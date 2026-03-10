@@ -1,0 +1,60 @@
+main{
+    background-color: aliceblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.container{   
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background-color: white;
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 1px 1px 1px grey;
+}
+
+.header-container{
+    text-align: center;
+}
+.img-logo{
+    width: 120;
+    height: 120px;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+form a{
+    text-align: center;
+}
+
+input, select{
+    width: 350px;
+    height: 30px;
+    border-radius: 8px;
+    padding: 5px;
+    background-color: rgba(128, 128, 128, 0.062);
+}
+
+.entrar, .criar-conta{
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.criar-conta{
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    border: 1px solid rgba(128, 128, 128, 0.219);
+}

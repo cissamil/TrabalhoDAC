@@ -6,8 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "serve:ssr:sistema-bancario": "node dist/sistema-bancario/server/server.mjs"
+    "test": "ng test"
   },
   "prettier": {
     "overrides": [
@@ -28,8 +27,6 @@
     "@angular/platform-browser": "^20.1.0",
     "@angular/platform-server": "^20.1.0",
     "@angular/router": "^20.1.0",
-    "@angular/ssr": "^20.1.5",
-    "express": "^5.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
