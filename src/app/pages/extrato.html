@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extrato - BANTADS</title>
+  <link rel="stylesheet" href="extrato.css" />
+
+  <!-- Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+<body>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="mini-logo">
+        <i class="fa-solid fa-bezier-curve"></i>
+      </div>
+      <span class="ia-badge">IA</span>
+    </div>
+
+    <div class="topbar-center">
+      <span>Internet Banking System</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+
+    <div class="topbar-right">
+      <button class="btn btn-outline">Crie sua conta com um e-mail</button>
+      <button class="btn btn-google">
+        <i class="fa-brands fa-google"></i>
+        Continuar com o Google
+      </button>
+    </div>
+  </header>
+
+  <!-- Blue Header -->
+  <section class="brandbar">
+    <div class="brand-left">
+      <div class="brand-icon">
+        <i class="fa-regular fa-building"></i>
+      </div>
+      <div>
+        <h1>BANTADS</h1>
+        <p>Área do Cliente</p>
+      </div>
+    </div>
+
+    <div class="brand-right">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      <span>Sair</span>
+    </div>
+  </section>
+
+  <!-- Main Layout -->
+  <main class="main-content">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav>
+        <ul>
+          <li><i class="fa-regular fa-credit-card"></i><span>Dashboard</span></li>
+          <li><i class="fa-regular fa-user"></i><span>Meu Perfil</span></li>
+          <li><i class="fa-solid fa-arrow-down"></i><span>Depósito</span></li>
+          <li><i class="fa-solid fa-arrow-up"></i><span>Saque</span></li>
+          <li><i class="fa-solid fa-right-left"></i><span>Transferência</span></li>
+          <li class="active"><i class="fa-regular fa-file-lines"></i><span>Extrato</span></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <section class="content">
+      <div class="page-header">
+        <h2>Extrato</h2>
+        <p>Consulte o histórico de transações da sua conta</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <i class="fa-regular fa-file-lines"></i>
+          <div>
+            <h3>Período de Consulta</h3>
+            <p>Selecione o período desejado para visualizar o extrato</p>
+          </div>
+        </div>
+
+        <form class="statement-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dataInicio">Data Início</label>
+              <div class="input-wrapper">
+                <input type="text" id="dataInicio" placeholder="dd/mm/aaaa" />
+                <i class="fa-regular fa-calendar"></i>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="dataFim">Data Fim</label>
+              <div class="input-wrapper">
+                <input type="text" id="dataFim" placeholder="dd/mm/aaaa" />
+                <i class="fa-regular fa-calendar"></i>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="consult-btn">Consultar Extrato</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Cookies -->
+  <div class="cookie-box">Gerenciar cookies ou desativar</div>
+</body>
+</html>
