@@ -1,0 +1,64 @@
+<main>
+    <div class="container">
+        <div class="header-container">
+            
+            <img class="img-logo" src="bank_icon.webp" alt="">
+
+            <h1>BANTADS</h1>
+        </div>
+        <div class="form-control">
+            <form action="">
+
+                <div class="field full-length">
+                    <label for="name">Nome Completo</label>
+                    <input type="text" name="name" placeholder="Digite o seu nome completo">
+                </div>
+
+                <div class="field">
+                    <label>CPF</label>
+                    <input type="text" mask="000.000.000-00" placeholder="123.456.789-10">
+                </div>
+
+                <div class="field">
+                    <label>E-mail</label>
+                    <input type="email" placeholder="seu@email.com">
+                </div>
+
+                <div class="field">
+                    <label>Telefone</label>
+                    <input type="text" placeholder="(00) 00000-0000" mask="(00) 00000-0000">
+                </div>
+
+                <!-- <div class="field">
+                    <label>Salário Mensal</label>
+                    <input type="number" mask="0,00">
+                </div> -->
+
+                <div class="field">
+                    <label>CEP</label>
+                    <input type="text" placeholder="00000-000" mask="00000-000">
+                </div>
+
+                <div class="field full-length">
+                    <label>Endereço</label>
+                    <input type="text" placeholder="Rua, número, complemento">
+                </div>
+
+                <div class="field">
+                    <label>Cidade</label>
+                    <input type="text" placeholder="Sua cidade">
+                </div>
+
+                <div class="field">
+                    <label>Estado</label>
+                    <input type="text" placeholder="UF">
+                </div>
+
+                <button class="enviar full-length">Enviar Solicitação</button>
+
+                
+            </form>
+            <p>Já possui conta? <span class="login" (click)="redirectToLoginPage()">Faça o login</span></p>
+        </div>
+    </div>
+</main>
