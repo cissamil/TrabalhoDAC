@@ -17,4 +17,8 @@ export class Login {
     
   }
 
+  redirectToClienteDashboardPage(){
+    this.router.navigate(['/cliente-main-page'])
+  }
+
 }

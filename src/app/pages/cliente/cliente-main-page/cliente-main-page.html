@@ -1,0 +1,60 @@
+<main>
+
+    <header>
+        <div class="title">
+            <h1>BANTADS</h1>
+            <p>Área do Cliente</p>
+        </div>
+        <div class="icon">
+            <a href="">Sair</a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="navigation-card">
+            <p (click)="changeNavigationOptions(clientNavigationOptions.Dashboard)">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="wallet"></mat-icon>
+                Dashboard
+            </p>
+            
+            <p (click)="changeNavigationOptions(clientNavigationOptions.Perfil)">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="account_circle"></mat-icon>
+                Meu Perfil
+            </p>
+
+            <p (click)="changeNavigationOptions(clientNavigationOptions.Deposito)">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="download_2"></mat-icon>
+                Depósito
+            </p>
+            
+            <p (click)="changeNavigationOptions(clientNavigationOptions.Saque)">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="upload_2"></mat-icon>
+                Saque
+            </p>
+
+            <p (click)="changeNavigationOptions(clientNavigationOptions.Transferencia)">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="compare_arrows"></mat-icon>
+                Transferência
+            </p>
+            
+            <p (click)="changeNavigationOptions(clientNavigationOptions.Extrato)">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="assignment"></mat-icon>
+                Extrato
+            </p>
+        </div>
+
+        <div class="components">
+
+            @if(navigationOption === clientNavigationOptions.Dashboard){
+                <app-dashboard-cliente></app-dashboard-cliente>
+            }
+
+
+
+
+        </div>
+
+    </div>
+
+</main>

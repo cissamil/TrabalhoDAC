@@ -1,0 +1,39 @@
+
+.info-cards{
+    padding-top: 30px;
+    display: flex;
+    gap: 20px;
+}
+
+.info-card{
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 20px;
+    gap: 20px;
+}
+
+.info-card .top, .info-card .bottom{
+    display: flex;
+    font-size: 0.8rem;
+    justify-content: space-between;
+}
+
+.info-card .middle{
+    font-size: 1.5rem;
+}
+
+.red{
+    color: red;
+}
+
+.blue{
+    color: blue;
+}
+
+.black{
+    color: black;
+}
+
+
