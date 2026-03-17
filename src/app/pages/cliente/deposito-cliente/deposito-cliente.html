@@ -1,0 +1,28 @@
+<main>
+    <h1 class="titulo"> Depósito </h1>
+    <p class="subtitulo"> Adicione fundos à sua conta </p>
+
+    <div class="container">
+<div class="card">
+  <h2>Realizar Depósito</h2>
+  <p>Informe o valor que deseja depositar em sua conta </p>
+  <label for="valorDeposito">Valor do Depósito</label>
+  <input [(ngModel)]="valorDeposito" type="number" name="" id="valorDeposito">
+  <p>O valor será creditado imediatamente em sua conta</p>
+  <p> {{ mensagem }} </p>
+  <button (click)="depositar()" id="btnDepositar">Confirmar Depósito</button>
+</div>
+
+<div class="card">
+  <h2>Informações da Conta</h2>
+
+  <p>Saldo Atual</p>
+  <span class= "saldoAtual">R${{saldo}}</span>
+  <div>
+  <p>Previsão após depósito</p>
+  <span class="previsao">R${{saldo+valorDeposito}}</span>
+  <p class="textoSecundario">Observação:O depósito será processado imediatamente e estará disponível em sua conta. </p>
+  </div>
+</div>
+</div>
+</main>
