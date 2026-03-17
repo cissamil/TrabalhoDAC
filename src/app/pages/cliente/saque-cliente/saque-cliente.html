@@ -1,0 +1,36 @@
+<main>
+
+<h1 class="titulo"> Saque </h1>
+<p class="subtitulo">Retire fundos da sua conta</p>
+
+<div class="container">
+<div class="card">
+  <h2>Realizar saque</h2>
+  <p>Informe o valor que deseja sacar de sua conta</p>
+  <label for="valorSaque">Valor do Saque</label>
+  <input type="number" [(ngModel)]="valorSaque" id="valorSaque">
+  <!--ngModel conecta html com ts, com entrada do usuario-->
+  <p>O valor será debitado imediatamente de sua conta</p>
+  <div class="textoSecundario">
+    <p >Saldo disponível para saque: </p>
+  <span class= "saldoAtual">R$ {{ saldo }} </span>
+  </div>
+    <button id="btnSacar" (click)="sacar()">Confirmar Saque</button>
+    <p> {{ mensagem }} </p>
+</div>
+
+<div class="card">
+  <h2>Informações da Conta</h2>
+  <p>Saldo atual e previsão após saque</p>
+  <div class="valores">
+  <p>Saldo Atual</p>
+  <span class= "saldoAtual">R$ {{ saldo }} </span>
+  <p>Limite Disponível</p>
+  <span class= "limite">R$ {{ limite }} </span>
+  <p>Saldo Disponível Total</p>
+  <!--saldo calculado é o limite + o atual, é tipo cheque especial + real-->
+  <span class= "saldoTotal">R$ {{ saldo+limite }} </span>
+</div>
+</div>
+</div>
+</main>
