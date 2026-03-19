@@ -1,0 +1,44 @@
+<main>
+	<header>
+		<div class="title">
+			<h1>BANTADS</h1>
+			<p>Área do Gerente</p>
+		</div>
+		<div class="icon">
+			<a href="">Sair</a>
+		</div>
+	</header>
+
+	<div class="container">
+		<div class="navigation-card">
+			<p (click)="changeNavigationOptions(managerNavigationOptions.TodosClientes)">
+				<mat-icon aria-hidden="false" aria-label="Todos os clientes" fontIcon="groups"></mat-icon>
+				Todos os Clientes
+			</p>
+
+			<p (click)="changeNavigationOptions(managerNavigationOptions.ConsultarCliente)">
+				<mat-icon aria-hidden="false" aria-label="Consultar cliente" fontIcon="person_search"></mat-icon>
+				Consultar Cliente
+			</p>
+
+			<p (click)="changeNavigationOptions(managerNavigationOptions.MelhoresClientes)">
+				<mat-icon aria-hidden="false" aria-label="Top 3 clientes" fontIcon="leaderboard"></mat-icon>
+				Top 3 Clientes
+			</p>
+		</div>
+
+		<div class="components">
+			@if(navigationOption === managerNavigationOptions.TodosClientes){
+				<app-todos-clientes></app-todos-clientes>
+			}
+
+			@if(navigationOption === managerNavigationOptions.ConsultarCliente){
+				<app-cliente-especifico></app-cliente-especifico>
+			}
+
+			@if(navigationOption === managerNavigationOptions.MelhoresClientes){
+				<app-top-3-clientes></app-top-3-clientes>
+			}
+		</div>
+	</div>
+</main>
