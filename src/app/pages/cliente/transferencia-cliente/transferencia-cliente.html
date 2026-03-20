@@ -1,0 +1,35 @@
+<main>
+    <h1 class="titulo"> Tranferência </h1>
+    <p class="subtitulo"> Informe os dados da transferência </p>
+
+    <div class="container">
+<div class="card">
+  <h2>Realizar Transferência</h2>
+  <p>Informe os dados da transferência </p>
+  <label for="contaDestino">Conta de Destino</label>
+  <input [(ngModel)]="contaDestino" type="number" name="" id="valorDeposito">
+  <p>Número da conta com 4 dígitos</p>
+  <label for="valorTransferência">Valor de Trasnferência</label>
+  <input [(ngModel)]="valorTransferencia" type="number" name="" id="valorDeposito">
+  <p>O valor será transferido imediatamente</p>
+  <div>
+  <p>Saldo disponível para transferência:</p>
+  <span class="saldo">R${{saldo}}</span>
+  </div>
+  <p> {{ mensagem }} </p>
+  <button (click)="transferir()" id="btnTransferir">Confirmar Transferência</button>
+</div>
+
+<div class="card">
+  <h2>Informações da Conta</h2>
+  <p>Saldo atual e previsão após transferência </p>
+  <p>Saldo Atual</p>
+  <span class= "saldoAtual">R$ {{ saldo }} </span>
+  <p>Limite Disponível</p>
+  <span class= "limite">R$ {{ limite }} </span>
+  <p>Saldo Disponível Total</p>
+  <!--saldo calculado é o limite + o atual, é tipo cheque especial + real-->
+  <span class= "saldoTotal">R$ {{ saldo+limite }} </span>
+</div>
+</div>
+</main>

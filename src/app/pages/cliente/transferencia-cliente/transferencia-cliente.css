@@ -1,0 +1,124 @@
+main{
+    background-color: aliceblue;
+    width: 100vw;
+    height: 100vh;
+}
+
+header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #155DFC;
+    color: white;
+    padding: 10px;
+}
+
+.titulo, .subtitulo{
+  margin: 32px;
+}
+
+.subtitulo {
+  font-size: large;
+}
+
+.container{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin: 32px;
+}
+
+.card{
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 36px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.card h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 12px;
+}
+
+.card p {
+  color: #64748b;
+  line-height: 1.5;
+  margin-top: 16px;
+  font-size: large;
+}
+
+label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
+input {
+  width: 100%;
+  padding: 16px 18px;
+  border: none;
+  border-radius: 14px;
+  background: #f3f4f6;
+  font-size: 18px;
+  color: #334155;
+  box-sizing: border-box;
+}
+
+#btnTransferir {
+  width: 100%;
+  margin-top: 24px;
+  padding: 18px;
+  border: none;
+  border-radius: 14px;
+  background: #bc31ef;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#btnTransferir:hover{
+  background: #7c14c7;
+}
+
+.saldoAtual{
+  font-size: 22px;
+  font-weight: bold;
+  color: #d66b0e;
+
+}
+
+.textoSecundario {
+  background: #eaf2ff;
+  color: #1e3a8a;
+  padding: 18px 20px;
+  border-radius: 16px;
+  margin-top: 28px;
+  line-height: 1.6;
+}
+
+.saldoTotal{
+  font-size: 26px;
+  font-weight: bold;
+  color: #2563eb;
+
+}
+.limite{
+  font-size: 26px;
+  font-weight: bold;
+  color: #111827;
+
+}
+
+.card span{
+  display:block;
+  margin-top:6px;
+  margin-bottom:20px;
+}
