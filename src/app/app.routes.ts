@@ -7,6 +7,7 @@ import { ClienteMainPage } from './pages/cliente/cliente-main-page/cliente-main-
 import { SaqueCliente } from './pages/cliente/saque-cliente/saque-cliente';
 import { DepositoCliente } from './pages/cliente/deposito-cliente/deposito-cliente';
 import { GerenteMainPage } from './pages/gerente/gerente-main-page/gerente-main-page';
+import { TransferenciaCliente } from './pages/cliente/transferencia-cliente/transferencia-cliente';
 export const routes: Routes = [
     {path: '', redirectTo: "login", pathMatch: 'full'},
 
@@ -15,7 +16,8 @@ export const routes: Routes = [
     {path: 'cliente-main-page', component: ClienteMainPage},
     {path: 'gerente-main-page', component: GerenteMainPage},
     {path: 'deposito-cliente', component: DepositoCliente},
-    {path: 'saque-cliente', component: SaqueCliente}
+    {path: 'saque-cliente', component: SaqueCliente},
+    {path: 'transferencia-cliente', component: TransferenciaCliente}
 
 
 

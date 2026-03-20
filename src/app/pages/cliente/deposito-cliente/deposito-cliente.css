@@ -7,6 +7,10 @@ main{
   margin: 32px;
 }
 
+.subtitulo {
+  font-size: large;
+}
+
 .container{
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -32,6 +36,7 @@ main{
 .card p {
   color: #64748b;
   line-height: 1.5;
+  font-size: large;
 }
 
 label {
