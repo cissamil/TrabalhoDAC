@@ -1,22 +1,56 @@
 
-.info-cards{
-    padding-top: 30px;
+.title{
     display: flex;
-    gap: 20px;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.info-card{
-    width: 200px;
+
+
+.container{
+    padding: 20px;
+}
+.info-cards{
+    flex: 1;
     display: flex;
+    width: 100%;
+    padding-top: 30px;
+    justify-content:space-between;
+}
+
+.info-card, .personal-manager{
+    width: 30%;
+    display: flex;
+    border-radius: 20px;
+    border: 1px solid rgba(128, 128, 128, 0.219);
     flex-direction: column;
     background-color: white;
     padding: 20px;
     gap: 20px;
 }
 
+.manager-header{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.manager-info{
+    font-size: 1.2rem;
+}
+
+.middle{
+    font-weight: bold;
+}
+
+.personal-manager{
+    margin-top: 40px;
+    width: 100%;
+}
+
 .info-card .top, .info-card .bottom{
     display: flex;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     justify-content: space-between;
 }
 
@@ -35,5 +69,6 @@
 .black{
     color: black;
 }
+
 
 

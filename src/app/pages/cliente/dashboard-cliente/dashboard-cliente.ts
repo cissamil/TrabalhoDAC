@@ -12,11 +12,10 @@ import { InfoCard } from '../../../models/info-card';
 
 export class DashboardCliente {
 
-
   infoCards:InfoCard[] = [
     {
       topTitle:"Saldo Atual",
-      icon:"account_ballance_wallet",
+      icon:"account_balance_wallet",
       middleContent:"R$ - 500,50",
       color:"red",
       bottomText:"Saldo Negativo"

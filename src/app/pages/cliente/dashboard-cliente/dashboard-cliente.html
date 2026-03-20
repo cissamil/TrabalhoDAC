@@ -4,27 +4,45 @@
         <h1>Bem Vindo(a)!</h1>
         <p>Confira suas informações financeiras</p>
     </div>
-
-    <div class="info-cards">
-
-        @for(infoCard of infoCards; track $index){
-
-            <div class="info-card">
-                <div class="top">
-                    <p>{{infoCard.topTitle}}</p>
-                    <mat-icon fontIcon="{{infoCard.icon}}" style="font-size: 1rem;"></mat-icon>
-                </div>
-                <div class="middle">
     
-                    <p class="{{infoCard.color}}">{{infoCard.middleContent}}</p>
+    <div class="container">
+
+        <div class="info-cards">
+    
+            @for(infoCard of infoCards; track $index){
+    
+                <div class="info-card">
+                    <div class="top">
+                        <p>{{infoCard.topTitle}}</p>
+                        <mat-icon fontIcon="{{infoCard.icon}}" style="font-size: 1rem;"></mat-icon>
+                    </div>
+                    <div class="middle">
+        
+                        <p class="{{infoCard.color}}">{{infoCard.middleContent}}</p>
+                    </div>
+                    <div class="bottom">
+                        <p>{{infoCard.bottomText}}</p>
+                    </div>
                 </div>
-                <div class="bottom">
-                    <p>{{infoCard.bottomText}}</p>
-                </div>
+            }
+    
+        </div>
+    
+        <div class="personal-manager">
+            <div class="manager-header">
+                <mat-icon fontIcon="person"></mat-icon>
+                <p>Seu Gerente</p>
             </div>
-        }
-
-
+            <div class="manager-info">
+                <p>João Silva</p>
+            </div>
+            <div class="manager-contact">
+                Entre em contato para mais informações sobre sua conta
+            </div>
+        </div>
+        
     </div>
+
+    
 
 </main>

@@ -11,10 +11,16 @@ header{
     align-items: center;
     background-color: #155DFC;
     color: white;
-    padding: 10px;
+    padding: 20px;
 }
 
-div.title{
+.icon{
+    padding-right: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+.title{
     display: flex;
     padding-left: 20px;
     flex-direction: column;
@@ -22,8 +28,8 @@ div.title{
 }
 
 .container{
-    padding-left: 70px;
-    padding-top: 50px;
+    padding-left: 40px;
+    padding-top: 30px;
     display: flex;
 }
 
@@ -31,11 +37,12 @@ div.title{
     font-size: 1.2rem;
     display: flex;
     gap: 10px;
-    border-radius: 20px;
+    border-radius: 15px;
     border: 1px solid rgba(128, 128, 128, 0.185);
     flex-direction: column;
     background-color: white;
-    padding: 30px;
+    padding: 25px;
+    max-height: 400px;
 }
 
 .navigation-card p{
