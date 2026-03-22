@@ -1,0 +1,49 @@
+<main>
+    <header>
+        <div class="title">
+            <h1>BANTADS</h1>
+            <p>Área do Administrador</p>
+        </div>
+        <div class="icon">
+            <mat-icon fontIcon="exit_to_app"></mat-icon>
+            <p>Sair</p>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="navigation-cards">
+
+            <div class="navigation-card" (click)="changeNavigationOptions(adminNavigationOptions.Dashboard)">
+                <mat-icon aria-hidden="false" fontIcon="dashboard"></mat-icon>
+                <p>Dashboard</p>
+            </div>
+
+            <div class="navigation-card" (click)="changeNavigationOptions(adminNavigationOptions.RelatorioClientes)">
+                <mat-icon aria-hidden="false" fontIcon="article"></mat-icon>
+                <p>Relatório de clientes</p>
+            </div>
+
+            <div class="navigation-card" (click)="changeNavigationOptions(adminNavigationOptions.GerenciarGerentes)">
+                <mat-icon aria-hidden="false" fontIcon="groups"></mat-icon>
+                <p>Gerenciar Gerentes</p>
+            </div>
+        </div>
+
+        <div class="components">
+
+            @if(navigationOption === adminNavigationOptions.Dashboard){
+                <app-admin-dashboard></app-admin-dashboard>
+            }
+
+            @if(navigationOption === adminNavigationOptions.RelatorioClientes){
+            }
+
+            @if(navigationOption === adminNavigationOptions.GerenciarGerentes){
+            }
+
+        </div>
+
+    </div>
+
+</main>

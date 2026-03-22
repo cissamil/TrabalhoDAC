@@ -18,7 +18,7 @@ export enum AdminNavigationOptions{
 
     Dashboard,
     RelatorioClientes,
-    GerenciarClientes
+    GerenciarGerentes
 
 }
 

@@ -1,0 +1,148 @@
+
+main{
+    padding: 30px 50px 50px 20px;
+}
+
+.title{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dashboard-card{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.info-cards{
+    flex: 1;
+    display: flex;
+    width: 100%;
+    padding-top: 30px;
+    justify-content:space-between;
+}
+
+.info-card, .managers{
+    width: 30%;
+    display: flex;
+    border-radius: 20px;
+    border: 1px solid rgba(128, 128, 128, 0.219);
+    flex-direction: column;
+    background-color: white;
+    padding: 20px;
+    gap: 20px;
+}
+
+.managers-header{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    font-size: 1rem;
+}
+
+.managers-list{
+    max-height: 500px;
+    overflow: auto;
+}
+
+.manager-info{
+    font-size: 1.2rem;
+}
+
+.middle{
+    font-weight: bold;
+}
+
+.managers{
+    margin-top: 40px;
+    width: 100%;
+}
+
+.info-card .top, .info-card .bottom{
+    display: flex;
+    font-size: 0.9rem;
+    justify-content: space-between;
+}
+
+.info-card .middle{
+    font-size: 1.5rem;
+}
+
+.red{
+    color: red;
+}
+
+.grey{
+    color: rgba(0, 0, 0, 0.555);
+}
+
+.blue{
+    color: blue;
+}
+
+.green{
+    color: green;
+}
+
+.black{
+    color: black;
+}
+
+
+
+
+table {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mat-mdc-header-cell {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+
+.green { color: green; }
+.red { color: red; }
+
+.badge-clientes {
+    background-color: #E3F2FD; /* Azul bem clarinho */
+    color: #1976D2;            /* Azul mais escuro para o texto */
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 16px;       /* Faz o formato de pílula */
+    display: inline-block;
+    min-width: 30px;
+    text-align: center;
+}
+
+
+/* Borda dourada para a primeira linha */
+.gold-border {
+    outline: 2px solid #FFD700; /* Dourado */
+    outline-offset: -2px;       /* Garante que a borda fique para dentro da célula */
+    background-color: #FFFDF0; /* Um fundo levemente amarelado para destacar */
+}
+
+/* Container para alinhar nome e badge lado a lado */
+.nome-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Badge "Melhor Gerente" */
+.badge-melhor {
+    background-color: #FEF9C3; /* Amarelo clarinho */
+    color: #854D0E;            /* Marrom/Dourado escuro para o texto */
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 1px solid #FDE047;
+    white-space: nowrap;
+}
