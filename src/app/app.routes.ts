@@ -11,8 +11,9 @@ import { TransferenciaCliente } from './pages/cliente/transferencia-cliente/tran
 export const routes: Routes = [
     {path: '', redirectTo: "login", pathMatch: 'full'},
 
-    {path:'extrato', component: Extrato},
     {path: 'login', component: Login},
+    {path: 'registro', component: Registro},
+    {path: 'extrato', component: Extrato},
     {path: 'cliente-main-page', component: ClienteMainPage},
     {path: 'gerente-main-page', component: GerenteMainPage},
     {path: 'deposito-cliente', component: DepositoCliente},

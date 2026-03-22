@@ -1,0 +1,230 @@
+import { Cliente, GerenteAdmin, Conta, Movimentacao } from '../models/entities';
+
+// --- Cliente e Auth ---
+export const CLIENTES_MOCK: Cliente[] = [
+  {
+    cpf: '12912861012',
+    nome: 'Catharyna',
+    email: 'cli1@bantads.com.br',
+    senha: 'tads',
+    salario: 10000.0,
+    endereco: '80010-010 - Rua XV de Novembro, 123 - Curitiba - PR',
+  },
+  {
+    cpf: '09506382000',
+    nome: 'Cleuddônio',
+    email: 'cli2@bantads.com.br',
+    senha: 'tads',
+    salario: 20000.0,
+    endereco: '80210-000 - Avenida Sete de Setembro, 500 - Curitiba - PR',
+  },
+  {
+    cpf: '85733854057',
+    nome: 'Catianna',
+    email: 'cli3@bantads.com.br',
+    senha: 'tads',
+    salario: 3000.0,
+    endereco: '81530-000 - Rua Francisco Derosso, 1000 - Curitiba - PR',
+  },
+  {
+    cpf: '58872160006',
+    nome: 'Cutardo',
+    email: 'cli4@bantads.com.br',
+    senha: 'tads',
+    salario: 500.0,
+    endereco: '80020-000 - Praça Tiradentes, 10 - Curitiba - PR',
+  },
+  {
+    cpf: '76179646090',
+    nome: 'Coândrya',
+    email: 'cli5@bantads.com.br',
+    senha: 'tads',
+    salario: 1500.0,
+    endereco: '82510-000 - Avenida Erasto Gaertner, 450 - Curitiba - PR',
+  },
+];
+
+// --- Gerente/Administrador e Auth ---
+export const STAFF_MOCK: GerenteAdmin[] = [
+  {
+    cpf: '98574307084',
+    nome: 'Geniéve',
+    email: 'ger1@bantads.com.br',
+    senha: 'tads',
+    tipo: 'gerente',
+  },
+  {
+    cpf: '64065268052',
+    nome: 'Godophredo',
+    email: 'ger2@bantads.com.br',
+    senha: 'tads',
+    tipo: 'gerente',
+  },
+  {
+    cpf: '23862179060',
+    nome: 'Gyândula',
+    email: 'ger3@bantads.com.br',
+    senha: 'tads',
+    tipo: 'gerente',
+  },
+  {
+    cpf: '40501740066',
+    nome: 'Adamântio',
+    email: 'adm1@bantads.com.br',
+    senha: 'tads',
+    tipo: 'administrador',
+  },
+];
+
+// --- Conta ---
+export const CONTAS_MOCK: Conta[] = [
+  {
+    cliente: 'Catharyna',
+    numeroConta: 1291,
+    saldo: 800.0,
+    limite: 5000.0,
+    gerente: 'Geniéve',
+    dataCriacao: new Date('2000-01-01'),
+  },
+  {
+    cliente: 'Cleuddônio',
+    numeroConta: 950,
+    saldo: -10000.0,
+    limite: 10000.0,
+    gerente: 'Godophredo',
+    dataCriacao: new Date('1990-10-10'),
+  },
+  {
+    cliente: 'Catianna',
+    numeroConta: 8573,
+    saldo: -1000.0,
+    limite: 1500.0,
+    gerente: 'Gyândula',
+    dataCriacao: new Date('2012-12-12'),
+  },
+  {
+    cliente: 'Cutardo',
+    numeroConta: 5887,
+    saldo: 150000.0,
+    limite: 0.0,
+    gerente: 'Geniéve',
+    dataCriacao: new Date('2022-02-22'),
+  },
+  {
+    cliente: 'Coândrya',
+    numeroConta: 7617,
+    saldo: 1500.0,
+    limite: 0.0,
+    gerente: 'Godophredo',
+    dataCriacao: new Date('2025-01-01'),
+  },
+];
+
+// --- Movimentações ---
+export const MOVIMENTACOES_MOCK: Movimentacao[] = [
+  {
+    data_hora: new Date('2020-01-01T10:00:00'),
+    tipo: 'depósito',
+    clienteOrigem: 'Catharyna',
+    clienteDestino: '',
+    valor: 1000.0,
+  },
+  {
+    data_hora: new Date('2020-01-01T11:00:00'),
+    tipo: 'depósito',
+    clienteOrigem: 'Catharyna',
+    clienteDestino: '',
+    valor: 900.0,
+  },
+  {
+    data_hora: new Date('2020-01-01T12:00:00'),
+    tipo: 'saque',
+    clienteOrigem: 'Catharyna',
+    clienteDestino: '',
+    valor: 550.0,
+  },
+  {
+    data_hora: new Date('2020-01-01T13:00:00'),
+    tipo: 'saque',
+    clienteOrigem: 'Catharyna',
+    clienteDestino: '',
+    valor: 350.0,
+  },
+  {
+    data_hora: new Date('2020-01-10T15:00:00'),
+    tipo: 'depósito',
+    clienteOrigem: 'Catharyna',
+    clienteDestino: '',
+    valor: 2000.0,
+  },
+  {
+    data_hora: new Date('2020-01-15T08:00:00'),
+    tipo: 'saque',
+    clienteOrigem: 'Catharyna',
+    clienteDestino: '',
+    valor: 500.0,
+  },
+  {
+    data_hora: new Date('2020-01-20T12:00:00'),
+    tipo: 'transferência',
+    clienteOrigem: 'Catharyna',
+    clienteDestino: 'Cleuddônio',
+    valor: 1700.0,
+  },
+  {
+    data_hora: new Date('2025-01-01T12:00:00'),
+    tipo: 'depósito',
+    clienteOrigem: 'Cleuddônio',
+    clienteDestino: '',
+    valor: 1000.0,
+  },
+  {
+    data_hora: new Date('2025-02-01T10:00:00'),
+    tipo: 'depósito',
+    clienteOrigem: 'Cleuddônio',
+    clienteDestino: '',
+    valor: 5000.0,
+  },
+  {
+    data_hora: new Date('2025-10-01T10:00:00'),
+    tipo: 'saque',
+    clienteOrigem: 'Cleuddônio',
+    clienteDestino: '',
+    valor: 200.0,
+  },
+  {
+    data_hora: new Date('2025-05-02T10:00:00'),
+    tipo: 'depósito',
+    clienteOrigem: 'Cleuddônio',
+    clienteDestino: '',
+    valor: 7000.0,
+  },
+  {
+    data_hora: new Date('2025-05-05T00:00:00'),
+    tipo: 'depósito',
+    clienteOrigem: 'Catianna',
+    clienteDestino: '',
+    valor: 1000.0,
+  },
+  {
+    data_hora: new Date('2025-06-05T00:00:00'),
+    tipo: 'saque',
+    clienteOrigem: 'Catianna',
+    clienteDestino: '',
+    valor: 2000.0,
+  },
+  {
+    data_hora: new Date('2025-01-06T00:00:00'),
+    tipo: 'depósito',
+    clienteOrigem: 'Cutardo',
+    clienteDestino: '',
+    valor: 150000.0,
+  },
+  {
+    data_hora: new Date('2025-01-07T00:00:00'),
+    tipo: 'depósito',
+    clienteOrigem: 'Coândrya',
+    clienteDestino: '',
+    valor: 1500.0,
+  },
+];

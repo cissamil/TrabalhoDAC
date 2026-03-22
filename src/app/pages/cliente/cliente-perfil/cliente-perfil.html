@@ -1,0 +1,96 @@
+<main>
+    <div class="title">
+        <h1>Meu Perfil</h1>
+        <p class="grey">Gerencie suas informações pessoais</p>
+    </div>
+    <div class="profile-container">
+
+        <div class="personal-data">
+
+            <div class="personal-data-title">
+                <p>Dados Pessoais</p>
+                <p>Você pode alterar todos os dados, exceto o CPF</p>
+            </div>
+
+            <form action="">
+
+                <div class="field full-length">
+                    <label for="name">Nome Completo</label>
+                    <input type="text" [(ngModel)]="cliente.nome" name="name" placeholder="Digite o seu nome completo">
+                </div>
+
+                <div class="field">
+                    <label>CPF</label>
+                    <input type="text" mask="000.000.000-00" [ngModel]="cliente.cpf" name="cpf" disabled>
+                    <label class="cpf_block">O CPF não pode ser alterado</label>
+                </div>
+
+                <div class="field">
+                    <label>E-mail</label>
+                    <input type="email" [(ngModel)]="cliente.email" name="email" placeholder="seu@email.com">
+                </div>
+
+                <div class="field">
+                    <label>Salário Mensal</label>
+                    <input type="number" [(ngModel)]="cliente.salario" name="salario">
+                </div>
+
+                <div class="field">
+                    <label>CEP</label>
+                    <input type="text" placeholder="00000-000" [(ngModel)]="cep" name="cep" mask="00000-000">
+                </div>
+
+                <div class="field full-length">
+                    <label>Endereço</label>
+                    <input type="text" placeholder="Rua, número, complemento" [(ngModel)]="rua"  name="rua">
+                </div>
+
+                <div class="field">
+                    <label>Cidade</label>
+                    <input type="text" placeholder="Sua cidade" [(ngModel)]="cidade" name="cidade">
+                </div>
+
+                <div class="field">
+                    <label>Estado</label>
+                    <input type="text" placeholder="UF" name="estado" [(ngModel)]="estado">
+                </div>
+
+
+                
+            </form>
+
+
+        </div>
+
+        <div class="account-data">
+
+            <div class="account-data-title">
+                <p>Dados da Conta</p>
+                <p class="grey">Informações financeiras atualizadas</p>
+            </div>
+
+            <div class="account-data-infos">
+                <div class="account-data-info">
+                    <p class="info-title grey">Saldo</p>
+                    <p class="info-content red">R$ {{conta_cliente.saldo | number:'1.2-2'}}</p>
+                </div>
+    
+                <div class="account-data-info">
+                    <p class="info-title grey">Limite</p>
+                    <p class="info-content">R$ {{conta_cliente.limite | number:'1.2-2'}}</p>
+                </div>
+    
+                <div class="account-data-info">
+                    <p class="info-title grey">Gerente</p>
+                    <p class="info-content">{{conta_cliente.gerente}}</p>
+                </div>
+            </div>
+
+        </div>
+
+        <button class="enviar full-length">Enviar Solicitação</button>
+
+
+    </div>
+
+</main>

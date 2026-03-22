@@ -1,5 +1,4 @@
 <main>
-
     <header>
         <div class="title">
             <h1>BANTADS</h1>
@@ -51,12 +50,20 @@
                 <app-dashboard-cliente></app-dashboard-cliente>
             }
 
+            @if(navigationOption === clientNavigationOptions.Perfil){
+                <app-cliente-perfil></app-cliente-perfil>
+            }
+
             @if(navigationOption === clientNavigationOptions.Deposito){
                 <app-deposito-cliente></app-deposito-cliente>
             }
 
             @if(navigationOption === clientNavigationOptions.Saque){
                 <app-saque-cliente></app-saque-cliente>
+            }
+
+            @if(navigationOption === clientNavigationOptions.Transferencia){
+                <app-transferencia-cliente></app-transferencia-cliente>
             }
 
             @if(navigationOption === clientNavigationOptions.Extrato){

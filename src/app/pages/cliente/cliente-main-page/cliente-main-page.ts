@@ -5,9 +5,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { DepositoCliente } from "../deposito-cliente/deposito-cliente";
 import { SaqueCliente } from "../saque-cliente/saque-cliente";
 import { Extrato } from "../extrato/extrato";
+import { TransferenciaCliente } from "../transferencia-cliente/transferencia-cliente";
+import { ClientePerfil } from "../cliente-perfil/cliente-perfil";
 @Component({
   selector: 'app-cliente-main-page',
-  imports: [DashboardCliente, MatIconModule, DepositoCliente, SaqueCliente, Extrato],
+  imports: [DashboardCliente, MatIconModule, DepositoCliente, SaqueCliente, Extrato, TransferenciaCliente, ClientePerfil],
   templateUrl: './cliente-main-page.html',
   styleUrl: './cliente-main-page.css',
 })

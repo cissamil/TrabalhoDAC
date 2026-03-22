@@ -1,0 +1,116 @@
+
+main{
+    padding: 30px 50px 50px 20px;
+}
+
+.title{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.profile-container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.personal-data, .account-data{   
+    justify-content: center;
+    background-color: white;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.151);
+    padding: 30px;
+}
+
+form{
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 50px;
+    row-gap: 20px;
+}
+
+.full-length{
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+
+.full-length input{
+    width: 100%;
+}
+
+.field{
+    display: flex;
+    flex-direction: column;
+}
+
+form a{
+    text-align: center;
+    cursor: pointer;
+}
+
+label{
+    font-size: .9rem;
+}
+.cpf_block{
+    color: rgba(0, 0, 0, 0.527);
+    font-size: .8rem;
+}
+
+input{
+    width: 100%;
+    height: 30px;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    padding: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.384);
+    background-color: rgba(128, 128, 128, 0.062);
+}
+
+.enviar{
+    background:#1E88E5;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+}
+
+
+/* ACCOUNT-DATA */
+
+.account-data-title{
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  gap: 5px;
+}
+
+.account-data-infos{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.account-data-info{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 10px;
+}
+
+.info-content{
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.red{
+    color: red;
+}
+
+.grey{
+    color: rgba(0, 0, 0, 0.555);
+}
