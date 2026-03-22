@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { ManagerNavigationOptions } from '../../../models/navigationOptions';
+import { ManagerNavigationOptions } from '../../../core/models/navigationOptions';
 import { TodosClientes } from '../todos-clientes/todos-clientes';
 import { ClienteEspecifico } from '../cliente-especifico/cliente-especifico';
 import { Top3Clientes } from '../top-3-clientes/top-3-clientes';

@@ -1,7 +1,7 @@
 <main>
 
     <div class="title">
-        <h1>Bem Vindo(a)!</h1>
+        <h1>Bem Vindo(a), {{cliente.nome}}!</h1>
         <p>Confira suas informações financeiras</p>
     </div>
     
@@ -18,7 +18,7 @@
                     </div>
                     <div class="middle">
         
-                        <p class="{{infoCard.color}}">{{infoCard.middleContent}}</p>
+                        <p class="{{infoCard.color}}">R$ {{infoCard.middleContent | number:'1.2-2'}}</p>
                     </div>
                     <div class="bottom">
                         <p>{{infoCard.bottomText}}</p>

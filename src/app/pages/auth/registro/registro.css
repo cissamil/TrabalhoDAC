@@ -14,10 +14,18 @@ main{
     justify-content: center;
     background-color: white;
     border-radius: 20px;
-    padding: 50px;
-    box-shadow: 1px 1px 1px grey;
+    margin-top: 30px;
+    padding: 20px 50px 10px 50px;
+    border: 1px solid rgba(128, 128, 128, 0.219);
+
 }
 
+.form-control{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
 .header-container{
     text-align: center;
     font-size: 0.8rem;

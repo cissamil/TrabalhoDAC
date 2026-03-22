@@ -31,8 +31,8 @@
                 </div>
 
                 <div class="field">
-                    <label>Salário Mensal</label>
-                    <input type="number" [(ngModel)]="cliente.salario" name="salario">
+                    <label>Salário Mensal (R$)</label>
+                    <input type="text" [(ngModel)]="salario" (input)="handleSalario($event)" name="salario">
                 </div>
 
                 <div class="field">

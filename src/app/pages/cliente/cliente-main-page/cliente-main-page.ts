@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ClientNavigationOptions } from '../../../models/navigationOptions';
+import { ClientNavigationOptions } from '../../../core/models/navigationOptions';
 import { DashboardCliente } from "../dashboard-cliente/dashboard-cliente";
 import { MatIconModule } from '@angular/material/icon';
 import { DepositoCliente } from "../deposito-cliente/deposito-cliente";
