@@ -4,7 +4,7 @@ import { CONTAS_MOCK, STAFF_MOCK } from '../../../core/mock/mock-data';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { DecimalPipe } from '@angular/common';
-import { ManagerTableData } from '../../../core/models/manager-table-data';
+import { ManagerTableData } from '../../../core/models/table-data';
 import { GerenteAdmin } from '../../../core/models/entities';
 import { NgxMaskPipe } from 'ngx-mask';
 
@@ -15,6 +15,11 @@ import { NgxMaskPipe } from 'ngx-mask';
   styleUrl: './admin-dashboard.css',
 })
 export class AdminDashboard implements OnInit {
+
+  gerentes = STAFF_MOCK.filter((gerente) => gerente.tipo == "gerente");
+  contas = CONTAS_MOCK;
+  MANAGERS_TABLE: ManagerTableData[] = [] 
+  displayedColumns: string[] = ['Nome Gerente', 'CPF', 'Qtd. Clientes', 'Saldos Positivos', 'Saldos Negativos', 'Saldo Total'];
 
   ngOnInit(): void {
 
@@ -52,7 +57,7 @@ export class AdminDashboard implements OnInit {
             saldosPositivos: resumo.positivos,
             saldosNegativos: resumo.negativos,
             saldoTotal: saldoTotal,
-            colorSaldoTotal: saldoTotal > 0 ? "green" : "red"
+            colorSaldoTotal: saldoTotal >= 0 ? "green" : "red"
           });
         }
     });  
@@ -61,10 +66,6 @@ export class AdminDashboard implements OnInit {
 
   }
 
-  gerentes = STAFF_MOCK.filter((gerente) => gerente.tipo == "gerente");
-  contas = CONTAS_MOCK;
-  MANAGERS_TABLE: ManagerTableData[] = [] 
-  displayedColumns: string[] = ['Nome do cliente', 'CPF', 'Qtd. Clientes', 'Saldos Positivos', 'Saldos Negativos', 'Saldo Total'];
 
   get saldosPositivos (){
     let saldo = 0;

@@ -1,0 +1,107 @@
+
+main{
+    padding: 30px 20px 50px 20px;
+}
+
+.title{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.clients{
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    padding: 20px;
+    margin-top: 40px;
+    border-radius: 20px;
+    flex-direction: column;
+    background-color: white;
+    border: 1px solid rgba(128, 128, 128, 0.219);
+}
+
+
+
+.clients-header{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    font-size: 1rem;
+}
+
+.clients-list{
+    max-height: 500px;
+    overflow: auto;
+}
+
+.red{
+    color: red !important;
+}
+
+.grey{
+    color: rgba(0, 0, 0, 0.555);
+}
+
+.blue{
+    color: blue !important;
+}
+
+.green{
+    color: green !important;
+}
+
+table {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  overflow: hidden;
+}
+
+.mat-mdc-header-cell {
+  background-color: #f5f5f5;
+  color: #333;
+  font-size: 0.8rem;
+}
+
+.mat-mdc-row{
+    font-size: 0.8rem;
+}
+
+
+/* admin-relatorio-clientes.css */
+
+.clients {
+    margin-top: 30px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+/* Reduzindo o padding das células para "apertar" a tabela */
+.mat-mdc-header-cell {
+    background-color: #f5f5f5;
+    color: #475569;
+    text-transform: uppercase;
+    font-size: 0.7rem; /* Texto levemente menor para caber tudo */
+    letter-spacing: 0.02em;
+    padding: 8px 12px !important; /* Padding reduzido (antes era 16px ou mais) */
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.mat-mdc-cell {
+    padding: 8px 12px !important; /* Padding reduzido nas linhas de dados */
+    font-size: 0.75rem;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* Efeito de hover discreto */
+.mat-mdc-row:hover {
+    background-color: #f8fafc;
+}
+

@@ -9,12 +9,6 @@ main{
     gap: 10px;
 }
 
-.dashboard-card{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-top: 20px;
-}
 
 .info-cards{
     flex: 1;
@@ -22,6 +16,16 @@ main{
     width: 100%;
     padding-top: 30px;
     justify-content:space-between;
+}
+
+.info-card .top, .info-card .bottom{
+    display: flex;
+    font-size: 0.9rem;
+    justify-content: space-between;
+}
+
+.info-card .middle{
+    font-size: 1.5rem;
 }
 
 .info-card, .managers{
@@ -47,10 +51,6 @@ main{
     overflow: auto;
 }
 
-.manager-info{
-    font-size: 1.2rem;
-}
-
 .middle{
     font-weight: bold;
 }
@@ -60,15 +60,6 @@ main{
     width: 100%;
 }
 
-.info-card .top, .info-card .bottom{
-    display: flex;
-    font-size: 0.9rem;
-    justify-content: space-between;
-}
-
-.info-card .middle{
-    font-size: 1.5rem;
-}
 
 .red{
     color: red;
@@ -145,4 +136,7 @@ table {
     border-radius: 12px;
     border: 1px solid #FDE047;
     white-space: nowrap;
+}
+.mat-mdc-row:hover {
+    background-color: #f8fafc;
 }
