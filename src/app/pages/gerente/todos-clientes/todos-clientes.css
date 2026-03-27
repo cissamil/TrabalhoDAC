@@ -18,7 +18,7 @@ section {
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 620px;
+  min-width: 920px;
 }
 
 th,
@@ -33,15 +33,7 @@ th {
   font-size: 0.9rem;
 }
 
-.status {
-  background-color: #d8f2e4;
-  color: #1f7a3d;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 0.8rem;
-}
-
-.status.inativo {
-  background-color: #ffe4e4;
-  color: #9f1f1f;
+.empty-state {
+  color: #546176;
+  font-style: italic;
 }

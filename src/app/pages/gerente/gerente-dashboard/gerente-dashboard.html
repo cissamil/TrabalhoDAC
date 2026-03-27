@@ -1,0 +1,42 @@
+<section>
+  <div class="title">
+    <h1>Bem Vindo(a), {{ nomeGerente }}!</h1>
+    <p>Aprove ou rejeite cliente</p>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>CPF</th>
+          <th>Nome</th>
+          <th>Salario</th>
+          <th>Acoes</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (pedidosPendentes.length === 0) {
+          <tr>
+            <td colspan="4" class="empty-state">Nenhum pedido pendente de aprovacao.</td>
+          </tr>
+        }
+
+        @for (pedido of pedidosPendentes; track pedido.cpf) {
+          <tr>
+            <td>{{ pedido.cpf }}</td>
+            <td>{{ pedido.nome }}</td>
+            <td>{{ formatarMoeda(pedido.salario) }}</td>
+            <td class="actions-cell">
+              <button class="btn btn-approve" type="button" (click)="aprovarPedido(pedido.cpf)">
+                Aprovar
+              </button>
+              <button class="btn btn-reject" type="button" (click)="recusarPedido(pedido.cpf)">
+                Recusar
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

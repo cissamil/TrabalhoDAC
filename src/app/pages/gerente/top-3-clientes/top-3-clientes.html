@@ -1,7 +1,7 @@
 <section>
   <div class="title">
     <h2>Top 3 Melhores Clientes</h2>
-    <p>Ranking dos clientes com melhor desempenho.</p>
+    <p>Ranking dos clientes com maior saldo em conta.</p>
   </div>
 
   <div class="ranking-grid">
@@ -9,8 +9,9 @@
       <article class="ranking-card">
         <span class="position">#{{ cliente.posicao }}</span>
         <h3>{{ cliente.nome }}</h3>
-        <p>Volume: <strong>R$ {{ cliente.volumeFinanceiro.toFixed(2) }}</strong></p>
-        <p>Score: <strong>{{ cliente.score }}</strong></p>
+        <p>CPF: <strong>{{ cliente.cpf }}</strong></p>
+        <p>Saldo: <strong>{{ formatarMoeda(cliente.saldo) }}</strong></p>
+        <p>Limite: <strong>{{ formatarMoeda(cliente.limite) }}</strong></p>
       </article>
     }
   </div>

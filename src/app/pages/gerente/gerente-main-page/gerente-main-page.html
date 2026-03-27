@@ -11,6 +11,11 @@
 
 	<div class="container">
 		<div class="navigation-card">
+			<p (click)="changeNavigationOptions(managerNavigationOptions.Dashboard)">
+				<mat-icon aria-hidden="false" aria-label="Dashboard" fontIcon="dashboard"></mat-icon>
+				Home
+			</p>
+
 			<p (click)="changeNavigationOptions(managerNavigationOptions.TodosClientes)">
 				<mat-icon aria-hidden="false" aria-label="Todos os clientes" fontIcon="groups"></mat-icon>
 				Todos os Clientes
@@ -28,6 +33,10 @@
 		</div>
 
 		<div class="components">
+			@if(navigationOption === managerNavigationOptions.Dashboard){
+				<app-gerente-dashboard></app-gerente-dashboard>
+			}
+
 			@if(navigationOption === managerNavigationOptions.TodosClientes){
 				<app-todos-clientes></app-todos-clientes>
 			}

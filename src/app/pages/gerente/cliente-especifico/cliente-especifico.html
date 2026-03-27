@@ -1,0 +1,39 @@
+<section>
+	<div class="title">
+		<h2>Consultar Cliente</h2>
+		<p>Pesquise por CPF ou nome para visualizar os detalhes da conta.</p>
+	</div>
+
+	<div class="search-bar">
+		<input
+			type="text"
+			[(ngModel)]="termoBusca"
+			placeholder="Digite CPF ou nome do cliente"
+			(keyup.enter)="consultarCliente()"
+		/>
+		<button type="button" (click)="consultarCliente()">Consultar</button>
+	</div>
+
+	@if (clienteSelecionado) {
+		<div class="details-grid">
+			<article class="detail-card">
+				<h3>Dados Cadastrais</h3>
+				<p><strong>Nome:</strong> {{ clienteSelecionado.nome }}</p>
+				<p><strong>CPF:</strong> {{ clienteSelecionado.cpf }}</p>
+				<p><strong>E-mail:</strong> {{ clienteSelecionado.email }}</p>
+				<p><strong>Endereco:</strong> {{ clienteSelecionado.endereco }}</p>
+			</article>
+
+			<article class="detail-card">
+				<h3>Dados Financeiros</h3>
+				<p><strong>Numero da conta:</strong> {{ clienteSelecionado.numeroConta }}</p>
+				<p><strong>Salario:</strong> {{ formatarMoeda(clienteSelecionado.salario) }}</p>
+				<p><strong>Saldo:</strong> {{ formatarMoeda(clienteSelecionado.saldo) }}</p>
+				<p><strong>Limite:</strong> {{ formatarMoeda(clienteSelecionado.limite) }}</p>
+				<p><strong>Gerente:</strong> {{ clienteSelecionado.gerente }}</p>
+			</article>
+		</div>
+	} @else {
+		<p class="empty-state">Nenhum cliente selecionado. Faça uma busca para consultar.</p>
+	}
+</section>

@@ -1,14 +1,17 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
 
 interface ClienteDetalhado {
-  id: number;
+  cpf: string;
   nome: string;
   email: string;
-  telefone: string;
+  endereco: string;
+  salario: number;
   saldo: number;
   limite: number;
-  status: string;
+  numeroConta: number;
+  gerente: string;
 }
 
 @Component({
@@ -18,4 +21,48 @@ interface ClienteDetalhado {
   styleUrl: './cliente-especifico.css',
 })
 export class ClienteEspecifico {
+  termoBusca = '';
+  clienteSelecionado: ClienteDetalhado | null = null;
+
+  consultarCliente(): void {
+    const termoNormalizado = this.termoBusca.trim().toLowerCase();
+    if (!termoNormalizado) {
+      this.clienteSelecionado = null;
+      return;
+    }
+
+    const cliente = CLIENTES_MOCK.find(
+      (item) => item.cpf.includes(termoNormalizado) || item.nome.toLowerCase().includes(termoNormalizado)
+    );
+
+    if (!cliente) {
+      this.clienteSelecionado = null;
+      return;
+    }
+
+    const conta = CONTAS_MOCK.find((item) => item.cliente === cliente.nome);
+    if (!conta) {
+      this.clienteSelecionado = null;
+      return;
+    }
+
+    this.clienteSelecionado = {
+      cpf: cliente.cpf,
+      nome: cliente.nome,
+      email: cliente.email,
+      endereco: cliente.endereco,
+      salario: cliente.salario,
+      saldo: conta.saldo,
+      limite: conta.limite,
+      numeroConta: conta.numeroConta,
+      gerente: conta.gerente,
+    };
+  }
+
+  formatarMoeda(valor: number): string {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(valor);
+  }
 }
