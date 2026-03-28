@@ -5,6 +5,7 @@ import { GerenteDashboard } from '../gerente-dashboard/gerente-dashboard';
 import { TodosClientes } from '../todos-clientes/todos-clientes';
 import { ClienteEspecifico } from '../cliente-especifico/cliente-especifico';
 import { Top3Clientes } from '../top-3-clientes/top-3-clientes';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gerente-main-page',
@@ -13,10 +14,17 @@ import { Top3Clientes } from '../top-3-clientes/top-3-clientes';
   styleUrl: './gerente-main-page.css',
 })
 export class GerenteMainPage {
+  
+  constructor(private router: Router){}
+
   public get managerNavigationOptions(): typeof ManagerNavigationOptions {
     return ManagerNavigationOptions;
   }
 
+  logOut(){
+    this.router.navigate(['/login']);
+  }
+  
   navigationOption: ManagerNavigationOptions = ManagerNavigationOptions.Dashboard;
 
   changeNavigationOptions(option: ManagerNavigationOptions) {

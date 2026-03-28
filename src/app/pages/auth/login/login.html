@@ -10,19 +10,19 @@
                 
                 <label for="profile">Perfil de acesso</label>
                 <select name="profile" id="">
-                    <option value="cliente">Cliente</option>
-                    <option value="gerente">Gerente</option>
-                    <option value="administrador">Administrador</option>
+                    <option value="cliente" (click)="setAcessProfile(profileOptions.Cliente)">Cliente</option>
+                    <option value="gerente" (click)="setAcessProfile(profileOptions.Gerente)">Gerente</option>
+                    <option value="administrador" (click)="setAcessProfile(profileOptions.Admin)">Administrador</option>
                 </select>
 
                 <label for="email">E-mail</label>
-                <input type="email" name="email" id="" placeholder="usuario@email.com">
+                <input type="email" [(ngModel)]="email" name="email"  id="" placeholder="usuario@email.com">
 
                 <label for="password">Senha</label>
-                <input type="password" name="password" id="" placeholder="******">
+                <input type="password" [(ngModel)]="senha" name="senha" id="" placeholder="******">
                 
-                <button class="entrar" type="submit" (click)="redirectToClienteDashboardPage()">Entrar</button>
-                <a  class="criar-conta" (click)="redirectToRegisterPage()">Criar conta</a>
+                <button class="entrar" type="submit" (click)="loginUser()">Entrar</button>
+                <a  class="criar-conta" (click)="redirect('/registro')">Criar conta</a>
             </form>
         </div>
     </div>

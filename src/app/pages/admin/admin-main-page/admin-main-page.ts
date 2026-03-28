@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { DecimalPipe } from '@angular/common';
 import { AdminDashboard } from "../admin-dashboard/admin-dashboard";
 import { AdminRelatorioClientes } from '../admin-relatorio-clientes/admin-relatorio-clientes';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-main-page',
@@ -13,6 +14,12 @@ import { AdminRelatorioClientes } from '../admin-relatorio-clientes/admin-relato
 })
 export class AdminMainPage {
 
+  constructor(private router:Router){}
+  
+  logOut(){
+    this.router.navigate(['/login']);
+  }
+  
   public get adminNavigationOptions() : typeof AdminNavigationOptions{
     return AdminNavigationOptions;
   }

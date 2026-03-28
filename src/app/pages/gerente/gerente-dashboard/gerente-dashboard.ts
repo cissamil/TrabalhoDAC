@@ -3,7 +3,7 @@ import {
   EmailNotificacao,
   GerenteAutocadastroService,
   PedidoAutocadastro,
-} from '../../../core/services/gerente-autocadastro.service';
+} from '../../../core/services/gerente-services/gerente-autocadastro.service';
 import { STAFF_MOCK } from '../../../core/mock/mock-data';
 import { GerenteAdmin } from '../../../core/models/entities';
 

@@ -1,4 +1,5 @@
 export interface Cliente{
+    id:number;
     cpf:string;
     nome:string;
     email:string;
@@ -8,6 +9,7 @@ export interface Cliente{
 }
 
 export interface GerenteAdmin{
+    id:number;
     cpf:string;
     nome:string;
     email:string;

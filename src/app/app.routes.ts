@@ -17,10 +17,10 @@ export const routes: Routes = [
     {path: 'extrato', component: Extrato},
     {path: 'cliente-main-page', component: ClienteMainPage},
     {path: 'gerente-main-page', component: GerenteMainPage},
+    {path: 'admin-main-page', component: AdminMainPage},
     {path: 'deposito-cliente', component: DepositoCliente},
     {path: 'saque-cliente', component: SaqueCliente},
     {path: 'transferencia-cliente', component: TransferenciaCliente},
-    {path: 'admin-main-page', component: AdminMainPage}
 
 
 

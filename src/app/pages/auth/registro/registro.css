@@ -27,12 +27,26 @@ main{
     gap: 15px;
 }
 .header-container{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-around;
     text-align: center;
     font-size: 0.8rem;
+    /* padding: 30px; */
 }
 .img-logo{
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
+    padding: 15px;
+}
+
+.diviser{
+    height: 2px;
+    width: 100%;
+    background-color: black;
+    margin: 10px 0 10px 0;
+
 }
 
 form{

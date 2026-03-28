@@ -15,10 +15,14 @@ export enum ManagerNavigationOptions{
 }
 
 export enum AdminNavigationOptions{
-
     Dashboard,
     RelatorioClientes,
     GerenciarGerentes
+}
 
+export enum ProfileOptions{
+    Cliente,
+    Gerente,
+    Admin
 }
 

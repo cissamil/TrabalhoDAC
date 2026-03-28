@@ -3,6 +3,7 @@ import { Cliente, GerenteAdmin, Conta, Movimentacao } from '../models/entities';
 // --- Cliente e Auth ---
 export const CLIENTES_MOCK: Cliente[] = [
   {
+    id: new Date().getTime() + 1,
     cpf: '12912861012',
     nome: 'Catharyna',
     email: 'cli1@bantads.com.br',
@@ -11,6 +12,7 @@ export const CLIENTES_MOCK: Cliente[] = [
     endereco: '80010-010 - Rua XV de Novembro, 123 - Curitiba - PR',
   },
   {
+    id: new Date().getTime() + 2,
     cpf: '09506382000',
     nome: 'Cleuddônio',
     email: 'cli2@bantads.com.br',
@@ -19,6 +21,7 @@ export const CLIENTES_MOCK: Cliente[] = [
     endereco: '80210-000 - Avenida Sete de Setembro, 500 - Curitiba - PR',
   },
   {
+    id: new Date().getTime() + 3,
     cpf: '85733854057',
     nome: 'Catianna',
     email: 'cli3@bantads.com.br',
@@ -27,6 +30,7 @@ export const CLIENTES_MOCK: Cliente[] = [
     endereco: '81530-000 - Rua Francisco Derosso, 1000 - Curitiba - PR',
   },
   {
+    id: new Date().getTime() + 4,
     cpf: '58872160006',
     nome: 'Cutardo',
     email: 'cli4@bantads.com.br',
@@ -35,6 +39,7 @@ export const CLIENTES_MOCK: Cliente[] = [
     endereco: '80020-000 - Praça Tiradentes, 10 - Curitiba - PR',
   },
   {
+    id: new Date().getTime() + 5,
     cpf: '76179646090',
     nome: 'Coândrya',
     email: 'cli5@bantads.com.br',
@@ -47,6 +52,7 @@ export const CLIENTES_MOCK: Cliente[] = [
 // --- Gerente/Administrador e Auth ---
 export const STAFF_MOCK: GerenteAdmin[] = [
   {
+    id: new Date().getTime() + 6,
     cpf: '98574307084',
     nome: 'Geniéve',
     email: 'ger1@bantads.com.br',
@@ -54,6 +60,7 @@ export const STAFF_MOCK: GerenteAdmin[] = [
     tipo: 'gerente',
   },
   {
+    id: new Date().getTime() + 7,
     cpf: '64065268052',
     nome: 'Godophredo',
     email: 'ger2@bantads.com.br',
@@ -61,6 +68,7 @@ export const STAFF_MOCK: GerenteAdmin[] = [
     tipo: 'gerente',
   },
   {
+    id: new Date().getTime() + 8,
     cpf: '23862179060',
     nome: 'Gyândula',
     email: 'ger3@bantads.com.br',
@@ -68,6 +76,7 @@ export const STAFF_MOCK: GerenteAdmin[] = [
     tipo: 'gerente',
   },
   {
+    id: new Date().getTime() + 9,
     cpf: '40501740066',
     nome: 'Adamântio',
     email: 'adm1@bantads.com.br',
