@@ -3,6 +3,10 @@ main{
     padding: 30px 50px 50px 20px;
 }
 
+.grey{
+    color: grey;
+}
+
 .title{
     display: flex;
     flex-direction: column;
@@ -13,6 +17,13 @@ main{
     flex-direction: column;
     gap: 20px;
     margin-top: 20px;
+}
+
+.personal-data-title{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-bottom: 20px;
 }
 
 .personal-data, .account-data{   

@@ -8,26 +8,26 @@
         <div class="personal-data">
 
             <div class="personal-data-title">
-                <p>Dados Pessoais</p>
-                <p>Você pode alterar todos os dados, exceto o CPF</p>
+                <h2>Dados Pessoais</h2>
+                <p class="grey">Você pode alterar todos os dados, exceto o CPF</p>
             </div>
 
             <form action="">
 
                 <div class="field full-length">
                     <label for="name">Nome Completo</label>
-                    <input type="text" [(ngModel)]="cliente.nome" name="name" placeholder="Digite o seu nome completo">
+                    <input type="text" [(ngModel)]="updatedCliente.nome" name="name" placeholder="Digite o seu nome completo">
                 </div>
 
                 <div class="field">
                     <label>CPF</label>
-                    <input type="text" mask="000.000.000-00" [ngModel]="cliente.cpf" name="cpf" disabled>
+                    <input type="text" mask="000.000.000-00" [ngModel]="updatedCliente.cpf" name="cpf" disabled>
                     <label class="cpf_block">O CPF não pode ser alterado</label>
                 </div>
 
                 <div class="field">
                     <label>E-mail</label>
-                    <input type="email" [(ngModel)]="cliente.email" name="email" placeholder="seu@email.com">
+                    <input type="email" [(ngModel)]="updatedCliente.email" name="email" placeholder="seu@email.com">
                 </div>
 
                 <div class="field">
@@ -37,7 +37,7 @@
 
                 <div class="field">
                     <label>CEP</label>
-                    <input type="text" placeholder="00000-000" [(ngModel)]="cep" name="cep" mask="00000-000">
+                    <input type="text" placeholder="00000-000" [dropSpecialCharacters]="false" [(ngModel)]="cep" name="cep" mask="00000-000">
                 </div>
 
                 <div class="field full-length">
@@ -65,7 +65,7 @@
         <div class="account-data">
 
             <div class="account-data-title">
-                <p>Dados da Conta</p>
+                <h3>Dados da Conta</h3>
                 <p class="grey">Informações financeiras atualizadas</p>
             </div>
 
@@ -88,7 +88,7 @@
 
         </div>
 
-        <button class="enviar full-length">Enviar Solicitação</button>
+        <button class="enviar full-length" type="submit" (click)="atualizarDados()">Atualizar Dados</button>
 
 
     </div>

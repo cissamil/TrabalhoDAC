@@ -1,7 +1,7 @@
 <main>
     <div class="container">
         <div class="header-container">
-                
+
             <img class="img-logo" src="bank_icon.webp" alt="">
 
             <div class="header-content">
@@ -19,50 +19,54 @@
 
                 <div class="field full-length">
                     <label for="name">Nome Completo</label>
-                    <input type="text" name="name" placeholder="Digite o seu nome completo">
+                    <input type="text" [(ngModel)]="cliente.nome"  name="nome" placeholder="Digite o seu nome completo">
+                </div>
+ 
+                <div class="field full-length">
+                    <label>E-mail</label>
+                    <input type="email" [(ngModel)]="cliente.email" name="email" placeholder="seu@email.com">
+                </div>
+ 
+                <div class="field full-length">
+                    <label for="name">Senha</label>
+                    <input type="text" [(ngModel)]="cliente.senha"  name="senha" placeholder="Digite sua senha">
                 </div>
 
                 <div class="field">
                     <label>CPF</label>
-                    <input type="text" mask="000.000.000-00" placeholder="123.456.789-10">
-                </div>
-
-                <div class="field">
-                    <label>E-mail</label>
-                    <input type="email" placeholder="seu@email.com">
-                </div>
-
-                <div class="field">
-                    <label>Telefone</label>
-                    <input type="text" placeholder="(00) 00000-0000" mask="(00) 00000-0000">
+                    <input type="text" [(ngModel)]="cliente.cpf" name="cpf" mask="000.000.000-00" placeholder="123.456.789-10">
                 </div>
 
                 <div class="field">
                     <label>Salário Mensal (R$)</label>
-                    <input type="text" [(ngModel)]="salario" (input)="handleSalario($event)" name="salario">
+                    <input type="text" [(ngModel)]="salario"  (input)="handleSalario($event)" name="salario">
                 </div>
 
                 <div class="field">
                     <label>CEP</label>
-                    <input type="text" placeholder="00000-000" mask="00000-000">
+                    <input type="text" [(ngModel)]="cep" name="cep" [dropSpecialCharacters]="false" placeholder="00000-000" mask="00000-000">
                 </div>
 
                 <div class="field full-length">
                     <label>Endereço</label>
-                    <input type="text" placeholder="Rua, número, complemento">
+                    <input type="text"  [(ngModel)]="rua" name="rua" placeholder="Rua, número, complemento">
                 </div>
 
                 <div class="field">
                     <label>Cidade</label>
-                    <input type="text" placeholder="Sua cidade">
+                    <input type="text" [(ngModel)]="cidade" name="cidade" placeholder="Sua cidade">
                 </div>
 
                 <div class="field">
                     <label>Estado</label>
-                    <input type="text" placeholder="UF">
+                    <select type="text"  [(ngModel)]="estado" name="estado" placeholder="UF"> 
+                        @for (estado of uf; track $index) {
+                            <option value="{{estado}}">{{estado}}</option>
+                        }
+                    </select>
                 </div>
 
-                <button class="enviar full-length">Enviar Solicitação</button>
+                <button class="enviar full-length" type="submit" (click)="registrarUsuario()">Enviar Solicitação</button>
 
                 
             </form>

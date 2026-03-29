@@ -18,15 +18,18 @@ export interface GerenteAdmin{
 }
 
 export interface Conta{
-    cliente: string;
-    numeroConta: number;
+    id: number;
     saldo:number;
     limite:number;
     gerente:string;
+    cliente: string;
     dataCriacao:Date;
+    cpfCliente:string;
+    numeroConta: number;
 }
 
 export interface Movimentacao{
+    id: number;
     data_hora: Date;
     tipo:string; // depósito/saque/transferência
     clienteOrigem: string;

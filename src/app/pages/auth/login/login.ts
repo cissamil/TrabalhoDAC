@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { FormsModule } from '@angular/forms';
 import { validateEmail } from '../../../core/shared/helpers';
+import { Cliente, GerenteAdmin } from '../../../core/models/entities';
 import {ProfileOptions } from '../../../core/models/navigationOptions';
 import { GerenteService } from '../../../core/services/gerente-services';
-import { Cliente, GerenteAdmin } from '../../../core/models/entities';
+import { ContaService } from '../../../core/services/conta-services/conta-service';
+import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { ClienteSessionService } from '../../../core/services/cliente-services/cliente-session.service';
 
 @Component({
   selector: 'app-login',
@@ -13,12 +15,26 @@ import { Cliente, GerenteAdmin } from '../../../core/models/entities';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login {
+export class Login implements OnInit{
   constructor(
     private router: Router,
     private clienteService: ClienteService,
     private gerenteService: GerenteService,
+    private clienteSessionService: ClienteSessionService,
+    private contaService: ContaService
   ) {}
+
+  ngOnInit(): void {
+    
+    console.log("Verificando se cliente já está logado");
+    const isLogged = this.clienteSessionService.checkIfClienteIsLogged();
+
+    if(isLogged){
+      console.log("Cliente está logado, redirecionando");
+
+      this.router.navigate(['cliente-main-page']);
+    }
+  }
 
   public get profileOptions(): typeof ProfileOptions {
     return ProfileOptions;
@@ -83,12 +99,23 @@ export class Login {
 
   handleResult(result : any, profile:ProfileOptions){
     
-    if(result == undefined){
+    if(!result){
       alert("Usuário não encontrado. Tente novamente");
       return;
     }
 
     if(profile == ProfileOptions.Cliente){
+      const cliente = result as Cliente;
+
+      const conta = this.contaService.buscarPorCpfCliente(cliente.cpf);
+
+      if(!conta){
+        alert("Usuário encontrado, mas nenhuma conta cadastrada. Espere a aprovação de um gerente para poder usar sua conta");
+      }
+
+      this.clienteSessionService.setCliente(result as Cliente);
+      this.clienteSessionService.setContaCliente(conta!);
+      
       this.redirect('/cliente-main-page');
       return;
     }

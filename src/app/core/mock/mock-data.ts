@@ -88,7 +88,9 @@ export const STAFF_MOCK: GerenteAdmin[] = [
 // --- Conta ---
 export const CONTAS_MOCK: Conta[] = [
   {
+    id: new Date().getTime() + 10,
     cliente: 'Catharyna',
+    cpfCliente: '12912861012',
     numeroConta: 1291,
     saldo: 800.0,
     limite: 5000.0,
@@ -96,7 +98,9 @@ export const CONTAS_MOCK: Conta[] = [
     dataCriacao: new Date('2000-01-01'),
   },
   {
+    id: new Date().getTime() + 11,
     cliente: 'Cleuddônio',
+    cpfCliente: '09506382000',
     numeroConta: 950,
     saldo: -10000.0,
     limite: 10000.0,
@@ -104,7 +108,9 @@ export const CONTAS_MOCK: Conta[] = [
     dataCriacao: new Date('1990-10-10'),
   },
   {
+    id: new Date().getTime() + 12,
     cliente: 'Catianna',
+    cpfCliente: '85733854057',
     numeroConta: 8573,
     saldo: -1000.0,
     limite: 1500.0,
@@ -112,7 +118,9 @@ export const CONTAS_MOCK: Conta[] = [
     dataCriacao: new Date('2012-12-12'),
   },
   {
+    id: new Date().getTime() + 13,
     cliente: 'Cutardo',
+    cpfCliente: '58872160006',
     numeroConta: 5887,
     saldo: 150000.0,
     limite: 0.0,
@@ -120,7 +128,9 @@ export const CONTAS_MOCK: Conta[] = [
     dataCriacao: new Date('2022-02-22'),
   },
   {
+    id: new Date().getTime() + 14,
     cliente: 'Coândrya',
+    cpfCliente: '76179646090',
     numeroConta: 7617,
     saldo: 1500.0,
     limite: 0.0,
@@ -132,6 +142,7 @@ export const CONTAS_MOCK: Conta[] = [
 // --- Movimentações ---
 export const MOVIMENTACOES_MOCK: Movimentacao[] = [
   {
+    id: new Date().getTime() + 15,
     data_hora: new Date('2020-01-01T10:00:00'),
     tipo: 'depósito',
     clienteOrigem: 'Catharyna',
@@ -139,6 +150,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 1000.0,
   },
   {
+    id: new Date().getTime() + 17,
     data_hora: new Date('2020-01-01T11:00:00'),
     tipo: 'depósito',
     clienteOrigem: 'Catharyna',
@@ -146,6 +158,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 900.0,
   },
   {
+    id: new Date().getTime() + 18,
     data_hora: new Date('2020-01-01T12:00:00'),
     tipo: 'saque',
     clienteOrigem: 'Catharyna',
@@ -153,6 +166,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 550.0,
   },
   {
+    id: new Date().getTime() + 19,
     data_hora: new Date('2020-01-01T13:00:00'),
     tipo: 'saque',
     clienteOrigem: 'Catharyna',
@@ -160,6 +174,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 350.0,
   },
   {
+    id: new Date().getTime() + 20,
     data_hora: new Date('2020-01-10T15:00:00'),
     tipo: 'depósito',
     clienteOrigem: 'Catharyna',
@@ -167,6 +182,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 2000.0,
   },
   {
+    id: new Date().getTime() + 21,
     data_hora: new Date('2020-01-15T08:00:00'),
     tipo: 'saque',
     clienteOrigem: 'Catharyna',
@@ -174,6 +190,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 500.0,
   },
   {
+    id: new Date().getTime() + 22,
     data_hora: new Date('2020-01-20T12:00:00'),
     tipo: 'transferência',
     clienteOrigem: 'Catharyna',
@@ -181,6 +198,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 1700.0,
   },
   {
+    id: new Date().getTime() + 23,
     data_hora: new Date('2025-01-01T12:00:00'),
     tipo: 'depósito',
     clienteOrigem: 'Cleuddônio',
@@ -188,6 +206,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 1000.0,
   },
   {
+    id: new Date().getTime() + 24,
     data_hora: new Date('2025-02-01T10:00:00'),
     tipo: 'depósito',
     clienteOrigem: 'Cleuddônio',
@@ -195,6 +214,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 5000.0,
   },
   {
+    id: new Date().getTime() + 25,
     data_hora: new Date('2025-10-01T10:00:00'),
     tipo: 'saque',
     clienteOrigem: 'Cleuddônio',
@@ -202,6 +222,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 200.0,
   },
   {
+    id: new Date().getTime() + 26,
     data_hora: new Date('2025-05-02T10:00:00'),
     tipo: 'depósito',
     clienteOrigem: 'Cleuddônio',
@@ -209,6 +230,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 7000.0,
   },
   {
+    id: new Date().getTime() + 27,
     data_hora: new Date('2025-05-05T00:00:00'),
     tipo: 'depósito',
     clienteOrigem: 'Catianna',
@@ -216,6 +238,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 1000.0,
   },
   {
+    id: new Date().getTime() + 28,
     data_hora: new Date('2025-06-05T00:00:00'),
     tipo: 'saque',
     clienteOrigem: 'Catianna',
@@ -223,6 +246,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 2000.0,
   },
   {
+    id: new Date().getTime() + 29,
     data_hora: new Date('2025-01-06T00:00:00'),
     tipo: 'depósito',
     clienteOrigem: 'Cutardo',
@@ -230,6 +254,7 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     valor: 150000.0,
   },
   {
+    id: new Date().getTime() + 30,
     data_hora: new Date('2025-01-07T00:00:00'),
     tipo: 'depósito',
     clienteOrigem: 'Coândrya',

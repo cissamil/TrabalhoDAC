@@ -37,6 +37,16 @@ export class ClienteService {
   }
 
   inserir(cliente:Cliente): void{
+
+    console.log(`
+      Cliente a inserir:
+      Nome: ${cliente.nome}
+      Email: ${cliente.email}
+      Senha: ${cliente.senha}
+      Salario: ${cliente.salario}
+      Endereço: ${cliente.endereco}
+    `);
+
     const clientes = this.listarTodos();
     cliente.id = new Date().getTime();
     clientes.push(cliente);
@@ -44,6 +54,15 @@ export class ClienteService {
   }
 
   atualizar(cliente: Cliente) : void{
+    console.log(`
+      Dados a atualizar:
+      Id: ${cliente.id}
+      Nome: ${cliente.nome}
+      Email: ${cliente.email}
+      Senha: ${cliente.senha}
+      Salario: ${cliente.salario}
+      Endereço: ${cliente.endereco}
+    `);
     const clientes = this.listarTodos();
     
     const index = clientes.findIndex(c => c.id === cliente.id);
@@ -64,9 +83,16 @@ export class ClienteService {
     this.atualizarDados(clientes);
   }
 
+  buscarClientePorEmail(email:string){
+    const clientes = this.listarTodos();
+
+    return clientes.find((cliente) => cliente.email === email);
+  }
+
   buscarClientePorEmailESenha(email:string, senha:string){
     const clientes = this.listarTodos();
 
     return clientes.find((cliente) => cliente.email === email && cliente.senha === senha);
   }
+
 }
