@@ -10,6 +10,45 @@ section {
   margin-top: 6px;
 }
 
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 18px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.stat-value {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.section {
+  margin-top: 24px;
+}
+
+.section h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #1d2b53;
+  font-size: 1.2rem;
+}
+
 .table-wrapper {
   overflow-x: auto;
   margin-top: 16px;
@@ -107,6 +146,23 @@ th {
 }
 
 .badge.rejected {
+  background-color: #ffe4e4;
+  color: #a32929;
+}
+
+.status {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.status.aprovado {
+  background-color: #d9f8e6;
+  color: #117a3a;
+}
+
+.status.recusado {
   background-color: #ffe4e4;
   color: #a32929;
 }

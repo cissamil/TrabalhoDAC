@@ -4,8 +4,9 @@ import {
   GerenteAutocadastroService,
   PedidoAutocadastro,
 } from '../../../core/services/gerente-services/gerente-autocadastro.service';
-import { STAFF_MOCK } from '../../../core/mock/mock-data';
-import { GerenteAdmin } from '../../../core/models/entities';
+import { GerenteService } from '../../../core/services/gerente-services';
+import { STAFF_MOCK, CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
+import { GerenteAdmin, Cliente, Conta } from '../../../core/models/entities';
 
 @Component({
   selector: 'app-gerente-dashboard',
@@ -15,13 +16,30 @@ import { GerenteAdmin } from '../../../core/models/entities';
 })
 export class GerenteDashboard {
   private readonly gerenteAutocadastroService = inject(GerenteAutocadastroService);
+  private readonly gerenteService = inject(GerenteService);
 
-  // Simula o usuario logado: atualmente pega o primeiro usuario do tipo gerente do mock.
+  // Pega o gerente logado atualmente da sessão
   readonly gerenteLogado: GerenteAdmin | null =
-    STAFF_MOCK.find((usuario) => usuario.tipo === 'gerente') ?? null;
+    this.gerenteService.getGerenteLogado();
+
+  // Dados dos clientes e contas do mock-data
+  readonly clientesMock: Cliente[] = CLIENTES_MOCK;
+  readonly contasMock: Conta[] = CONTAS_MOCK;
 
   get nomeGerente(): string {
     return this.gerenteLogado?.nome ?? 'Gerente';
+  }
+
+  get totalClientes(): number {
+    return this.clientesMock.length;
+  }
+
+  get saldoTotalContas(): number {
+    return this.contasMock.reduce((total, conta) => total + conta.saldo, 0);
+  }
+
+  get limiteTotalDisponivel(): number {
+    return this.contasMock.reduce((total, conta) => total + conta.limite, 0);
   }
 
   get pedidosPendentes(): PedidoAutocadastro[] {

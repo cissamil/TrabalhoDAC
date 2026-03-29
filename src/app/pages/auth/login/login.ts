@@ -121,11 +121,15 @@ export class Login implements OnInit{
     }
 
     if(profile == ProfileOptions.Gerente){
+      const gerente = result as GerenteAdmin;
+      this.gerenteService.setGerenteLogado(gerente);
       this.redirect('/gerente-main-page');
       return;
     }
     
     if(profile == ProfileOptions.Admin){
+      const gerente = result as GerenteAdmin;
+      this.gerenteService.setGerenteLogado(gerente);
       this.redirect('/admin-main-page');
       return;
     }

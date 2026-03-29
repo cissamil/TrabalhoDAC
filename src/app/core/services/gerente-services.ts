@@ -4,6 +4,7 @@ import { GerenteAdmin } from '../models/entities';
 import { STAFF_MOCK } from '../mock/mock-data';
 
 const LS_CHAVE = 'gerentes';
+const LS_CHAVE_LOGADO = 'gerenteLogado';
 
 @Injectable({
   providedIn: 'root',
@@ -70,6 +71,27 @@ export class GerenteService {
         gerente.senha === senha &&
         gerente.tipo === tipo,
     );
+  }
+
+  // Métodos para gerenciamento de sessão do gerente logado
+  setGerenteLogado(gerente: GerenteAdmin): void {
+    localStorage[LS_CHAVE_LOGADO] = JSON.stringify(gerente);
+  }
+
+  getGerenteLogado(): GerenteAdmin | null {
+    const gerenteData = localStorage[LS_CHAVE_LOGADO];
+    if (!gerenteData) {
+      return null;
+    }
+    return JSON.parse(gerenteData) as GerenteAdmin;
+  }
+
+  isGerenteLogado(): boolean {
+    return !!localStorage[LS_CHAVE_LOGADO];
+  }
+
+  logout(): void {
+    localStorage.removeItem(LS_CHAVE_LOGADO);
   }
   
 }
