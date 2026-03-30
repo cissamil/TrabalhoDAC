@@ -1,0 +1,230 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f5f5f7;
+  padding: 32px;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+main {
+  width: 100%;
+}
+
+.titulo {
+  margin: 0;
+  color: #111827;
+}
+
+main > .titulo {
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+main > .subtitulo {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  color: #6b7280;
+}
+
+#btnNovoGerente {
+  border: none;
+  background: linear-gradient(90deg, #a020f0 0%, #8b1cf2 100%);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(160, 32, 240, 0.2);
+  margin-bottom: 28px;
+}
+
+#btnNovoGerente:hover {
+  filter: brightness(1.03);
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-areas:
+    "card1 card2 card3"
+    "lista lista lista";
+  gap: 24px;
+  width: 100%;
+}
+
+.card1,
+.card2,
+.card3,
+.containerListaGerentes {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  box-sizing: border-box;
+}
+
+.card1 {
+  grid-area: card1;
+}
+
+.card2 {
+  grid-area: card2;
+}
+
+.card3 {
+  grid-area: card3;
+}
+
+.card1,
+.card2,
+.card3 {
+  padding: 28px 26px;
+  min-height: 145px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card1 p,
+.card2 p,
+.card3 p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.totalGerentes,
+.totalContas,
+.mediaGerente {
+  display: inline-block;
+  font-size: 44px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1;
+}
+
+.containerListaGerentes {
+  grid-area: lista;
+  padding: 24px 26px 18px 26px;
+}
+
+.containerListaGerentes .titulo {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.containerListaGerentes .subtitulo {
+  margin: 0 0 22px 0;
+  font-size: 15px;
+  color: #6b7280;
+}
+
+table {
+  width: 100%;
+  background: transparent;
+}
+
+.mat-mdc-table {
+  background: transparent;
+}
+
+.mat-mdc-header-row {
+  height: 56px;
+}
+
+.mat-mdc-row {
+  height: 72px;
+}
+
+.mat-mdc-header-cell {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  border-bottom: 1px solid #e5e7eb;
+  background: transparent;
+}
+
+.mat-mdc-cell {
+  font-size: 15px;
+  color: #111827;
+  border-bottom: 1px solid #ececec;
+  background: transparent;
+}
+
+.mat-mdc-row:last-child .mat-mdc-cell {
+  border-bottom: none;
+}
+
+.mat-column-Nome {
+  font-weight: 600;
+}
+
+.mat-column-Quantidade\ de\ Contas {
+  width: 170px;
+}
+
+.mat-column-Ações {
+  width: 220px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.mat-column-Ações .mat-mdc-cell,
+.mat-column-Ações .mat-mdc-header-cell {
+  text-align: right;
+}
+
+td[mat-cell] button {
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 10px;
+  min-width: 92px;
+}
+
+td[mat-cell] button:last-child {
+  margin-right: 0;
+}
+
+td[mat-cell] button:first-child {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #111827;
+}
+
+td[mat-cell] button:last-child {
+  background: #e11d48;
+  border: 1px solid #e11d48;
+  color: #ffffff;
+}
+
+td[mat-cell] button:first-child:hover {
+  background: #f9fafb;
+}
+
+td[mat-cell] button:last-child:hover {
+  background: #be123c;
+  border-color: #be123c;
+}
+
+@media (max-width: 1100px) {
+  .container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "card1"
+      "card2"
+      "card3"
+      "lista";
+  }
+
+  .mat-column-Ações {
+    width: auto;
+  }
+}

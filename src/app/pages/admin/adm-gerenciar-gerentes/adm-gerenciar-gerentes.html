@@ -1,0 +1,75 @@
+<main>
+  <h1 class="titulo"> Gerenciar Gerentes </h1>
+  <p class="subtitulo"> Cadastre, edite ou remova gerentes do sistema </p>
+  <button id=btnNovoGerente> Novo Gerente </button>
+
+  <div class="container">
+    <div class="card1">
+      <p>Total de Gerentes</p>
+      <span class="totalGerentes">{{ totalGerentes }}</span>
+    </div>
+    <div class="card2">
+      <p>Total de Contas</p>
+      <span class="totalContas">{{ totalContas }}</span>
+    </div>
+    <div class="card3">
+      <p>Média por Gerente</p>
+      <span class="mediaGerente">{{ mediaPorGerente.toFixed(0) }}</span>
+    </div>
+
+    <div class="containerListaGerentes">
+      <h2 class="titulo">Lista de Gerentes</h2>
+      <p class="subtitulo">Ordenados por nome em ordem crescente</p>
+
+      <table mat-table [dataSource]="MANAGERS_TABLE" class="mat-elevation-z2">
+
+        <ng-container matColumnDef="Nome">
+          <th mat-header-cell *matHeaderCellDef> Nome </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.nome }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="CPF">
+          <th mat-header-cell *matHeaderCellDef> CPF </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.cpf }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="E-mail">
+          <th mat-header-cell *matHeaderCellDef> E-mail </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.email }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Telefone">
+          <th mat-header-cell *matHeaderCellDef> Telefone </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.telefone }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Quantidade de Contas">
+          <th mat-header-cell *matHeaderCellDef> Quantidade de Contas </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.quantidadeClientes }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Ações">
+          <th mat-header-cell *matHeaderCellDef> Ações </th>
+          <td mat-cell *matCellDef="let element">
+            <button type="button">Editar</button>
+            <button type="button">Remover</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedcColunas"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedcColunas"></tr>
+      </table>
+    </div>
+
+  </div>
+</main>
