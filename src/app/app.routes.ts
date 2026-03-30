@@ -9,6 +9,7 @@ import { DepositoCliente } from './pages/cliente/deposito-cliente/deposito-clien
 import { GerenteMainPage } from './pages/gerente/gerente-main-page/gerente-main-page';
 import { TransferenciaCliente } from './pages/cliente/transferencia-cliente/transferencia-cliente';
 import { AdminMainPage } from './pages/admin/admin-main-page/admin-main-page';
+import { AdminGerenciarGerentes } from './pages/admin/adm-gerenciar-gerentes/adm-gerenciar-gerentes';
 export const routes: Routes = [
     {path: '', redirectTo: "login", pathMatch: 'full'},
 
@@ -21,6 +22,7 @@ export const routes: Routes = [
     {path: 'deposito-cliente', component: DepositoCliente},
     {path: 'saque-cliente', component: SaqueCliente},
     {path: 'transferencia-cliente', component: TransferenciaCliente},
+    {path: 'admin-gerenciar-gerentes', component: AdminGerenciarGerentes},
 
 
 
