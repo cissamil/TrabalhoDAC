@@ -18,7 +18,7 @@ export class AdminDashboard implements OnInit {
 
   gerentes = STAFF_MOCK.filter((gerente) => gerente.tipo == "gerente");
   contas = CONTAS_MOCK;
-  MANAGERS_TABLE: ManagerTableData[] = [] 
+  MANAGERS_TABLE: ManagerTableData[] = []
   displayedColumns: string[] = ['Nome Gerente', 'CPF', 'Qtd. Clientes', 'Saldos Positivos', 'Saldos Negativos', 'Saldo Total'];
 
   ngOnInit(): void {
@@ -29,8 +29,8 @@ export class AdminDashboard implements OnInit {
   fillManagersTable(){
 
     this.gerentes.forEach((gerente) =>{
-    
-      if(gerente.tipo !== "administrador"){ 
+
+      if(gerente.tipo !== "administrador"){
 
         const contasDoGerente = this.contas.filter(c => c.gerente === gerente.nome);
 
@@ -60,7 +60,7 @@ export class AdminDashboard implements OnInit {
             colorSaldoTotal: saldoTotal >= 0 ? "green" : "red"
           });
         }
-    });  
+    });
 
     this.MANAGERS_TABLE.sort((a,b) => b.saldosPositivos - a.saldosPositivos);
 
