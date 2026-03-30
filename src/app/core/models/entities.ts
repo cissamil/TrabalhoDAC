@@ -3,6 +3,7 @@ export interface Cliente{
     cpf:string;
     nome:string;
     email:string;
+    telefone:string;
     senha:string;
     salario:number;
     endereco:string;
@@ -13,6 +14,7 @@ export interface GerenteAdmin{
     cpf:string;
     nome:string;
     email:string;
+    telefone:string;
     senha:string;
     tipo:string; // gerente / administrador
 }

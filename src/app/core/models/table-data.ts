@@ -1,5 +1,5 @@
 export interface ManagerTableData{
-    nome: string; 
+    nome: string;
     cpf: string;
     quantidadeClientes:number;
     saldosPositivos:number;
@@ -19,4 +19,12 @@ export interface ClientTableData{
     cpfGerente:string;
     nomeGerente:string;
     colorSaldo:string;
+}
+
+export interface ManagerListTableData {
+    nome: string;
+    cpf: string;
+    email: string;
+    telefone: string;
+    quantidadeClientes: number;
 }

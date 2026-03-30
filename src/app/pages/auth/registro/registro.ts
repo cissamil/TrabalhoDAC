@@ -31,6 +31,7 @@ export class Registro {
     cpf: '',
     nome: '',
     email: '',
+    telefone:'',
     senha: '',
     salario: 0,
     endereco: '',
@@ -65,7 +66,7 @@ export class Registro {
     if (!validateEmail(this.cliente.email.trim())) {
       alert('Digite um email válido');
       return;
-    } 
+    }
 
     if(!validateCPF(this.cliente.cpf)){
       alert("Preencha o cpf corretamente");
@@ -97,7 +98,7 @@ export class Registro {
 
     this.router.navigate(['/cliente-main-page', this.cliente]);
 
-    
+
   }
 
   validateFields():boolean{
@@ -106,7 +107,7 @@ export class Registro {
       this.cliente.nome &&
       this.cliente.email &&
       this.cliente.senha &&
-      this.cliente.cpf && 
+      this.cliente.cpf &&
       this.salario !== 0 &&
       this.cep &&
       this.rua &&
@@ -117,6 +118,6 @@ export class Registro {
     }
 
     return false;
-    
+
   }
 }
