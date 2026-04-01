@@ -1,43 +1,140 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Cliente, Conta } from '../../../core/models/entities';
+import { ClienteSessionService } from '../../../core/services/session-controller.service';
+import { Router } from '@angular/router';
+import { ContaService } from '../../../core/services/conta-services/conta-service';
+import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
+import { DecimalPipe } from '@angular/common';
+
+
+interface valorInfo{
+  title:string;
+  value:number;
+  reference:string;
+}
+
+
 //ngModel
 @Component({
   selector: 'app-saque-cliente',
-  imports: [FormsModule],
+  imports: [FormsModule, DecimalPipe],
   templateUrl: './saque-cliente.html',
-  styleUrl: './saque-cliente.css'
+  styleUrl: './saque-cliente.css',
 })
-
 export class SaqueCliente {
+  constructor(
+    private clienteSessionService: ClienteSessionService,
+    private router: Router,
+    private contaService: ContaService,
+  ) {}
 
-  saldo = 500;
-  limite = 300;
-  valorSaque=0;
-  mensagem='';
+  saldo = 0;
+  limite = 0;
+  valorSaque: string = '0,00';
+  mensagem = '';
+  corMensagem = '';
+  valoresInfo: valorInfo[] = [];
+  private currencyFormatter:CurrencyFormatter = new CurrencyFormatter();
+
   //saldoCalculado = this.saldo + this.limite;
 
-  sacar(){
-    console.log('clicou');
-    //user digita o valorSaque = 30 reais
-    //usuario clica no btn sacar
-    //sistema verifica se a entrada é valida ou se digitou errado
-    if (this.valorSaque <=0)  { //isValid
-      return this.mensagem="Valor inválido"
-    };
-    //sistema verifica se o valorSaque é menor que o saldoCalculado
-    if (this.valorSaque > (this.saldo+this.limite)) {
-      return this.mensagem="Saldo insuficiente"
+  cliente!: Cliente;
+  contaCliente!: Conta;
+
+  ngOnInit(): void {
+    const dadosCliente = this.clienteSessionService.getCliente();
+    const dadosConta = this.clienteSessionService.getConta();
+
+    if (dadosCliente && dadosConta) {
+      this.cliente = dadosCliente;
+      this.contaCliente = dadosConta;
+
+      this.inicializarSaque();
+    } else {
+      this.router.navigate(['/login']);
     }
-    //sistema retorna "tem certeza que vc quer sacar valorSaque?" == front
-    //usuario confirma
+  }
 
-    this.saldo=this.saldo-this.valorSaque
-    this.valorSaque=0;
-    //limpando o valor do input
-    this.mensagem="Saque realizado com sucesso"
-    return
-    //sistema atualiza saldo
-    //sistema mostra mensagem "saque feito com sucesso"
+  get saldoDisponivelTotal():number{
+    return this.saldo + this.limite;
+  }
 
+  get valorASacar():number{
+    
+    return this.currencyFormatter.removeCurrencyMaskFromString(this.valorSaque);
+  }
+
+  get novoSaldo(): number{
+    const valor = this.currencyFormatter.removeCurrencyMaskFromString(this.valorSaque);
+
+    return this.saldo - valor;
+  }
+
+  get listaValoresInfo(): valorInfo[]{
+    return [
+    {
+      title: 'Saldo Atual',
+      value: this.saldo,
+      reference: 'saldoAtual'
+    },
+    {
+      title: 'Limite Disponível',
+      value: this.limite,
+      reference: 'limite'
+    },
+    {
+      title: 'Saldo Disponível Total',
+      value: this.saldoDisponivelTotal,
+      reference: 'saldoTotal'
+    },
+    {
+      title: 'Valor total a sacar',
+      value: this.valorASacar,
+      reference: 'valorS'
+    },
+    {
+      title: 'Novo Saldo (Previsão)',
+      value: this.novoSaldo,
+      reference: 'novoS'
+    }
+  ];
+
+  }
+
+  inicializarSaque(){
+    this.saldo = this.contaCliente.saldo;
+    this.limite = this.contaCliente.limite;    
+  }
+
+  handleValorSaque(e: any) {
+    let input = e.target;
+    input.value = this.currencyFormatter.applyCurrencyMaskOnString(input.value);
+    this.valorSaque = input.value;
+  }
+
+  sacar() {
+
+    const valor: number = this.currencyFormatter.removeCurrencyMaskFromString(this.valorSaque);
+
+    if (valor <= 0) {
+      return (this.mensagem = 'Valor inválido');
+    }
+
+    if (valor > this.saldoDisponivelTotal) {
+      return (this.mensagem = 'Saldo insuficiente');
+    }
+
+    this.saldo = this.saldo - valor;
+
+    this.valorSaque = '0,00';
+    this.mensagem = 'Saque realizado com sucesso';
+    this.corMensagem = 'green';
+
+    this.contaCliente.saldo = this.saldo;
+
+    this.contaService.atualizarConta(this.contaCliente);
+    this.clienteSessionService.setContaCliente(this.contaCliente);
+    return;
   }
 }

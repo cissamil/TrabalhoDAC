@@ -7,8 +7,8 @@
     <div class="card">
       <h2>Realizar saque</h2>
       <p>Informe o valor que deseja sacar de sua conta</p>
-      <label for="valorSaque">Valor do Saque</label>
-      <input type="number" [(ngModel)]="valorSaque" id="valorSaque">
+      <label for="valorSaque">Valor do Saque (R$)</label>
+      <input type="text" [(ngModel)]="valorSaque" name="valorSaque" (input)="handleValorSaque($event)" id="valorSaque">
       <!--ngModel conecta html com ts, com entrada do usuario-->
       <p>O valor será debitado imediatamente de sua conta</p>
       <div class="textoSecundario">
@@ -23,13 +23,25 @@
       <h2>Informações da Conta</h2>
       <p>Saldo atual e previsão após saque</p>
       <div class="valores">
-        <p>Saldo Atual</p>
-        <span class="saldoAtual">R$ {{ saldo }} </span>
-        <p>Limite Disponível</p>
-        <span class="limite">R$ {{ limite }} </span>
-        <p>Saldo Disponível Total</p>
-        <!--saldo calculado é o limite + o atual, é tipo cheque especial + real-->
-        <span class="saldoTotal">R$ {{ saldo+limite }} </span>
+
+        @for(valorInfo of listaValoresInfo; track $index){
+
+          @if(valorInfo.reference != 'valorS' && valorInfo.reference !== 'novoS'){
+            <p>{{valorInfo.title}}</p>
+            <span class={{valorInfo.reference}}>R$ {{valorInfo.value | number:'1.2-2'}}</span>
+          }
+
+          @if(valorInfo.reference == 'valorS' && valorASacar > 0){
+            <p>{{valorInfo.title}}</p>
+            <span class="red">R$ {{valorInfo.value | number:'1.2-2'}}</span>
+          }
+
+          @if(valorInfo.reference == 'novoS' && valorASacar > 0){
+            <p>{{valorInfo.title}}</p>
+            <span class="red">R$ {{valorInfo.value | number:'1.2-2'}}</span>
+          }
+        }
+
       </div>
     </div>
   </div>
