@@ -122,11 +122,13 @@ export class SaqueCliente implements OnInit{
 
     if (valor <= 0) {
       this.mensagem = 'Valor inválido';
+      this.corMensagem = 'red';
       return;
     }
 
     if (valor > this.saldoDisponivelTotal) {
       this.mensagem = 'Saldo insuficiente';
+      this.corMensagem = 'red';
       return;
     }
 
@@ -134,8 +136,8 @@ export class SaqueCliente implements OnInit{
     
     
     this.valorSaque = '0,00';
-    this.mensagem = 'Saque realizado com sucesso';
     this.corMensagem = 'green';
+    this.mensagem = 'Saque realizado com sucesso';
     
     
     this.contaCliente.saldo = this.saldo;

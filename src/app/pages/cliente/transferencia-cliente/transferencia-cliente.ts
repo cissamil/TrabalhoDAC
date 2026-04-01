@@ -34,6 +34,7 @@ export class TransferenciaCliente implements OnInit{
   numeroContaDestino: string = "";
   valorTransferencia: string = '0,00';
   mensagem = "";
+  corMensagem = "";
   saldo = 0;
   limite = 0;
   tipoErro = '';
@@ -122,18 +123,21 @@ export class TransferenciaCliente implements OnInit{
     if(this.numeroContaDestino.toString().length < 4){
       this.mensagem = "Preencha a conta corretamente";
       this.tipoErro = 'erroCONTA';
+      this.corMensagem = 'red';
       return;
     }
 
     if(valor <= 0){
       this.mensagem="Valor inválido"
       this.tipoErro = 'erroTR'
+      this.corMensagem = 'red';
       return; 
     }
 
     if(valor > (this.saldo+this.limite)){
       this.mensagem="Saldo insuficiente"
       this.tipoErro = 'erroTR';
+      this.corMensagem = 'red';
       return; 
     }
 
@@ -144,6 +148,7 @@ export class TransferenciaCliente implements OnInit{
     if(!contaDestino){
       this.mensagem = 'Conta de desino não encontrada';
       this.tipoErro = 'erroCONTA';
+      this.corMensagem = 'red';
 
       console.error("Conta não encontrada");
       return;
@@ -161,7 +166,9 @@ export class TransferenciaCliente implements OnInit{
     this.registrarMovimentacao(valor, contaDestino.cliente);
     
 
+    this.corMensagem = 'green';
     this.mensagem = "Transferência realizada com sucesso";
+
 
   }
 

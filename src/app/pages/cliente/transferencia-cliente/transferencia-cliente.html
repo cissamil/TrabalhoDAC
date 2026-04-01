@@ -5,44 +5,44 @@
   <div class="container">
     <div class="card">
       <h2>Realizar Transferência</h2>
-      <p>Informe os dados da transferência </p>
+      <p class="cardInfo">Informe os dados da transferência </p>
       <label for="contaDestino">Conta de Destino</label>
       <input [(ngModel)]="numeroContaDestino" type="text" name="" id="valorDeposito" maxlength="4">
-      <p>Número da conta com 4 dígitos</p>
+      <p class="cardInfo">Número da conta com 4 dígitos</p>
       @if(mensagem != null && tipoErro == 'erroCONTA'){
 
-        <p> {{ mensagem }} </p>
+        <p class={{corMensagem}}> {{ mensagem }} </p>
       }
       <label for="valorTransferência">Valor de Transferência(R$)</label>
       <input [(ngModel)]="valorTransferencia" type="text" (input)="handleValorTransferencia($event)" name="valorTransferencia" id="valorTransferencia">
-      <p>O valor será transferido imediatamente</p>
+      <p class="cardInfo">O valor será transferido imediatamente</p>
 
       @if(mensagem != null && tipoErro == 'erroTR'){
 
-        <p> {{ mensagem }} </p>
+        <p class={{corMensagem}}> {{ mensagem }} </p>
       }
       <button (click)="transferir()" id="btnTransferir">Confirmar Transferência</button>
     </div>
 
     <div class="card">
       <h2>Informações da Conta</h2>
-      <p>Saldo atual e previsão após transferência </p>
+      <p class="cardInfo">Saldo atual e previsão após transferência </p>
       <div class="valores">
 
         @for(valorInfo of listaValoresInfo; track $index){
 
           @if(valorInfo.reference != 'valorS' && valorInfo.reference !== 'novoS'){
-            <p>{{valorInfo.title}}</p>
+            <p class="cardInfo">{{valorInfo.title}}</p>
             <span class={{valorInfo.reference}}>R$ {{valorInfo.value | number:'1.2-2'}}</span>
           }
 
           @if(valorInfo.reference == 'valorS' && valorASacar > 0){
-            <p>{{valorInfo.title}}</p>
+            <p class="cardInfo">{{valorInfo.title}}</p>
             <span class="red">R$ {{valorInfo.value | number:'1.2-2'}}</span>
           }
 
           @if(valorInfo.reference == 'novoS' && valorASacar > 0){
-            <p>{{valorInfo.title}}</p>
+            <p class="cardInfo">{{valorInfo.title}}</p>
             <span class="red">R$ {{valorInfo.value | number:'1.2-2'}}</span>
           }
         }

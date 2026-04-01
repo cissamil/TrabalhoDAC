@@ -6,38 +6,39 @@
   <div class="saque-container">
     <div class="card">
       <h2>Realizar saque</h2>
-      <p>Informe o valor que deseja sacar de sua conta</p>
+      <p class="cardInfo">Informe o valor que deseja sacar de sua conta</p>
       <label for="valorSaque">Valor do Saque (R$)</label>
       <input type="text" [(ngModel)]="valorSaque" name="valorSaque" (input)="handleValorSaque($event)" id="valorSaque">
       <!--ngModel conecta html com ts, com entrada do usuario-->
-      <p>O valor será debitado imediatamente de sua conta</p>
+      <p class="cardInfo">O valor será debitado imediatamente de sua conta</p>
+      <p class={{corMensagem}}> {{ mensagem }} </p>
       <div class="textoSecundario">
-        <p>Saldo disponível para saque: </p>
+        <p class="cardInfo">Saldo disponível para saque: </p>
         <span class="saldoAtual">R$ {{ saldoDisponivelTotal }} </span>
       </div>
       <button id="btnSacar" (click)="sacar()">Confirmar Saque</button>
-      <p> {{ mensagem }} </p>
+
     </div>
 
     <div class="card">
       <h2>Informações da Conta</h2>
-      <p>Saldo atual e previsão após saque</p>
+      <p class="cardInfo">Saldo atual e previsão após saque</p>
       <div class="valores">
 
         @for(valorInfo of listaValoresInfo; track $index){
 
           @if(valorInfo.reference != 'valorS' && valorInfo.reference !== 'novoS'){
-            <p>{{valorInfo.title}}</p>
+            <p class="cardInfo">{{valorInfo.title}}</p>
             <span class={{valorInfo.reference}}>R$ {{valorInfo.value | number:'1.2-2'}}</span>
           }
 
           @if(valorInfo.reference == 'valorS' && valorASacar > 0){
-            <p>{{valorInfo.title}}</p>
+            <p class="cardInfo">{{valorInfo.title}}</p>
             <span class="red">R$ {{valorInfo.value | number:'1.2-2'}}</span>
           }
 
           @if(valorInfo.reference == 'novoS' && valorASacar > 0){
-            <p>{{valorInfo.title}}</p>
+            <p class="cardInfo">{{valorInfo.title}}</p>
             <span class="red">R$ {{valorInfo.value | number:'1.2-2'}}</span>
           }
         }
