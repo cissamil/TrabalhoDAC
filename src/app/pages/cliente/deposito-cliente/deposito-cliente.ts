@@ -1,34 +1,88 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Cliente, Conta } from '../../../core/models/entities';
+import { ClienteSessionService } from '../../../core/services/session-controller.service';
+import { Router } from '@angular/router';
+import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
+import { DecimalPipe } from '@angular/common';
+import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { ContaService } from '../../../core/services/conta-services/conta-service';
 
 @Component({
   selector: 'app-deposito-cliente',
-  imports: [FormsModule],
+  imports: [FormsModule, DecimalPipe],
   templateUrl: './deposito-cliente.html',
   styleUrl: './deposito-cliente.css',
 })
-export class DepositoCliente {
-  saldo=500;
-  limite=300;
-  valorDeposito=0;
-  mensagem="";
+export class DepositoCliente implements OnInit {
+  constructor(
+    private clienteSessionService: ClienteSessionService,
+    private router: Router,
+    private contaService: ContaService
+  ) {}
 
-  depositar(){
-    //user digita valor para deposito
-    if (this.valorDeposito<=0){
-      return this.mensagem="O valor do depósito deve ser maior que zero"
+  private currencyFormatter: CurrencyFormatter = new CurrencyFormatter();
+
+  saldo = 0;
+  limite = 0;
+  valorDeposito: string = '0,00';
+  corMensagem = '';
+  mensagem = '';
+
+  get valorEstimadoDeposito(): number {
+    const valor = this.currencyFormatter.removeCurrencyMaskFromString(
+      this.valorDeposito,
+    );
+
+    return this.saldo + valor;
+  }
+  cliente!: Cliente;
+  contaCliente!: Conta;
+
+  ngOnInit(): void {
+    const dadosCliente = this.clienteSessionService.getCliente();
+    const dadosConta = this.clienteSessionService.getConta();
+
+    if (dadosCliente && dadosConta) {
+      this.cliente = dadosCliente;
+      this.contaCliente = dadosConta;
+
+      this.inicializarDeposito();
+    } else {
+      this.router.navigate(['/login']);
     }
-    //sistema valida os caracteres
-    //user aperta botao de confirmar deposito
-    //sistema retorna "tem certeza que vc quer depositar valorDeposito?" == front
-    //usuario confirma
-    this.saldo=this.saldo+this.valorDeposito;
-    //sistema atualiza saldo
-    this.valorDeposito=0;
-    //limpa input
-    this.mensagem="Depósito realizado com sucesso"
-    return
-    //sistema mostra mensagem "deposito feito com sucesso"
+  }
 
+  inicializarDeposito() {
+    this.saldo = this.contaCliente.saldo;
+    this.limite = this.contaCliente.limite;
+  }
+
+  handleValorDeposito(e: any) {
+    let input = e.target;
+    input.value = this.currencyFormatter.applyCurrencyMaskOnString(input.value);
+    this.valorDeposito = input.value;
+  }
+
+  depositar() {
+    const valor = this.currencyFormatter.removeCurrencyMaskFromString(
+      this.valorDeposito,
+    );
+    //user digita valor para deposito
+    if (valor <= 0) {
+      this.corMensagem = 'red';
+      this.mensagem= 'O valor do depósito deve ser maior que zero'
+      return;
+    }
+    this.saldo = this.saldo + valor;
+    this.valorDeposito = '0,00';
+    this.corMensagem= 'green';
+    this.mensagem = 'Depósito realizado com sucesso';
+
+    this.contaCliente.saldo = this.saldo;
+
+    this.contaService.atualizarConta(this.contaCliente);
+    this.clienteSessionService.setContaCliente(this.contaCliente);
+    return;
   }
 }

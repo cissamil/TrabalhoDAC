@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Cliente, Conta } from '../../models/entities';
-import { CONTAS_MOCK } from '../../mock/mock-data';
+import { Cliente, Conta } from '../models/entities';
 
 @Injectable({
   providedIn: 'root' 

@@ -31,6 +31,24 @@ export class ContaService {
       localStorage[LS_CHAVE] = JSON.stringify(contas);
       this.contasSubject.next(contas);
     }  
+
+    atualizarConta(conta: Conta){
+
+      try{
+        const contas = this.listarTodos();
+      
+        const index = contas.findIndex(c => c.id === conta.id);
+        if(index > -1){
+          contas[index] = conta;
+          this.atualizarDados(contas);
+        }
+
+        console.log("Conta atualizada com sucesso!");
+      }catch(e){
+        console.error("Erro ao atualizar conta");
+      }
+
+    }
   
     listarTodos() : Conta[]{
       return this.contasSubject.getValue();

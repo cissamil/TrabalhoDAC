@@ -9,7 +9,7 @@ import { TransferenciaCliente } from "../transferencia-cliente/transferencia-cli
 import { ClientePerfil } from "../cliente-perfil/cliente-perfil";
 import { ActivatedRoute, Router } from '@angular/router';
 import { Cliente } from '../../../core/models/entities';
-import { ClienteSessionService } from '../../../core/services/cliente-services/cliente-session.service';
+import { ClienteSessionService } from '../../../core/services/session-controller.service';
 @Component({
   selector: 'app-cliente-main-page',
   imports: [DashboardCliente, MatIconModule, DepositoCliente, SaqueCliente, Extrato, TransferenciaCliente, ClientePerfil],
@@ -31,7 +31,7 @@ export class ClienteMainPage{
 
   }
 
-  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Perfil;
+  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Deposito;
 
   changeNavigationOptions(option: ClientNavigationOptions){
 

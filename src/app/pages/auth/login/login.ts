@@ -7,7 +7,7 @@ import {ProfileOptions } from '../../../core/models/navigationOptions';
 import { GerenteService } from '../../../core/services/gerente-services';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
-import { ClienteSessionService } from '../../../core/services/cliente-services/cliente-session.service';
+import { ClienteSessionService } from '../../../core/services/session-controller.service';
 
 @Component({
   selector: 'app-login',

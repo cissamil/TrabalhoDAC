@@ -1,13 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { NgxMaskDirective } from "ngx-mask";
 import { FormsModule } from "@angular/forms";
 import { DecimalPipe } from '@angular/common';
-import { NgxMaskDirective } from "ngx-mask";
-import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
+import { Component, Input, OnInit } from '@angular/core';
 import { Cliente, Conta } from '../../../core/models/entities';
-import { ClienteSessionService } from '../../../core/services/cliente-services/cliente-session.service';
-import { Router } from '@angular/router';
 import { validateCEP, validateEmail } from '../../../core/shared/helpers';
+import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { ClienteSessionService } from '../../../core/services/session-controller.service';
 
 @Component({
   selector: 'app-cliente-perfil',

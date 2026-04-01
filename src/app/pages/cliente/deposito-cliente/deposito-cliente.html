@@ -5,11 +5,11 @@
   <div class="deposito-container">
     <div class="card">
       <h2>Realizar Depósito</h2>
-      <p>Informe o valor que deseja depositar em sua conta </p>
-      <label for="valorDeposito">Valor do Depósito</label>
-      <input [(ngModel)]="valorDeposito" type="number" name="" id="valorDeposito">
-      <p>O valor será creditado imediatamente em sua conta</p>
-      <p> {{ mensagem }} </p>
+      <p class="cardInfo">Informe o valor que deseja depositar em sua conta </p>
+      <label for="valorDeposito">Valor do Depósito (R$)</label>
+      <input [(ngModel)]="valorDeposito" type="text" (input)="handleValorDeposito($event)" name="valorDeposito" id="valorDeposito">
+      <p class="cardInfo">O valor será creditado imediatamente em sua conta</p>
+      <p class={{corMensagem}}> {{ mensagem }} </p>
       <button (click)="depositar()" id="btnDepositar">Confirmar Depósito</button>
     </div>
 
@@ -17,10 +17,10 @@
       <h2>Informações da Conta</h2>
 
       <p>Saldo Atual</p>
-      <span class="saldoAtual">R${{saldo}}</span>
+      <span class="saldoAtual">R$ {{saldo | number:'1.2-2'}}</span>
       <div>
-        <p>Previsão após depósito</p>
-        <span class="previsao">R${{saldo+valorDeposito}}</span>
+        <p class="cardInfo">Previsão após depósito</p>
+        <span class="previsao">R$ {{valorEstimadoDeposito | number:'1.2-2'}}</span>
         <p class="textoSecundario">Observação:O depósito será processado imediatamente e estará disponível em sua conta.
         </p>
       </div>

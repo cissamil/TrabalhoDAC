@@ -4,7 +4,7 @@ import{MatIconModule} from "@angular/material/icon";
 import { InfoCard } from '../../../core/models/info-card';
 import { CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
 import { DecimalPipe } from '@angular/common';
-import { ClienteSessionService } from '../../../core/services/cliente-services/cliente-session.service';
+import { ClienteSessionService } from '../../../core/services/session-controller.service';
 import { Cliente, Conta } from '../../../core/models/entities';
 import { Router } from '@angular/router';
 
