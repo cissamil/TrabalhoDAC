@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Cliente, Conta, Movimentacao } from '../../../core/models/entities';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
@@ -23,7 +23,7 @@ interface valorInfo{
   templateUrl: './saque-cliente.html',
   styleUrl: './saque-cliente.css',
 })
-export class SaqueCliente {
+export class SaqueCliente implements OnInit{
   constructor(
     private router: Router,
     private contaService: ContaService,
@@ -36,6 +36,7 @@ export class SaqueCliente {
   valorSaque: string = '0,00';
   mensagem = '';
   corMensagem = '';
+  
   valoresInfo: valorInfo[] = [];
   private currencyFormatter:CurrencyFormatter = new CurrencyFormatter();
 
@@ -120,11 +121,13 @@ export class SaqueCliente {
     const valor: number = this.currencyFormatter.removeCurrencyMaskFromString(this.valorSaque);
 
     if (valor <= 0) {
-      return (this.mensagem = 'Valor inválido');
+      this.mensagem = 'Valor inválido';
+      return;
     }
 
     if (valor > this.saldoDisponivelTotal) {
-      return (this.mensagem = 'Saldo insuficiente');
+      this.mensagem = 'Saldo insuficiente';
+      return;
     }
 
     this.saldo = this.saldo - valor;

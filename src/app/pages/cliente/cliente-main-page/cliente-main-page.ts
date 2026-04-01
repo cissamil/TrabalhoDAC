@@ -31,7 +31,7 @@ export class ClienteMainPage{
 
   }
 
-  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Saque;
+  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Transferencia;
 
   changeNavigationOptions(option: ClientNavigationOptions){
 

@@ -45,8 +45,39 @@ export class ContaService {
 
         console.log("Conta atualizada com sucesso!");
       }catch(e){
-        console.error("Erro ao atualizar conta");
+        console.error("Erro ao atualizar conta ", e);
       }
+
+    }
+
+    realizarTransferencia(contaOrigem: Conta, contaDestino: Conta){
+      try{
+        const contas = this.listarTodos();
+        
+        this.listarConta(contaDestino.numeroConta);
+        const indexOrigem = contas.findIndex(c => c.id === contaOrigem.id);
+        const indexDestino = contas.findIndex(c => c.id === contaDestino.id);
+        
+        if(indexOrigem > -1 && indexDestino > -1){
+          contas[indexOrigem] = contaOrigem;
+          contas[indexDestino] = contaDestino;
+          this.atualizarDados(contas);
+        }
+
+        this.listarConta(contaDestino.numeroConta);
+
+      }catch(e){
+        console.error("Erro ao atualizar conta ", e);
+      }
+    }
+
+    listarConta(numeroConta:number){
+
+      const contas = this.listarTodos();
+
+      const conta = contas.find((conta) => conta.numeroConta === numeroConta);
+
+      console.log("Valor atual conta: ", conta?.saldo);
 
     }
   
@@ -58,6 +89,15 @@ export class ContaService {
       const contas = this.listarTodos();
 
       return contas.find((conta) => conta.cpfCliente == cpf);
+    }
+    
+    buscarPorNumeroConta(numero: string){
+
+      const numeroConta = Number(numero);
+
+      const contas = this.listarTodos();
+
+      return contas.find((conta) => conta.numeroConta === numeroConta);
     }
   
   

@@ -110,11 +110,15 @@ input {
   color: #2563eb;
 
 }
-.limite{
+.limite, .red{
   font-size: 26px;
   font-weight: bold;
   color: #111827;
 
+}
+
+.red{
+  color: red;
 }
 
 .card span{

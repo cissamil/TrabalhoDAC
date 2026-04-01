@@ -110,7 +110,7 @@ export const CONTAS_MOCK: Conta[] = [
     id: new Date().getTime() + 11,
     cliente: 'Cleuddônio',
     cpfCliente: '09506382000',
-    numeroConta: 950,
+    numeroConta: 9500,
     saldo: -10000.0,
     limite: 10000.0,
     gerente: 'Godophredo',
