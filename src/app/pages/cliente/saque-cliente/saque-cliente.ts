@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Cliente, Conta } from '../../../core/models/entities';
+import { Cliente, Conta, Movimentacao } from '../../../core/models/entities';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
 import { Router } from '@angular/router';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
 import { DecimalPipe } from '@angular/common';
+import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
 
 
 interface valorInfo{
@@ -24,9 +25,10 @@ interface valorInfo{
 })
 export class SaqueCliente {
   constructor(
-    private clienteSessionService: ClienteSessionService,
     private router: Router,
     private contaService: ContaService,
+    private movimentacaoService: MovimentacaoService,
+    private clienteSessionService: ClienteSessionService,
   ) {}
 
   saldo = 0;
@@ -126,15 +128,36 @@ export class SaqueCliente {
     }
 
     this.saldo = this.saldo - valor;
-
+    
+    
     this.valorSaque = '0,00';
     this.mensagem = 'Saque realizado com sucesso';
     this.corMensagem = 'green';
-
+    
+    
     this.contaCliente.saldo = this.saldo;
-
+    
+    
     this.contaService.atualizarConta(this.contaCliente);
     this.clienteSessionService.setContaCliente(this.contaCliente);
+    
+    this.registrarMovimentacao(valor);
     return;
+  }
+
+  registrarMovimentacao(valor: number){
+
+
+    const movimentacao: Movimentacao = {
+      id:0,
+      data_hora: new Date(),
+      tipo:'saque',
+      clienteDestino: '',
+      valor: valor,
+      clienteOrigem: this.cliente.nome,
+    }
+
+    this.movimentacaoService.inserir(movimentacao);    
+
   }
 }

@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Cliente, Conta } from '../../../core/models/entities';
+import { Cliente, Conta, Movimentacao } from '../../../core/models/entities';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
 import { Router } from '@angular/router';
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
 import { DecimalPipe } from '@angular/common';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
+import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
 
 @Component({
   selector: 'app-deposito-cliente',
@@ -16,9 +17,10 @@ import { ContaService } from '../../../core/services/conta-services/conta-servic
 })
 export class DepositoCliente implements OnInit {
   constructor(
-    private clienteSessionService: ClienteSessionService,
     private router: Router,
-    private contaService: ContaService
+    private contaService: ContaService,
+    private clienteSessionService: ClienteSessionService,
+    private movimentacaoService: MovimentacaoService
   ) {}
 
   private currencyFormatter: CurrencyFormatter = new CurrencyFormatter();
@@ -74,6 +76,7 @@ export class DepositoCliente implements OnInit {
       this.mensagem= 'O valor do depósito deve ser maior que zero'
       return;
     }
+
     this.saldo = this.saldo + valor;
     this.valorDeposito = '0,00';
     this.corMensagem= 'green';
@@ -83,6 +86,23 @@ export class DepositoCliente implements OnInit {
 
     this.contaService.atualizarConta(this.contaCliente);
     this.clienteSessionService.setContaCliente(this.contaCliente);
+
+    this.registrarMovimentacao(valor);
     return;
+  }
+
+  registrarMovimentacao(valor:number){
+
+    const movimentacao: Movimentacao = {
+      id:0,
+      data_hora: new Date(),
+      tipo:'deposito',
+      clienteDestino: '',
+      valor: valor,
+      clienteOrigem: this.cliente.nome,
+    }
+
+    this.movimentacaoService.inserir(movimentacao);    
+
   }
 }
