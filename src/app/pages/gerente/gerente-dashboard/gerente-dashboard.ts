@@ -5,7 +5,7 @@ import {
   PedidoAutocadastro,
 } from '../../../core/services/gerente-services/gerente-autocadastro.service';
 import { GerenteService } from '../../../core/services/gerente-services';
-import { STAFF_MOCK, CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
+import { CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
 import { GerenteAdmin, Cliente, Conta } from '../../../core/models/entities';
 
 @Component({
@@ -17,6 +17,8 @@ import { GerenteAdmin, Cliente, Conta } from '../../../core/models/entities';
 export class GerenteDashboard {
   private readonly gerenteAutocadastroService = inject(GerenteAutocadastroService);
   private readonly gerenteService = inject(GerenteService);
+  pedidoEmRecusa: PedidoAutocadastro | null = null;
+  motivoRecusaInput = '';
 
   // Pega o gerente logado atualmente da sessão
   readonly gerenteLogado: GerenteAdmin | null =
@@ -65,17 +67,39 @@ export class GerenteDashboard {
     );
   }
 
-  recusarPedido(cpf: string): void {
-    const motivoRecusa = prompt('Informe o motivo da recusa:')?.trim();
+  iniciarRecusa(pedido: PedidoAutocadastro): void {
+    this.pedidoEmRecusa = pedido;
+    this.motivoRecusaInput = '';
+  }
+
+  cancelarRecusa(): void {
+    this.pedidoEmRecusa = null;
+    this.motivoRecusaInput = '';
+  }
+
+  confirmarRecusa(): void {
+    if (!this.pedidoEmRecusa) {
+      return;
+    }
+
+    const motivoRecusa = this.motivoRecusaInput.trim();
     if (!motivoRecusa) {
       alert('A recusa exige um motivo.');
       return;
     }
 
-    const recusou = this.gerenteAutocadastroService.recusarPedido(cpf, motivoRecusa);
+    const recusou = this.gerenteAutocadastroService.recusarPedido(
+      this.pedidoEmRecusa.cpf,
+      motivoRecusa
+    );
     if (recusou) {
       alert('Cliente recusado e e-mail com o motivo enviado com sucesso.');
+      this.cancelarRecusa();
     }
+  }
+
+  atualizarMotivoRecusa(valor: string): void {
+    this.motivoRecusaInput = valor;
   }
 
   formatarMoeda(valor: number): string {
@@ -94,5 +118,14 @@ export class GerenteDashboard {
       dateStyle: 'short',
       timeStyle: 'medium',
     }).format(data);
+  }
+
+  formatarCpf(cpf: string): string {
+    const numeros = cpf.replace(/\D/g, '');
+    if (numeros.length !== 11) {
+      return cpf;
+    }
+
+    return `${numeros.slice(0, 3)}.${numeros.slice(3, 6)}.${numeros.slice(6, 9)}-${numeros.slice(9)}`;
   }
 }

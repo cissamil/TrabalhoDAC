@@ -14,7 +14,7 @@
             <th>CPF</th>
             <th>Nome</th>
             <th>Salario</th>
-           <th>Ações</th>
+            <th>Acoes</th>
           </tr>
         </thead>
         <tbody>
@@ -26,14 +26,14 @@
 
           @for (pedido of pedidosPendentes; track pedido.cpf) {
             <tr>
-              <td>{{ pedido.cpf }}</td>
+              <td>{{ formatarCpf(pedido.cpf) }}</td>
               <td>{{ pedido.nome }}</td>
-              <td>{{ formatarMoeda(pedido.salario) }}</td>             
+              <td>{{ formatarMoeda(pedido.salario) }}</td>
               <td class="actions-cell">
                 <button class="btn btn-approve" type="button" (click)="aprovarPedido(pedido.cpf)">
                   Aprovar
                 </button>
-                <button class="btn btn-reject" type="button" (click)="recusarPedido(pedido.cpf)">
+                <button class="btn btn-reject" type="button" (click)="iniciarRecusa(pedido)">
                   Recusar
                 </button>
               </td>
@@ -53,20 +53,87 @@
           <thead>
             <tr>
               <th>CPF</th>
-              <th>Nome</th>                    
+              <th>Nome</th>
+              <th>Status</th>
+              <th>Data/Hora Decisao</th>
+              <th>Conta</th>
+              <th>Limite</th>
+              <th>Motivo</th>
             </tr>
           </thead>
           <tbody>
             @for (pedido of pedidosProcessados; track pedido.cpf) {
               <tr>
-                <td>{{ pedido.cpf }}</td>
+                <td>{{ formatarCpf(pedido.cpf) }}</td>
                 <td>{{ pedido.nome }}</td>
-              
-                
+                <td>
+                  @if (pedido.status === 'APROVADO') {
+                    <span class="badge approved">Aprovado</span>
+                  } @else {
+                    <span class="badge rejected">Recusado</span>
+                  }
+                </td>
+                <td>{{ formatarData(pedido.dataDecisao) }}</td>
+                <td>{{ pedido.contaGerada?.numeroConta ?? '-' }}</td>
+                <td>{{ pedido.contaGerada ? formatarMoeda(pedido.contaGerada.limite) : '-' }}</td>
+                <td>{{ pedido.motivoRecusa ?? '-' }}</td>
               </tr>
             }
           </tbody>
         </table>
+      </div>
+    </div>
+  }
+
+  <!-- Seção de E-mails Simulados -->
+  @if (emailsEnviados.length > 0) {
+    <div class="section">
+      <h2>E-mails Simulados Enviados</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Para</th>
+              <th>Assunto</th>
+              <th>Corpo</th>
+              <th>Data/Hora</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (email of emailsEnviados; track email.dataEnvio.getTime() + email.para) {
+              <tr>
+                <td>{{ email.para }}</td>
+                <td>{{ email.assunto }}</td>
+                <td class="email-body">{{ email.corpo }}</td>
+                <td>{{ formatarData(email.dataEnvio) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  @if (pedidoEmRecusa) {
+    <div class="modal-backdrop" (click)="cancelarRecusa()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Recusar Autocadastro</h3>
+        <p>
+          Informe o motivo da recusa para o cliente
+          <strong>{{ pedidoEmRecusa.nome }}</strong>.
+        </p>
+
+        <textarea
+          rows="4"
+          placeholder="Ex.: Documentacao inconsistente, dados invalidos..."
+          [value]="motivoRecusaInput"
+          (input)="atualizarMotivoRecusa($any($event.target).value)"
+        ></textarea>
+
+        <div class="modal-actions">
+          <button class="btn btn-cancel" type="button" (click)="cancelarRecusa()">Cancelar</button>
+          <button class="btn btn-reject" type="button" (click)="confirmarRecusa()">Confirmar Recusa</button>
+        </div>
       </div>
     </div>
   }
