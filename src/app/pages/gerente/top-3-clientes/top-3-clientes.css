@@ -36,20 +36,20 @@ section {
 }
 
 .ranking-card.first {
-  border-color: #8fb8ff;
+  border-color: #76d695;
 }
 
 .ranking-card.second {
-  border-color: #c9d7f1;
+  border-color: #bfe9cd;
 }
 
 .ranking-card.third {
-  border-color: #b8c9eb;
+  border-color: #a8dfbc;
 }
 
 .position {
   margin: 0;
-  color: #155dfc;
+  color: #0f8d39;
   font-weight: 700;
   font-size: 1.05rem;
 }
@@ -85,7 +85,7 @@ hr {
 
 .saldo-value {
   margin: 8px 0 0 0;
-  color: #155dfc;
+  color: #04aa3d;
   font-weight: 800;
   font-size: 2rem;
 }

@@ -9,7 +9,7 @@ header {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: #155dfc;
+  background-color: #04aa3d;
   color: white;
   padding: 10px;
 }
@@ -58,8 +58,8 @@ div.title {
 }
 
 .navigation-card a.active-link {
-  background-color: rgba(21, 93, 252, 0.12);
-  color: #0f4fd3;
+  background-color: rgba(4, 170, 61, 0.14);
+  color: #0b7a32;
   font-weight: 600;
 }
 

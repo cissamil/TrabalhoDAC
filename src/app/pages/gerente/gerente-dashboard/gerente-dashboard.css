@@ -18,7 +18,7 @@ section {
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #05b843 0%, #0b7a32 100%);
   border-radius: 12px;
   padding: 18px;
   color: white;
@@ -120,8 +120,8 @@ th {
 }
 
 .info-card {
-  background: #f8fbff;
-  border: 1px solid #e6edf8;
+  background: #f6fff9;
+  border: 1px solid #dbf2e3;
   border-radius: 12px;
   padding: 14px;
 }
@@ -131,7 +131,7 @@ th {
 }
 
 .decision-item {
-  border: 1px solid #e4ebf6;
+  border: 1px solid #deede4;
   border-radius: 10px;
   background-color: white;
   padding: 10px;
@@ -213,7 +213,7 @@ th {
 .modal textarea {
   width: 100%;
   resize: vertical;
-  border: 1px solid #c7d5ea;
+  border: 1px solid #bfdfca;
   border-radius: 8px;
   padding: 10px;
   font: inherit;
@@ -221,8 +221,8 @@ th {
 }
 
 .modal textarea:focus {
-  outline: 2px solid #b8d2ff;
-  border-color: #8ab0ef;
+  outline: 2px solid #c8edd6;
+  border-color: #76c893;
 }
 
 .modal-actions {
