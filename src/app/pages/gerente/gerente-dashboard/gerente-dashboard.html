@@ -47,7 +47,7 @@
   <!-- Seção de Pedidos Processados -->
   @if (pedidosProcessados.length > 0) {
     <div class="section">
-      <h2>Pedidos Recentes Processados</h2>
+      <h2>Historico de pedidos</h2>
       <div class="table-wrapper">
         <table>
           <thead>
@@ -77,35 +77,6 @@
                 <td>{{ pedido.contaGerada?.numeroConta ?? '-' }}</td>
                 <td>{{ pedido.contaGerada ? formatarMoeda(pedido.contaGerada.limite) : '-' }}</td>
                 <td>{{ pedido.motivoRecusa ?? '-' }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
-  }
-
-  <!-- Seção de E-mails Simulados -->
-  @if (emailsEnviados.length > 0) {
-    <div class="section">
-      <h2>E-mails Simulados Enviados</h2>
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Para</th>
-              <th>Assunto</th>
-              <th>Corpo</th>
-              <th>Data/Hora</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (email of emailsEnviados; track email.dataEnvio.getTime() + email.para) {
-              <tr>
-                <td>{{ email.para }}</td>
-                <td>{{ email.assunto }}</td>
-                <td class="email-body">{{ email.corpo }}</td>
-                <td>{{ formatarData(email.dataEnvio) }}</td>
               </tr>
             }
           </tbody>

@@ -77,10 +77,6 @@ th {
   gap: 8px;
 }
 
-.email-body {
-  min-width: 280px;
-}
-
 .btn {
   border: none;
   border-radius: 8px;

@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import {
-  EmailNotificacao,
   GerenteAutocadastroService,
   PedidoAutocadastro,
 } from '../../../core/services/gerente-services/gerente-autocadastro.service';
@@ -50,10 +49,6 @@ export class GerenteDashboard {
 
   get pedidosProcessados(): PedidoAutocadastro[] {
     return this.gerenteAutocadastroService.getPedidosProcessados();
-  }
-
-  get emailsEnviados(): EmailNotificacao[] {
-    return this.gerenteAutocadastroService.getEmailsEnviados();
   }
 
   aprovarPedido(cpf: string): void {
