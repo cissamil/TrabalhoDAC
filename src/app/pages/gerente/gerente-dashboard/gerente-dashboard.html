@@ -24,13 +24,13 @@
             </tr>
           }
 
-          @for (pedido of pedidosPendentes; track pedido.cpf) {
+          @for (pedido of pedidosPendentes; track pedido.cpfCliente) {
             <tr>
-              <td>{{ formatarCpf(pedido.cpf) }}</td>
-              <td>{{ pedido.nome }}</td>
-              <td>{{ formatarMoeda(pedido.salario) }}</td>
+              <td>{{ formatarCpf(pedido.cpfCliente) }}</td>
+              <td>{{ pedido.nomeCliente }}</td>
+              <td>R$ {{pedido.salario | number:'1.2-2' }}</td>
               <td class="actions-cell">
-                <button class="btn btn-approve" type="button" (click)="aprovarPedido(pedido.cpf)">
+                <button class="btn btn-approve" type="button" (click)="aprovarPedido(pedido.cpfCliente)">
                   Aprovar
                 </button>
                 <button class="btn btn-reject" type="button" (click)="iniciarRecusa(pedido)">
@@ -62,10 +62,10 @@
             </tr>
           </thead>
           <tbody>
-            @for (pedido of pedidosProcessados; track pedido.cpf) {
+            @for (pedido of pedidosProcessados; track pedido.cpfCliente) {
               <tr>
-                <td>{{ formatarCpf(pedido.cpf) }}</td>
-                <td>{{ pedido.nome }}</td>
+                <td>{{ formatarCpf(pedido.cpfCliente) }}</td>
+                <td>{{ pedido.nomeCliente }}</td>
                 <td>
                   @if (pedido.status === 'APROVADO') {
                     <span class="badge approved">Aprovado</span>
@@ -73,9 +73,9 @@
                     <span class="badge rejected">Recusado</span>
                   }
                 </td>
-                <td>{{ formatarData(pedido.dataDecisao) }}</td>
+                <td>{{ pedido.dataDecisao | date: 'short' }}</td>
                 <td>{{ pedido.contaGerada?.numeroConta ?? '-' }}</td>
-                <td>{{ pedido.contaGerada ? formatarMoeda(pedido.contaGerada.limite) : '-' }}</td>
+                <td>R$ {{ (pedido.contaGerada?.limite | number :'1.2-2') ?? '-'}}</td>
                 <td>{{ pedido.motivoRecusa ?? '-' }}</td>
               </tr>
             }
@@ -91,7 +91,7 @@
         <h3>Recusar Autocadastro</h3>
         <p>
           Informe o motivo da recusa para o cliente
-          <strong>{{ pedidoEmRecusa.nome }}</strong>.
+          <strong>{{ pedidoEmRecusa.nomeCliente }}</strong>.
         </p>
 
         <textarea

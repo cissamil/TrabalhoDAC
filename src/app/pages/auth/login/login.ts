@@ -99,7 +99,7 @@ export class Login implements OnInit{
 
   handleResult(result : any, profile:ProfileOptions){
     
-    if(!result){
+    if(result === undefined){
       alert("Usuário não encontrado. Tente novamente");
       return;
     }

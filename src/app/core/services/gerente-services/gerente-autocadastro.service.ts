@@ -1,77 +1,39 @@
-import { Injectable } from '@angular/core';
-
-export type PedidoStatus = 'PENDENTE' | 'APROVADO' | 'RECUSADO';
-
-export interface ContaGerada {
-  cpfCliente: string;
-  numeroConta: string;
-  senha: string;
-  limite: number;
-  gerente: string;
-  dataCriacao: Date;
-}
-
-export interface PedidoAutocadastro {
-  cpf: string;
-  nome: string;
-  email: string;
-  salario: number;
-  dataSolicitacao: Date;
-  status: PedidoStatus;
-  dataDecisao?: Date;
-  motivoRecusa?: string;
-  contaGerada?: ContaGerada;
-}
-
-export interface EmailNotificacao {
-  para: string;
-  assunto: string;
-  corpo: string;
-  dataEnvio: Date;
-}
+import { inject, Injectable } from '@angular/core';
+import { ClienteService } from '../cliente-services/cliente-service';
+import { Conta, EmailNotificacao, GerenteAdmin, PedidoAutoCadastro } from '../../models/entities';
+import { PedidoAutoCadastroService } from '../pedido-autocadastro-services/pedido-autocadastro-service';
+import { ContaService } from '../conta-services/conta-service';
 
 @Injectable({
   providedIn: 'root',
-})
+})  
 export class GerenteAutocadastroService {
-  private readonly pedidos: PedidoAutocadastro[] = [
-    {
-      cpf: '41826991007',
-      nome: 'Amanda Costa',
-      email: 'amanda.costa@email.com',
-      salario: 2400,
-      dataSolicitacao: new Date('2026-03-25T09:20:00'),
-      status: 'PENDENTE',
-    },
-    {
-      cpf: '98256430060',
-      nome: 'Renato Alves',
-      email: 'renato.alves@email.com',
-      salario: 1700,
-      dataSolicitacao: new Date('2026-03-26T11:45:00'),
-      status: 'PENDENTE',
-    },
-    {
-      cpf: '14690238044',
-      nome: 'Patricia Ramos',
-      email: 'patricia.ramos@email.com',
-      salario: 5200,
-      dataSolicitacao: new Date('2026-03-26T15:30:00'),
-      status: 'PENDENTE',
-    },
-  ];
 
-  private readonly contasCriadas: ContaGerada[] = [];
+  private readonly pedidosService = inject(PedidoAutoCadastroService);
+  private readonly clientesService = inject(ClienteService);
+  private readonly contaService = inject(ContaService);
+
+  private readonly pedidos: PedidoAutoCadastro[] = this.pedidosService.listarTodos();
+  private readonly contasCriadas: Conta[] = [];
   private readonly emailsEnviados: EmailNotificacao[] = [];
 
-  getPedidosPendentes(): PedidoAutocadastro[] {
-    return this.pedidos.filter((pedido) => pedido.status === 'PENDENTE');
+  getPedidosPendentes(cpfGerente:string): PedidoAutoCadastro[] {
+    return this.pedidos.filter(
+      (pedido) =>
+        pedido.status === 'PENDENTE' && pedido.cpfGerente === cpfGerente,
+    );
   }
 
-  getPedidosProcessados(): PedidoAutocadastro[] {
+  getPedidosProcessados(cpfGerente: string): PedidoAutoCadastro[] {
     return this.pedidos
-      .filter((pedido) => pedido.status !== 'PENDENTE')
-      .sort((a, b) => (b.dataDecisao?.getTime() ?? 0) - (a.dataDecisao?.getTime() ?? 0));
+      .filter((pedido) => pedido.status !== 'PENDENTE' && pedido.cpfGerente === cpfGerente)
+      .sort((a, b) =>{
+        
+        const dataA = a.dataDecisao? new Date(a.dataDecisao).getTime() : 0;
+        const dataB = b.dataDecisao? new Date(b.dataDecisao).getTime() : 0;
+        
+        return dataB - dataA;
+      });
   }
 
   getEmailsEnviados(): EmailNotificacao[] {
@@ -80,18 +42,33 @@ export class GerenteAutocadastroService {
       .sort((a, b) => b.dataEnvio.getTime() - a.dataEnvio.getTime());
   }
 
-  aprovarPedido(cpf: string, gerente: string): ContaGerada | null {
-    const pedido = this.pedidos.find((item) => item.cpf === cpf && item.status === 'PENDENTE');
-    if (!pedido) {
+  aprovarPedido(cpf: string, gerente: GerenteAdmin): Conta | null {
+    const pedido = this.pedidos.find((item) => item.cpfCliente === cpf && item.status === 'PENDENTE');
+    const cliente = this.clientesService.buscarClientePorCPF(cpf);
+
+    console.log("CPF:", cpf);
+    console.log(`pedido: ${pedido?.id}. Cliente: ${cliente?.id}`);
+
+    if (!pedido || !cliente) {
       return null;
     }
 
-    const contaGerada: ContaGerada = {
-      cpfCliente: pedido.cpf,
+    const senha:string = this.gerarSenhaTemporaria();
+    
+    cliente.senha = senha; 
+
+    this.clientesService.atualizar(cliente);
+    
+
+    const contaGerada: Conta = {
+      id: new Date().getTime(),
+      cliente: cliente.nome,
+      cpfCliente: pedido.cpfCliente,
       numeroConta: this.gerarNumeroConta(),
-      senha: this.gerarSenhaTemporaria(),
       limite: this.calcularLimite(pedido.salario),
-      gerente,
+      gerente: gerente.nome,
+      cpfGerente: gerente.cpf,
+      saldo: 0,
       dataCriacao: new Date(),
     };
 
@@ -99,14 +76,18 @@ export class GerenteAutocadastroService {
     pedido.dataDecisao = new Date();
     pedido.contaGerada = contaGerada;
 
+    this.pedidosService.atualizar(pedido);
     this.contasCriadas.push(contaGerada);
-    this.registrarEmailAprovacao(pedido, contaGerada);
+    this.registrarEmailAprovacao(pedido, contaGerada, senha);
 
+    this.contaService.inserir(contaGerada);
+
+    console.log("Senha gerada para o usuário: ", senha);
     return contaGerada;
   }
 
   recusarPedido(cpf: string, motivoRecusa: string): boolean {
-    const pedido = this.pedidos.find((item) => item.cpf === cpf && item.status === 'PENDENTE');
+    const pedido = this.pedidos.find((item) => item.cpfCliente === cpf && item.status === 'PENDENTE');
     if (!pedido) {
       return false;
     }
@@ -114,7 +95,8 @@ export class GerenteAutocadastroService {
     pedido.status = 'RECUSADO';
     pedido.dataDecisao = new Date();
     pedido.motivoRecusa = motivoRecusa;
-
+    
+    this.pedidosService.atualizar(pedido);
     this.registrarEmailRecusa(pedido, motivoRecusa);
     return true;
   }
@@ -123,12 +105,12 @@ export class GerenteAutocadastroService {
     return salario >= 2000 ? salario / 2 : 0;
   }
 
-  private gerarNumeroConta(): string {
-    return Math.floor(1000 + Math.random() * 9000).toString();
+  private gerarNumeroConta(): number {
+    return Math.floor(1000 + Math.random() * 9000);
   }
 
   private gerarSenhaTemporaria(): string {
-    const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+    const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz0123456789';
     let senha = '';
 
     for (let i = 0; i < 10; i += 1) {
@@ -139,25 +121,25 @@ export class GerenteAutocadastroService {
     return senha;
   }
 
-  private registrarEmailAprovacao(pedido: PedidoAutocadastro, conta: ContaGerada): void {
+  private registrarEmailAprovacao(pedido: PedidoAutoCadastro, conta: Conta, senha: string): void {
     const limiteFormatado = new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',
     }).format(conta.limite);
 
     this.emailsEnviados.push({
-      para: pedido.email,
+      para: pedido.emailCliente,
       assunto: 'Aprovacao de autocadastro',
-      corpo: `Ola ${pedido.nome}, sua conta foi aprovada. Numero da conta: ${conta.numeroConta}. Senha temporaria: ${conta.senha}. Limite: ${limiteFormatado}.`,
+      corpo: `Ola ${pedido.nomeCliente}, sua conta foi aprovada. Numero da conta: ${conta.numeroConta}. Senha temporaria: ${senha}. Limite: ${limiteFormatado}.`,
       dataEnvio: new Date(),
     });
-  }
+  };
 
-  private registrarEmailRecusa(pedido: PedidoAutocadastro, motivo: string): void {
+  private registrarEmailRecusa(pedido: PedidoAutoCadastro, motivo: string): void {
     this.emailsEnviados.push({
-      para: pedido.email,
+      para: pedido.emailCliente,
       assunto: 'Recusa de autocadastro',
-      corpo: `Ola ${pedido.nome}, seu autocadastro foi recusado. Motivo: ${motivo}.`,
+      corpo: `Ola ${pedido.nomeCliente}, seu autocadastro foi recusado. Motivo: ${motivo}.`,
       dataEnvio: new Date(),
     });
   }

@@ -1,4 +1,4 @@
-import { Cliente, GerenteAdmin, Conta, Movimentacao } from '../models/entities';
+import { Cliente, GerenteAdmin, Conta, Movimentacao, PedidoAutoCadastro } from '../models/entities';
 
 // --- Cliente e Auth ---
 export const CLIENTES_MOCK: Cliente[] = [
@@ -104,6 +104,7 @@ export const CONTAS_MOCK: Conta[] = [
     saldo: 800.0,
     limite: 5000.0,
     gerente: 'Geniéve',
+    cpfGerente: '98574307084',
     dataCriacao: new Date('2000-01-01'),
   },
   {
@@ -114,6 +115,7 @@ export const CONTAS_MOCK: Conta[] = [
     saldo: -10000.0,
     limite: 10000.0,
     gerente: 'Godophredo',
+    cpfGerente:'64065268052',
     dataCriacao: new Date('1990-10-10'),
   },
   {
@@ -124,6 +126,7 @@ export const CONTAS_MOCK: Conta[] = [
     saldo: -1000.0,
     limite: 1500.0,
     gerente: 'Gyândula',
+    cpfGerente: '23862179060',
     dataCriacao: new Date('2012-12-12'),
   },
   {
@@ -134,6 +137,7 @@ export const CONTAS_MOCK: Conta[] = [
     saldo: 150000.0,
     limite: 0.0,
     gerente: 'Geniéve',
+    cpfGerente: '98574307084',
     dataCriacao: new Date('2022-02-22'),
   },
   {
@@ -144,6 +148,7 @@ export const CONTAS_MOCK: Conta[] = [
     saldo: 1500.0,
     limite: 0.0,
     gerente: 'Godophredo',
+    cpfGerente:'64065268052',
     dataCriacao: new Date('2025-01-01'),
   },
 ];
@@ -269,5 +274,42 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     clienteOrigem: 'Coândrya',
     clienteDestino: '',
     valor: 1500.0,
+  },
+];
+
+
+export const PEDIDOS_MOCK: PedidoAutoCadastro[] = [
+  {
+    id: new Date().getTime() + 31,
+    cpfCliente: '41826991007',
+    nomeCliente: 'Amanda Costa',
+    nomeGerente: 'Genévie',
+    cpfGerente: '98574307084',
+    emailCliente: '',
+    salario: 2400,
+    dataSolicitacao: new Date('2026-03-25T09:20:00'),
+    status: 'PENDENTE',
+  },
+  {
+    id: new Date().getTime() + 32,
+    cpfCliente: '98256430060',
+    nomeCliente: 'Renato Alves',
+    nomeGerente: 'Genévie',
+    cpfGerente: '98574307084',
+    emailCliente: '',
+    salario: 1700,
+    dataSolicitacao: new Date('2026-03-26T11:45:00'),
+    status: 'PENDENTE',
+  },
+  {
+    id: new Date().getTime() + 33,
+    cpfCliente: '14690238044',
+    nomeCliente: 'Patricia Ramos',
+    nomeGerente: 'Genévie',
+    cpfGerente: '98574307084',
+    emailCliente: '',
+    salario: 5200,
+    dataSolicitacao: new Date('2026-03-26T15:30:00'),
+    status: 'PENDENTE',
   },
 ];

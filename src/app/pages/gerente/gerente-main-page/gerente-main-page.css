@@ -4,6 +4,12 @@ main {
   min-height: 100vh;
 }
 
+.icon{
+    padding-right: 10px;
+    cursor: pointer;
+    color: white;
+}
+
 header {
   display: flex;
   flex-direction: row;

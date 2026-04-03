@@ -1,11 +1,12 @@
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
-import {NgxMaskDirective, NgxMaskPipe} from "ngx-mask";
 import { FormsModule } from '@angular/forms';
-import { Cliente } from '../../../core/models/entities';
+import {NgxMaskDirective, NgxMaskPipe} from "ngx-mask";
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
+import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { validateCEP, validateCPF, validateEmail } from '../../../core/shared/helpers';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { Cliente,} from '../../../core/models/entities';
 
 @Component({
   selector: 'app-registro',
@@ -14,7 +15,11 @@ import { ClienteService } from '../../../core/services/cliente-services/cliente-
   styleUrl: './registro.css',
 })
 export class Registro {
-  constructor(private router: Router, private clienteService: ClienteService) {}
+  constructor(
+    private router: Router, 
+    private contaService: ContaService,
+    private clienteService: ClienteService, 
+  ){}
 
   currencyFormatter: CurrencyFormatter = new CurrencyFormatter();
 
@@ -28,25 +33,25 @@ export class Registro {
 
   cliente: Cliente = {
     id: 0,
-    cpf: '',
-    nome: '',
-    email: '',
+    cpf: '12345678910',
+    nome: 'Peterson Fontinhas',
+    email: 'petersonfontinhas@gmail.com ',
     telefone:'',
     senha: '',
     salario: 0,
     endereco: '',
   };
 
-  cep: string = '';
-  rua: string = '';
-  cidade: string = '';
-  estado: string = '';
+  cep: string = '45645645';
+  rua: string = 'flroes';
+  cidade: string = 'cidades';
+  estado: string = 'PR';
 
   redirectToLoginPage() {
     this.router.navigate(['/login']);
   }
 
-  salario: number = 0;
+  salario: string = "5.000,00";
 
   handleSalario(e: any) {
     let input = e.target;
@@ -55,69 +60,61 @@ export class Registro {
   }
 
   registrarUsuario() {
-    const isFieldsFilled = this.validateFields();
+    const verifyFileds = this.validateFields();
 
+    if(verifyFileds != null){
+      alert(verifyFileds);
+      return;
+    }
+    
     this.cliente.nome = this.cliente.nome.trim();
-    if(!isFieldsFilled){
-      alert("Preencha todos os campos");
-      return;
-    }
+    this.cliente.email = this.cliente.email.trim();
 
-    if (!validateEmail(this.cliente.email.trim())) {
-      alert('Digite um email válido');
-      return;
-    }
-
-    if(!validateCPF(this.cliente.cpf)){
-      alert("Preencha o cpf corretamente");
-      return;
-    }
-
-    if(!validateCEP(this.cep)){
-      alert("Preencha o cep corretamente");
-      return;
-    }
-
-    const validateRegister = this.clienteService.buscarClientePorEmail(this.cliente.email);
-
-    if(validateRegister !== undefined){
-      alert("Email já está em uso. Faça o login");
-      return;
-    }
-
+    const salario = this.currencyFormatter.removeCurrencyMaskFromString(this.salario);
     const enderecoCompleto = `${this.cep} - ${this.rua} - ${this.cidade} - ${this.estado}`;
 
-
-    this.cliente.salario = this.salario;
+    this.cliente.salario = salario;
     this.cliente.endereco = enderecoCompleto;
-
 
     this.clienteService.inserir(this.cliente);
 
-    alert("Registro realizado com sucesso");
+    alert("Registro realizado com sucesso. Aguarde a aprovação da sua conta, você receberá um e-mail");
 
-    this.router.navigate(['/cliente-main-page', this.cliente]);
+    this.router.navigate(['/login']);
 
+  }
+
+  validateFields(): string | null{
+
+    if(!this.cliente.nome.trim()) return "Preencha o nome corretamente";
+    
+    if(!this.cliente.email.trim()) return "Preencha o email corretamente";
+
+    if(!this.cliente.cpf) return "Preencha o CPF corretamente";
+
+    if(this.salario === "0,00") return "Preencha o campo de salário";
+    
+    if(!this.cep) return "Preencha o o CEP corretamente";
+
+    if(!this.rua) return "Preencha a rua corretamente";
+
+    if(!this.cidade) return "Preencha a cidade corretamente";
+
+    if(!this.estado) return "Preencha o estado corretamente";
+
+    if (!validateEmail(this.cliente.email.trim())) return "Digite um email válido";
+
+    if(!validateCPF(this.cliente.cpf)) return "Preencha o cpf corretamente";
+
+    if(!validateCEP(this.cep)) return "Preencha o cep corretamente";
+
+    const validateRegister = this.clienteService.buscarClientePorEmail(this.cliente.email);
+
+    if(validateRegister !== undefined) return "Email já está em uso. Faça o login";
+    
+    return null;
 
   }
 
-  validateFields():boolean{
 
-    if(
-      this.cliente.nome &&
-      this.cliente.email &&
-      this.cliente.senha &&
-      this.cliente.cpf &&
-      this.salario !== 0 &&
-      this.cep &&
-      this.rua &&
-      this.cidade &&
-      this.estado
-    ) {
-      return true;
-    }
-
-    return false;
-
-  }
 }
