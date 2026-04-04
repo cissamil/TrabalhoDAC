@@ -93,4 +93,20 @@
 
     </div>
 
+    @if(responseModal != null) {
+        <div class="modal-overlay">
+            <div class="modal-card">
+                <div class="modal-icon-container" [class]="responseModal.type">
+                    <mat-icon>{{ responseModal.messageIcon }}</mat-icon>
+                </div>
+
+                <div class="modal-content">
+                    <h3>{{ responseModal.title || 'Aviso' }}</h3>
+                    <p>{{ responseModal.message }}</p>
+                </div>
+
+                <button class="modal-button" (click)="closeModal()">Entendido</button>
+            </div>
+        </div>
+    }
 </main>

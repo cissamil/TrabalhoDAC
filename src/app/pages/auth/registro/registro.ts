@@ -7,17 +7,18 @@ import { ContaService } from '../../../core/services/conta-services/conta-servic
 import { validateCEP, validateCPF, validateEmail } from '../../../core/shared/helpers';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { Cliente,} from '../../../core/models/entities';
+import { MatIconModule } from '@angular/material/icon';
+import { ResponseModal } from '../../../core/models/response-modal';
 
 @Component({
   selector: 'app-registro',
-  imports: [NgxMaskDirective,FormsModule],
+  imports: [NgxMaskDirective, FormsModule, MatIconModule],
   templateUrl: './registro.html',
-  styleUrl: './registro.css',
+  styleUrls: ['./registro.css', '../../shared/css/responseModal.css'],
 })
 export class Registro {
   constructor(
     private router: Router, 
-    private contaService: ContaService,
     private clienteService: ClienteService, 
   ){}
 
@@ -31,12 +32,14 @@ export class Registro {
     'RR','SC','SP','SE','TO',
   ];
 
+  responseModal: ResponseModal | null = null;
+
   cliente: Cliente = {
     id: 0,
     cpf: '12345678910',
     nome: 'Peterson Fontinhas',
-    email: 'petersonfontinhas@gmail.com ',
-    telefone:'',
+    email: 'petersonfontinhas@gmail.com',
+    telefone:'41991455216',
     senha: '',
     salario: 0,
     endereco: '',
@@ -59,17 +62,32 @@ export class Registro {
     this.salario = input.value;
   }
 
-  registrarUsuario() {
-    const verifyFileds = this.validateFields();
-
-    if(verifyFileds != null){
-      alert(verifyFileds);
-      return;
+  closeModal(){
+    if(this.responseModal?.type === 'success'){
+      this.router.navigate(['/login']);
     }
-    
+
+    this.responseModal = null;
+
+  }
+
+  registrarUsuario() {
+
+    const verifyFields = this.validateFields();
+
     this.cliente.nome = this.cliente.nome.trim();
     this.cliente.email = this.cliente.email.trim();
 
+    if(verifyFields != null){
+      this.responseModal = {
+        title: "Campo Inválido",
+        message: verifyFields,
+        messageIcon: "error",
+        type: 'error'
+      };
+      return;
+    }
+    
     const salario = this.currencyFormatter.removeCurrencyMaskFromString(this.salario);
     const enderecoCompleto = `${this.cep} - ${this.rua} - ${this.cidade} - ${this.estado}`;
 
@@ -78,19 +96,23 @@ export class Registro {
 
     this.clienteService.inserir(this.cliente);
 
-    alert("Registro realizado com sucesso. Aguarde a aprovação da sua conta, você receberá um e-mail");
-
-    this.router.navigate(['/login']);
-
+    this.responseModal = {
+      title: "Registro realizado com sucesso!.",
+      message: "Aguarde a aprovação da sua conta, você receberá um e-mail com a sua senha",
+      messageIcon: "check",
+      type: 'success'
+    };
   }
 
   validateFields(): string | null{
 
-    if(!this.cliente.nome.trim()) return "Preencha o nome corretamente";
+    if(!this.cliente.nome) return "Preencha o nome corretamente";
     
-    if(!this.cliente.email.trim()) return "Preencha o email corretamente";
+    if(!this.cliente.email) return "Preencha o email corretamente";
 
     if(!this.cliente.cpf) return "Preencha o CPF corretamente";
+    
+    if(!this.cliente.telefone) return "Preencha o telefone corretamente";
 
     if(this.salario === "0,00") return "Preencha o campo de salário";
     
@@ -102,7 +124,8 @@ export class Registro {
 
     if(!this.estado) return "Preencha o estado corretamente";
 
-    if (!validateEmail(this.cliente.email.trim())) return "Digite um email válido";
+
+    if (!validateEmail(this.cliente.email)) return "Digite um email válido";
 
     if(!validateCPF(this.cliente.cpf)) return "Preencha o cpf corretamente";
 

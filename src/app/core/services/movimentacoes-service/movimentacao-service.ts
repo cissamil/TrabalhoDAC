@@ -18,6 +18,8 @@ export class MovimentacaoService {
   
         localStorage[LS_CHAVE] = JSON.stringify(MOVIMENTACOES_MOCK); 
       }
+        // localStorage[LS_CHAVE] = JSON.stringify(MOVIMENTACOES_MOCK); 
+
       
       const movimentacoes: Movimentacao[]= localStorage[LS_CHAVE] ? JSON.parse(localStorage[LS_CHAVE]) : [];
       this.movimentacoesSubject = new BehaviorSubject<Movimentacao[]>(movimentacoes);

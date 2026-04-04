@@ -1,16 +1,18 @@
 import { Router } from '@angular/router';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { ResponseModal } from '../../../core/models/response-modal';
 import { GerenteService } from '../../../core/services/gerente-services';
 import { CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
 import { GerenteAdmin, Cliente, Conta, PedidoAutoCadastro} from '../../../core/models/entities';
 import {  GerenteAutocadastroService} from '../../../core/services/gerente-services/gerente-autocadastro.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-gerente-dashboard',
-  imports: [DatePipe, DecimalPipe],
+  imports: [DatePipe, DecimalPipe, MatIconModule],
   templateUrl: './gerente-dashboard.html',
-  styleUrl: './gerente-dashboard.css',
+  styleUrls:[ './gerente-dashboard.css', '../../shared/css/responseModal.css'],
 })
 export class GerenteDashboard  implements OnInit{
   constructor(
@@ -24,6 +26,7 @@ export class GerenteDashboard  implements OnInit{
 
   // Pega o gerente logado atualmente da sessão
   gerenteLogado!: GerenteAdmin;
+  responseModal: ResponseModal | null = null;
 
   ngOnInit(): void {
     const dadosGerente = this.gerenteService.getGerenteLogado();
@@ -75,10 +78,19 @@ export class GerenteDashboard  implements OnInit{
       return;
     }
 
-    alert(
-      `Cliente aprovado com sucesso. Conta ${contaCriada.numeroConta} criada e senha enviada por e-mail.`,
-    );
+    this.responseModal = {
+      title: "Cliente Aprovado com sucesso!",
+      message: `Conta ${contaCriada.numeroConta} criada e senha enviada por e-mail.`,
+      messageIcon: "check",
+      type: 'success'
+    };
+
   }
+
+  closeModal(){
+    this.responseModal = null;
+  }
+
 
   iniciarRecusa(pedido: PedidoAutoCadastro): void {
     this.pedidoEmRecusa = pedido;
@@ -97,7 +109,14 @@ export class GerenteDashboard  implements OnInit{
 
     const motivoRecusa = this.motivoRecusaInput.trim();
     if (!motivoRecusa) {
-      alert('A recusa exige um motivo.');
+
+      this.responseModal = {
+        title: "Campo incompleto",
+        message: "Preencha o motivo da recusa",
+        messageIcon: "error",
+        type: 'error'
+      };
+
       return;
     }
 
@@ -106,7 +125,14 @@ export class GerenteDashboard  implements OnInit{
       motivoRecusa,
     );
     if (recusou) {
-      alert('Cliente recusado e e-mail com o motivo enviado com sucesso.');
+
+      this.responseModal = {
+        title: "Cliente Recusado",
+        message: "E-mail com motivo enviado com sucesso!",
+        messageIcon: "check",
+        type: 'success'
+      };
+
       this.cancelarRecusa();
     }
   }
@@ -114,13 +140,6 @@ export class GerenteDashboard  implements OnInit{
   atualizarMotivoRecusa(valor: string): void {
     this.motivoRecusaInput = valor;
   }
-
-  // formatarMoeda(valor: number): string {
-  //   return new Intl.NumberFormat('pt-BR', {
-  //     style: 'currency',
-  //     currency: 'BRL',
-  //   }).format(valor);
-  // }
 
   formatarCpf(cpf: string): string {
     const numeros = cpf.replace(/\D/g, '');

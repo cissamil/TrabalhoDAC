@@ -20,6 +20,9 @@ export class ContaService {
 
       localStorage[LS_CHAVE] = JSON.stringify(CONTAS_MOCK); 
     }
+
+    // localStorage[LS_CHAVE] = JSON.stringify(CONTAS_MOCK); 
+
     
     const contas: Conta[]= localStorage[LS_CHAVE] ? JSON.parse(localStorage[LS_CHAVE]) : [];
     this.contasSubject = new BehaviorSubject<Conta[]>(contas);
@@ -103,6 +106,8 @@ export class ContaService {
     });
 
     contagemPorGerente.sort((a, b) => a.totalClientes - b.totalClientes);
+
+    console.log("Contagem: ", contagemPorGerente);
 
     return contagemPorGerente[0].dados;
 

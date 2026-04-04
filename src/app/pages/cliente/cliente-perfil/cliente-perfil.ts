@@ -2,8 +2,10 @@ import { Router } from '@angular/router';
 import { NgxMaskDirective } from "ngx-mask";
 import { FormsModule } from "@angular/forms";
 import { DecimalPipe } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { Component, Input, OnInit } from '@angular/core';
 import { Cliente, Conta } from '../../../core/models/entities';
+import { ResponseModal } from '../../../core/models/response-modal';
 import { validateCEP, validateEmail } from '../../../core/shared/helpers';
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
@@ -11,9 +13,9 @@ import { ClienteSessionService } from '../../../core/services/session-controller
 
 @Component({
   selector: 'app-cliente-perfil',
-  imports: [FormsModule, DecimalPipe, NgxMaskDirective],
+  imports: [FormsModule, DecimalPipe, NgxMaskDirective, MatIconModule],
   templateUrl: './cliente-perfil.html',
-  styleUrl: './cliente-perfil.css',
+  styleUrls: ['./cliente-perfil.css', '../../shared/css/responseModal.css'],
 })
 export class ClientePerfil implements OnInit {
   constructor(
@@ -33,6 +35,7 @@ export class ClientePerfil implements OnInit {
   updatedCliente!: Cliente;
 
   currencyFormatter: CurrencyFormatter = new CurrencyFormatter();
+  responseModal: ResponseModal | null = null;
 
   ngOnInit(): void {
     const dadosCliente = this.clienteSessionService.getCliente();
@@ -68,19 +71,22 @@ export class ClientePerfil implements OnInit {
     this.salario = input.value;
   }
 
+  closeModal(){
+    this.responseModal = null;
+  }
+
+
   atualizarDados() {
 
-    if (!this.validateFields) {
-      alert('Preencha todos os campos');
-      return;
-    }
-    if (!validateEmail(this.updatedCliente.email)) {
-      alert('Digite um email válido');
-      return;
-    }
+    const verifyFields = this.validateFields();
 
-    if (!validateCEP(this.cep.trim())) {
-      alert('Preencha o CEP corretamente');
+    if(verifyFields != null){
+      this.responseModal = {
+        title: "Campo Inválido",
+        message: verifyFields,
+        messageIcon: "error",
+        type: 'error'
+      };
       return;
     }
 
@@ -97,23 +103,42 @@ export class ClientePerfil implements OnInit {
     this.clienteService.atualizar(this.updatedCliente);
     this.clienteSessionService.setCliente(this.updatedCliente);
 
-    alert("Dados alterados com sucesso!");
+    this.responseModal = {
+      title: "Sucesso",
+      message: "Dados alterados com êxito!",
+      messageIcon: "check",
+      type: 'success'
+    };
   }
 
-  validateFields(): boolean {
-    if (
-      this.cliente.nome &&
-      this.cliente.email &&
-      this.cliente.senha &&
-      this.cliente.cpf &&
-      this.cep &&
-      this.rua &&
-      this.cidade &&
-      this.estado
-    ) {
-      return true;
-    }
 
-    return false;
+  validateFields(): string | null{
+
+    if(!this.cliente.nome) return "Preencha o nome corretamente";
+    
+    if(!this.cliente.email) return "Preencha o email corretamente";
+
+    if(!this.cliente.cpf) return "Preencha o CPF corretamente";
+    
+    if(!this.cliente.telefone) return "Preencha o telefone corretamente";
+
+    if(this.salario === "0,00") return "Preencha o campo de salário";
+    
+    if(!this.cep) return "Preencha o o CEP corretamente";
+
+    if(!this.rua) return "Preencha a rua corretamente";
+
+    if(!this.cidade) return "Preencha a cidade corretamente";
+
+    if(!this.estado) return "Preencha o estado corretamente";
+
+    if (!validateEmail(this.cliente.email)) return "Digite um email válido";
+
+    if(!validateCEP(this.cep)) return "Preencha o cep corretamente";
+
+    
+    return null;
+
   }
+
 }

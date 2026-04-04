@@ -26,15 +26,15 @@
                     <label>E-mail</label>
                     <input type="email" [(ngModel)]="cliente.email" name="email" placeholder="seu@email.com">
                 </div>
- 
-                <!-- <div class="field full-length">
-                    <label for="name">Senha</label>
-                    <input type="text" [(ngModel)]="cliente.senha"  name="senha" placeholder="Digite sua senha">
-                </div> -->
 
                 <div class="field">
                     <label>CPF</label>
                     <input type="text" [(ngModel)]="cliente.cpf" name="cpf" mask="000.000.000-00" placeholder="123.456.789-10">
+                </div>
+
+                <div class="field">
+                    <label>Telefone</label>
+                    <input type="text" [(ngModel)]="cliente.telefone" name="telefone" mask="(00) 00000-0000" placeholder="(12) 12345-6789">
                 </div>
 
                 <div class="field">
@@ -73,4 +73,22 @@
             <p>Já possui conta? <span class="login" (click)="redirectToLoginPage()">Faça o login</span></p>
         </div>
     </div>
+
+
+    @if(responseModal != null) {
+    <div class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-icon-container" [class]="responseModal.type">
+                <mat-icon>{{ responseModal.messageIcon }}</mat-icon>
+            </div>
+
+            <div class="modal-content">
+                <h3>{{ responseModal.title || 'Aviso' }}</h3>
+                <p>{{ responseModal.message }}</p>
+            </div>
+
+            <button class="modal-button" (click)="closeModal()">Entendido</button>
+        </div>
+    </div>
+    }
 </main>
