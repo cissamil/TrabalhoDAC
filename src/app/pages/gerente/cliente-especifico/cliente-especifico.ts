@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
 
 interface ClienteDetalhado {
@@ -24,6 +25,18 @@ export class ClienteEspecifico {
   termoBusca = '';
   clienteSelecionado: ClienteDetalhado | null = null;
 
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.route.queryParamMap.subscribe((params) => {
+      const cpf = params.get('cpf');
+      if (cpf) {
+        this.termoBusca = cpf;
+        this.consultarCliente();
+      }
+    });
+  }
+
   consultarCliente(): void {
     const termoNormalizado = this.termoBusca.trim().toLowerCase();
     if (!termoNormalizado) {
@@ -31,8 +44,10 @@ export class ClienteEspecifico {
       return;
     }
 
+    const termoCpf = termoNormalizado.replace(/\D/g, '');
+
     const cliente = CLIENTES_MOCK.find(
-      (item) => item.cpf.includes(termoNormalizado) || item.nome.toLowerCase().includes(termoNormalizado)
+      (item) => item.cpf.includes(termoCpf) || item.nome.toLowerCase().includes(termoNormalizado)
     );
 
     if (!cliente) {
