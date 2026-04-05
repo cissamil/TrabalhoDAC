@@ -10,6 +10,21 @@ section {
   margin-top: 6px;
 }
 
+.search-bar {
+  margin-top: 16px;
+  margin-bottom: 12px;
+}
+
+.search-bar input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d6deec;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 1rem;
+  background-color: #f8fbff;
+}
+
 .table-wrapper {
   overflow-x: auto;
   margin-top: 16px;
@@ -31,6 +46,16 @@ td {
 th {
   color: #1d2b53;
   font-size: 0.9rem;
+}
+
+.detail-link {
+  color: #117a3a;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.detail-link:hover {
+  text-decoration: underline;
 }
 
 .empty-state {

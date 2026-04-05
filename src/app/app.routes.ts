@@ -29,6 +29,7 @@ export const routes: Routes = [
                 { path: 'dashboard', component: GerenteDashboard },
                 { path: 'todos-clientes', component: TodosClientes },
                 { path: 'consultar-cliente', component: ClienteEspecifico },
+                { path: 'consultar-cliente/:cpf', component: ClienteEspecifico },
                 { path: 'top-3-clientes', component: Top3Clientes },
             ],
         },

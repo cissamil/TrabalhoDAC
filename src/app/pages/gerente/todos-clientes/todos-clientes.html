@@ -4,33 +4,51 @@
     <p>Visualize todos os clientes e os principais dados das contas.</p>
   </div>
 
+  <div class="search-bar">
+    <input
+      type="text"
+      [(ngModel)]="termoBusca"
+      placeholder="Pesquisar por CPF ou nome"
+    />
+  </div>
+
   <div class="table-wrapper">
     <table>
       <thead>
         <tr>
           <th>CPF</th>
           <th>Nome</th>
+          <th>Cidade</th>
+          <th>Estado</th>
           <th>E-mail</th>
           <th>Salario</th>
           <th>Saldo</th>
           <th>Limite</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        @if (clientes.length === 0) {
+        @if (clientesFiltrados.length === 0) {
           <tr>
-            <td colspan="6" class="empty-state">Nenhum cliente encontrado.</td>
+            <td colspan="9" class="empty-state">Nenhum cliente encontrado.</td>
           </tr>
         }
 
-        @for (cliente of clientes; track cliente.cpf) {
+        @for (cliente of clientesFiltrados; track cliente.cpf) {
           <tr>
-            <td>{{ cliente.cpf }}</td>
+            <td>{{ formatarCpf(cliente.cpf) }}</td>
             <td>{{ cliente.nome }}</td>
+            <td>{{ cliente.cidade }}</td>
+            <td>{{ cliente.estado }}</td>
             <td>{{ cliente.email }}</td>
             <td>{{ formatarMoeda(cliente.salario) }}</td>
             <td>{{ formatarMoeda(cliente.saldo) }}</td>
             <td>{{ formatarMoeda(cliente.limite) }}</td>
+            <td>
+              <a class="detail-link" [routerLink]="['/gerente-main-page/consultar-cliente']" [queryParams]="{ cpf: cliente.cpf }">
+                Ver detalhes
+              </a>
+            </td>
           </tr>
         }
       </tbody>
