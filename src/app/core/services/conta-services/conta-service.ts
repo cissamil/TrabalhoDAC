@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CONTAS_MOCK } from '../../mock/mock-data';
-import { GerenteService } from '../gerente-services';
+import { GerenteService } from '../gerente-services/gerente-services';
 import { ClienteSessionService } from '../session-controller.service';
 import { Conta, GerenteAdmin, Movimentacao } from '../../models/entities';
 import { MovimentacaoService } from '../movimentacoes-service/movimentacao-service';
