@@ -1,7 +1,7 @@
-import { DecimalPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { DecimalPipe } from '@angular/common';
 import { NgxMaskPipe } from 'ngx-mask';
 import { ClientTableData } from '../../../core/models/table-data';
 import { ContaService } from '../../../core/services/conta-services/conta-service';

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { NgxMaskPipe } from 'ngx-mask';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { ManagerListTableData } from '../../../core/models/table-data';
@@ -8,7 +10,7 @@ import { ContaService } from '../../../core/services/conta-services/conta-servic
 
 @Component({
   selector: 'app-admin-gerenciar-gerentes',
-  imports: [MatTableModule, FormsModule],
+  imports: [MatTableModule, NgxMaskPipe, FormsModule],
   templateUrl: './adm-gerenciar-gerentes.html',
   styleUrl: './adm-gerenciar-gerentes.css',
 })
