@@ -308,38 +308,4 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
 ];
 
 
-export const PEDIDOS_MOCK: PedidoAutoCadastro[] = [
-  {
-    id: new Date().getTime() + 31,
-    cpfCliente: '41826991007',
-    nomeCliente: 'Amanda Costa',
-    nomeGerente: 'Genévie',
-    cpfGerente: '98574307084',
-    emailCliente: '',
-    salario: 2400,
-    dataSolicitacao: new Date('2026-03-25T09:20:00'),
-    status: 'PENDENTE',
-  },
-  {
-    id: new Date().getTime() + 32,
-    cpfCliente: '98256430060',
-    nomeCliente: 'Renato Alves',
-    nomeGerente: 'Genévie',
-    cpfGerente: '98574307084',
-    emailCliente: '',
-    salario: 1700,
-    dataSolicitacao: new Date('2026-03-26T11:45:00'),
-    status: 'PENDENTE',
-  },
-  {
-    id: new Date().getTime() + 33,
-    cpfCliente: '14690238044',
-    nomeCliente: 'Patricia Ramos',
-    nomeGerente: 'Genévie',
-    cpfGerente: '98574307084',
-    emailCliente: '',
-    salario: 5200,
-    dataSolicitacao: new Date('2026-03-26T15:30:00'),
-    status: 'PENDENTE',
-  },
-];
+export const PEDIDOS_MOCK: PedidoAutoCadastro[] = [];
