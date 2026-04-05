@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { InfoCard } from '../../../core/models/info-card';
-import { CONTAS_MOCK, STAFF_MOCK } from '../../../core/mock/mock-data';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { DecimalPipe } from '@angular/common';
 import { ManagerTableData } from '../../../core/models/table-data';
-import { GerenteAdmin } from '../../../core/models/entities';
+import { Conta, GerenteAdmin } from '../../../core/models/entities';
 import { NgxMaskPipe } from 'ngx-mask';
+import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
+import { ContaService } from '../../../core/services/conta-services/conta-service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -16,18 +17,34 @@ import { NgxMaskPipe } from 'ngx-mask';
 })
 export class AdminDashboard implements OnInit {
 
-  gerentes = STAFF_MOCK.filter((gerente) => gerente.tipo == "gerente");
-  contas = CONTAS_MOCK;
+  constructor(
+    private gerentesService: GerenteService,
+    private contasService:ContaService,
+  ){}
+
+  gerentes: GerenteAdmin[]=[];
+  contas: Conta[]=[];
   MANAGERS_TABLE: ManagerTableData[] = []
-  displayedColumns: string[] = ['Nome Gerente', 'CPF', 'Qtd. Clientes', 'Saldos Positivos', 'Saldos Negativos', 'Saldo Total'];
+  infoCards: InfoCard[] = []
+
+  displayedColumns: string[] = [
+    'Nome Gerente',
+    'CPF',
+    'Qtd. Clientes',
+    'Saldos Positivos',
+    'Saldos Negativos',
+    'Saldo Total'];
 
   ngOnInit(): void {
-
+    this.gerentes=this.gerentesService.listarGerentes();
+    this.contas=this.contasService.listarTodos();
     this.fillManagersTable();
+    this.fillInfoCards();
   }
 
   fillManagersTable(){
 
+    this.MANAGERS_TABLE=[];
     this.gerentes.forEach((gerente) =>{
 
       if(gerente.tipo !== "administrador"){
@@ -94,15 +111,15 @@ export class AdminDashboard implements OnInit {
 
 
 
-  infoCards: InfoCard[] = [
+fillInfoCards(): void {
+  this.infoCards = [
     {
       topTitle: 'Total de Clientes',
       icon: 'account_balance_wallet',
       middleContent: this.contas.length.toString(),
-      color: "black",
-      bottomText: "Em todos os gerentes",
+      color: 'black',
+      bottomText: 'Em todos os gerentes',
     },
-
     {
       topTitle: 'Saldos Positivos',
       icon: 'trending_up',
@@ -110,7 +127,6 @@ export class AdminDashboard implements OnInit {
       color: 'green',
       bottomText: 'Limite Disponível',
     },
-
     {
       topTitle: 'Saldos Negativos',
       icon: 'trending_down',
@@ -119,5 +135,6 @@ export class AdminDashboard implements OnInit {
       bottomText: 'Saldo + Limite',
     },
   ];
+}
 
 }

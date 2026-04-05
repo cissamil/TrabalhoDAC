@@ -4,7 +4,7 @@ import {
   GerenteAutocadastroService,
   PedidoAutocadastro,
 } from '../../../core/services/gerente-services/gerente-autocadastro.service';
-import { GerenteService } from '../../../core/services/gerente-services';
+import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 import { STAFF_MOCK, CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
 import { GerenteAdmin, Cliente, Conta } from '../../../core/models/entities';
 
