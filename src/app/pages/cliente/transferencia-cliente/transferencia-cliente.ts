@@ -117,9 +117,16 @@ export class TransferenciaCliente implements OnInit{
   transferir(){
 
     const valor = this.currencyFormatter.removeCurrencyMaskFromString(this.valorTransferencia);
+
+    if(Number(this.numeroContaDestino) === this.contaCliente.numeroConta){
+      this.mensagem = "Você não pode transferir para você mesmo";
+      this.tipoErro = 'erroCONTA';
+      this.corMensagem = 'red';
+      return;
+    }
     
-    if(this.numeroContaDestino.toString().length < 4){
-      this.mensagem = "Preencha a conta corretamente";
+    if(this.numeroContaDestino.length < 4){
+      this.mensagem = "Preencha a conta corretamente (4 dígitos)";
       this.tipoErro = 'erroCONTA';
       this.corMensagem = 'red';
       return;
@@ -138,6 +145,7 @@ export class TransferenciaCliente implements OnInit{
       this.corMensagem = 'red';
       return; 
     }
+
 
 
     const contaDestino = this.contaService.buscarPorNumeroConta(this.numeroContaDestino); 

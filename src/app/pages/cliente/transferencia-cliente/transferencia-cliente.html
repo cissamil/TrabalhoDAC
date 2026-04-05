@@ -38,12 +38,12 @@
 
           @if(valorInfo.reference == 'valorS' && valorASacar > 0){
             <p class="cardInfo">{{valorInfo.title}}</p>
-            <span class="red">R$ {{valorInfo.value | number:'1.2-2'}}</span>
+            <span class="redInfo">R$ {{valorInfo.value | number:'1.2-2'}}</span>
           }
 
           @if(valorInfo.reference == 'novoS' && valorASacar > 0){
             <p class="cardInfo">{{valorInfo.title}}</p>
-            <span class="red">R$ {{valorInfo.value | number:'1.2-2'}}</span>
+            <span class="redInfo">R$ {{valorInfo.value | number:'1.2-2'}}</span>
           }
         }
 
