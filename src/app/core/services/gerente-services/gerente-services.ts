@@ -19,9 +19,7 @@ export class GerenteService {
   //versão que mostra as mudanças
 
 
-  constructor(
-    private contaService:ContaService,
-  ){
+  constructor(){
 
     if(!localStorage[LS_CHAVE]){
       //verifica se tem algo salvo
@@ -126,29 +124,18 @@ export class GerenteService {
 
   }
 
+
   removerGerente(idEmExclusao:number):void{
     const todosGerentes=this.listarGerentes();
     if(todosGerentes.length<=1){
       alert("Não é permitido remover o último gerente.");
       return;
     }
-    const gerenteEmExclusao = todosGerentes.find(g => g.id === idEmExclusao);
-    if (!gerenteEmExclusao) return;
 
-    const quaseTodosGerentes=todosGerentes.filter(gerente=>gerente.id!==idEmExclusao);
-    console.log('Total antes:', todosGerentes.length);
-    console.log('Candidatos após filtro:', quaseTodosGerentes.length);
-    const contagem=quaseTodosGerentes.map(contador=>({
-      dados:contador,
-      qtdContas: this.contaService.contarContasGerente(contador.nome)
-    }));
-    contagem.sort((a,b)=>a.qtdContas-b.qtdContas);
-    const sucessor=contagem[0].dados;
-
-    this.contaService.substituirGerente(gerenteEmExclusao.nome,sucessor.nome);
     const novaListaGerentes=this.listarTodos().filter(g=>g.id !==idEmExclusao);
     this.atualizarDados(novaListaGerentes);
-    alert(`Contas de ${gerenteEmExclusao.nome} transferidas para ${sucessor.nome}`);
 
   }
+
+
 }

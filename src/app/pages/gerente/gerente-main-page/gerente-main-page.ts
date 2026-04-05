@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { GerenteService } from '../../../core/services/gerente-services';
+import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 
 @Component({
   selector: 'app-gerente-main-page',

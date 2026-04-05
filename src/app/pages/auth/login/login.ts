@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { validateEmail } from '../../../core/shared/helpers';
 import { Cliente, GerenteAdmin } from '../../../core/models/entities';
 import {ProfileOptions } from '../../../core/models/navigationOptions';
-import { GerenteService } from '../../../core/services/gerente-services';
+import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
@@ -29,7 +29,7 @@ export class Login implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    
+
     console.log("Verificando se cliente já está logado");
     const isLogged = this.clienteSessionService.checkIfClienteIsLogged();
 
@@ -41,7 +41,7 @@ export class Login implements OnInit{
   }
 
   responseModal: ResponseModal | null = null;
-  
+
 
   public get profileOptions(): typeof ProfileOptions {
     return ProfileOptions;
@@ -53,9 +53,12 @@ export class Login implements OnInit{
   }
 
   setAcessProfile(option: ProfileOptions) {
+    console.log('antes: ')
     this.acessProfile = option;
     console.log('AcessProfile', this.acessProfile);
+    console.log('depois: ');
   }
+
 
   closeModal(){
     if(this.responseModal?.type === 'success'){
@@ -76,7 +79,7 @@ export class Login implements OnInit{
     const verifyFields = this.validateFields();
 
     if(verifyFields != null){
-     this.responseModal = {
+    this.responseModal = {
         title: "Campo Inválido",
         message: verifyFields,
         messageIcon: "error",
@@ -86,36 +89,42 @@ export class Login implements OnInit{
       return;
 
     }
-    
+
     if(this.acessProfile == ProfileOptions.Cliente){
+      console.log('validando dado cliente');
       const result = this.clienteService.buscarClientePorEmailESenha(
         this.email,
         this.senha,
       );
+      console.log('result cliente: ', result);
 
       this.handleResult(result, this.acessProfile);
     }
 
     if(this.acessProfile === ProfileOptions.Gerente){
+      console.log('validando dado gerente');
       const result = this.gerenteService.buscarGerentePorEmailESenhaETipo(
         this.email,
         this.senha,
         "gerente"
       );
+      console.log('result ger: ', result);
 
       this.handleResult(result, this.acessProfile);
     }
-    
+
     if(this.acessProfile === ProfileOptions.Admin){
+      console.log('validando dado admin');
       const result = this.gerenteService.buscarGerentePorEmailESenhaETipo(
         this.email,
         this.senha,
         "administrador"
       );
+      console.log('result adm: ', result);
 
       this.handleResult(result, this.acessProfile);
     }
-    
+
   }
 
   validateFields() : string | null{
@@ -132,7 +141,7 @@ export class Login implements OnInit{
 
 
   handleResult(result : any, profile:ProfileOptions){
-    
+
     if(result === undefined){
       this.responseModal = {
         title: "Campo Inválido",
@@ -152,7 +161,7 @@ export class Login implements OnInit{
       this.clienteSessionService.setCliente(result as Cliente);
       this.clienteSessionService.setContaCliente(conta!);
       // this.clienteSessionService.setMovimentacoesCliente(movimentacoes!);
-    
+
       this.redirect('/cliente-main-page');
       return;
     }
@@ -163,7 +172,7 @@ export class Login implements OnInit{
       this.redirect('/gerente-main-page');
       return;
     }
-    
+
     if(profile == ProfileOptions.Admin){
       const gerente = result as GerenteAdmin;
       this.gerenteService.setGerenteLogado(gerente);

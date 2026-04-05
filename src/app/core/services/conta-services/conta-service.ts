@@ -18,7 +18,12 @@ export class ContaService {
     public contas$: Observable<Conta[]>
 
 
-    constructor(){
+    constructor(
+      private movimentacaoService: MovimentacaoService,
+      private gerenteService: GerenteService,
+      private clienteSessionService:ClienteSessionService,
+    ){
+
       if(!localStorage[LS_CHAVE]){
 
         localStorage[LS_CHAVE] = JSON.stringify(CONTAS_MOCK);
@@ -35,6 +40,22 @@ export class ContaService {
       localStorage[LS_CHAVE] = JSON.stringify(contas);
       this.contasSubject.next(contas);
     }
+
+    inserir(conta: Conta): void{
+    try{
+
+      const contas = this.listarTodos();
+      conta.id = new Date().getTime();
+      contas.push(conta);
+      this.atualizarDados(contas);
+
+    }catch(e){
+
+      console.error("Erro ao inserir usuário: ", e)
+
+    }
+
+  }
 
   atualizarConta(conta: Conta){
 
@@ -54,19 +75,23 @@ export class ContaService {
 
   }
 
-    realizarTransferencia(contaOrigem: Conta, contaDestino: Conta){
-      try{
-        const contas = this.listarTodos();
+    realizarTransferencia(contaOrigem: Conta, contaDestino: Conta, valor:number){
+    try{
 
-        this.listarConta(contaDestino.numeroConta);
-        const indexOrigem = contas.findIndex(c => c.id === contaOrigem.id);
-        const indexDestino = contas.findIndex(c => c.id === contaDestino.id);
+      const contas = this.listarTodos();
 
-        if(indexOrigem > -1 && indexDestino > -1){
-          contas[indexOrigem] = contaOrigem;
-          contas[indexDestino] = contaDestino;
-          this.atualizarDados(contas);
-        }
+      this.listarConta(contaDestino.numeroConta);
+      const indexOrigem = contas.findIndex(c => c.id === contaOrigem.id);
+      const indexDestino = contas.findIndex(c => c.id === contaDestino.id);
+
+      if(indexOrigem > -1 && indexDestino > -1){
+        contas[indexOrigem] = contaOrigem;
+        contas[indexDestino] = contaDestino;
+        this.atualizarDados(contas);
+
+        this.registrarMovimentacao(valor, contaOrigem, contaDestino)
+        this.clienteSessionService.setContaCliente(contaOrigem);
+      }
 
       this.listarConta(contaDestino.numeroConta);
 
@@ -74,6 +99,7 @@ export class ContaService {
       console.error("Erro ao atualizar conta ", e);
     }
   }
+
 
   registrarMovimentacao(valor: number, contaOrigem: Conta, contaDestino:Conta){
 
@@ -98,9 +124,8 @@ export class ContaService {
 
   buscarGerenteComMenosClientes(): GerenteAdmin{
 
-    const gerenteService: GerenteService = new GerenteService();
     const contas = this.listarTodos();
-    const gerentes = gerenteService.listarGerentes();
+    const gerentes = this.gerenteService.listarGerentes();
 
     const contagemPorGerente = gerentes.map((gerente) =>{
       return {
@@ -144,6 +169,24 @@ export class ContaService {
     const contas = this.listarTodos();
 
       return contas.find((conta) => conta.numeroConta === numeroConta);
+    }
+
+    contarContasGerente(nomeGerente:string):number{
+      const contas=this.listarTodos();
+      return contas.filter((c:Conta)=>c.gerente===nomeGerente).length;
+
+    }
+
+    substituirGerente(gerenteEmExclusao:string, gerenteNovo:string):void{
+      const contas=this.listarTodos();
+      const contasAtualizadas=contas.map((conta:Conta)=>{
+        if(conta.gerente===gerenteEmExclusao){
+          return{...conta, gerente:gerenteNovo};
+        }
+        return conta;
+      })
+
+      this.atualizarDados(contasAtualizadas);
     }
 
 

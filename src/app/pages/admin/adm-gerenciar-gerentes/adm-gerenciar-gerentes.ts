@@ -54,10 +54,17 @@ export class AdminGerenciarGerentes implements OnInit{
 
   ngOnInit(): void {
     this.gerentes=this.gerenteService.listarGerentes();
+    this.contas=this.contaService.listarTodos();
     this.fillGerentesTable();
     this.calcularCards();
   };
 
+
+  toggleFormularioNovoGerente(): void {
+    this.exibirFormularioNovoGerente = !this.exibirFormularioNovoGerente;
+    this.mensagemErro = '';
+    this.mensagemSucesso = '';
+  }
 
   fillGerentesTable(): void {
     //imprime os dados dos gerentes na tela em formato de tabela
@@ -85,16 +92,194 @@ export class AdminGerenciarGerentes implements OnInit{
     this.MANAGERS_TABLE = [...novosDados];
 }
 
-  remover(id:number):void{
-    console.log('Tabela antes da remoção');
-    if (confirm('Tem certeza que deseja remover este gerente? as contas serão transferidas.')) {
-    this.gerenteService.removerGerente(id);
+  private atualizarTela(): void {
     this.gerentes = this.gerenteService.listarGerentes();
     this.contas = this.contaService.listarTodos();
     this.fillGerentesTable();
     this.calcularCards();
-    console.log('Tabela atualizada após remoção');
   }
 
+inserirNovoGerente(): void {
+    this.mensagemErro = '';
+    this.mensagemSucesso = '';
+
+    const nome = this.novoGerente.nome.trim();
+    const cpf = this.novoGerente.cpf.replace(/\D/g, '');
+    const email = this.novoGerente.email.trim().toLowerCase();
+    const telefone = this.novoGerente.telefone.replace(/\D/g, '');
+    const senha = this.novoGerente.senha;
+
+    if (!nome || !cpf || !email || !telefone || !senha) {
+      this.mensagemErro = 'Preencha todos os campos, incluindo a senha.';
+      return;
+    }
+
+    if (cpf.length !== 11) {
+      this.mensagemErro = 'CPF invalido. Informe 11 digitos.';
+      return;
+    }
+
+    const jaExisteCpf = this.gerenteService.listarTodos().some((item) => item.cpf === cpf);
+    if (jaExisteCpf) {
+      this.mensagemErro = 'Ja existe cadastro com este CPF.';
+      return;
+    }
+
+    const gerentesAntesInsercao = this.gerenteService.listarGerentes();
+
+    const novoGerente: GerenteAdmin = {
+      id: 0,
+      nome,
+      cpf,
+      email,
+      telefone,
+      senha,
+      tipo: 'gerente',
+    };
+
+    this.gerenteService.inserir(novoGerente);
+
+    const contaTransferida = this.transferirContaParaNovoGerente(novoGerente, gerentesAntesInsercao);
+
+    this.atualizarTela();
+    this.mensagemSucesso = contaTransferida
+      ? `Novo gerente cadastrado com sucesso. Conta ${contaTransferida.numeroConta} transferida automaticamente.`
+      : `Novo gerente cadastrado com sucesso. Nenhuma conta foi transferida.`;
+
+    this.novoGerente = {
+      nome: '',
+      cpf: '',
+      email: '',
+      telefone: '',
+      senha: '',
+    };
+  }
+  private obterMenorSaldoPositivo(contas: Conta[]): number {
+    const menoresSaldosPositivos = contas
+      .map((conta) => conta.saldo)
+      .filter((saldo) => saldo > 0)
+      .sort((a, b) => a - b);
+
+    return menoresSaldosPositivos[0] ?? Number.POSITIVE_INFINITY;
+  }
+
+  private selecionarContaParaTransferencia(contas: Conta[]): Conta | null {
+    const contasPositivas = contas
+      .filter((conta) => conta.saldo > 0)
+      .sort((a, b) => a.saldo - b.saldo);
+
+    if (contasPositivas.length > 0) {
+      return contasPositivas[0];
+    }
+
+    const contasOrdenadas = contas.slice().sort((a, b) => a.saldo - b.saldo);
+    return contasOrdenadas[0] ?? null;
+  }
+
+  private transferirContaParaNovoGerente(
+    novoGerente: GerenteAdmin,
+    gerentesAntesInsercao: GerenteAdmin[],
+  ): Conta | null {
+    if (gerentesAntesInsercao.length === 0) {
+      return null;
+    }
+
+    const contasAtuais = this.contaService.listarTodos();
+    if (contasAtuais.length === 0) {
+      return null;
+    }
+
+    if (gerentesAntesInsercao.length === 1) {
+      const contasGerenteUnico = contasAtuais.filter(
+        (conta) => conta.gerente === gerentesAntesInsercao[0].nome
+      );
+
+      if (contasGerenteUnico.length <= 1) {
+        return null;
+      }
+    }
+
+    const contagemPorGerente = gerentesAntesInsercao.map((gerente) => {
+      const contasGerente = contasAtuais.filter((conta) => conta.gerente === gerente.nome);
+      return {
+        gerente,
+        contas: contasGerente,
+      };
+    });
+
+    const maxContas = Math.max(...contagemPorGerente.map((item) => item.contas.length));
+    if (maxContas <= 0) {
+      return null;
+    }
+
+    const candidatos = contagemPorGerente.filter((item) => item.contas.length === maxContas);
+    const gerenteDoador = candidatos
+      .map((item) => ({
+        ...item,
+        menorSaldoPositivo: this.obterMenorSaldoPositivo(item.contas),
+      }))
+      .sort((a, b) => {
+        if (a.menorSaldoPositivo !== b.menorSaldoPositivo) {
+          return a.menorSaldoPositivo - b.menorSaldoPositivo;
+        }
+
+        return a.gerente.nome.localeCompare(b.gerente.nome);
+      })[0];
+
+    if (!gerenteDoador) {
+      return null;
+    }
+
+    const contaEscolhida = this.selecionarContaParaTransferencia(gerenteDoador.contas);
+    if (!contaEscolhida) {
+      return null;
+    }
+
+    const contaAtualizada: Conta = {
+      ...contaEscolhida,
+      gerente: novoGerente.nome,
+      cpfGerente: novoGerente.cpf,
+    };
+
+    this.contaService.atualizarConta(contaAtualizada);
+    return contaAtualizada;
+  }
+
+  remover(id:number):void{
+    const confirmarRemocao: boolean = confirm(
+      'Tem certeza que deseja remover este gerente? As contas serão transferidas.'
+    );
+
+    if (!confirmarRemocao) return;
+    const listaGerentes= this.gerenteService.listarGerentes();
+
+    const quaseTodosGerentes= listaGerentes.filter( gerente => gerente.id !== id);
+
+    const gerenteEmExclusao = listaGerentes.find(g => g.id === id);
+    if (!gerenteEmExclusao) return;
+
+    const contagem=quaseTodosGerentes.map(contador=>({
+      dados:contador,
+      qtdContas: this.contaService.contarContasGerente(contador.nome)
+    }));
+    contagem.sort((a,b)=>a.qtdContas-b.qtdContas);
+    const sucessor=contagem[0].dados;
+
+    this.contaService.substituirGerente(gerenteEmExclusao.nome,sucessor.nome);
+
+
+    this.gerenteService.removerGerente(id);
+
+    this.gerentes = this.gerenteService.listarGerentes();
+
+    this.contas = this.contaService.listarTodos();
+
+    this.fillGerentesTable();
+
+    this.calcularCards();
+
+    alert(`Contas de ${gerenteEmExclusao.nome} transferidas para ${sucessor.nome}`);
+
 }
+
 }
