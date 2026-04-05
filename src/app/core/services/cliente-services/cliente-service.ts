@@ -9,7 +9,7 @@ const LS_CHAVE = 'clientes';
   providedIn: 'root',
 })
 export class ClienteService {
-  
+
   private clientesSubject: BehaviorSubject<Cliente[]>;
   public clientes$: Observable<Cliente[]>
 
@@ -17,9 +17,9 @@ export class ClienteService {
   constructor(){
     if(!localStorage[LS_CHAVE]){
 
-      localStorage[LS_CHAVE] = JSON.stringify(CLIENTES_MOCK); 
+      localStorage[LS_CHAVE] = JSON.stringify(CLIENTES_MOCK);
     }
-    
+
     const clientes: Cliente[]= localStorage[LS_CHAVE] ? JSON.parse(localStorage[LS_CHAVE]) : [];
     this.clientesSubject = new BehaviorSubject<Cliente[]>(clientes);
     this.clientes$ = this.clientesSubject.asObservable();
@@ -30,7 +30,7 @@ export class ClienteService {
   private atualizarDados(clientes: Cliente[]){
     localStorage[LS_CHAVE] = JSON.stringify(clientes);
     this.clientesSubject.next(clientes);
-  }  
+  }
 
   listarTodos() : Cliente[]{
     return this.clientesSubject.getValue();
@@ -64,7 +64,7 @@ export class ClienteService {
       Endereço: ${cliente.endereco}
     `);
     const clientes = this.listarTodos();
-    
+
     const index = clientes.findIndex(c => c.id === cliente.id);
     if(index > -1){
       clientes[index] = cliente;
@@ -72,8 +72,10 @@ export class ClienteService {
     }
   }
 
-  buscarPorId(){
+  buscarPorCPF(cpf: string){
+    const clientes = this.listarTodos();
 
+    return clientes.find((cliente) => cliente.cpf === cpf);
   }
 
   remover(id: number) : void{
@@ -95,4 +97,5 @@ export class ClienteService {
     return clientes.find((cliente) => cliente.email === email && cliente.senha === senha);
   }
 
+ 
 }

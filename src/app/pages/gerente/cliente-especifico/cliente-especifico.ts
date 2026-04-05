@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
+import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { ContaService } from '../../../core/services/conta-services/conta-service';
+import { Cliente, Conta } from '../../../core/models/entities';
 
 interface ClienteDetalhado {
   cpf: string;
@@ -20,9 +22,24 @@ interface ClienteDetalhado {
   templateUrl: './cliente-especifico.html',
   styleUrl: './cliente-especifico.css',
 })
-export class ClienteEspecifico {
+export class ClienteEspecifico implements OnInit {
+
+  constructor(
+    private clienteService: ClienteService,
+    private contaService: ContaService,
+  ){}
+
+  clientes:Cliente[]=[];
+  contas: Conta[]=[];
+
   termoBusca = '';
   clienteSelecionado: ClienteDetalhado | null = null;
+
+  ngOnInit(): void {
+    this.clientes=this.clienteService.listarTodos();
+    this.contas=this.contaService.listarTodos();
+
+  }
 
   consultarCliente(): void {
     const termoNormalizado = this.termoBusca.trim().toLowerCase();
@@ -31,16 +48,15 @@ export class ClienteEspecifico {
       return;
     }
 
-    const cliente = CLIENTES_MOCK.find(
-      (item) => item.cpf.includes(termoNormalizado) || item.nome.toLowerCase().includes(termoNormalizado)
-    );
+    const cliente = this.clientes.find(
+      (item) => item.cpf.includes(termoNormalizado));
 
     if (!cliente) {
       this.clienteSelecionado = null;
       return;
     }
 
-    const conta = CONTAS_MOCK.find((item) => item.cliente === cliente.nome);
+    const conta = this.contas.find((item) => item.cpfCliente === cliente.cpf);
     if (!conta) {
       this.clienteSelecionado = null;
       return;
