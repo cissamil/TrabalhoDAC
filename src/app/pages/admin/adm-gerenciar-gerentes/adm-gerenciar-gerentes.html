@@ -8,7 +8,7 @@
   @if (exibirFormularioNovoGerente) {
     <section class="novo-gerente-form">
       <h2>Novo gerente</h2>
-  
+
       <div class="form-grid">
         <label>
           Nome
@@ -45,12 +45,12 @@
       }
 
       <div class="form-actions">
-        <button type="button" class="btnSalvar" (click)="inserirNovoGerente()">Salvar</button>
+        <button type="button" class="btnSalvar" (click)="salvarGerente()">{{idGerenteEditando ? 'Atualizar' : 'Salvar'}}</button>
       </div>
     </section>
   }
 
-  
+
   <div class="container">
     <div class="card1">
       <p>Total de Gerentes</p>
@@ -109,7 +109,7 @@
         <ng-container matColumnDef="Ações">
           <th mat-header-cell *matHeaderCellDef> Ações </th>
           <td mat-cell *matCellDef="let element">
-            <button type="button">Editar</button>
+            <button type="button" (click)="atualizarGerente(element.id)">Editar</button>
             <button type="button" class="btn-remover"
             (click)="remover(element.id)">Remover</button>
           </td>

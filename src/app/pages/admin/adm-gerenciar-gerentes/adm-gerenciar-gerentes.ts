@@ -33,6 +33,7 @@ export class AdminGerenciarGerentes implements OnInit{
   exibirFormularioNovoGerente = false;
   mensagemErro = '';
   mensagemSucesso = '';
+  idGerenteEditando: number | null = null;
 
   novoGerente = {
     nome: '',
@@ -280,6 +281,108 @@ inserirNovoGerente(): void {
 
     alert(`Contas de ${gerenteEmExclusao.nome} transferidas para ${sucessor.nome}`);
 
+}
+
+editarGerente(): void {
+
+  if (!this.idGerenteEditando) return;
+
+  const gerenteOriginal = this.gerenteService
+    .listarTodos()
+    .find(g => g.id === this.idGerenteEditando);
+
+  if (!gerenteOriginal) return;
+
+  const gerenteAtualizado: GerenteAdmin = {
+    id: gerenteOriginal.id, // mantém
+    cpf: gerenteOriginal.cpf, // NÃO altera
+    tipo: gerenteOriginal.tipo, // mantém
+
+    nome: this.novoGerente.nome,
+    email: this.novoGerente.email,
+    telefone: this.novoGerente.telefone,
+    senha: this.novoGerente.senha,
+  };
+
+  this.gerenteService.atualizar(gerenteAtualizado);
+
+  this.atualizarTela();
+
+  this.idGerenteEditando = null;
+
+  this.novoGerente = {
+    nome: '',
+    cpf: '',
+    email: '',
+    telefone: '',
+    senha: '',
+  };
+
+  this.exibirFormularioNovoGerente = false;
+}
+
+  atualizarGerente(id: number) {
+
+  const gerente = this.gerenteService
+    .listarTodos()
+    .find(g => g.id === id);
+
+  if (!gerente) return;
+
+  this.idGerenteEditando = id;
+  this.exibirFormularioNovoGerente = true;
+
+  this.novoGerente = {
+    nome: gerente.nome,
+    cpf: gerente.cpf,
+    email: gerente.email,
+    telefone: gerente.telefone,
+    senha: gerente.senha
+  };
+}
+salvarGerente(): void {
+
+  if (this.idGerenteEditando) {
+    this.editarGerente();
+  } else {
+    this.inserirNovoGerente();
+  }
+}
+
+private atualizarGerenteSalvo(): void {
+  if (this.idGerenteEditando === null) return;
+
+  const gerenteOriginal = this.gerenteService
+    .listarTodos()
+    .find(g => g.id === this.idGerenteEditando);
+
+  if (!gerenteOriginal) return;
+
+  const gerenteAtualizado: GerenteAdmin = {
+    id: gerenteOriginal.id,
+    cpf: gerenteOriginal.cpf,
+    tipo: gerenteOriginal.tipo,
+    nome: this.novoGerente.nome.trim(),
+    email: this.novoGerente.email.trim().toLowerCase(),
+    telefone: this.novoGerente.telefone.replace(/\D/g, ''),
+    senha: this.novoGerente.senha
+  };
+
+  this.gerenteService.atualizar(gerenteAtualizado);
+
+  this.atualizarTela();
+  this.mensagemSucesso = 'Gerente atualizado com sucesso.';
+  this.idGerenteEditando = null;
+
+  this.novoGerente = {
+    nome: '',
+    cpf: '',
+    email: '',
+    telefone: '',
+    senha: '',
+  };
+
+  this.exibirFormularioNovoGerente = false;
 }
 
 }
