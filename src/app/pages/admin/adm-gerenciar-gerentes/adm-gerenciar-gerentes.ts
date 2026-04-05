@@ -294,9 +294,9 @@ editarGerente(): void {
   if (!gerenteOriginal) return;
 
   const gerenteAtualizado: GerenteAdmin = {
-    id: gerenteOriginal.id, // mantém
-    cpf: gerenteOriginal.cpf, // NÃO altera
-    tipo: gerenteOriginal.tipo, // mantém
+    id: gerenteOriginal.id,
+    cpf: gerenteOriginal.cpf,
+    tipo: gerenteOriginal.tipo,
 
     nome: this.novoGerente.nome,
     email: this.novoGerente.email,
@@ -347,42 +347,6 @@ salvarGerente(): void {
   } else {
     this.inserirNovoGerente();
   }
-}
-
-private atualizarGerenteSalvo(): void {
-  if (this.idGerenteEditando === null) return;
-
-  const gerenteOriginal = this.gerenteService
-    .listarTodos()
-    .find(g => g.id === this.idGerenteEditando);
-
-  if (!gerenteOriginal) return;
-
-  const gerenteAtualizado: GerenteAdmin = {
-    id: gerenteOriginal.id,
-    cpf: gerenteOriginal.cpf,
-    tipo: gerenteOriginal.tipo,
-    nome: this.novoGerente.nome.trim(),
-    email: this.novoGerente.email.trim().toLowerCase(),
-    telefone: this.novoGerente.telefone.replace(/\D/g, ''),
-    senha: this.novoGerente.senha
-  };
-
-  this.gerenteService.atualizar(gerenteAtualizado);
-
-  this.atualizarTela();
-  this.mensagemSucesso = 'Gerente atualizado com sucesso.';
-  this.idGerenteEditando = null;
-
-  this.novoGerente = {
-    nome: '',
-    cpf: '',
-    email: '',
-    telefone: '',
-    senha: '',
-  };
-
-  this.exibirFormularioNovoGerente = false;
 }
 
 }
