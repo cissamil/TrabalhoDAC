@@ -12,31 +12,31 @@ export class ContaService {
 
     private contasSubject: BehaviorSubject<Conta[]>;
     public contas$: Observable<Conta[]>
-  
-  
+
+
     constructor(){
       if(!localStorage[LS_CHAVE]){
-  
-        localStorage[LS_CHAVE] = JSON.stringify(CONTAS_MOCK); 
+
+        localStorage[LS_CHAVE] = JSON.stringify(CONTAS_MOCK);
       }
-      
+
       const contas: Conta[]= localStorage[LS_CHAVE] ? JSON.parse(localStorage[LS_CHAVE]) : [];
       this.contasSubject = new BehaviorSubject<Conta[]>(contas);
       this.contas$ = this.contasSubject.asObservable();
-  
+
       console.log(`MOCK de contas inseridos, quantidade: ${contas.length}`);
     }
-  
+
     private atualizarDados(contas: Conta[]){
       localStorage[LS_CHAVE] = JSON.stringify(contas);
       this.contasSubject.next(contas);
-    }  
+    }
 
     atualizarConta(conta: Conta){
 
       try{
         const contas = this.listarTodos();
-      
+
         const index = contas.findIndex(c => c.id === conta.id);
         if(index > -1){
           contas[index] = conta;
@@ -53,11 +53,11 @@ export class ContaService {
     realizarTransferencia(contaOrigem: Conta, contaDestino: Conta){
       try{
         const contas = this.listarTodos();
-        
+
         this.listarConta(contaDestino.numeroConta);
         const indexOrigem = contas.findIndex(c => c.id === contaOrigem.id);
         const indexDestino = contas.findIndex(c => c.id === contaDestino.id);
-        
+
         if(indexOrigem > -1 && indexDestino > -1){
           contas[indexOrigem] = contaOrigem;
           contas[indexDestino] = contaDestino;
@@ -80,7 +80,7 @@ export class ContaService {
       console.log("Valor atual conta: ", conta?.saldo);
 
     }
-  
+
     listarTodos() : Conta[]{
       return this.contasSubject.getValue();
     }
@@ -90,7 +90,7 @@ export class ContaService {
 
       return contas.find((conta) => conta.cpfCliente == cpf);
     }
-    
+
     buscarPorNumeroConta(numero: string){
 
       const numeroConta = Number(numero);
@@ -99,6 +99,25 @@ export class ContaService {
 
       return contas.find((conta) => conta.numeroConta === numeroConta);
     }
-  
-  
+
+    contarContasGerente(nomeGerente:string):number{
+      const contas=this.listarTodos();
+      return contas.filter((c:Conta)=>c.gerente===nomeGerente).length;
+
+    }
+
+    substituirGerente(gerenteEmExclusao:string, gerenteNovo:string):void{
+      const contas=this.listarTodos();
+      const contasAtualizadas=contas.map((conta:Conta)=>{
+        if(conta.gerente===gerenteEmExclusao){
+          return{...conta, gerente:gerenteNovo};
+        }
+        return conta;
+      })
+
+      this.atualizarDados(contasAtualizadas);
+      console.log(`Contas transferidas de ${gerenteEmExclusao} para ${gerenteNovo} com sucesso.`);
+    }
+
+
 }

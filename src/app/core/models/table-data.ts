@@ -22,6 +22,7 @@ export interface ClientTableData{
 }
 
 export interface ManagerListTableData {
+    id:number;
     nome: string;
     cpf: string;
     email: string;
