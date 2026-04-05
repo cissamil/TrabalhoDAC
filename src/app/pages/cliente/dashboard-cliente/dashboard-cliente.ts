@@ -21,6 +21,7 @@ export class DashboardCliente implements OnInit {
   cliente!: Cliente;
   conta_cliente!: Conta;
   infoCards: InfoCard[] = []; 
+  nomeGerente:string =  "";
 
   ngOnInit(): void {
 
@@ -43,6 +44,7 @@ inicializarDashboard() {
     const saldoDisponivel = this.conta_cliente.limite + this.conta_cliente.saldo;
     const color = saldoStatus ? 'black' : 'red';
     const saldoInfo = saldoStatus ? 'Saldo Positivo' : 'Saldo Negativo';
+    this.nomeGerente = this.conta_cliente.gerente;
 
     this.infoCards = [
       {

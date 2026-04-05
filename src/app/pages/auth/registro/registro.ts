@@ -36,25 +36,25 @@ export class Registro {
 
   cliente: Cliente = {
     id: 0,
-    cpf: '12345678910',
-    nome: 'Peterson Fontinhas',
-    email: 'petersonfontinhas@gmail.com',
-    telefone:'41991455216',
+    cpf: '',
+    nome: '',
+    email: '',
+    telefone:'',
     senha: '',
     salario: 0,
     endereco: '',
   };
 
-  cep: string = '45645645';
-  rua: string = 'flroes';
-  cidade: string = 'cidades';
-  estado: string = 'PR';
+  cep: string = '';
+  rua: string = '';
+  cidade: string = '';
+  estado: string = '';
 
   redirectToLoginPage() {
     this.router.navigate(['/login']);
   }
 
-  salario: string = "5.000,00";
+  salario: string = "";
 
   handleSalario(e: any) {
     let input = e.target;
