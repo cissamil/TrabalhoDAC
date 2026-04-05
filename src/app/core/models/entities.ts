@@ -26,15 +26,51 @@ export interface Conta{
     gerente:string;
     cliente: string;
     dataCriacao:Date;
+    cpfGerente:string;
     cpfCliente:string;
     numeroConta: number;
+}
+
+
+
+export interface ContaGerada {
+  cpfCliente: string;
+  numeroConta: string;
+  senha: string;
+  limite: number;
+  gerente: string;
+  dataCriacao: Date;
+}
+
+export interface PedidoAutoCadastro {
+  id: number,
+  cpfCliente: string;
+  nomeCliente: string;
+  nomeGerente: string;
+  cpfGerente: string;
+  emailCliente:string;
+  salario: number;
+  dataSolicitacao: Date;
+  status: "APROVADO" | "RECUSADO" | "PENDENTE";
+  dataDecisao?: Date;
+  motivoRecusa?: string;
+  contaGerada?: Conta;
+}
+
+export interface EmailNotificacao {
+  para: string;
+  assunto: string;
+  corpo: string;
+  dataEnvio: Date;
 }
 
 export interface Movimentacao{
     id: number;
     data_hora: Date;
-    tipo:string; // depósito/saque/transferência
+    tipo: "deposito" | "saque" | "transferencia"; // depósito/saque/transferência
     clienteOrigem: string;
+    cpfClienteOrigem:string;
     clienteDestino: string;
+    cpfClienteDestino:string;
     valor:number;
 }

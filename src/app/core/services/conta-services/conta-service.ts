@@ -1,7 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Conta } from '../../models/entities';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CONTAS_MOCK } from '../../mock/mock-data';
+import { GerenteService } from '../gerente-services';
+import { ClienteSessionService } from '../session-controller.service';
+import { Conta, GerenteAdmin, Movimentacao } from '../../models/entities';
+import { MovimentacaoService } from '../movimentacoes-service/movimentacao-service';
+import { ClienteService } from '../cliente-services/cliente-service';
 
 const LS_CHAVE = 'contas';
 
@@ -32,7 +36,7 @@ export class ContaService {
       this.contasSubject.next(contas);
     }
 
-    atualizarConta(conta: Conta){
+  atualizarConta(conta: Conta){
 
       try{
         const contas = this.listarTodos();
@@ -43,12 +47,12 @@ export class ContaService {
           this.atualizarDados(contas);
         }
 
-        console.log("Conta atualizada com sucesso!");
-      }catch(e){
-        console.error("Erro ao atualizar conta ", e);
-      }
-
+      console.log("Conta atualizada com sucesso!");
+    }catch(e){
+      console.error("Erro ao atualizar conta ", e);
     }
+
+  }
 
     realizarTransferencia(contaOrigem: Conta, contaDestino: Conta){
       try{
@@ -64,20 +68,62 @@ export class ContaService {
           this.atualizarDados(contas);
         }
 
-        this.listarConta(contaDestino.numeroConta);
+      this.listarConta(contaDestino.numeroConta);
 
-      }catch(e){
-        console.error("Erro ao atualizar conta ", e);
-      }
+    }catch(e){
+      console.error("Erro ao atualizar conta ", e);
+    }
+  }
+
+  registrarMovimentacao(valor: number, contaOrigem: Conta, contaDestino:Conta){
+
+
+
+
+    const movimentacao: Movimentacao = {
+      id:0,
+      valor: valor,
+      data_hora: new Date(),
+      tipo:'transferencia',
+      clienteOrigem: contaOrigem.cliente,
+      clienteDestino: contaDestino.cliente,
+      cpfClienteDestino: contaDestino.cpfCliente,
+      cpfClienteOrigem: contaOrigem.cpfCliente
     }
 
-    listarConta(numeroConta:number){
+    this.movimentacaoService.inserir(movimentacao);
 
-      const contas = this.listarTodos();
+  }
 
-      const conta = contas.find((conta) => conta.numeroConta === numeroConta);
 
-      console.log("Valor atual conta: ", conta?.saldo);
+  buscarGerenteComMenosClientes(): GerenteAdmin{
+
+    const gerenteService: GerenteService = new GerenteService();
+    const contas = this.listarTodos();
+    const gerentes = gerenteService.listarGerentes();
+
+    const contagemPorGerente = gerentes.map((gerente) =>{
+      return {
+        dados: gerente,
+        totalClientes: contas.filter((c) => c.cpfGerente === gerente.cpf).length
+      };
+    });
+
+    contagemPorGerente.sort((a, b) => a.totalClientes - b.totalClientes);
+
+    console.log("Contagem: ", contagemPorGerente);
+
+    return contagemPorGerente[0].dados;
+
+  }
+
+  listarConta(numeroConta:number){
+
+    const contas = this.listarTodos();
+
+    const conta = contas.find((conta) => conta.numeroConta === numeroConta);
+
+    console.log("Valor atual conta: ", conta?.saldo);
 
     }
 
@@ -85,38 +131,19 @@ export class ContaService {
       return this.contasSubject.getValue();
     }
 
-    buscarPorCpfCliente(cpf:string){
-      const contas = this.listarTodos();
+  buscarPorCpfCliente(cpf:string){
+    const contas = this.listarTodos();
 
       return contas.find((conta) => conta.cpfCliente == cpf);
     }
 
     buscarPorNumeroConta(numero: string){
 
-      const numeroConta = Number(numero);
+    const numeroConta = Number(numero);
 
-      const contas = this.listarTodos();
+    const contas = this.listarTodos();
 
       return contas.find((conta) => conta.numeroConta === numeroConta);
-    }
-
-    contarContasGerente(nomeGerente:string):number{
-      const contas=this.listarTodos();
-      return contas.filter((c:Conta)=>c.gerente===nomeGerente).length;
-
-    }
-
-    substituirGerente(gerenteEmExclusao:string, gerenteNovo:string):void{
-      const contas=this.listarTodos();
-      const contasAtualizadas=contas.map((conta:Conta)=>{
-        if(conta.gerente===gerenteEmExclusao){
-          return{...conta, gerente:gerenteNovo};
-        }
-        return conta;
-      })
-
-      this.atualizarDados(contasAtualizadas);
-      console.log(`Contas transferidas de ${gerenteEmExclusao} para ${gerenteNovo} com sucesso.`);
     }
 
 

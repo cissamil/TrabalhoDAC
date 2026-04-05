@@ -18,7 +18,7 @@ section {
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #05b843 0%, #0b7a32 100%);
   border-radius: 12px;
   padding: 18px;
   color: white;
@@ -103,6 +103,15 @@ th {
   background-color: #ffc7c7;
 }
 
+.btn-cancel {
+  background-color: #edf1f7;
+  color: #2b3b55;
+}
+
+.btn-cancel:hover {
+  background-color: #dde5f1;
+}
+
 .extra-sections {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -111,8 +120,8 @@ th {
 }
 
 .info-card {
-  background: #f8fbff;
-  border: 1px solid #e6edf8;
+  background: #f6fff9;
+  border: 1px solid #dbf2e3;
   border-radius: 12px;
   padding: 14px;
 }
@@ -122,7 +131,7 @@ th {
 }
 
 .decision-item {
-  border: 1px solid #e4ebf6;
+  border: 1px solid #deede4;
   border-radius: 10px;
   background-color: white;
   padding: 10px;
@@ -170,6 +179,57 @@ th {
 .empty-state {
   color: #546176;
   font-style: italic;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  width: min(520px, calc(100vw - 32px));
+  background-color: white;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+}
+
+.modal h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #1d2b53;
+}
+
+.modal p {
+  margin-top: 0;
+  color: #3d4c67;
+}
+
+.modal textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid #bfdfca;
+  border-radius: 8px;
+  padding: 10px;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.modal textarea:focus {
+  outline: 2px solid #c8edd6;
+  border-color: #76c893;
+}
+
+.modal-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 @media (max-width: 1000px) {

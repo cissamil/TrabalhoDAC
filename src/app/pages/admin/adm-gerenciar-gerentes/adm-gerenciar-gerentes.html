@@ -1,8 +1,56 @@
 <main>
   <h1 class="titulo"> Gerenciar Gerentes </h1>
   <p class="subtitulo"> Cadastre, edite ou remova gerentes do sistema </p>
-  <button id=btnNovoGerente> Novo Gerente </button>
+  <button id=btnNovoGerente type="button" (click)="toggleFormularioNovoGerente()">
+    {{ exibirFormularioNovoGerente ? 'Fechar' : 'Novo Gerente' }}
+  </button>
 
+  @if (exibirFormularioNovoGerente) {
+    <section class="novo-gerente-form">
+      <h2>Novo gerente</h2>
+  
+      <div class="form-grid">
+        <label>
+          Nome
+          <input type="text" [(ngModel)]="novoGerente.nome" />
+        </label>
+
+        <label>
+          CPF
+          <input type="text" [(ngModel)]="novoGerente.cpf" maxlength="14" />
+        </label>
+
+        <label>
+          E-mail
+          <input type="email" [(ngModel)]="novoGerente.email" />
+        </label>
+
+        <label>
+          Telefone
+          <input type="text" [(ngModel)]="novoGerente.telefone" maxlength="15" />
+        </label>
+
+        <label>
+          Senha
+          <input type="password" [(ngModel)]="novoGerente.senha" />
+        </label>
+      </div>
+
+      @if (mensagemErro) {
+        <p class="mensagem erro">{{ mensagemErro }}</p>
+      }
+
+      @if (mensagemSucesso) {
+        <p class="mensagem sucesso">{{ mensagemSucesso }}</p>
+      }
+
+      <div class="form-actions">
+        <button type="button" class="btnSalvar" (click)="inserirNovoGerente()">Salvar</button>
+      </div>
+    </section>
+  }
+
+  
   <div class="container">
     <div class="card1">
       <p>Total de Gerentes</p>

@@ -10,6 +10,10 @@ import { GerenteMainPage } from './pages/gerente/gerente-main-page/gerente-main-
 import { TransferenciaCliente } from './pages/cliente/transferencia-cliente/transferencia-cliente';
 import { AdminMainPage } from './pages/admin/admin-main-page/admin-main-page';
 import { AdminGerenciarGerentes } from './pages/admin/adm-gerenciar-gerentes/adm-gerenciar-gerentes';
+import { GerenteDashboard } from './pages/gerente/gerente-dashboard/gerente-dashboard';
+import { TodosClientes } from './pages/gerente/todos-clientes/todos-clientes';
+import { ClienteEspecifico } from './pages/gerente/cliente-especifico/cliente-especifico';
+import { Top3Clientes } from './pages/gerente/top-3-clientes/top-3-clientes';
 export const routes: Routes = [
     {path: '', redirectTo: "login", pathMatch: 'full'},
 
@@ -17,7 +21,18 @@ export const routes: Routes = [
     {path: 'registro', component: Registro},
     {path: 'extrato', component: Extrato},
     {path: 'cliente-main-page', component: ClienteMainPage},
-    {path: 'gerente-main-page', component: GerenteMainPage},
+        {
+            path: 'gerente-main-page',
+            component: GerenteMainPage,
+            children: [
+                { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+                { path: 'dashboard', component: GerenteDashboard },
+                { path: 'todos-clientes', component: TodosClientes },
+                { path: 'consultar-cliente', component: ClienteEspecifico },
+                { path: 'consultar-cliente/:cpf', component: ClienteEspecifico },
+                { path: 'top-3-clientes', component: Top3Clientes },
+            ],
+        },
     {path: 'admin-main-page', component: AdminMainPage},
     {path: 'deposito-cliente', component: DepositoCliente},
     {path: 'saque-cliente', component: SaqueCliente},

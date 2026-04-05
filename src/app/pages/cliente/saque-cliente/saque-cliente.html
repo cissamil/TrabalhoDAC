@@ -14,7 +14,7 @@
       <p class={{corMensagem}}> {{ mensagem }} </p>
       <div class="textoSecundario">
         <p class="cardInfo">Saldo disponível para saque: </p>
-        <span class="saldoAtual">R$ {{ saldoDisponivelTotal }} </span>
+        <span class="saldoAtual">R$ {{ saldoDisponivelTotal | number:'1.2-2'}} </span>
       </div>
       <button id="btnSacar" (click)="sacar()">Confirmar Saque</button>
 
@@ -34,12 +34,12 @@
 
           @if(valorInfo.reference == 'valorS' && valorASacar > 0){
             <p class="cardInfo">{{valorInfo.title}}</p>
-            <span class="red">R$ {{valorInfo.value | number:'1.2-2'}}</span>
+            <span class="redInfo">R$ {{valorInfo.value | number:'1.2-2'}}</span>
           }
 
           @if(valorInfo.reference == 'novoS' && valorASacar > 0){
             <p class="cardInfo">{{valorInfo.title}}</p>
-            <span class="red">R$ {{valorInfo.value | number:'1.2-2'}}</span>
+            <span class="redInfo">R$ {{valorInfo.value | number:'1.2-2'}}</span>
           }
         }
 

@@ -14,7 +14,7 @@
             <th>CPF</th>
             <th>Nome</th>
             <th>Salario</th>
-           <th>Ações</th>
+            <th>Acoes</th>
           </tr>
         </thead>
         <tbody>
@@ -24,16 +24,16 @@
             </tr>
           }
 
-          @for (pedido of pedidosPendentes; track pedido.cpf) {
+          @for (pedido of pedidosPendentes; track pedido.cpfCliente) {
             <tr>
-              <td>{{ pedido.cpf }}</td>
-              <td>{{ pedido.nome }}</td>
-              <td>{{ formatarMoeda(pedido.salario) }}</td>             
+              <td>{{ formatarCpf(pedido.cpfCliente) }}</td>
+              <td>{{ pedido.nomeCliente }}</td>
+              <td>R$ {{pedido.salario | number:'1.2-2' }}</td>
               <td class="actions-cell">
-                <button class="btn btn-approve" type="button" (click)="aprovarPedido(pedido.cpf)">
+                <button class="btn btn-approve" type="button" (click)="aprovarPedido(pedido.cpfCliente)">
                   Aprovar
                 </button>
-                <button class="btn btn-reject" type="button" (click)="recusarPedido(pedido.cpf)">
+                <button class="btn btn-reject" type="button" (click)="iniciarRecusa(pedido)">
                   Recusar
                 </button>
               </td>
@@ -47,22 +47,36 @@
   <!-- Seção de Pedidos Processados -->
   @if (pedidosProcessados.length > 0) {
     <div class="section">
-      <h2>Pedidos Recentes Processados</h2>
+      <h2>Historico de pedidos</h2>
       <div class="table-wrapper">
         <table>
           <thead>
             <tr>
               <th>CPF</th>
-              <th>Nome</th>                    
+              <th>Nome</th>
+              <th>Status</th>
+              <th>Data/Hora Decisao</th>
+              <th>Conta</th>
+              <th>Limite</th>
+              <th>Motivo</th>
             </tr>
           </thead>
           <tbody>
-            @for (pedido of pedidosProcessados; track pedido.cpf) {
+            @for (pedido of pedidosProcessados; track pedido.cpfCliente) {
               <tr>
-                <td>{{ pedido.cpf }}</td>
-                <td>{{ pedido.nome }}</td>
-              
-                
+                <td>{{ formatarCpf(pedido.cpfCliente) }}</td>
+                <td>{{ pedido.nomeCliente }}</td>
+                <td>
+                  @if (pedido.status === 'APROVADO') {
+                    <span class="badge approved">Aprovado</span>
+                  } @else {
+                    <span class="badge rejected">Recusado</span>
+                  }
+                </td>
+                <td>{{ pedido.dataDecisao | date: 'short' }}</td>
+                <td>{{ pedido.contaGerada?.numeroConta ?? '-' }}</td>
+                <td>R$ {{ (pedido.contaGerada?.limite | number :'1.2-2') ?? '-'}}</td>
+                <td>{{ pedido.motivoRecusa ?? '-' }}</td>
               </tr>
             }
           </tbody>
@@ -70,4 +84,45 @@
       </div>
     </div>
   }
+
+  @if (pedidoEmRecusa) {
+    <div class="modal-backdrop" (click)="cancelarRecusa()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Recusar Autocadastro</h3>
+        <p>
+          Informe o motivo da recusa para o cliente
+          <strong>{{ pedidoEmRecusa.nomeCliente }}</strong>.
+        </p>
+
+        <textarea
+          rows="4"
+          placeholder="Ex.: Documentacao inconsistente, dados invalidos..."
+          [value]="motivoRecusaInput"
+          (input)="atualizarMotivoRecusa($any($event.target).value)"
+        ></textarea>
+
+        <div class="modal-actions">
+          <button class="btn btn-cancel" type="button" (click)="cancelarRecusa()">Cancelar</button>
+          <button class="btn btn-reject" type="button" (click)="confirmarRecusa()">Confirmar Recusa</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if(responseModal != null) {
+        <div class="modal-overlay">
+            <div class="modal-card">
+                <div class="modal-icon-container" [class]="responseModal.type">
+                    <mat-icon>{{ responseModal.messageIcon }}</mat-icon>
+                </div>
+
+                <div class="modal-content">
+                    <h3>{{ responseModal.title || 'Aviso' }}</h3>
+                    <p>{{ responseModal.message }}</p>
+                </div>
+
+                <button class="modal-button" (click)="closeModal()">Entendido</button>
+            </div>
+        </div>
+    }
 </section>

@@ -1,7 +1,5 @@
 main{
-    background-color: aliceblue;
-    width: 100vw;
-    height: 100vh;
+    padding: 30px 50px 50px 20px;
 }
 
 header{
@@ -110,11 +108,14 @@ input {
   color: #2563eb;
 
 }
-.limite, .red{
+.limite, .redInfo{
   font-size: 26px;
   font-weight: bold;
   color: #111827;
+}
 
+.redInfo{
+  color: red;
 }
 
 .red, .green{

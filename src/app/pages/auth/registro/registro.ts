@@ -1,20 +1,26 @@
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
-import {NgxMaskDirective, NgxMaskPipe} from "ngx-mask";
 import { FormsModule } from '@angular/forms';
-import { Cliente } from '../../../core/models/entities';
+import {NgxMaskDirective, NgxMaskPipe} from "ngx-mask";
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
+import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { validateCEP, validateCPF, validateEmail } from '../../../core/shared/helpers';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { Cliente,} from '../../../core/models/entities';
+import { MatIconModule } from '@angular/material/icon';
+import { ResponseModal } from '../../../core/models/response-modal';
 
 @Component({
   selector: 'app-registro',
-  imports: [NgxMaskDirective,FormsModule],
+  imports: [NgxMaskDirective, FormsModule, MatIconModule],
   templateUrl: './registro.html',
-  styleUrl: './registro.css',
+  styleUrls: ['./registro.css', '../../shared/css/responseModal.css'],
 })
 export class Registro {
-  constructor(private router: Router, private clienteService: ClienteService) {}
+  constructor(
+    private router: Router, 
+    private clienteService: ClienteService, 
+  ){}
 
   currencyFormatter: CurrencyFormatter = new CurrencyFormatter();
 
@@ -26,27 +32,29 @@ export class Registro {
     'RR','SC','SP','SE','TO',
   ];
 
+  responseModal: ResponseModal | null = null;
+
   cliente: Cliente = {
     id: 0,
-    cpf: '',
-    nome: '',
-    email: '',
-    telefone:'',
+    cpf: '12345678910',
+    nome: 'Peterson Fontinhas',
+    email: 'petersonfontinhas@gmail.com',
+    telefone:'41991455216',
     senha: '',
     salario: 0,
     endereco: '',
   };
 
-  cep: string = '';
-  rua: string = '';
-  cidade: string = '';
-  estado: string = '';
+  cep: string = '45645645';
+  rua: string = 'flroes';
+  cidade: string = 'cidades';
+  estado: string = 'PR';
 
   redirectToLoginPage() {
     this.router.navigate(['/login']);
   }
 
-  salario: number = 0;
+  salario: string = "5.000,00";
 
   handleSalario(e: any) {
     let input = e.target;
@@ -54,70 +62,82 @@ export class Registro {
     this.salario = input.value;
   }
 
+  closeModal(){
+    if(this.responseModal?.type === 'success'){
+      this.router.navigate(['/login']);
+    }
+
+    this.responseModal = null;
+
+  }
+
   registrarUsuario() {
-    const isFieldsFilled = this.validateFields();
+
+    const verifyFields = this.validateFields();
 
     this.cliente.nome = this.cliente.nome.trim();
-    if(!isFieldsFilled){
-      alert("Preencha todos os campos");
+    this.cliente.email = this.cliente.email.trim();
+
+    if(verifyFields != null){
+      this.responseModal = {
+        title: "Campo Inválido",
+        message: verifyFields,
+        messageIcon: "error",
+        type: 'error'
+      };
       return;
     }
-
-    if (!validateEmail(this.cliente.email.trim())) {
-      alert('Digite um email válido');
-      return;
-    }
-
-    if(!validateCPF(this.cliente.cpf)){
-      alert("Preencha o cpf corretamente");
-      return;
-    }
-
-    if(!validateCEP(this.cep)){
-      alert("Preencha o cep corretamente");
-      return;
-    }
-
-    const validateRegister = this.clienteService.buscarClientePorEmail(this.cliente.email);
-
-    if(validateRegister !== undefined){
-      alert("Email já está em uso. Faça o login");
-      return;
-    }
-
+    
+    const salario = this.currencyFormatter.removeCurrencyMaskFromString(this.salario);
     const enderecoCompleto = `${this.cep} - ${this.rua} - ${this.cidade} - ${this.estado}`;
 
-
-    this.cliente.salario = this.salario;
+    this.cliente.salario = salario;
     this.cliente.endereco = enderecoCompleto;
-
 
     this.clienteService.inserir(this.cliente);
 
-    alert("Registro realizado com sucesso");
+    this.responseModal = {
+      title: "Registro realizado com sucesso!.",
+      message: "Aguarde a aprovação da sua conta, você receberá um e-mail com a sua senha",
+      messageIcon: "check",
+      type: 'success'
+    };
+  }
 
-    this.router.navigate(['/cliente-main-page', this.cliente]);
+  validateFields(): string | null{
 
+    if(!this.cliente.nome) return "Preencha o nome corretamente";
+    
+    if(!this.cliente.email) return "Preencha o email corretamente";
+
+    if(!this.cliente.cpf) return "Preencha o CPF corretamente";
+    
+    if(!this.cliente.telefone) return "Preencha o telefone corretamente";
+
+    if(this.salario === "0,00") return "Preencha o campo de salário";
+    
+    if(!this.cep) return "Preencha o o CEP corretamente";
+
+    if(!this.rua) return "Preencha a rua corretamente";
+
+    if(!this.cidade) return "Preencha a cidade corretamente";
+
+    if(!this.estado) return "Preencha o estado corretamente";
+
+
+    if (!validateEmail(this.cliente.email)) return "Digite um email válido";
+
+    if(!validateCPF(this.cliente.cpf)) return "Preencha o cpf corretamente";
+
+    if(!validateCEP(this.cep)) return "Preencha o cep corretamente";
+
+    const validateRegister = this.clienteService.buscarClientePorEmail(this.cliente.email);
+
+    if(validateRegister !== undefined) return "Email já está em uso. Faça o login";
+    
+    return null;
 
   }
 
-  validateFields():boolean{
 
-    if(
-      this.cliente.nome &&
-      this.cliente.email &&
-      this.cliente.senha &&
-      this.cliente.cpf &&
-      this.salario !== 0 &&
-      this.cep &&
-      this.rua &&
-      this.cidade &&
-      this.estado
-    ) {
-      return true;
-    }
-
-    return false;
-
-  }
 }

@@ -15,7 +15,6 @@ interface valorInfo{
   reference:string;
 }
 
-
 @Component({
   selector: 'app-transferencia-cliente',
   imports: [FormsModule, DecimalPipe],
@@ -27,7 +26,6 @@ export class TransferenciaCliente implements OnInit{
   constructor(
     private router: Router,
     private contaService: ContaService,
-    private movimentacaoService: MovimentacaoService,
     private clienteSessionService: ClienteSessionService,
   ) {}
 
@@ -119,9 +117,16 @@ export class TransferenciaCliente implements OnInit{
   transferir(){
 
     const valor = this.currencyFormatter.removeCurrencyMaskFromString(this.valorTransferencia);
+
+    if(Number(this.numeroContaDestino) === this.contaCliente.numeroConta){
+      this.mensagem = "Você não pode transferir para você mesmo";
+      this.tipoErro = 'erroCONTA';
+      this.corMensagem = 'red';
+      return;
+    }
     
-    if(this.numeroContaDestino.toString().length < 4){
-      this.mensagem = "Preencha a conta corretamente";
+    if(this.numeroContaDestino.length < 4){
+      this.mensagem = "Preencha a conta corretamente (4 dígitos)";
       this.tipoErro = 'erroCONTA';
       this.corMensagem = 'red';
       return;
@@ -140,6 +145,7 @@ export class TransferenciaCliente implements OnInit{
       this.corMensagem = 'red';
       return; 
     }
+
 
 
     const contaDestino = this.contaService.buscarPorNumeroConta(this.numeroContaDestino); 
@@ -161,10 +167,9 @@ export class TransferenciaCliente implements OnInit{
     contaDestino.saldo += valor;
     this.contaCliente.saldo = this.saldo;
 
-    this.contaService.realizarTransferencia(this.contaCliente, contaDestino)
-    this.clienteSessionService.setContaCliente(this.contaCliente);
-    this.registrarMovimentacao(valor, contaDestino.cliente);
-    
+    const contaOrigem = this.contaCliente;
+
+    this.contaService.realizarTransferencia(contaOrigem, contaDestino, valor)
 
     this.corMensagem = 'green';
     this.mensagem = "Transferência realizada com sucesso";
@@ -172,19 +177,5 @@ export class TransferenciaCliente implements OnInit{
 
   }
 
-  registrarMovimentacao(valor: number, nomeContaDestino:string){
-
-    const movimentacao: Movimentacao = {
-      id:0,
-      data_hora: new Date(),
-      tipo:'transferencia',
-      clienteDestino: nomeContaDestino,
-      valor: valor,
-      clienteOrigem: this.cliente.nome,
-    }
-
-    this.movimentacaoService.inserir(movimentacao);    
-
-  }
 
 }

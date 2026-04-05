@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { ManagerListTableData } from '../../../core/models/table-data';
 import { Conta, GerenteAdmin } from '../../../core/models/entities';
@@ -7,7 +8,7 @@ import { ContaService } from '../../../core/services/conta-services/conta-servic
 
 @Component({
   selector: 'app-admin-gerenciar-gerentes',
-  imports: [MatTableModule],
+  imports: [MatTableModule, FormsModule],
   templateUrl: './adm-gerenciar-gerentes.html',
   styleUrl: './adm-gerenciar-gerentes.css',
 })
@@ -29,6 +30,17 @@ export class AdminGerenciarGerentes implements OnInit{
   totalGerentes:number=0;
   totalContas:number=0;
   mediaPorGerente:number=0;
+  exibirFormularioNovoGerente = false;
+  mensagemErro = '';
+  mensagemSucesso = '';
+
+  novoGerente = {
+    nome: '',
+    cpf: '',
+    email: '',
+    telefone: '',
+    senha: '',
+  };
 
   displayedcColunas:string[]=[
     'Nome',
@@ -42,7 +54,6 @@ export class AdminGerenciarGerentes implements OnInit{
 
   ngOnInit(): void {
     this.gerentes=this.gerenteService.listarGerentes();
-    this.contas=this.contaService.listarTodos();
     this.fillGerentesTable();
     this.calcularCards();
   };

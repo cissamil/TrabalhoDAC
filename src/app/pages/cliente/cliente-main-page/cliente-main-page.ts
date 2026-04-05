@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { ClientNavigationOptions } from '../../../core/models/navigationOptions';
-import { DashboardCliente } from "../dashboard-cliente/dashboard-cliente";
-import { MatIconModule } from '@angular/material/icon';
-import { DepositoCliente } from "../deposito-cliente/deposito-cliente";
-import { SaqueCliente } from "../saque-cliente/saque-cliente";
+import { Router } from '@angular/router';
 import { Extrato } from "../extrato/extrato";
-import { TransferenciaCliente } from "../transferencia-cliente/transferencia-cliente";
-import { ClientePerfil } from "../cliente-perfil/cliente-perfil";
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { Cliente } from '../../../core/models/entities';
+import { SaqueCliente } from "../saque-cliente/saque-cliente";
+import { ClientePerfil } from "../cliente-perfil/cliente-perfil";
+import { DepositoCliente } from "../deposito-cliente/deposito-cliente";
+import { DashboardCliente } from "../dashboard-cliente/dashboard-cliente";
+import { ClientNavigationOptions } from '../../../core/models/navigationOptions';
+import { TransferenciaCliente } from "../transferencia-cliente/transferencia-cliente";
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
+
 @Component({
   selector: 'app-cliente-main-page',
   imports: [DashboardCliente, MatIconModule, DepositoCliente, SaqueCliente, Extrato, TransferenciaCliente, ClientePerfil],

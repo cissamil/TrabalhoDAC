@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { Cliente, Conta } from '../../../core/models/entities';
+import { ActivatedRoute } from '@angular/router';
+import { CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
 
 interface ClienteDetalhado {
   cpf: string;
@@ -25,6 +27,7 @@ interface ClienteDetalhado {
 export class ClienteEspecifico implements OnInit {
 
   constructor(
+    private route: ActivatedRoute,
     private clienteService: ClienteService,
     private contaService: ContaService,
   ){}
@@ -35,10 +38,17 @@ export class ClienteEspecifico implements OnInit {
   termoBusca = '';
   clienteSelecionado: ClienteDetalhado | null = null;
 
+
   ngOnInit(): void {
     this.clientes=this.clienteService.listarTodos();
     this.contas=this.contaService.listarTodos();
-
+    this.route.queryParamMap.subscribe((params) => {
+      const cpf = params.get('cpf');
+      if (cpf) {
+        this.termoBusca = cpf;
+        this.consultarCliente();
+      }
+    });
   }
 
   consultarCliente(): void {
@@ -50,7 +60,8 @@ export class ClienteEspecifico implements OnInit {
 
     const cliente = this.clientes.find(
       (item) => item.cpf.includes(termoNormalizado));
-
+    const termoCpf = termoNormalizado.replace(/\D/g, '');
+    
     if (!cliente) {
       this.clienteSelecionado = null;
       return;

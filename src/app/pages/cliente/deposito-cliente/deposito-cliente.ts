@@ -98,8 +98,10 @@ export class DepositoCliente implements OnInit {
       data_hora: new Date(),
       tipo:'deposito',
       clienteDestino: '',
+      cpfClienteDestino: '',
       valor: valor,
       clienteOrigem: this.cliente.nome,
+      cpfClienteOrigem: this.cliente.cpf,
     }
 
     this.movimentacaoService.inserir(movimentacao);    

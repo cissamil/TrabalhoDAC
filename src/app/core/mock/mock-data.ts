@@ -1,4 +1,4 @@
-import { Cliente, GerenteAdmin, Conta, Movimentacao } from '../models/entities';
+import { Cliente, GerenteAdmin, Conta, Movimentacao, PedidoAutoCadastro } from '../models/entities';
 
 // --- Cliente e Auth ---
 export const CLIENTES_MOCK: Cliente[] = [
@@ -104,6 +104,7 @@ export const CONTAS_MOCK: Conta[] = [
     saldo: 800.0,
     limite: 5000.0,
     gerente: 'Geniéve',
+    cpfGerente: '98574307084',
     dataCriacao: new Date('2000-01-01'),
   },
   {
@@ -114,6 +115,7 @@ export const CONTAS_MOCK: Conta[] = [
     saldo: -10000.0,
     limite: 10000.0,
     gerente: 'Godophredo',
+    cpfGerente:'64065268052',
     dataCriacao: new Date('1990-10-10'),
   },
   {
@@ -124,6 +126,7 @@ export const CONTAS_MOCK: Conta[] = [
     saldo: -1000.0,
     limite: 1500.0,
     gerente: 'Gyândula',
+    cpfGerente: '23862179060',
     dataCriacao: new Date('2012-12-12'),
   },
   {
@@ -134,6 +137,7 @@ export const CONTAS_MOCK: Conta[] = [
     saldo: 150000.0,
     limite: 0.0,
     gerente: 'Geniéve',
+    cpfGerente: '98574307084',
     dataCriacao: new Date('2022-02-22'),
   },
   {
@@ -144,6 +148,7 @@ export const CONTAS_MOCK: Conta[] = [
     saldo: 1500.0,
     limite: 0.0,
     gerente: 'Godophredo',
+    cpfGerente:'64065268052',
     dataCriacao: new Date('2025-01-01'),
   },
 ];
@@ -155,7 +160,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2020-01-01T10:00:00'),
     tipo: 'deposito',
     clienteOrigem: 'Catharyna',
+    cpfClienteOrigem: '12912861012',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 1000.0,
   },
   {
@@ -163,7 +170,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2020-01-01T11:00:00'),
     tipo: 'deposito',
     clienteOrigem: 'Catharyna',
+    cpfClienteOrigem: '12912861012',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 900.0,
   },
   {
@@ -171,7 +180,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2020-01-01T12:00:00'),
     tipo: 'saque',
     clienteOrigem: 'Catharyna',
+    cpfClienteOrigem: '12912861012',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 550.0,
   },
   {
@@ -179,7 +190,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2020-01-01T13:00:00'),
     tipo: 'saque',
     clienteOrigem: 'Catharyna',
+    cpfClienteOrigem: '12912861012',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 350.0,
   },
   {
@@ -187,7 +200,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2020-01-10T15:00:00'),
     tipo: 'deposito',
     clienteOrigem: 'Catharyna',
+    cpfClienteOrigem: '12912861012',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 2000.0,
   },
   {
@@ -195,7 +210,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2020-01-15T08:00:00'),
     tipo: 'saque',
     clienteOrigem: 'Catharyna',
+    cpfClienteOrigem: '12912861012',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 500.0,
   },
   {
@@ -203,7 +220,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2020-01-20T12:00:00'),
     tipo: 'transferencia',
     clienteOrigem: 'Catharyna',
+    cpfClienteOrigem: '12912861012',
     clienteDestino: 'Cleuddônio',
+    cpfClienteDestino: '09506382000',
     valor: 1700.0,
   },
   {
@@ -211,7 +230,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2025-01-01T12:00:00'),
     tipo: 'deposito',
     clienteOrigem: 'Cleuddônio',
+    cpfClienteOrigem: '09506382000',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 1000.0,
   },
   {
@@ -219,7 +240,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2025-02-01T10:00:00'),
     tipo: 'deposito',
     clienteOrigem: 'Cleuddônio',
+    cpfClienteOrigem: '09506382000',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 5000.0,
   },
   {
@@ -227,7 +250,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2025-10-01T10:00:00'),
     tipo: 'saque',
     clienteOrigem: 'Cleuddônio',
+    cpfClienteOrigem: '09506382000',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 200.0,
   },
   {
@@ -235,7 +260,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2025-05-02T10:00:00'),
     tipo: 'deposito',
     clienteOrigem: 'Cleuddônio',
+    cpfClienteOrigem: '09506382000',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 7000.0,
   },
   {
@@ -243,7 +270,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2025-05-05T00:00:00'),
     tipo: 'deposito',
     clienteOrigem: 'Catianna',
+    cpfClienteOrigem: '85733854057',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 1000.0,
   },
   {
@@ -251,7 +280,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2025-06-05T00:00:00'),
     tipo: 'saque',
     clienteOrigem: 'Catianna',
+    cpfClienteOrigem: '85733854057',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 2000.0,
   },
   {
@@ -259,7 +290,9 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2025-01-06T00:00:00'),
     tipo: 'deposito',
     clienteOrigem: 'Cutardo',
+    cpfClienteOrigem: '58872160006',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 150000.0,
   },
   {
@@ -267,7 +300,12 @@ export const MOVIMENTACOES_MOCK: Movimentacao[] = [
     data_hora: new Date('2025-01-07T00:00:00'),
     tipo: 'deposito',
     clienteOrigem: 'Coândrya',
+    cpfClienteOrigem:'76179646090',
     clienteDestino: '',
+    cpfClienteDestino: '',
     valor: 1500.0,
   },
 ];
+
+
+export const PEDIDOS_MOCK: PedidoAutoCadastro[] = [];

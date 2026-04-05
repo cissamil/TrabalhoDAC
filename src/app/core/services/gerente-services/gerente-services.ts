@@ -91,6 +91,8 @@ export class GerenteService {
     //busca o gerente que tenha o email, senha e tipo estritamente iguais
   }
 
+
+
   // Métodos para gerenciamento de sessão do gerente logado
   setGerenteLogado(gerente: GerenteAdmin): void {
     localStorage[LS_CHAVE_LOGADO] = JSON.stringify(gerente);
@@ -119,8 +121,8 @@ export class GerenteService {
   listarGerentes():GerenteAdmin[] {
     return this.gerentesSubject
       .getValue()
-      .filter((item)=> item.tipo==='gerente')
-      .sort((a,b)=>a.nome.localeCompare(b.nome));
+      .filter((item) => item.tipo === 'gerente')
+      .sort((a,b) => a.nome.localeCompare(b.nome));
 
   }
 

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Cliente } from '../../models/entities';
+import { Cliente, GerenteAdmin, PedidoAutoCadastro } from '../../models/entities';
 import { CLIENTES_MOCK } from '../../mock/mock-data';
+import { PedidoAutoCadastroService } from '../pedido-autocadastro-services/pedido-autocadastro-service';
+import { ContaService } from '../conta-services/conta-service';
 
 const LS_CHAVE = 'clientes';
 
@@ -13,8 +15,7 @@ export class ClienteService {
   private clientesSubject: BehaviorSubject<Cliente[]>;
   public clientes$: Observable<Cliente[]>
 
-
-  constructor(){
+  constructor(private pedidoAutoCadastroService: PedidoAutoCadastroService, private contaService: ContaService){
     if(!localStorage[LS_CHAVE]){
 
       localStorage[LS_CHAVE] = JSON.stringify(CLIENTES_MOCK);
@@ -47,10 +48,44 @@ export class ClienteService {
       Endereço: ${cliente.endereco}
     `);
 
-    const clientes = this.listarTodos();
-    cliente.id = new Date().getTime();
-    clientes.push(cliente);
-    this.atualizarDados(clientes);
+    try{
+
+      const clientes = this.listarTodos();
+      cliente.id = new Date().getTime();
+      clientes.push(cliente);
+      this.atualizarDados(clientes);
+
+      const gerente = this.contaService.buscarGerenteComMenosClientes();
+
+      this.enviarSolicitacaoDeConta(cliente, gerente);
+
+      console.log("Gerente com menos clientes:", gerente.nome);
+
+    }catch(e){
+
+      console.error("Erro ao inserir usuário: ", e)
+
+    }
+
+  }
+
+  private enviarSolicitacaoDeConta(cliente:Cliente, gerente: GerenteAdmin){
+
+    const pedidoCadastro: PedidoAutoCadastro ={
+      id: 0,
+      nomeCliente: cliente.nome,
+      nomeGerente: gerente.nome,
+      cpfCliente: cliente.cpf,
+      cpfGerente: gerente.cpf,
+      emailCliente: cliente.email,
+      salario: cliente.salario,
+      dataSolicitacao: new Date(),
+      status: 'PENDENTE'
+    }
+
+    console.log("[SERVICE] Pedido a ser enviado:", pedidoCadastro);
+
+    this.pedidoAutoCadastroService.inserir(pedidoCadastro);
   }
 
   atualizar(cliente: Cliente) : void{
@@ -91,11 +126,17 @@ export class ClienteService {
     return clientes.find((cliente) => cliente.email === email);
   }
 
-  buscarClientePorEmailESenha(email:string, senha:string){
+  buscarClientePorCPF(cpf:string){
     const clientes = this.listarTodos();
 
+    console.log("Clientes: ", clientes);
+    return clientes.find((cliente) => cliente.cpf === cpf);
+  }
+
+  buscarClientePorEmailESenha(email:string, senha:string){
+    const clientes = this.listarTodos();
     return clientes.find((cliente) => cliente.email === email && cliente.senha === senha);
   }
 
- 
+
 }

@@ -157,9 +157,11 @@ export class SaqueCliente implements OnInit{
       id:0,
       data_hora: new Date(),
       tipo:'saque',
-      clienteDestino: '',
       valor: valor,
+      clienteDestino: '',
+      cpfClienteDestino: '',
       clienteOrigem: this.cliente.nome,
+      cpfClienteOrigem: this.cliente.cpf,
     }
 
     this.movimentacaoService.inserir(movimentacao);    

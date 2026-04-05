@@ -4,12 +4,18 @@ main {
   min-height: 100vh;
 }
 
+.icon{
+    padding-right: 10px;
+    cursor: pointer;
+    color: white;
+}
+
 header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: #155dfc;
+  background-color: #04aa3d;
   color: white;
   padding: 10px;
 }
@@ -41,18 +47,26 @@ div.title {
   height: fit-content;
 }
 
-.navigation-card p {
+.navigation-card a {
   cursor: pointer;
   padding: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 15px;
 }
 
-.navigation-card p:hover {
+.navigation-card a:hover {
   background-color: rgba(128, 128, 128, 0.205);
-  border-radius: 15px;
   transition: 0.25s;
+}
+
+.navigation-card a.active-link {
+  background-color: rgba(4, 170, 61, 0.14);
+  color: #0b7a32;
+  font-weight: 600;
 }
 
 .components {

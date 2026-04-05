@@ -8,12 +8,15 @@ import { GerenteService } from '../../../core/services/gerente-services';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
+import { ResponseModal } from '../../../core/models/response-modal';
+import { MatIconModule } from '@angular/material/icon';
+import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, MatIconModule],
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrls: ['./login.css',  '../../shared/css/responseModal.css'],
 })
 export class Login implements OnInit{
   constructor(
@@ -21,6 +24,7 @@ export class Login implements OnInit{
     private clienteService: ClienteService,
     private gerenteService: GerenteService,
     private clienteSessionService: ClienteSessionService,
+    private movimentacoesService: MovimentacaoService,
     private contaService: ContaService
   ) {}
 
@@ -36,6 +40,9 @@ export class Login implements OnInit{
     }
   }
 
+  responseModal: ResponseModal | null = null;
+  
+
   public get profileOptions(): typeof ProfileOptions {
     return ProfileOptions;
   }
@@ -50,20 +57,34 @@ export class Login implements OnInit{
     console.log('AcessProfile', this.acessProfile);
   }
 
+  closeModal(){
+    if(this.responseModal?.type === 'success'){
+      this.router.navigate(['/login']);
+    }
+
+    this.responseModal = null;
+
+  }
+
+
   email: string = '';
   senha: string = '';
 
   loginUser() {
     console.log(`Email inserido: ${this.email}. Senha inserida: ${this.senha}`);
 
-    if (!this.email || !this.senha) {
-      alert('Preencha todos os campos');
-      return;
-    }
+    const verifyFields = this.validateFields();
 
-    if (!validateEmail(this.email)) {
-      alert('Digite um email válido');
+    if(verifyFields != null){
+     this.responseModal = {
+        title: "Campo Inválido",
+        message: verifyFields,
+        messageIcon: "error",
+        type: 'error'
+      };
+
       return;
+
     }
     
     if(this.acessProfile == ProfileOptions.Cliente){
@@ -97,10 +118,28 @@ export class Login implements OnInit{
     
   }
 
+  validateFields() : string | null{
+
+    if(!this.email) return "Preencha o e-mail corretamente";
+    if(!this.senha) return "Preencha a senha corretamente";
+
+    if(!validateEmail(this.email)) return "Digite um e-mail válido";
+
+    return null;
+
+  }
+
+
+
   handleResult(result : any, profile:ProfileOptions){
     
-    if(!result){
-      alert("Usuário não encontrado. Tente novamente");
+    if(result === undefined){
+      this.responseModal = {
+        title: "Campo Inválido",
+        message: 'Usuário não encontrado. Verifique suas informações e tente novamente',
+        messageIcon: "error",
+        type: 'error'
+      };
       return;
     }
 
@@ -108,14 +147,12 @@ export class Login implements OnInit{
       const cliente = result as Cliente;
 
       const conta = this.contaService.buscarPorCpfCliente(cliente.cpf);
-
-      if(!conta){
-        alert("Usuário encontrado, mas nenhuma conta cadastrada. Espere a aprovação de um gerente para poder usar sua conta");
-      }
+      // const movimentacoes = this.movimentacaoService.buscarMovimentacoesPorCPFCliente(cliente.cpf);
 
       this.clienteSessionService.setCliente(result as Cliente);
       this.clienteSessionService.setContaCliente(conta!);
-      
+      // this.clienteSessionService.setMovimentacoesCliente(movimentacoes!);
+    
       this.redirect('/cliente-main-page');
       return;
     }

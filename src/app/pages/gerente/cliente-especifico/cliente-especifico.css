@@ -5,6 +5,15 @@ section {
 	border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
+.title {
+	margin-bottom: 12px;
+}
+
+.title h2 {
+	margin: 0 0 6px 0;
+	color: #1d2b53;
+}
+
 .title p {
 	color: #505866;
 	margin-top: 6px;
@@ -27,7 +36,7 @@ section {
 .search-bar button {
 	border: none;
 	border-radius: 10px;
-	background-color: #155dfc;
+	background-color: #04aa3d;
 	color: white;
 	font-weight: 600;
 	padding: 0 16px;
@@ -42,10 +51,11 @@ section {
 }
 
 .detail-card {
-	background-color: #f8fbff;
-	border: 1px solid #e2e9f5;
+	background-color: #f6fff9;
+	border: 1px solid #dbf2e3;
 	border-radius: 12px;
 	padding: 14px;
+	box-shadow: 0 6px 16px rgba(17, 45, 78, 0.05);
 }
 
 .detail-card p {
@@ -56,6 +66,10 @@ section {
 	margin-top: 16px;
 	color: #546176;
 	font-style: italic;
+}
+
+.details-grid strong {
+	color: #17324d;
 }
 
 @media (max-width: 900px) {

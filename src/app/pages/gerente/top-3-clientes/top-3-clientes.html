@@ -1,17 +1,26 @@
 <section>
   <div class="title">
-    <h2>Top 3 Melhores Clientes</h2>
-    <p>Ranking dos clientes com maior saldo em conta.</p>
+    <h2>3 Melhores Clientes</h2>
+    <p>Clientes com os maiores saldos do banco.</p>
   </div>
 
+  @if (topClientes.length === 0) {
+    <p class="empty-state">Nenhum cliente encontrado para o ranking.</p>
+  }
+
   <div class="ranking-grid">
-    @for (cliente of topClientes; track cliente.posicao) {
-      <article class="ranking-card">
-        <span class="position">#{{ cliente.posicao }}</span>
+    @for (cliente of topClientes; track cliente.cpf; let i = $index) {
+      <article class="ranking-card" [class.first]="i === 0" [class.second]="i === 1" [class.third]="i === 2">
+        <p class="position">{{ i + 1 }}º Lugar</p>
+
         <h3>{{ cliente.nome }}</h3>
-        <p>CPF: <strong>{{ cliente.cpf }}</strong></p>
-        <p>Saldo: <strong>{{ formatarMoeda(cliente.saldo) }}</strong></p>
-        <p>Limite: <strong>{{ formatarMoeda(cliente.limite) }}</strong></p>
+        <p class="cpf">{{ formatarCpf(cliente.cpf) }}</p>
+        <p class="location">{{ cliente.cidade }} - {{ cliente.estado }}</p>
+
+        <hr />
+
+        <p class="saldo-label">Saldo</p>
+        <p class="saldo-value">{{ formatarMoeda(cliente.saldo) }}</p>
       </article>
     }
   </div>

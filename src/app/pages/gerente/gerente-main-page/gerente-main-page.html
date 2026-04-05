@@ -4,50 +4,37 @@
 			<h1>BANTADS</h1>
 			<p>Área do Gerente</p>
 		</div>
-		<div class="icon" (click)="logOut()">
-			<a href="">Sair</a>
-		</div>
+        <div class="icon" (click)="logOut()" >
+            <mat-icon fontIcon="exit_to_app"></mat-icon>
+            <p>Sair</p>
+        </div>
 	</header>
 
 	<div class="container">
 		<div class="navigation-card">
-			<p (click)="changeNavigationOptions(managerNavigationOptions.Dashboard)">
+			<a routerLink="dashboard" routerLinkActive="active-link">
 				<mat-icon aria-hidden="false" aria-label="Dashboard" fontIcon="dashboard"></mat-icon>
 				Home
-			</p>
+			</a>
 
-			<p (click)="changeNavigationOptions(managerNavigationOptions.TodosClientes)">
+			<a routerLink="todos-clientes" routerLinkActive="active-link">
 				<mat-icon aria-hidden="false" aria-label="Todos os clientes" fontIcon="groups"></mat-icon>
 				Todos os Clientes
-			</p>
+			</a>
 
-			<p (click)="changeNavigationOptions(managerNavigationOptions.ConsultarCliente)">
+			<a routerLink="consultar-cliente" routerLinkActive="active-link">
 				<mat-icon aria-hidden="false" aria-label="Consultar cliente" fontIcon="person_search"></mat-icon>
 				Consultar Cliente
-			</p>
+			</a>
 
-			<p (click)="changeNavigationOptions(managerNavigationOptions.MelhoresClientes)">
+			<a routerLink="top-3-clientes" routerLinkActive="active-link">
 				<mat-icon aria-hidden="false" aria-label="Top 3 clientes" fontIcon="leaderboard"></mat-icon>
 				Top 3 Clientes
-			</p>
+			</a>
 		</div>
 
 		<div class="components">
-			@if(navigationOption === managerNavigationOptions.Dashboard){
-				<app-gerente-dashboard></app-gerente-dashboard>
-			}
-
-			@if(navigationOption === managerNavigationOptions.TodosClientes){
-				<app-todos-clientes></app-todos-clientes>
-			}
-
-			@if(navigationOption === managerNavigationOptions.ConsultarCliente){
-				<app-cliente-especifico></app-cliente-especifico>
-			}
-
-			@if(navigationOption === managerNavigationOptions.MelhoresClientes){
-				<app-top-3-clientes></app-top-3-clientes>
-			}
+			<router-outlet></router-outlet>
 		</div>
 	</div>
 </main>

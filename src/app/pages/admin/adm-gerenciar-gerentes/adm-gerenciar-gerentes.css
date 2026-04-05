@@ -46,6 +46,78 @@ main > .subtitulo {
   filter: brightness(1.03);
 }
 
+.novo-gerente-form {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  box-sizing: border-box;
+  padding: 22px;
+  margin-bottom: 24px;
+}
+
+.novo-gerente-form h2 {
+  margin: 0 0 6px 0;
+  color: #111827;
+}
+
+.novo-gerente-form p {
+  margin: 0 0 16px 0;
+  color: #6b7280;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #111827;
+  font-weight: 600;
+}
+
+.form-grid input {
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.mensagem {
+  margin: 12px 0 0 0;
+  font-weight: 600;
+}
+
+.mensagem.erro {
+  color: #be123c;
+}
+
+.mensagem.sucesso {
+  color: #166534;
+}
+
+.form-actions {
+  margin-top: 14px;
+}
+
+.btnSalvar {
+  border: none;
+  border-radius: 10px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.btnSalvar:hover {
+  background: #1f2937;
+}
+
 .container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -226,5 +298,9 @@ td[mat-cell] button:last-child:hover {
 
   .mat-column-Ações {
     width: auto;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
   }
 }

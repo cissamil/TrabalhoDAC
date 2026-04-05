@@ -1,15 +1,94 @@
 <main>
-  <h1 class="titulo">Extrato</h1>
-  <p class="subtitulo">Consulte o histórico de transações da sua conta</p>
+
+  <div class="title">
+    <h1>Extrato</h1>
+    <p class="grey">Consulte o histórico de transações da sua conta</p>
+  </div>
 
   <div class="card">
     <h2>Período de Consulta</h2>
+
     <p>Selecione o período desejado para visualizar o extrato</p>
-    <label for="dataInicio">Data Início</label>
-    <input [(ngModel)]="dataInicio" type="date">
-    <label for="dataFim">Data Fim</label>
-    <input [(ngModel)]="dataFim" type="date">
-    <button (click)="tirarExtrato()" class="btnNeutro">Consultar Extrato</button>
+
+    <div class="date-selectors">
+
+      <div class="selector">
+        <label for="dataInicio">Data Início: </label>
+        <input [(ngModel)]="dataInicio" name="dataInicio" type="date">
+      </div>
+
+      <div class="selector">
+        <label for="dataFim">Data Fim: </label>
+        <input [(ngModel)]="dataFim" name="dataFim" type="date">
+      </div>
+  
+    </div>
+
+
+    <!-- <button (click)="tirarExtrato()" class="btnNeutro">Consultar Extrato</button> -->
   </div>
-  <p> {{ mensagem }} </p>
+
+  @if(dataInicio && dataFim){
+    <div class="card">
+      <div class="title">
+        <h1>Extrato Bancário</h1>
+        <p class="grey">Período: {{ dataInicio | date:'dd/MM/yyyy' }} até {{ dataFim | date:'dd/MM/yyyy' }}</p>
+      </div>
+  
+      <div class="extrato-container">
+        @for (dia of movimentacoesAgrupadasPorDia | keyvalue: originalOrder; track dia.key) {
+          <div class="dia-section">
+            
+            <div class="dia-header">
+              <span class="dia-texto">{{ dia.key }}</span>
+              <div class="saldo-consolidado-badge">
+                <span class="label">Saldo do dia:</span>
+                <span class="valor" [class.red]="dia.value.saldoConsolidado < 0">
+                  R$ {{ dia.value.saldoConsolidado | number:'1.2-2' }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="movimentacoes-lista">
+              @for (mov of dia.value.movimentacoes; track mov.id) {
+                <div class="movimentacao-card" [ngClass]="getClasseMovimentacao(mov)">
+                  <div class="status-indicator"></div>
+                  
+                  <div class="mov-main-info">
+                    <div class="mov-primario">
+                      <span class="hora">{{ mov.data_hora | date:'HH:mm' }}</span>
+                      <span class="operacao-nome">
+                        @if(mov.tipo === 'transferencia'){ TRANSFERÊNCIA }
+                        @else if (mov.tipo === 'deposito') { DEPÓSITO } 
+                        @else { SAQUE }
+                      </span>
+                    </div>
+                    
+                    @if (mov.tipo === 'transferencia') {
+                      <div class="mov-detalhe">
+                        <mat-icon class="icon-small">swap_horiz</mat-icon>
+                        <span>{{ mov.cpfClienteOrigem === cliente.cpf ? 'Para: ' + mov.clienteDestino : 'De: ' + mov.clienteOrigem }}</span>
+                      </div>
+                    }
+                  </div>
+
+                  <div class="mov-valor-container">
+                    <span class="simbolo">{{ isSaida(mov) ? '-' : '+' }}</span>
+                    <span class="valor-final">R$ {{ mov.valor | number:'1.2-2' }}</span>
+                  </div>
+                </div>
+              } @empty {
+                <div class="sem-mov-card">
+                  <mat-icon>info_outline</mat-icon>
+                  <p>Nenhuma movimentação registrada.</p>
+                </div>
+              }
+            </div>
+
+          </div>
+        }
+      </div>
+    </div>
+  }
+  
 </main>

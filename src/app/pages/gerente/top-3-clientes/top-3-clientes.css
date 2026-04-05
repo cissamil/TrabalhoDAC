@@ -5,31 +5,110 @@ section {
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
+.title {
+  margin-bottom: 18px;
+}
+
+.title h2 {
+  margin: 0 0 6px 0;
+  color: #1d2b53;
+}
+
 .title p {
   color: #505866;
-  margin-top: 6px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .ranking-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 14px;
-  margin-top: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
 }
 
 .ranking-card {
-  background: linear-gradient(135deg, #eff4ff, #f8faff);
-  border: 1px solid #dde6fb;
-  border-radius: 14px;
-  padding: 16px;
+  border: 1px solid #d7deea;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f9fbff 0%, #ffffff 100%);
+  padding: 20px 18px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(29, 43, 83, 0.08);
+}
+
+.ranking-card.first {
+  border-color: #76d695;
+}
+
+.ranking-card.second {
+  border-color: #bfe9cd;
+}
+
+.ranking-card.third {
+  border-color: #a8dfbc;
 }
 
 .position {
-  font-size: 0.9rem;
-  color: #1b4fb6;
+  margin: 0;
+  color: #0f8d39;
   font-weight: 700;
+  font-size: 1.05rem;
 }
 
 h3 {
-  margin: 8px 0;
+  margin: 14px 0 10px 0;
+  color: #0f1f3f;
+  font-size: 2rem;
+}
+
+.cpf,
+.location {
+  margin: 0;
+  color: #4c5c78;
+  font-size: 1.05rem;
+}
+
+.location {
+  margin-top: 8px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #dfe7f4;
+  margin: 16px 0;
+}
+
+.saldo-label {
+  margin: 0;
+  color: #546176;
+  font-size: 1.02rem;
+}
+
+.saldo-value {
+  margin: 8px 0 0 0;
+  color: #04aa3d;
+  font-weight: 800;
+  font-size: 2rem;
+}
+
+.empty-state {
+  color: #546176;
+  font-style: italic;
+  margin: 0;
+}
+
+@media (max-width: 1000px) {
+  .ranking-grid {
+    grid-template-columns: 1fr;
+  }
+
+  h3,
+  .saldo-value {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 700px) {
+  section {
+    padding: 14px;
+  }
 }
