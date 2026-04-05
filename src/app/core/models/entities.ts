@@ -67,8 +67,10 @@ export interface EmailNotificacao {
 export interface Movimentacao{
     id: number;
     data_hora: Date;
-    tipo:string; // depósito/saque/transferência
+    tipo: "deposito" | "saque" | "transferencia"; // depósito/saque/transferência
     clienteOrigem: string;
+    cpfClienteOrigem:string;
     clienteDestino: string;
+    cpfClienteDestino:string;
     valor:number;
 }

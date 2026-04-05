@@ -14,7 +14,7 @@
       <p class={{corMensagem}}> {{ mensagem }} </p>
       <div class="textoSecundario">
         <p class="cardInfo">Saldo disponível para saque: </p>
-        <span class="saldoAtual">R$ {{ saldoDisponivelTotal }} </span>
+        <span class="saldoAtual">R$ {{ saldoDisponivelTotal | number:'1.2-2'}} </span>
       </div>
       <button id="btnSacar" (click)="sacar()">Confirmar Saque</button>
 

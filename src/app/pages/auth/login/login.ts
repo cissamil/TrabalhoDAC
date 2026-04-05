@@ -10,6 +10,7 @@ import { ClienteService } from '../../../core/services/cliente-services/cliente-
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
 import { ResponseModal } from '../../../core/models/response-modal';
 import { MatIconModule } from '@angular/material/icon';
+import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +24,7 @@ export class Login implements OnInit{
     private clienteService: ClienteService,
     private gerenteService: GerenteService,
     private clienteSessionService: ClienteSessionService,
+    private movimentacoesService: MovimentacaoService,
     private contaService: ContaService
   ) {}
 
@@ -145,10 +147,12 @@ export class Login implements OnInit{
       const cliente = result as Cliente;
 
       const conta = this.contaService.buscarPorCpfCliente(cliente.cpf);
+      // const movimentacoes = this.movimentacaoService.buscarMovimentacoesPorCPFCliente(cliente.cpf);
 
       this.clienteSessionService.setCliente(result as Cliente);
       this.clienteSessionService.setContaCliente(conta!);
-      
+      // this.clienteSessionService.setMovimentacoesCliente(movimentacoes!);
+    
       this.redirect('/cliente-main-page');
       return;
     }

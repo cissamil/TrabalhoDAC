@@ -15,7 +15,6 @@ interface valorInfo{
   reference:string;
 }
 
-
 @Component({
   selector: 'app-transferencia-cliente',
   imports: [FormsModule, DecimalPipe],
@@ -27,7 +26,6 @@ export class TransferenciaCliente implements OnInit{
   constructor(
     private router: Router,
     private contaService: ContaService,
-    private movimentacaoService: MovimentacaoService,
     private clienteSessionService: ClienteSessionService,
   ) {}
 
@@ -161,10 +159,9 @@ export class TransferenciaCliente implements OnInit{
     contaDestino.saldo += valor;
     this.contaCliente.saldo = this.saldo;
 
-    this.contaService.realizarTransferencia(this.contaCliente, contaDestino)
-    this.clienteSessionService.setContaCliente(this.contaCliente);
-    this.registrarMovimentacao(valor, contaDestino.cliente);
-    
+    const contaOrigem = this.contaCliente;
+
+    this.contaService.realizarTransferencia(contaOrigem, contaDestino, valor)
 
     this.corMensagem = 'green';
     this.mensagem = "Transferência realizada com sucesso";
@@ -172,19 +169,5 @@ export class TransferenciaCliente implements OnInit{
 
   }
 
-  registrarMovimentacao(valor: number, nomeContaDestino:string){
-
-    const movimentacao: Movimentacao = {
-      id:0,
-      data_hora: new Date(),
-      tipo:'transferencia',
-      clienteDestino: nomeContaDestino,
-      valor: valor,
-      clienteOrigem: this.cliente.nome,
-    }
-
-    this.movimentacaoService.inserir(movimentacao);    
-
-  }
 
 }

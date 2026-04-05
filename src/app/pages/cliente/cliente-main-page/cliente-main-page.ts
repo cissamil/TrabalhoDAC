@@ -32,7 +32,7 @@ export class ClienteMainPage{
 
   }
 
-  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Dashboard;
+  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Extrato;
 
   changeNavigationOptions(option: ClientNavigationOptions){
 

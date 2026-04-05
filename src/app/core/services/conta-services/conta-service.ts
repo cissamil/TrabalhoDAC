@@ -1,8 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Conta, GerenteAdmin } from '../../models/entities';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CONTAS_MOCK } from '../../mock/mock-data';
 import { GerenteService } from '../gerente-services';
+import { ClienteSessionService } from '../session-controller.service';
+import { Conta, GerenteAdmin, Movimentacao } from '../../models/entities';
+import { MovimentacaoService } from '../movimentacoes-service/movimentacao-service';
+import { ClienteService } from '../cliente-services/cliente-service';
 
 const LS_CHAVE = 'contas';
 
@@ -15,7 +18,7 @@ export class ContaService {
   public contas$: Observable<Conta[]>
 
 
-  constructor(){
+  constructor(private clienteSessionService: ClienteSessionService, private movimentacaoService: MovimentacaoService){
     if(!localStorage[LS_CHAVE]){
 
       localStorage[LS_CHAVE] = JSON.stringify(CONTAS_MOCK); 
@@ -71,8 +74,9 @@ export class ContaService {
 
   }
 
-  realizarTransferencia(contaOrigem: Conta, contaDestino: Conta){
+  realizarTransferencia(contaOrigem: Conta, contaDestino: Conta, valor:number){
     try{
+
       const contas = this.listarTodos();
       
       this.listarConta(contaDestino.numeroConta);
@@ -83,6 +87,9 @@ export class ContaService {
         contas[indexOrigem] = contaOrigem;
         contas[indexDestino] = contaDestino;
         this.atualizarDados(contas);
+
+        this.registrarMovimentacao(valor, contaOrigem, contaDestino)
+        this.clienteSessionService.setContaCliente(contaOrigem);
       }
 
       this.listarConta(contaDestino.numeroConta);
@@ -91,6 +98,27 @@ export class ContaService {
       console.error("Erro ao atualizar conta ", e);
     }
   }
+
+  registrarMovimentacao(valor: number, contaOrigem: Conta, contaDestino:Conta){
+
+  
+
+
+    const movimentacao: Movimentacao = {
+      id:0,
+      valor: valor,
+      data_hora: new Date(),
+      tipo:'transferencia',
+      clienteOrigem: contaOrigem.cliente,
+      clienteDestino: contaDestino.cliente,
+      cpfClienteDestino: contaDestino.cpfCliente,
+      cpfClienteOrigem: contaOrigem.cpfCliente
+    }
+
+    this.movimentacaoService.inserir(movimentacao);    
+
+  }
+
 
   buscarGerenteComMenosClientes(): GerenteAdmin{
 
