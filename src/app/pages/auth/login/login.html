@@ -8,18 +8,24 @@
         <div class="form-control">
             <form action="">
                 
-                <label for="profile">Perfil de acesso</label>
-                <select name="profile" id="">
-                    <option value="cliente" (click)="setAcessProfile(profileOptions.Cliente)">Cliente</option>
-                    <option value="gerente" (click)="setAcessProfile(profileOptions.Gerente)">Gerente</option>
-                    <option value="administrador" (click)="setAcessProfile(profileOptions.Admin)">Administrador</option>
-                </select>
+                <div class="form-input">
+                    <label for="profile">Perfil de acesso</label>
+                    <select name="profile" id="">
+                        <option value="cliente" (click)="setAcessProfile(profileOptions.Cliente)">Cliente</option>
+                        <option value="gerente" (click)="setAcessProfile(profileOptions.Gerente)">Gerente</option>
+                        <option value="administrador" (click)="setAcessProfile(profileOptions.Admin)">Administrador</option>
+                    </select>
+                </div>
 
-                <label for="email">E-mail</label>
-                <input type="email" [(ngModel)]="email" name="email"  id="" placeholder="usuario@email.com">
+                <div class="form-input">
+                    <label for="email">E-mail</label>
+                    <input type="email" [(ngModel)]="email" name="email"  id="" placeholder="usuario@email.com">
+                </div>
 
-                <label for="password">Senha</label>
-                <input type="password" [(ngModel)]="senha" name="senha" id="" placeholder="******">
+                <div class="form-input">
+                    <label for="password">Senha</label>
+                    <input type="password" [(ngModel)]="senha" name="senha" id="" placeholder="******">
+                </div>
                 
                 <button class="entrar" type="submit" (click)="loginUser()">Entrar</button>
                 <a  class="criar-conta" (click)="redirect('/registro')">Criar conta</a>
