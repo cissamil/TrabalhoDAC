@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
-import { CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Subscription, combineLatest } from 'rxjs';
+import { Cliente } from '../../../core/models/entities';
+import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { ContaService } from '../../../core/services/conta-services/conta-service';
 
 interface TopCliente {
   cpf: string;
@@ -15,26 +18,48 @@ interface TopCliente {
   templateUrl: './top-3-clientes.html',
   styleUrl: './top-3-clientes.css',
 })
-export class Top3Clientes {
-  topClientes: TopCliente[] = CONTAS_MOCK
-    .map((conta) => {
-      const cliente = CLIENTES_MOCK.find((item) => item.cpf === conta.cpfCliente);
-      if (!cliente) {
-        return null;
-      }
+export class Top3Clientes implements OnInit, OnDestroy {
+  private readonly clienteService = inject(ClienteService);
+  private readonly contaService = inject(ContaService);
+  private readonly subscriptions = new Subscription();
 
-      const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco);
-      return {
-        cpf: cliente.cpf,
-        nome: cliente.nome,
-        cidade,
-        estado,
-        saldo: conta.saldo,
-      };
-    })
-    .filter((item): item is TopCliente => item !== null)
-    .sort((a, b) => b.saldo - a.saldo)
-    .slice(0, 3);
+  topClientes: TopCliente[] = [];
+
+  ngOnInit(): void {
+    this.subscriptions.add(
+      combineLatest([this.clienteService.clientes$, this.contaService.contas$]).subscribe(
+        ([clientes, contas]) => {
+          const clientesPorCpf = new Map<string, Cliente>(
+            clientes.map((cliente) => [cliente.cpf, cliente])
+          );
+
+          this.topClientes = contas
+            .map((conta) => {
+              const cliente = clientesPorCpf.get(conta.cpfCliente);
+              if (!cliente) {
+                return null;
+              }
+
+              const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco);
+              return {
+                cpf: cliente.cpf,
+                nome: cliente.nome,
+                cidade,
+                estado,
+                saldo: conta.saldo,
+              };
+            })
+            .filter((item): item is TopCliente => item !== null)
+            .sort((a, b) => b.saldo - a.saldo)
+            .slice(0, 3);
+        }
+      )
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
   private extrairCidadeEstado(endereco: string): { cidade: string; estado: string } {
     const partes = endereco.split(' - ').map((item) => item.trim());
