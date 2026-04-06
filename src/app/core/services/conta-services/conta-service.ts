@@ -171,23 +171,25 @@ export class ContaService {
       return contas.find((conta) => conta.numeroConta === numeroConta);
     }
 
-    contarContasGerente(nomeGerente:string):number{
-      const contas=this.listarTodos();
-      return contas.filter((c:Conta)=>c.gerente===nomeGerente).length;
+    contarContasGerente(cpfGerente: string): number {
+  const contas = this.listarTodos();
+  return contas.filter((c: Conta) => c.cpfGerente === cpfGerente).length;
+}
 
+substituirGerente(cpfGerenteEmExclusao: string, cpfGerenteNovo: string): void {
+  const contas = this.listarTodos();
+
+  const contasAtualizadas = contas.map((conta: Conta) => {
+    if (conta.cpfGerente === cpfGerenteEmExclusao) {
+      return {
+        ...conta,
+        cpfGerente: cpfGerenteNovo
+      };
     }
+    return conta;
+  });
 
-    substituirGerente(gerenteEmExclusao:string, gerenteNovo:string):void{
-      const contas=this.listarTodos();
-      const contasAtualizadas=contas.map((conta:Conta)=>{
-        if(conta.gerente===gerenteEmExclusao){
-          return{...conta, gerente:gerenteNovo};
-        }
-        return conta;
-      })
-
-      this.atualizarDados(contasAtualizadas);
-    }
-
+  this.atualizarDados(contasAtualizadas);
+}
 
 }
