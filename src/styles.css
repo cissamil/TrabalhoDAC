@@ -1,31 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
-@font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 400; /* Peso regular */
-  font-display: swap; /* Evita texto invisível enquanto a fonte carrega */
-  src: url('./assets/fonts/montserrat-v26-latin-regular.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 500; /* Peso médio */
-  font-display: swap;
-  src: url('./assets/fonts/montserrat-v26-latin-500.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 700; /* Peso negrito */
-  font-display: swap;
-  src: url('./assets/fonts/montserrat-v26-latin-700.woff2') format('woff2');
-}
-
 *{
     box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
+    /* font-family: 'Montserrat', sans-serif; */
     margin: 0;
 }
 
