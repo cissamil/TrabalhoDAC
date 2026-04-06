@@ -72,17 +72,17 @@
             <div class="account-data-infos">
                 <div class="account-data-info">
                     <p class="info-title grey">Saldo</p>
-                    <p class="info-content red">R$ {{conta_cliente.saldo | number:'1.2-2'}}</p>
+                    <p class="info-content" [ngClass]="contaCliente.saldo > 0 ? 'blue' : 'red'">R$ {{contaCliente.saldo | number:'1.2-2'}}</p>
                 </div>
     
                 <div class="account-data-info">
                     <p class="info-title grey">Limite</p>
-                    <p class="info-content">R$ {{conta_cliente.limite | number:'1.2-2'}}</p>
+                    <p class="info-content">R$ {{contaCliente.limite | number:'1.2-2'}}</p>
                 </div>
     
                 <div class="account-data-info">
                     <p class="info-title grey">Gerente</p>
-                    <p class="info-content">{{conta_cliente.gerente}}</p>
+                    <p class="info-content">{{contaCliente.gerente}}</p>
                 </div>
             </div>
 

@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { NgxMaskDirective } from "ngx-mask";
 import { FormsModule } from "@angular/forms";
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, NgClass } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Component, Input, OnInit } from '@angular/core';
 import { Cliente, Conta } from '../../../core/models/entities';
@@ -10,22 +10,24 @@ import { validateCEP, validateEmail } from '../../../core/shared/helpers';
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
+import { ContaService } from '../../../core/services/conta-services/conta-service';
 
 @Component({
   selector: 'app-cliente-perfil',
-  imports: [FormsModule, DecimalPipe, NgxMaskDirective, MatIconModule],
+  imports: [FormsModule, DecimalPipe, NgxMaskDirective, MatIconModule, NgClass],
   templateUrl: './cliente-perfil.html',
   styleUrls: ['./cliente-perfil.css', '../../shared/css/responseModal.css'],
 })
 export class ClientePerfil implements OnInit {
   constructor(
-    private clienteSessionService: ClienteSessionService,
     private router: Router,
+    private contaService: ContaService,
     private clienteService: ClienteService,
+    private clienteSessionService: ClienteSessionService,
   ) {}
 
   private cliente!: Cliente;
-  conta_cliente!: Conta;
+  contaCliente!: Conta;
   cep: string = '';
   rua: string = '';
   cidade: string = '';
@@ -43,12 +45,16 @@ export class ClientePerfil implements OnInit {
 
     if (dadosCliente && dadosConta) {
       this.cliente = dadosCliente;
-      this.conta_cliente = dadosConta;
+      this.contaCliente = dadosConta;
 
       this.initalizeProfileData();
     } else {
       this.router.navigate(['/login']);
     }
+  }
+
+  get colorSaldo(){
+    return this.contaCliente.saldo > 0 ? 'blue' : 'red';
   }
 
   initalizeProfileData() {
@@ -90,8 +96,21 @@ export class ClientePerfil implements OnInit {
       return;
     }
 
-    const salarioNumber: number =
-      this.currencyFormatter.removeCurrencyMaskFromString(this.salario);
+    const salarioNumber: number = this.currencyFormatter.removeCurrencyMaskFromString(this.salario);
+    let novoLimite = salarioNumber / 2;
+
+    console.log(`Novo limite: ${novoLimite}, Saldo: ${this.contaCliente.saldo}`)
+
+    if(this.contaCliente.saldo < 0){
+
+      const saldoPositivo = this.contaCliente.saldo * -1;
+      
+      if(novoLimite < saldoPositivo){
+        novoLimite = saldoPositivo;
+      }
+    }
+
+    this.contaCliente.limite = novoLimite;
 
     console.log('Salário atual', salarioNumber);
 
@@ -102,6 +121,10 @@ export class ClientePerfil implements OnInit {
 
     this.clienteService.atualizar(this.updatedCliente);
     this.clienteSessionService.setCliente(this.updatedCliente);
+    this.clienteSessionService.setContaCliente(this.contaCliente);
+
+    this.contaService.atualizarConta(this.contaCliente);
+  
 
     this.responseModal = {
       title: "Sucesso",
