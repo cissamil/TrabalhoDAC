@@ -1,11 +1,11 @@
+import { FormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
-import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
-import { ManagerListTableData } from '../../../core/models/table-data';
 import { Conta, GerenteAdmin } from '../../../core/models/entities';
-import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
+import { ManagerListTableData } from '../../../core/models/table-data';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
+import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 
 @Component({
   selector: 'app-admin-gerenciar-gerentes',
