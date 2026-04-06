@@ -153,7 +153,7 @@ export class AdminGerenciarGerentes implements OnInit {
   private obterMenorSaldoPositivo(contas: Conta[]): number {
     const menoresSaldosPositivos = contas
       .map((conta) => conta.saldo)
-      .filter((saldo) => saldo > 0)
+      .filter((saldo) => saldo < 0)
       .sort((a, b) => a - b);
 
     return menoresSaldosPositivos[0] ?? Number.POSITIVE_INFINITY;
