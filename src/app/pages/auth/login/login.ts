@@ -46,7 +46,7 @@ export class Login implements OnInit{
   public get profileOptions(): typeof ProfileOptions {
     return ProfileOptions;
   }
-  acessProfile: ProfileOptions = ProfileOptions.Cliente;
+  acessProfile: ProfileOptions = ProfileOptions.Gerente;
 
   redirect(page:string){
     this.router.navigate([page]);

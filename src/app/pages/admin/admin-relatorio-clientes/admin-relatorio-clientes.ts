@@ -47,37 +47,50 @@ export class AdminRelatorioClientes implements OnInit {
     this.clientes = this.clienteService.listarTodos();
     this.contas = this.contaService.listarTodos();
     this.gerentes = this.gerenteService.listarGerentes();
+    console.log('clientes do service', this.clientes);
+  console.log('contas do service', this.contas);
+  console.log('gerentes do service', this.gerentes);
     this.fillClientsTable();
   }
 
   fillClientsTable() {
-    this.CLIENTS_TABLE=[];
-    this.clientes.forEach((cliente) =>{
-      const contaCliente = this.contas.find((conta) => conta.cliente == cliente.nome);
-      const gerenteCliente = this.gerentes.find((gerente) => gerente.nome == contaCliente?.gerente)
+  this.CLIENTS_TABLE = [];
 
-      if(contaCliente && gerenteCliente){
+  console.log('CLIENTES:', this.clientes);
+  console.log('CONTAS:', this.contas);
+  console.log('GERENTES:', this.gerentes);
 
-        this.CLIENTS_TABLE.push({
+  this.clientes.forEach((cliente) => {
+    const contaCliente = this.contas.find(
+      (conta) => conta.cpfCliente === cliente.cpf
+    );
 
-          cpfCliente: cliente.cpf,
-          nomeCliente:cliente.nome,
-          emailCliente:cliente.email,
-          salarioCliente:cliente.salario,
-          numeroContaCliente:contaCliente.numeroConta,
-          saldoContaCliente:contaCliente.saldo,
-          limiteContaCliente:contaCliente.limite,
-          cpfGerente:gerenteCliente.cpf,
-          nomeGerente:gerenteCliente.nome,
-          colorSaldo: contaCliente.saldo >= 0 ? "green" : "red"
-        });
-      }
+    const gerenteCliente = this.gerentes.find(
+      (gerente) => gerente.cpf === contaCliente?.cpfGerente
+    );
 
+    console.log('cliente atual:', cliente.nome, cliente.cpf);
+    console.log('conta encontrada:', contaCliente);
+    console.log('gerente encontrado:', gerenteCliente);
 
-    });
+    if (contaCliente && gerenteCliente) {
+      this.CLIENTS_TABLE.push({
+        cpfCliente: cliente.cpf,
+        nomeCliente: cliente.nome,
+        emailCliente: cliente.email,
+        salarioCliente: cliente.salario,
+        numeroContaCliente: contaCliente.numeroConta,
+        saldoContaCliente: contaCliente.saldo,
+        limiteContaCliente: contaCliente.limite,
+        cpfGerente: gerenteCliente.cpf,
+        nomeGerente: gerenteCliente.nome,
+        colorSaldo: contaCliente.saldo >= 0 ? 'green' : 'red'
+      });
+    }
+  });
 
-    this.CLIENTS_TABLE.sort((a, b) => a.nomeCliente.localeCompare(b.nomeCliente));
+  console.log('TABELA FINAL:', this.CLIENTS_TABLE);
 
-
-  }
+  this.CLIENTS_TABLE.sort((a, b) => a.nomeCliente.localeCompare(b.nomeCliente));
+}
 }
