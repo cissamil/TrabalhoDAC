@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgxMaskPipe } from 'ngx-mask';
 import { FormsModule } from '@angular/forms';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
@@ -10,6 +11,7 @@ interface ClienteDetalhado {
   cpf: string;
   nome: string;
   email: string;
+  telefone:string
   endereco: string;
   salario: number;
   saldo: number;
@@ -20,7 +22,7 @@ interface ClienteDetalhado {
 
 @Component({
   selector: 'app-cliente-especifico',
-  imports: [FormsModule],
+  imports: [FormsModule, NgxMaskPipe],
   templateUrl: './cliente-especifico.html',
   styleUrl: './cliente-especifico.css',
 })
@@ -61,7 +63,7 @@ export class ClienteEspecifico implements OnInit {
     const cliente = this.clientes.find(
       (item) => item.cpf.includes(termoNormalizado));
     const termoCpf = termoNormalizado.replace(/\D/g, '');
-    
+
     if (!cliente) {
       this.clienteSelecionado = null;
       return;
@@ -77,6 +79,7 @@ export class ClienteEspecifico implements OnInit {
       cpf: cliente.cpf,
       nome: cliente.nome,
       email: cliente.email,
+      telefone:cliente.telefone,
       endereco: cliente.endereco,
       salario: cliente.salario,
       saldo: conta.saldo,

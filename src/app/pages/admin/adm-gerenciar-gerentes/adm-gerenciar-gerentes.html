@@ -17,7 +17,7 @@
 
         <label>
           CPF
-          <input type="text" [(ngModel)]="novoGerente.cpf" maxlength="14" />
+          <input type="text" mask='000.000.000-00' [(ngModel)]="novoGerente.cpf" maxlength="14" />
         </label>
 
         <label>
@@ -27,7 +27,7 @@
 
         <label>
           Telefone
-          <input type="text" [(ngModel)]="novoGerente.telefone" maxlength="15" />
+          <input type="text" mask="(00) 00000-0000" [(ngModel)]="novoGerente.telefone" maxlength="15" />
         </label>
 
         <label>
