@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgxMaskPipe, NgxMaskDirective } from 'ngx-mask';
+import { NgxMaskPipe } from 'ngx-mask';
 import { FormsModule } from '@angular/forms';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
@@ -22,7 +22,7 @@ interface ClienteDetalhado {
 
 @Component({
   selector: 'app-cliente-especifico',
-  imports: [FormsModule, NgxMaskPipe, NgxMaskDirective],
+  imports: [FormsModule, NgxMaskPipe],
   templateUrl: './cliente-especifico.html',
   styleUrl: './cliente-especifico.css',
 })

@@ -15,10 +15,18 @@
           <input type="text" [(ngModel)]="novoGerente.nome" />
         </label>
 
-        <label>
-          CPF
-          <input type="text" mask='000.000.000-00' [(ngModel)]="novoGerente.cpf" />
-        </label>
+        @if (idGerenteEditando){
+          <div class="field">
+            <label>CPF</label>
+              <input type="text" mask="000.000.000-00" [ngModel]="novoGerente.cpf" name="cpf" disabled>
+              <label class="cpf_block">O CPF não pode ser alterado</label>
+        </div>
+        }@else {
+          <div class="field">
+            <label>CPF</label>
+              <input type="text" mask="000.000.000-00" [(ngModel)]="novoGerente.cpf" name="cpf" >
+        </div>
+        }
 
         <label>
           E-mail
