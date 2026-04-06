@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { NgxMaskDirective } from 'ngx-mask';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
@@ -18,7 +19,7 @@ interface ClienteTabela {
 
 @Component({
   selector: 'app-todos-clientes',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, NgxMaskDirective],
   templateUrl: './todos-clientes.html',
   styleUrl: './todos-clientes.css',
 })
@@ -92,6 +93,24 @@ export class TodosClientes {
     );
   }
 
+  get isBuscaCpf(): boolean {
+    return this.comecaComNumero(this.termoBusca);
+  }
+
+  onTermoBuscaChange(valor: string): void {
+    if (!valor) {
+      this.termoBusca = '';
+      return;
+    }
+
+    if (this.comecaComNumero(valor)) {
+      this.termoBusca = valor.slice(0, 14);
+      return;
+    }
+
+    this.termoBusca = valor.slice(0, 50);
+  }
+
   private extrairCidadeEstado(endereco: string): { cidade: string; estado: string } {
     const partes = endereco.split(' - ').map((item) => item.trim());
     return {
@@ -114,5 +133,14 @@ export class TodosClientes {
       style: 'currency',
       currency: 'BRL',
     }).format(valor);
+  }
+
+  private comecaComNumero(valor: string): boolean {
+    const texto = valor.trimStart();
+    if (!texto) {
+      return false;
+    }
+
+    return /^\d/.test(texto);
   }
 }

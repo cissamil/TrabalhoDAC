@@ -4,11 +4,25 @@
   </div>
 
   <div class="search-bar">
-    <input
-      type="text"
-      [(ngModel)]="termoBusca"
-      placeholder="Pesquisar por CPF ou nome"
-    />
+    @if (isBuscaCpf) {
+      <input
+        type="text"
+        [(ngModel)]="termoBusca"
+        (ngModelChange)="onTermoBuscaChange($event)"
+        [mask]="'000.000.000-00'"
+        [dropSpecialCharacters]="false"
+        maxlength="14"
+        placeholder="Pesquisar por CPF ou nome"
+      />
+    } @else {
+      <input
+        type="text"
+        [(ngModel)]="termoBusca"
+        (ngModelChange)="onTermoBuscaChange($event)"
+        maxlength="50"
+        placeholder="Pesquisar por CPF ou nome"
+      />
+    }
   </div>
 
   <div class="table-wrapper">
