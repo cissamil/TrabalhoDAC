@@ -13,24 +13,25 @@ import { GerenteService } from '../../../core/services/gerente-services/gerente-
   templateUrl: './adm-gerenciar-gerentes.html',
   styleUrl: './adm-gerenciar-gerentes.css',
 })
-export class AdminGerenciarGerentes implements OnInit{
+export class AdminGerenciarGerentes implements OnInit {
   constructor(
-    private gerenteService:GerenteService,
-    private contaService:ContaService,){}
+    private gerenteService: GerenteService,
+    private contaService: ContaService,
+  ) {}
 
-  calcularCards():void{
-    this.totalGerentes=this.gerentes.length;
-    this.totalContas=this.contas.length;
-    this.mediaPorGerente=this.totalGerentes>0?this.totalContas/this.totalGerentes:0;
+  calcularCards(): void {
+    this.totalGerentes = this.gerentes.length;
+    this.totalContas = this.contas.length;
+    this.mediaPorGerente = this.totalGerentes > 0 ? this.totalContas / this.totalGerentes : 0;
   }
-  gerentes:GerenteAdmin[]=[];
-  contas:Conta[]=[];
-  MANAGERS_TABLE:ManagerListTableData[]=[];
-  //array final da tabela
 
-  totalGerentes:number=0;
-  totalContas:number=0;
-  mediaPorGerente:number=0;
+  gerentes: GerenteAdmin[] = [];
+  contas: Conta[] = [];
+  MANAGERS_TABLE: ManagerListTableData[] = [];
+
+  totalGerentes: number = 0;
+  totalContas: number = 0;
+  mediaPorGerente: number = 0;
   exibirFormularioNovoGerente = false;
   mensagemErro = '';
   mensagemSucesso = '';
@@ -44,7 +45,7 @@ export class AdminGerenciarGerentes implements OnInit{
     senha: '',
   };
 
-  displayedcColunas:string[]=[
+  displayedcColunas: string[] = [
     'Nome',
     'CPF',
     'E-mail',
@@ -53,14 +54,12 @@ export class AdminGerenciarGerentes implements OnInit{
     'Ações'
   ];
 
-
   ngOnInit(): void {
-    this.gerentes=this.gerenteService.listarGerentes();
-    this.contas=this.contaService.listarTodos();
+    this.gerentes = this.gerenteService.listarGerentes();
+    this.contas = this.contaService.listarTodos();
     this.fillGerentesTable();
     this.calcularCards();
-  };
-
+  }
 
   toggleFormularioNovoGerente(): void {
     this.exibirFormularioNovoGerente = !this.exibirFormularioNovoGerente;
@@ -69,30 +68,24 @@ export class AdminGerenciarGerentes implements OnInit{
   }
 
   fillGerentesTable(): void {
-    //imprime os dados dos gerentes na tela em formato de tabela
-  const novosDados = this.gerentes.map((gerente) => {
-      //preenche e espelha todos os dados de gerente com spreed na impressao da tabela
+    const novosDados = this.gerentes.map((gerente) => {
+      const quantidadeContas = this.contas.filter(
+        (conta) => conta.cpfGerente === gerente.cpf
+      ).length;
 
-    const quantidadeContas = this.contas.filter(
-      //faz o cruzamento e calcula a qtd de contas que cada gerente tem
-      (conta) => conta.cpfGerente === gerente.cpf
-    ).length;
+      return {
+        id: gerente.id,
+        nome: gerente.nome,
+        cpf: gerente.cpf,
+        email: gerente.email,
+        telefone: gerente.telefone,
+        quantidadeClientes: quantidadeContas
+      };
+    });
 
-    return {
-      id:gerente.id,
-      nome: gerente.nome,
-      cpf: gerente.cpf,
-      email: gerente.email,
-      telefone: gerente.telefone,
-      quantidadeClientes: quantidadeContas // mantém seu nome
-    };
-  });
-
-  novosDados.sort((a, b) => a.nome.localeCompare(b.nome));
-    //ordem alfabetica
-    console.log(this.MANAGERS_TABLE);
+    novosDados.sort((a, b) => a.nome.localeCompare(b.nome));
     this.MANAGERS_TABLE = [...novosDados];
-}
+  }
 
   private atualizarTela(): void {
     this.gerentes = this.gerenteService.listarGerentes();
@@ -101,7 +94,7 @@ export class AdminGerenciarGerentes implements OnInit{
     this.calcularCards();
   }
 
-inserirNovoGerente(): void {
+  inserirNovoGerente(): void {
     this.mensagemErro = '';
     this.mensagemSucesso = '';
 
@@ -156,6 +149,7 @@ inserirNovoGerente(): void {
       senha: '',
     };
   }
+
   private obterMenorSaldoPositivo(contas: Conta[]): number {
     const menoresSaldosPositivos = contas
       .map((conta) => conta.saldo)
@@ -193,7 +187,7 @@ inserirNovoGerente(): void {
 
     if (gerentesAntesInsercao.length === 1) {
       const contasGerenteUnico = contasAtuais.filter(
-        (conta) => conta.gerente === gerentesAntesInsercao[0].nome
+        (conta) => conta.cpfGerente === gerentesAntesInsercao[0].cpf
       );
 
       if (contasGerenteUnico.length <= 1) {
@@ -202,7 +196,10 @@ inserirNovoGerente(): void {
     }
 
     const contagemPorGerente = gerentesAntesInsercao.map((gerente) => {
-      const contasGerente = contasAtuais.filter((conta) => conta.gerente === gerente.nome);
+      const contasGerente = contasAtuais.filter(
+        (conta) => conta.cpfGerente === gerente.cpf
+      );
+
       return {
         gerente,
         contas: contasGerente,
@@ -247,107 +244,98 @@ inserirNovoGerente(): void {
     return contaAtualizada;
   }
 
-  remover(id:number):void{
+  remover(id: number): void {
     const confirmarRemocao: boolean = confirm(
       'Tem certeza que deseja remover este gerente? As contas serão transferidas.'
     );
 
     if (!confirmarRemocao) return;
-    const listaGerentes= this.gerenteService.listarGerentes();
 
-    const quaseTodosGerentes= listaGerentes.filter( gerente => gerente.id !== id);
+    const listaGerentes = this.gerenteService.listarGerentes();
+    const quaseTodosGerentes = listaGerentes.filter((gerente) => gerente.id !== id);
 
-    const gerenteEmExclusao = listaGerentes.find(g => g.id === id);
+    const gerenteEmExclusao = listaGerentes.find((g) => g.id === id);
     if (!gerenteEmExclusao) return;
 
-    const contagem=quaseTodosGerentes.map(contador=>({
-      dados:contador,
+    const contagem = quaseTodosGerentes.map((contador) => ({
+      dados: contador,
       qtdContas: this.contaService.contarContasGerente(contador.cpf)
     }));
-    contagem.sort((a,b)=>a.qtdContas-b.qtdContas);
-    const sucessor=contagem[0].dados;
 
-    this.contaService.substituirGerente(gerenteEmExclusao.cpf,sucessor.cpf);
+    contagem.sort((a, b) => a.qtdContas - b.qtdContas);
+    const sucessor = contagem[0].dados;
 
-
+    this.contaService.substituirGerente(gerenteEmExclusao.cpf, sucessor.cpf);
     this.gerenteService.removerGerente(id);
 
     this.gerentes = this.gerenteService.listarGerentes();
-
     this.contas = this.contaService.listarTodos();
-
     this.fillGerentesTable();
-
     this.calcularCards();
 
-    alert(`Contas de ${gerenteEmExclusao.cpf} transferidas para ${sucessor.cpf}`);
+    alert(`Contas de ${gerenteEmExclusao.nome} transferidas para ${sucessor.nome}`);
+  }
 
-}
+  editarGerente(): void {
+    if (!this.idGerenteEditando) return;
 
-editarGerente(): void {
+    const gerenteOriginal = this.gerenteService
+      .listarTodos()
+      .find(g => g.id === this.idGerenteEditando);
 
-  if (!this.idGerenteEditando) return;
+    if (!gerenteOriginal) return;
 
-  const gerenteOriginal = this.gerenteService
-    .listarTodos()
-    .find(g => g.id === this.idGerenteEditando);
+    const gerenteAtualizado: GerenteAdmin = {
+      id: gerenteOriginal.id,
+      cpf: gerenteOriginal.cpf,
+      tipo: gerenteOriginal.tipo,
+      nome: this.novoGerente.nome,
+      email: this.novoGerente.email,
+      telefone: this.novoGerente.telefone,
+      senha: this.novoGerente.senha,
+    };
 
-  if (!gerenteOriginal) return;
+    this.gerenteService.atualizar(gerenteAtualizado);
 
-  const gerenteAtualizado: GerenteAdmin = {
-    id: gerenteOriginal.id,
-    cpf: gerenteOriginal.cpf,
-    tipo: gerenteOriginal.tipo,
+    this.atualizarTela();
 
-    nome: this.novoGerente.nome,
-    email: this.novoGerente.email,
-    telefone: this.novoGerente.telefone,
-    senha: this.novoGerente.senha,
-  };
+    this.idGerenteEditando = null;
 
-  this.gerenteService.atualizar(gerenteAtualizado);
+    this.novoGerente = {
+      nome: '',
+      cpf: '',
+      email: '',
+      telefone: '',
+      senha: '',
+    };
 
-  this.atualizarTela();
-
-  this.idGerenteEditando = null;
-
-  this.novoGerente = {
-    nome: '',
-    cpf: '',
-    email: '',
-    telefone: '',
-    senha: '',
-  };
-
-  this.exibirFormularioNovoGerente = false;
-}
+    this.exibirFormularioNovoGerente = false;
+  }
 
   atualizarGerente(id: number) {
+    const gerente = this.gerenteService
+      .listarTodos()
+      .find(g => g.id === id);
 
-  const gerente = this.gerenteService
-    .listarTodos()
-    .find(g => g.id === id);
+    if (!gerente) return;
 
-  if (!gerente) return;
+    this.idGerenteEditando = id;
+    this.exibirFormularioNovoGerente = true;
 
-  this.idGerenteEditando = id;
-  this.exibirFormularioNovoGerente = true;
-
-  this.novoGerente = {
-    nome: gerente.nome,
-    cpf: gerente.cpf,
-    email: gerente.email,
-    telefone: gerente.telefone,
-    senha: gerente.senha
-  };
-}
-salvarGerente(): void {
-
-  if (this.idGerenteEditando) {
-    this.editarGerente();
-  } else {
-    this.inserirNovoGerente();
+    this.novoGerente = {
+      nome: gerente.nome,
+      cpf: gerente.cpf,
+      email: gerente.email,
+      telefone: gerente.telefone,
+      senha: gerente.senha
+    };
   }
-}
 
+  salvarGerente(): void {
+    if (this.idGerenteEditando) {
+      this.editarGerente();
+    } else {
+      this.inserirNovoGerente();
+    }
+  }
 }
