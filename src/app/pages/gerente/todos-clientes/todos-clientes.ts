@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
+import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { ContaService } from '../../../core/services/conta-services/conta-service';
+import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 
 interface ClienteTabela {
   cpf: string;
@@ -23,22 +25,51 @@ interface ClienteTabela {
 export class TodosClientes {
   termoBusca = '';
 
-  readonly clientes: ClienteTabela[] = CLIENTES_MOCK.map((cliente) => {
-    const contaCliente = CONTAS_MOCK.find((conta) => conta.cliente === cliente.nome);
-    const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco);
+  constructor(
+    private clienteService: ClienteService,
+    private contaService: ContaService,
+    private gerenteService: GerenteService,
+  ) {}
 
-    return {
-      cpf: cliente.cpf,
-      nome: cliente.nome,
-      cidade,
-      estado,
-      email: cliente.email,
-      salario: cliente.salario,
-      saldo: contaCliente?.saldo ?? 0,
-      limite: contaCliente?.limite ?? 0,
-    };
-  })
-    .sort((a, b) => a.nome.localeCompare(b.nome));
+  get clientes(): ClienteTabela[] {
+    const gerenteLogado = this.gerenteService.getGerenteLogado();
+    if (!gerenteLogado) {
+      return [];
+    }
+
+    const clientes = this.clienteService.listarTodos();
+    const contas = this.contaService.listarTodos();
+
+    return clientes
+      .map((cliente) => {
+        const contaCliente = contas.find((conta) => conta.cpfCliente === cliente.cpf);
+        if (!contaCliente) {
+          return null;
+        }
+
+        const pertenceAoGerenteLogado =
+          contaCliente.cpfGerente === gerenteLogado.cpf ||
+          contaCliente.gerente === gerenteLogado.nome;
+
+        if (!pertenceAoGerenteLogado) {
+          return null;
+        }
+
+        const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco);
+        return {
+          cpf: cliente.cpf,
+          nome: cliente.nome,
+          cidade,
+          estado,
+          email: cliente.email,
+          salario: cliente.salario,
+          saldo: contaCliente.saldo,
+          limite: contaCliente.limite,
+        };
+      })
+      .filter((cliente): cliente is ClienteTabela => cliente !== null)
+      .sort((a, b) => a.nome.localeCompare(b.nome));
+  }
 
   get clientesFiltrados(): ClienteTabela[] {
     const termo = this.termoBusca.trim().toLowerCase();
@@ -46,9 +77,18 @@ export class TodosClientes {
       return this.clientes;
     }
 
+    const termoCpf = termo.replace(/\D/g, '');
+
     return this.clientes.filter(
-      (cliente) =>
-        cliente.cpf.includes(termo.replace(/\D/g, '')) || cliente.nome.toLowerCase().includes(termo)
+      (cliente) => {
+        const cpfNumerico = cliente.cpf.replace(/\D/g, '');
+        const nomeNormalizado = cliente.nome.toLowerCase();
+
+        const correspondeCpf = termoCpf.length > 0 && cpfNumerico.startsWith(termoCpf);
+        const correspondeNome = nomeNormalizado.startsWith(termo);
+
+        return correspondeCpf || correspondeNome;
+      }
     );
   }
 
