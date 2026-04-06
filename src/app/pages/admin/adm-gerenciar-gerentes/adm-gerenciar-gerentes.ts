@@ -75,7 +75,7 @@ export class AdminGerenciarGerentes implements OnInit{
 
     const quantidadeContas = this.contas.filter(
       //faz o cruzamento e calcula a qtd de contas que cada gerente tem
-      (conta) => conta.gerente === gerente.nome
+      (conta) => conta.cpfGerente === gerente.cpf
     ).length;
 
     return {
@@ -262,12 +262,12 @@ inserirNovoGerente(): void {
 
     const contagem=quaseTodosGerentes.map(contador=>({
       dados:contador,
-      qtdContas: this.contaService.contarContasGerente(contador.nome)
+      qtdContas: this.contaService.contarContasGerente(contador.cpf)
     }));
     contagem.sort((a,b)=>a.qtdContas-b.qtdContas);
     const sucessor=contagem[0].dados;
 
-    this.contaService.substituirGerente(gerenteEmExclusao.nome,sucessor.nome);
+    this.contaService.substituirGerente(gerenteEmExclusao.cpf,sucessor.cpf);
 
 
     this.gerenteService.removerGerente(id);
@@ -280,7 +280,7 @@ inserirNovoGerente(): void {
 
     this.calcularCards();
 
-    alert(`Contas de ${gerenteEmExclusao.nome} transferidas para ${sucessor.nome}`);
+    alert(`Contas de ${gerenteEmExclusao.cpf} transferidas para ${sucessor.cpf}`);
 
 }
 
