@@ -1,14 +1,17 @@
 <section>
 	<div class="title">
 		<h2>Consultar Cliente</h2>
-		<p>Pesquise por CPF ou nome para visualizar os detalhes da conta.</p>
+		<p>Pesquise por CPF para visualizar os detalhes da conta.</p>
 	</div>
 
 	<div class="search-bar">
 		<input
 			type="text"
 			[(ngModel)]="termoBusca"
-			placeholder="Digite CPF ou nome do cliente"
+			(ngModelChange)="termoBusca = formatarCpfBusca($event)"
+			maxlength="14"
+			inputmode="numeric"
+			placeholder="Digite CPF do cliente"
 			(keyup.enter)="consultarCliente()"
 		/>
 		<button type="button" (click)="consultarCliente()">Consultar</button>
