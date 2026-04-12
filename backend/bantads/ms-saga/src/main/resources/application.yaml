@@ -1,0 +1,13 @@
+spring:
+  application:
+      name: "MsSaga"
+
+server:
+  port: 8085
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /
+    disable-swagger-default-url: true

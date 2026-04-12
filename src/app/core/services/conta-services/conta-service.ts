@@ -28,7 +28,8 @@ export class ContaService {
 
         localStorage[LS_CHAVE] = JSON.stringify(CONTAS_MOCK);
       }
-
+      // localStorage[LS_CHAVE] = JSON.stringify(CONTAS_MOCK);
+      
       const contas: Conta[]= localStorage[LS_CHAVE] ? JSON.parse(localStorage[LS_CHAVE]) : [];
       this.contasSubject = new BehaviorSubject<Conta[]>(contas);
       this.contas$ = this.contasSubject.asObservable();

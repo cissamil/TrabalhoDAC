@@ -116,6 +116,10 @@ export class TransferenciaCliente implements OnInit{
 
   transferir(){
 
+    this.mensagem = ''
+    this.tipoErro = '';
+    this.corMensagem = '';
+
     const valor = this.currencyFormatter.removeCurrencyMaskFromString(this.valorTransferencia);
 
     if(Number(this.numeroContaDestino) === this.contaCliente.numeroConta){

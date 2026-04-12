@@ -1,0 +1,13 @@
+spring:
+  application:
+      name: "MsGerente"
+
+server:
+  port: 8084
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /
+    disable-swagger-default-url: true

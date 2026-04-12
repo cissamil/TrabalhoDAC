@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { validateEmail } from '../../../core/shared/helpers';
+import { ResponseModal } from '../../../core/models/response-modal';
 import { Cliente, GerenteAdmin } from '../../../core/models/entities';
 import {ProfileOptions } from '../../../core/models/navigationOptions';
-import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
-import { ResponseModal } from '../../../core/models/response-modal';
-import { MatIconModule } from '@angular/material/icon';
 import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
 
 @Component({
@@ -46,17 +46,14 @@ export class Login implements OnInit{
   public get profileOptions(): typeof ProfileOptions {
     return ProfileOptions;
   }
-  acessProfile: ProfileOptions = ProfileOptions.Gerente;
+  acessProfile: ProfileOptions = ProfileOptions.Cliente;
 
   redirect(page:string){
     this.router.navigate([page]);
   }
 
   setAcessProfile(option: ProfileOptions) {
-    console.log('antes: ')
     this.acessProfile = option;
-    console.log('AcessProfile', this.acessProfile);
-    console.log('depois: ');
   }
 
 
@@ -74,7 +71,7 @@ export class Login implements OnInit{
   senha: string = '';
 
   loginUser() {
-    console.log(`Email inserido: ${this.email}. Senha inserida: ${this.senha}`);
+    // console.log(`Email inserido: ${this.email}. Senha inserida: ${this.senha}`);
 
     const verifyFields = this.validateFields();
 
@@ -91,36 +88,36 @@ export class Login implements OnInit{
     }
 
     if(this.acessProfile == ProfileOptions.Cliente){
-      console.log('validando dado cliente');
+      // console.log('validando dado cliente');
       const result = this.clienteService.buscarClientePorEmailESenha(
         this.email,
         this.senha,
       );
-      console.log('result cliente: ', result);
+      // console.log('result cliente: ', result);
 
       this.handleResult(result, this.acessProfile);
     }
 
     if(this.acessProfile === ProfileOptions.Gerente){
-      console.log('validando dado gerente');
+      // console.log('validando dado gerente');
       const result = this.gerenteService.buscarGerentePorEmailESenhaETipo(
         this.email,
         this.senha,
         "gerente"
       );
-      console.log('result ger: ', result);
+      // console.log('result ger: ', result);
 
       this.handleResult(result, this.acessProfile);
     }
 
     if(this.acessProfile === ProfileOptions.Admin){
-      console.log('validando dado admin');
+      // console.log('validando dado admin');
       const result = this.gerenteService.buscarGerentePorEmailESenhaETipo(
         this.email,
         this.senha,
         "administrador"
       );
-      console.log('result adm: ', result);
+      // console.log('result adm: ', result);
 
       this.handleResult(result, this.acessProfile);
     }

@@ -72,7 +72,7 @@
             <div class="account-data-infos">
                 <div class="account-data-info">
                     <p class="info-title grey">Saldo</p>
-                    <p class="info-content" [ngClass]="contaCliente.saldo > 0 ? 'blue' : 'red'">R$ {{contaCliente.saldo | number:'1.2-2'}}</p>
+                    <p class="info-content" [ngClass]="contaCliente.saldo >= 0 ? 'blue' : 'red'">R$ {{contaCliente.saldo | number:'1.2-2'}}</p>
                 </div>
     
                 <div class="account-data-info">

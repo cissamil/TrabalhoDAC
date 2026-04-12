@@ -20,7 +20,8 @@ export class ClienteService {
 
       localStorage[LS_CHAVE] = JSON.stringify(CLIENTES_MOCK);
     }
-
+    
+    // localStorage[LS_CHAVE] = JSON.stringify(CLIENTES_MOCK);
     const clientes: Cliente[]= localStorage[LS_CHAVE] ? JSON.parse(localStorage[LS_CHAVE]) : [];
     this.clientesSubject = new BehaviorSubject<Cliente[]>(clientes);
     this.clientes$ = this.clientesSubject.asObservable();
@@ -39,14 +40,14 @@ export class ClienteService {
 
   inserir(cliente:Cliente): void{
 
-    console.log(`
-      Cliente a inserir:
-      Nome: ${cliente.nome}
-      Email: ${cliente.email}
-      Senha: ${cliente.senha}
-      Salario: ${cliente.salario}
-      Endereço: ${cliente.endereco}
-    `);
+    // console.log(`
+    //   Cliente a inserir:
+    //   Nome: ${cliente.nome}
+    //   Email: ${cliente.email}
+    //   Senha: ${cliente.senha}
+    //   Salario: ${cliente.salario}
+    //   Endereço: ${cliente.endereco}
+    // `);
 
     try{
 
@@ -89,15 +90,15 @@ export class ClienteService {
   }
 
   atualizar(cliente: Cliente) : void{
-    console.log(`
-      Dados a atualizar:
-      Id: ${cliente.id}
-      Nome: ${cliente.nome}
-      Email: ${cliente.email}
-      Senha: ${cliente.senha}
-      Salario: ${cliente.salario}
-      Endereço: ${cliente.endereco}
-    `);
+    // console.log(`
+    //   Dados a atualizar:
+    //   Id: ${cliente.id}
+    //   Nome: ${cliente.nome}
+    //   Email: ${cliente.email}
+    //   Senha: ${cliente.senha}
+    //   Salario: ${cliente.salario}
+    //   Endereço: ${cliente.endereco}
+    // `);
     const clientes = this.listarTodos();
 
     const index = clientes.findIndex(c => c.id === cliente.id);
@@ -129,7 +130,7 @@ export class ClienteService {
   buscarClientePorCPF(cpf:string){
     const clientes = this.listarTodos();
 
-    console.log("Clientes: ", clientes);
+    // console.log("Clientes: ", clientes);
     return clientes.find((cliente) => cliente.cpf === cpf);
   }
 

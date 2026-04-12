@@ -41,15 +41,15 @@ export class PedidoAutoCadastroService {
 
   inserir(pedido: PedidoAutoCadastro): void{
 
-    console.log(`
-      Pedido a inserir:
-      Nome Cliente: ${pedido.nomeCliente},
-      CPF Cliente: ${pedido.cpfCliente},
-      CPF Gerente: ${pedido.cpfGerente},
-      Status: ${pedido.status}
-      Data Solicitação: ${pedido.dataSolicitacao}
-      Salario: ${pedido.salario}
-    `);
+    // console.log(`
+    //   Pedido a inserir:
+    //   Nome Cliente: ${pedido.nomeCliente},
+    //   CPF Cliente: ${pedido.cpfCliente},
+    //   CPF Gerente: ${pedido.cpfGerente},
+    //   Status: ${pedido.status}
+    //   Data Solicitação: ${pedido.dataSolicitacao}
+    //   Salario: ${pedido.salario}
+    // `);
 
     const pedidos = this.listarTodos();
     pedido.id = new Date().getTime();
@@ -58,15 +58,15 @@ export class PedidoAutoCadastroService {
   }
 
   atualizar(pedido: PedidoAutoCadastro) : void{
-    console.log(`
-      Pedido a inserir:
-      Cliente: ${pedido.nomeCliente},
-      CPF Cliente: ${pedido.cpfCliente},
-      CPF Gerente: ${pedido.cpfGerente},
-      Status: ${pedido.status}
-      Data Solicitação: ${pedido.dataSolicitacao}
-      Salario: ${pedido.salario}
-    `);
+    // console.log(`
+    //   Pedido a inserir:
+    //   Cliente: ${pedido.nomeCliente},
+    //   CPF Cliente: ${pedido.cpfCliente},
+    //   CPF Gerente: ${pedido.cpfGerente},
+    //   Status: ${pedido.status}
+    //   Data Solicitação: ${pedido.dataSolicitacao}
+    //   Salario: ${pedido.salario}
+    // `);
     const pedidos = this.listarTodos();
     
     const index = pedidos.findIndex(p => p.id === pedido.id);

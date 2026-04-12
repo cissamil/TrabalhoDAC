@@ -27,7 +27,8 @@ export class GerenteService {
       localStorage[LS_CHAVE] = JSON.stringify(STAFF_MOCK);
       //se nao existir salva no mock
     }
-
+    
+    // localStorage[LS_CHAVE] = JSON.stringify(STAFF_MOCK);
     const gerentes: GerenteAdmin[]= localStorage[LS_CHAVE] ? JSON.parse(localStorage[LS_CHAVE]) : [];
     //le o que está no localStorage
     this.gerentesSubject = new BehaviorSubject<GerenteAdmin[]>(gerentes);
