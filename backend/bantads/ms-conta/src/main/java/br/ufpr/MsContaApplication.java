@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients(basePackages = "ufpr.br")
+@EnableFeignClients(basePackages = "br.ufpr")
 public class MsContaApplication {
   public static void main(String[] args){
 
