@@ -1,6 +1,5 @@
-package br.ufpr.config;
+package br.ufpr.rabbitMQConfig;
 
-import br.ufpr.dataprovider.adapter.PedidoSagaDTO;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -14,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
   public static final String SAGA_EXCHANGE = "saga.autocadastro";
-  public static  final String SAGA_QUEUE = "saga.autocadastro.queue";
+  public static  final String SAGA_QUEUE = "criar.credencial.queue";
 
   @Bean
   public MessageConverter jsonMessageConverter(){
@@ -34,7 +33,7 @@ public class RabbitMQConfig {
   @Bean
   public Binding binding(Queue queue, DirectExchange exchange){
 
-    return BindingBuilder.bind(queue).to(exchange).with("autocadastro.key");
+    return BindingBuilder.bind(queue).to(exchange).with("criar.credencial");
   }
 
 

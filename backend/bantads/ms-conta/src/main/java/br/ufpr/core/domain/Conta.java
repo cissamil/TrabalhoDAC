@@ -1,4 +1,4 @@
-package br.ufpr.models;
+package br.ufpr.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

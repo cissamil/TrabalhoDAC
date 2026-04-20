@@ -12,13 +12,20 @@ import org.springframework.stereotype.Component;
 public class SendSagaAdapter implements SendSagaPortOut{
 
   private final RabbitTemplate rabbitTemplate;
+  private final PedidoSagaDTO pedidoSagaDTO = new PedidoSagaDTO();
 
   @Override
   public void send(Cliente cliente){
+
+    pedidoSagaDTO.setNomeCliente(cliente.getNome());
+    pedidoSagaDTO.setCpfCliente(cliente.getCpf());
+    pedidoSagaDTO.setEmailCliente(cliente.getEmail());
+    pedidoSagaDTO.setSalario(cliente.getSalario());
+
     rabbitTemplate.convertAndSend(
       RabbitMQConfig.SAGA_EXCHANGE,
       "autocadastro.key",
-      cliente
+      pedidoSagaDTO
     );
   }
 
