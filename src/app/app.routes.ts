@@ -15,29 +15,33 @@ import { TodosClientes } from './pages/gerente/todos-clientes/todos-clientes';
 import { ClienteEspecifico } from './pages/gerente/cliente-especifico/cliente-especifico';
 import { Top3Clientes } from './pages/gerente/top-3-clientes/top-3-clientes';
 export const routes: Routes = [
+  //------- LOGIN---------------//
     {path: '', redirectTo: "login", pathMatch: 'full'},
-
+    
     {path: 'login', component: Login},
     {path: 'registro', component: Registro},
-    {path: 'extrato', component: Extrato},
+    //-----------ADMIN----------------//
+    {path: 'admin-main-page', component: AdminMainPage, data:{role:'ADMIN'}},
+    {path: 'admin-gerenciar-gerentes', component: AdminGerenciarGerentes, data:{role:'ADMIN'}},
+    //------------GERENTE------------------//
+    {
+      path: 'gerente-main-page',
+      component: GerenteMainPage,
+      children: [
+        { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+        { path: 'dashboard', component: GerenteDashboard },
+        { path: 'todos-clientes', component: TodosClientes },
+        { path: 'consultar-cliente', component: ClienteEspecifico },
+        { path: 'consultar-cliente/:cpf', component: ClienteEspecifico },
+        { path: 'top-3-clientes', component: Top3Clientes },
+      ],
+    },
+    //--------------CLIENTE----------------//
     {path: 'cliente-main-page', component: ClienteMainPage},
-        {
-            path: 'gerente-main-page',
-            component: GerenteMainPage,
-            children: [
-                { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-                { path: 'dashboard', component: GerenteDashboard },
-                { path: 'todos-clientes', component: TodosClientes },
-                { path: 'consultar-cliente', component: ClienteEspecifico },
-                { path: 'consultar-cliente/:cpf', component: ClienteEspecifico },
-                { path: 'top-3-clientes', component: Top3Clientes },
-            ],
-        },
-    {path: 'admin-main-page', component: AdminMainPage},
+    {path: 'extrato', component: Extrato},
     {path: 'deposito-cliente', component: DepositoCliente},
     {path: 'saque-cliente', component: SaqueCliente},
-    {path: 'transferencia-cliente', component: TransferenciaCliente},
-    {path: 'admin-gerenciar-gerentes', component: AdminGerenciarGerentes},
+    {path: 'transferencia-cliente', component: TransferenciaCliente}
 
 
 
