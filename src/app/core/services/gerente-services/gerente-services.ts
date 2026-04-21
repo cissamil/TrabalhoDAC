@@ -11,7 +11,7 @@ const LS_CHAVE_LOGADO = 'gerenteLogado';
 })
 export class GerenteService {
 
-  GERENTE_URL="http://localhost:4200/gerentes";
+  GERENTE_URL="http://localhost:8080/gerentes";
 
   httpOptions={
     headers: new HttpHeaders({
