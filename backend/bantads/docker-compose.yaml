@@ -3,29 +3,28 @@ version: '1.0'
 services:
   postgres-db:
     image: postgres:14
-    container-name: bantads-postgres
+    container_name: bantads-postgres
     environment:
       POSTGRES_USER: tads
       POSTGRES_PASSWORD: tads
-      POSTGRES_DB: bantads
     ports:
       - "5432:5432"
     volumes:
-      - pg_data:/var/lib/postgres/data
+      - pg_data:/var/lib/postgresql/data
       - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql #mapeamento do script de criação
 
   mongodb:
     image: mongo:latest
-    container-name: bantads-mongodb
+    container_name: bantads-mongodb
     ports:
-      - "27017-27017"
+      - "27017:27017"
     volumes:
       - mongo_data:/data/db
 
 
   rabbitmq:
     image: rabbitmq:3-management
-    container-name: bantads-rabbitmq
+    container_name: bantads-rabbitmq
     ports:
       - "5672:5672" # Comunicação
       - "15672:15672" # Painel
