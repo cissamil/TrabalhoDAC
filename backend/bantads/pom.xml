@@ -28,6 +28,7 @@
       <module>ms-auth</module>
       <module>ms-saga</module>
       <module>ms-core</module>
+      <module>bantads-common-lib</module>
     </modules>
     <scm>
 		<connection/>

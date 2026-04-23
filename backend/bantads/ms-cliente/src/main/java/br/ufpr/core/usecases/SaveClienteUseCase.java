@@ -1,31 +1,56 @@
 package br.ufpr.core.usecases;
 
 import br.ufpr.core.domain.Cliente;
-import br.ufpr.core.ports.input.SaveClientePortIn;
-import br.ufpr.core.ports.output.SaveClientePortOut;
-import br.ufpr.core.ports.output.SendSagaPortOut;
+import br.ufpr.core.ports.input.SaveClienteInputPort;
+import br.ufpr.core.ports.output.FindClienteByClienteIdOutputPort;
+import br.ufpr.core.ports.output.FindClienteByCpfOutputPort;
+import br.ufpr.core.ports.output.SaveClienteOutputPort;
+import br.ufpr.core.ports.output.SendCreateContaSagaOutputPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class SaveClienteUseCase implements SaveClientePortIn {
+public class SaveClienteUseCase implements SaveClienteInputPort {
 
-  private final SaveClientePortOut saveClientePortOut;
-  private final SendSagaPortOut sendSagaPortOut;
+  private final SaveClienteOutputPort saveClienteOutputPort;
+  private final FindClienteByCpfOutputPort findClienteByCpfOutputPort;
+  private final FindClienteByClienteIdOutputPort findClienteByClienteIdOutputPort;
+
+  private final SendCreateContaSagaOutputPort sendCreateContaSagaOutputPort;
 
   @Override
   public void execute (Cliente cliente){
 
-    if (saveClientePortOut.existsByCpf(cliente.getCpf())){
+    validateCliente(cliente);
+
+    String clienteId = generateValidClienteId();
+
+    cliente.setClienteId(clienteId);
+
+    saveClienteOutputPort.save(cliente);
+
+    sendCreateContaSagaOutputPort.send(cliente);
+  }
+
+  private void validateCliente(Cliente cliente) {
+    if (findClienteByCpfOutputPort.exists(cliente.getCpf())){
       throw new RuntimeException("CPF já cadastrado");
     }
+  }
 
+  private String generateValidClienteId() {
 
-    saveClientePortOut.save(cliente);
+    String clienteId = UUID.randomUUID().toString();
 
-    sendSagaPortOut.send(cliente);
+    while(findClienteByClienteIdOutputPort.exists(clienteId)){
+
+      clienteId = UUID.randomUUID().toString();
+    }
+
+    return clienteId;
   }
 
 }

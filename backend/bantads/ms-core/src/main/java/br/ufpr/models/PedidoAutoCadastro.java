@@ -3,11 +3,6 @@ package br.ufpr.models;
 import java.math.BigDecimal;
 import java.util.Date;
 
-enum StatusPedido{
-  APROVADO,
-  RECUSADO,
-  PENDENTE
-}
 
 public class PedidoAutoCadastro {
   private Integer id;

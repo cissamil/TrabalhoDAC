@@ -2,9 +2,8 @@ package br.ufpr.entrypoint.controller;
 
 import br.ufpr.dataprovider.adapter.PedidoAutocadastroEntity;
 import br.ufpr.dataprovider.adapter.PedidoSagaDTO;
-import br.ufpr.dataprovider.adapter.StatusPedido;
 import br.ufpr.dataprovider.client.PedidoAutocadastroRepository;
-import br.ufpr.entrypoint.mapper.PedidoMapper;
+import br.ufpr.model.message.StatusPedido;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,7 @@ public class PedidoController {
 
     repository.save(pedido);
 
-    rabbitTemplate.convertAndSend("saga.autocadastro", "pedido.finalizado", pedidoSagaDTO);
+    rabbitTemplate.convertAndSend("saga.autocadastro", "pedido.aprovado", pedidoSagaDTO);
 
     return ResponseEntity.accepted().build();
 
