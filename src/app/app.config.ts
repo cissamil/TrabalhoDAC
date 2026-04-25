@@ -7,6 +7,7 @@ import { provideRouter } from '@angular/router';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideHttpClient } from '@angular/common/http';
 
 registerLocaleData(localePt);
 export const appConfig: ApplicationConfig = {
@@ -14,9 +15,10 @@ export const appConfig: ApplicationConfig = {
     provideEnvironmentNgxMask(),
     provideZonelessChangeDetection(),
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), 
+    provideRouter(routes),
     provideClientHydration(withEventReplay()),
     {provide: MAT_DATE_LOCALE, useValue:'pt-BR'},
-    {provide: LOCALE_ID, useValue:'pt-BR'}
+    {provide: LOCALE_ID, useValue:'pt-BR'},
+    provideHttpClient()
   ]
 };
