@@ -1,6 +1,6 @@
-package br.ufpr.dataprovider.adapter;
+package br.ufpr.dataprovider.adapter.domain;
 
-import br.ufpr.model.message.StatusPedido;
+import br.ufpr.model.enumerator.StatusPedido;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

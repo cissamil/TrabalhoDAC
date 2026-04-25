@@ -1,5 +1,6 @@
-package br.ufpr.dataprovider.adapter;
+package br.ufpr.dataprovider.adapter.domain;
 
+import br.ufpr.model.enumerator.StatusPedido;
 import lombok.Data;
 
 @Data

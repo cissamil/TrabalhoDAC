@@ -1,5 +1,6 @@
 package br.ufpr.core.domain;
 
+import br.ufpr.model.enumerator.StatusConta;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,7 @@ public class Conta {
   private String clienteId;
   private String gerenteId;
   private Date dataCriacao;
-  private Integer numeroConta;
+  private String numeroConta;
+  private StatusConta statusConta;
+
 }

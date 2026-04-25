@@ -2,7 +2,9 @@ package br.ufpr.core.mapper;
 
 import br.ufpr.core.domain.PedidoCadastro;
 import br.ufpr.core.domain.TransferPedidoCadastroInputData;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PedidoCadastroMapper {
 
   public PedidoCadastro toDomain(TransferPedidoCadastroInputData inputData){

@@ -1,6 +1,6 @@
 package br.ufpr.core.domain;
 
-import br.ufpr.model.message.StatusPedido;
+import br.ufpr.model.enumerator.StatusPedido;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -8,8 +8,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ContaRepository extends JpaRepository<ContaEntity, Integer> {
 
-  @Query(value = "SELECT id_gerente FROM contas GROUP BY id_gerente ORDER BY COUNT(id_cliente) ASC LIMIT 1", nativeQuery = true)
-  String getGerenteWithFewerClientes();
+  @Query(
+    value =
+      "SELECT gerente_id FROM contas " +
+      "WHERE status_conta = 'CONTA_APROVADA' " +
+      "GROUP BY gerente_id " +
+      "ORDER BY COUNT(cliente_id) ASC LIMIT 1",
+    nativeQuery = true
+  )
+  String findGerenteIdWithFewerClientes();
 
   boolean existsByNumeroConta(Integer numeroConta);
   ContaEntity findByNumeroConta(Integer numeroConta);

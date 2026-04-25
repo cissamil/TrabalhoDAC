@@ -2,7 +2,9 @@ package br.ufpr.dataprovider.mapper;
 
 import br.ufpr.core.domain.Cliente;
 import br.ufpr.dataprovider.adapter.domain.ClienteEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ClienteEntityMapper {
 
   public Cliente toDomain(ClienteEntity entity){

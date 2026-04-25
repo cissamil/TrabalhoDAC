@@ -1,4 +1,4 @@
-package br.ufpr.dataprovider.adapter;
+package br.ufpr.dataprovider.adapter.domain;
 
 import lombok.Data;
 

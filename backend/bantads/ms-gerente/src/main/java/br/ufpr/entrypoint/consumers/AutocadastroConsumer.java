@@ -1,12 +1,8 @@
 package br.ufpr.entrypoint.consumers;
 
 import br.ufpr.config.RabbitMQConfig;
-import br.ufpr.core.domain.PedidoCadastro;
 import br.ufpr.core.domain.TransferPedidoCadastroInputData;
 import br.ufpr.core.ports.input.SavePedidoCadastroInputPort;
-import br.ufpr.dataprovider.adapter.PedidoAutocadastroEntity;
-import br.ufpr.dataprovider.adapter.PedidoSagaDTO;
-import br.ufpr.dataprovider.client.PedidoAutocadastroRepository;
 import br.ufpr.model.message.TransferPedidoAutocadastroSagaMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

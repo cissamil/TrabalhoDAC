@@ -1,0 +1,9 @@
+TRUNCATE contas RESTART IDENTITY;
+
+-- Inserindo as contas referenciando os UUIDs dos clientes acima
+INSERT INTO contas (cliente_id, numero_conta, saldo, limite, gerente_id, data_criacao, status_conta) VALUES
+('a1b2c3d4-1001-4000-8000-000000000001', '1291', 800.00, 5000.00, 'Geniéve', '2000-01-01', 'CONTA_APROVADA'),
+('a1b2c3d4-1002-4000-8000-000000000002', '0950', -10000.00, 10000.00, 'Godophredo', '1990-10-10', 'CONTA_APROVADA'),
+('a1b2c3d4-1003-4000-8000-000000000003', '8573', -1000.00, 1500.00, 'Gyândula', '2012-12-12', 'CONTA_APROVADA'),
+('a1b2c3d4-1004-4000-8000-000000000004', '5887', 150000.00, 0.00, 'Geniéve', '2022-02-22', 'CONTA_APROVADA'),
+('a1b2c3d4-1005-4000-8000-000000000005', '7617', 1500.00, 0.00, 'Godophredo', '2025-01-01', 'CONTA_APROVADA');

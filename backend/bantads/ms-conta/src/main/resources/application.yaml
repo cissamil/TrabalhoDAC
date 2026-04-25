@@ -14,9 +14,22 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:postgresql://localhost:5432/ms_conta_db
+    url: jdbc:postgresql://localhost:5432/ms_conta_cud_db
     username: tads
     password: tads
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: tads
+    password: tads
+
+  sql:
+    init:
+      mode: always
+    jpa:
+      defer-datasource-initialization: true
+
 
 server:
   port: 8083

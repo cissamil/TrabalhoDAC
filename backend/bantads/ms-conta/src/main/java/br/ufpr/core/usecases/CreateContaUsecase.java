@@ -1,10 +1,12 @@
 package br.ufpr.core.usecases;
 
 import br.ufpr.core.domain.Conta;
-import br.ufpr.core.domain.TransferContaCreationDataInputData;
+import br.ufpr.core.domain.TransferClienteDataInputData;
 import br.ufpr.core.ports.input.CreateContaInputPort;
 import br.ufpr.core.ports.output.FindContaByNumeroContaOutputPort;
+import br.ufpr.core.ports.output.FindGerenteIdWithFewerClientesOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
+import br.ufpr.model.enumerator.StatusConta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,35 +20,55 @@ public class CreateContaUsecase implements CreateContaInputPort {
 
   private final SaveContaOutputPort saveContaOutputPort;
   private final FindContaByNumeroContaOutputPort findContaByNumeroContaOutputPort;
+  private final FindGerenteIdWithFewerClientesOutputPort findGerenteIdWithFewerClientesOutputPort;
 
-  public void execute(TransferContaCreationDataInputData inputData){
+  public void execute(TransferClienteDataInputData inputData){
+
+    System.out.println("Criando conta do usuário");
+
     Conta novaConta = new Conta();
 
     Date today = new Date();
+
+    String numeroConta = generateValidFourDigitsNumeroConta();
+
+    String clienteId = inputData.getClienteId();
+    String gerenteId = findGerenteIdWithFewerClientesOutputPort.find();
+
     BigDecimal saldo = BigDecimal.ZERO;
-    Integer numeroConta = generateValidFourDigitsNumeroConta();
     BigDecimal limite = calculateLimiteContaBasedOnSalary(inputData.getSalario());
+
+    validateGerenteId(gerenteId);
 
     novaConta.setId(null);
     novaConta.setSaldo(saldo);
     novaConta.setLimite(limite);
     novaConta.setDataCriacao(today);
     novaConta.setNumeroConta(numeroConta);
-    novaConta.setClienteId(inputData.getClienteId());
-    novaConta.setGerenteId(inputData.getGerenteId());
+    novaConta.setClienteId(clienteId);
+    novaConta.setGerenteId(gerenteId);
+    novaConta.setStatusConta(StatusConta.CONTA_PENDENTE);
 
     saveContaOutputPort.save(novaConta);
   }
 
-  private Integer generateValidFourDigitsNumeroConta(){
+  private static void validateGerenteId(String gerenteId) {
 
-    Integer fourRandomDigits= new Random().nextInt(9000) + 1000;
+    System.out.println("Id do gerente atribuido: " + gerenteId);
+    if(gerenteId == null) {
+      throw new RuntimeException("Gerente não encontrado");
+    }
+  }
+
+  private String generateValidFourDigitsNumeroConta(){
+
+    int fourRandomDigits= new Random().nextInt(9000) + 1000;
 
     while (findContaByNumeroContaOutputPort.exists(fourRandomDigits)){
       fourRandomDigits = new Random().nextInt(9000) + 1000;
     }
 
-    return fourRandomDigits;
+    return String.valueOf(fourRandomDigits);
   }
 
   private BigDecimal calculateLimiteContaBasedOnSalary(BigDecimal salary){

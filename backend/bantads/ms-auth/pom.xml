@@ -27,6 +27,12 @@
       <artifactId>spring-boot-starter-mongodb-test</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>br.ufpr</groupId>
+      <artifactId>bantads-common-lib</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
 

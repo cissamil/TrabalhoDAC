@@ -2,6 +2,7 @@ package br.ufpr.dataprovider.adapter;
 
 import br.ufpr.core.domain.PedidoCadastro;
 import br.ufpr.core.ports.output.SavePedidoCadastroOutputPort;
+import br.ufpr.dataprovider.adapter.domain.PedidoAutocadastroEntity;
 import br.ufpr.dataprovider.client.PedidoAutocadastroRepository;
 import br.ufpr.dataprovider.mapper.PedidoAutocadastroEntityMapper;
 import lombok.RequiredArgsConstructor;

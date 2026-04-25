@@ -1,4 +1,4 @@
-package br.ufpr.model.message;
+package br.ufpr.model.enumerator;
 
 public enum StatusPedido {
     APROVADO,

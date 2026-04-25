@@ -1,10 +1,13 @@
 package br.ufpr.rabbitMQConfig.consumers;
 
-import br.ufpr.dataprovider.adapter.StatusPedido;
-import br.ufpr.dataprovider.adapter.TipoUsuario;
-import br.ufpr.dataprovider.adapter.UsuarioDocument;
-import br.ufpr.dataprovider.adapter.UsuarioSagaDTO;
+import br.ufpr.core.domain.TransferClienteIdInputData;
+import br.ufpr.core.ports.input.CreateClienteCredentialInputPort;
+import br.ufpr.model.enumerator.TipoUsuario;
+import br.ufpr.dataprovider.adapter.domain.UsuarioEntity;
+import br.ufpr.dataprovider.adapter.domain.UsuarioSagaDTO;
 import br.ufpr.dataprovider.client.UsuarioRepository;
+import br.ufpr.model.enumerator.StatusPedido;
+import br.ufpr.model.message.TransferClienteIdSagaMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
@@ -13,25 +16,16 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CriarContaConsumer {
 
-  private final UsuarioRepository usuarioRepository;
+  private CreateClienteCredentialInputPort createClienteCredentialInputPort;
 
   @RabbitListener(queues = "criar.credencial.queue")
-  public void criarCredencial(UsuarioSagaDTO usuarioDTO){
-    if(!StatusPedido.APROVADO.equals(usuarioDTO.getStatusPedido())){
-      throw new RuntimeException("Pedido de usuário não aprovado");
-    }
+  public void criarCredencial(TransferClienteIdSagaMessage message){
 
-    UsuarioDocument novoUsuario = new UsuarioDocument();
+    TransferClienteIdInputData inputData = new TransferClienteIdInputData();
+    inputData.setClienteId(message.getClienteId());
 
-    novoUsuario.setLogin(usuarioDTO.getEmail());
-    novoUsuario.setSenha("1234");
-    novoUsuario.setTipoUsuario(TipoUsuario.CLIENTE);
-
-    usuarioRepository.save(novoUsuario);
-
-    System.out.println("Credenciais criadas no MongoDB para: " + novoUsuario.getLogin());
+    createClienteCredentialInputPort.execute(inputData);
 
 
   }
-
 }

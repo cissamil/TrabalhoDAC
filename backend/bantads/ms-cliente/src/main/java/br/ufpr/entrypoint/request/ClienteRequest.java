@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ClienteRequest {
-  @CPF
+//  @CPF
   @NotBlank
   @Pattern(regexp = "\\d{11}", message = "CPF deve conter 11 dígitos")
   private String cpf;

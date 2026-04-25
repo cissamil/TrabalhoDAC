@@ -1,9 +1,11 @@
 package br.ufpr.entrypoint.controller;
 
-import br.ufpr.dataprovider.adapter.PedidoAutocadastroEntity;
-import br.ufpr.dataprovider.adapter.PedidoSagaDTO;
+import br.ufpr.core.mapper.PedidoCadastroMapper;
+import br.ufpr.core.ports.input.AprovePedidoCadastroInputPort;
+import br.ufpr.dataprovider.adapter.domain.PedidoAutocadastroEntity;
+import br.ufpr.dataprovider.adapter.domain.PedidoSagaDTO;
 import br.ufpr.dataprovider.client.PedidoAutocadastroRepository;
-import br.ufpr.model.message.StatusPedido;
+import br.ufpr.model.enumerator.StatusPedido;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
@@ -17,22 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PedidoController {
 
-  private final PedidoAutocadastroRepository repository;
-  private final RabbitTemplate rabbitTemplate;
-  private final PedidoMapper pedidoMapper;
+  AprovePedidoCadastroInputPort aprovePedidoCadastroInputPort;
 
   @PostMapping("/{id}/aprovar")
   public ResponseEntity<Void> aprovarPedido(@PathVariable Integer id){
-    PedidoAutocadastroEntity pedido = repository.findById(id)
-      .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
 
-    pedido.setStatusPedido((StatusPedido.APROVADO));
-
-    final PedidoSagaDTO pedidoSagaDTO = pedidoMapper.toDTO(pedido);
-
-    repository.save(pedido);
-
-    rabbitTemplate.convertAndSend("saga.autocadastro", "pedido.aprovado", pedidoSagaDTO);
+    aprovePedidoCadastroInputPort.execute(id);
 
     return ResponseEntity.accepted().build();
 

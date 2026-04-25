@@ -1,4 +1,4 @@
-package br.ufpr.dataprovider.adapter;
+package br.ufpr.model.enumerator;
 
 public enum TipoUsuario {
   CLIENTE,

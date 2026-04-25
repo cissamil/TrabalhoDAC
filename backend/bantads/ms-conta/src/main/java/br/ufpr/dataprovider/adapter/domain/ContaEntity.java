@@ -1,5 +1,6 @@
 package br.ufpr.dataprovider.adapter.domain;
 
+import br.ufpr.model.enumerator.StatusConta;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -20,14 +21,21 @@ public class ContaEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column(unique = true)
-  private Integer numeroConta;
+  @Column(name = "numero_conta", unique = true)
+  private String numeroConta;
 
   private BigDecimal saldo;
   private BigDecimal limite;
 
+  @Column(name = "cliente_id")
   private String clienteId;
+
+  @Column(name = "gerente_id")
   private String gerenteId;
 
+  @Column(name = "data_criacao")
   private Date dataCriacao;
+
+  @Enumerated(EnumType.STRING)
+  private StatusConta statusConta;
 }

@@ -1,8 +1,10 @@
 package br.ufpr.dataprovider.mapper;
 
 import br.ufpr.core.domain.PedidoCadastro;
-import br.ufpr.dataprovider.adapter.PedidoAutocadastroEntity;
+import br.ufpr.dataprovider.adapter.domain.PedidoAutocadastroEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PedidoAutocadastroEntityMapper {
 
   public PedidoCadastro toDomain(PedidoAutocadastroEntity entity){
