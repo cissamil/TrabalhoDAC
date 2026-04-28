@@ -37,5 +37,6 @@ public class ContaEntity {
   private Date dataCriacao;
 
   @Enumerated(EnumType.STRING)
+  @Column(name = "status_conta")
   private StatusConta statusConta;
 }

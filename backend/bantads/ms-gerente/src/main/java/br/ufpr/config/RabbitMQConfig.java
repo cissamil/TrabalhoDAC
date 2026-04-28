@@ -18,11 +18,6 @@ public class RabbitMQConfig {
   public static  final String SAGA_QUEUE_PEDIDO_CRIADO = "saga.pedido.criado.queue";
 
   @Bean
-  public MessageConverter jsonMessageConverter(){
-    return new JacksonJsonMessageConverter();
-  }
-
-  @Bean
   public DirectExchange exchange(){
     return new DirectExchange(SAGA_EXCHANGE);
   }

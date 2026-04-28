@@ -1,6 +1,33 @@
 spring:
+  docker:
+    compose:
+      enabled: false
+
   application:
       name: "MsGerente"
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ms_gerente_db
+    username: tads
+    password: tads
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: tads
+    password: tads
+
+  sql:
+    init:
+      mode: always
 
 server:
   port: 8084
