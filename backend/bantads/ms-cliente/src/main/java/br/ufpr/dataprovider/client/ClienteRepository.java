@@ -4,6 +4,8 @@ import br.ufpr.dataprovider.adapter.domain.ClienteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ClienteRepository  extends JpaRepository<ClienteEntity, Integer> {
 
@@ -12,4 +14,6 @@ public interface ClienteRepository  extends JpaRepository<ClienteEntity, Integer
 
   boolean existsByClienteId(String clienteId);
   ClienteEntity findByClienteId(String clienteId);
+
+  List<ClienteEntity> findByClienteIdIn(List<String> clienteIds);
 }

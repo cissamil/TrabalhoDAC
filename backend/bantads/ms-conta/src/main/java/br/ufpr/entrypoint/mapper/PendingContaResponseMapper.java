@@ -13,7 +13,6 @@ public class PendingContaResponseMapper {
 
     PendingContaResponse response = new PendingContaResponse();
 
-
     response.setId(conta.getId());
     response.setClienteId(conta.getClienteId());
     response.setGerenteId(conta.getGerenteId());

@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 public class PendingClienteResponse {
 
   private String nome;
+  private String cpf;
   private String email;
   private String clienteId;
   private BigDecimal salario;

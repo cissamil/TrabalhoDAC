@@ -1,4 +1,4 @@
-package br.ufpr.dataprovider;
+package br.ufpr.dataprovider.adapter;
 
 import java.util.List;
 import br.ufpr.core.domain.Conta;
