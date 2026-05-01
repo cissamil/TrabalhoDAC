@@ -1,13 +1,11 @@
 package br.ufpr.dataprovider.adapter.domain;
 
-import br.ufpr.core.domain.TipoGerente;
+import br.ufpr.model.enumerator.TipoGerente;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 @Entity
 @Data

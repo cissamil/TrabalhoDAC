@@ -7,11 +7,10 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class TransferContaCreationDataInputData {
+@NoArgsConstructor
+public class AprovePendingContaInputData {
 
-  private String clienteId;
-  private String gerenteId;
-  private BigDecimal salario;
+  private Integer contaId;
+  private BigDecimal clienteSalario;
 }

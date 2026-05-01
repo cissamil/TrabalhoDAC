@@ -14,15 +14,11 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ClienteResponse {
+public class PendingClienteResponse {
 
-  private Integer id;
-  private String clienteId;
-  private String cpf;
   private String nome;
   private String email;
-  private String telefone;
+  private String clienteId;
   private BigDecimal salario;
-  private String endereco;
 
 }

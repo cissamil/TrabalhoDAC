@@ -2,7 +2,7 @@ package br.ufpr.entrypoint.consumers;
 
 import br.ufpr.config.RabbitMQConfigMsConta;
 import br.ufpr.core.domain.TransferClienteDataInputData;
-import br.ufpr.core.ports.input.CreateContaInputPort;
+import br.ufpr.core.ports.input.CreatePendingContaInputPort;
 import br.ufpr.model.message.TransferClienteDataSagaMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,34 +17,53 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AutocadastroConsumer {
 
-  private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-  @Autowired
-  private final RabbitTemplate rabbitTemplate;
+    @Autowired
+    private final RabbitTemplate rabbitTemplate;
+    private final CreatePendingContaInputPort createPendingContaInputPort;
 
-  private final CreateContaInputPort createContaInputPort;
+    @RabbitListener(queues = RabbitMQConfigMsConta.REGISTER_QUEUE)
+    public void receivePedido(String message) throws JsonProcessingException {
 
-  @RabbitListener(queues = RabbitMQConfigMsConta.REGISTER_QUEUE)
-  public void receivePedido(String message) throws JsonProcessingException {
+      try {
 
-    try {
+        TransferClienteDataSagaMessage payload = objectMapper.readValue(message, TransferClienteDataSagaMessage.class);
 
-      TransferClienteDataSagaMessage payload = objectMapper.readValue(message, TransferClienteDataSagaMessage.class);
+        System.out.println("[MS-CONTA] Cadastro de cliente recebido, criando conta com dados: Id: " + payload.getClienteId() + ", Salário: " + payload.getSalario());
 
-      System.out.println("[MS-CONTA] Cadastro de cliente recebido, criando conta com dados: Id: " + payload.getClienteId() + ", Salário: " + payload.getSalario());
+        TransferClienteDataInputData inputData = new TransferClienteDataInputData();
 
-      TransferClienteDataInputData inputData = new TransferClienteDataInputData();
+        inputData.setClienteId(payload.getClienteId());
+        inputData.setSalario(payload.getSalario());
 
-      inputData.setClienteId(payload.getClienteId());
-      inputData.setSalario(payload.getSalario());
+        createPendingContaInputPort.execute(inputData);
 
-      createContaInputPort.execute(inputData);
+      } catch (Exception e) {
+        throw new AmqpRejectAndDontRequeueException(e);
+      }
 
-    } catch (Exception e) {
-      throw new AmqpRejectAndDontRequeueException(e);
     }
 
 
-
-  }
+  //  @RabbitListener(queues = RabbitMQConfigMsConta.REGISTER_QUEUE)
+  //  public void receivePedido(String message) throws JsonProcessingException {
+  //
+  //    try {
+  //
+  //      TransferClienteDataSagaMessage payload = objectMapper.readValue(message, TransferClienteDataSagaMessage.class);
+  //
+  //      System.out.println("[MS-CONTA] Cadastro de cliente recebido, criando pedido com dados: Id: " + payload.getClienteId());
+  //
+  //      TransferClienteDataInputData inputData = new TransferClienteDataInputData();
+  //
+  //      inputData.setClienteId(payload.getClienteId());
+  //
+  //      createPedidoInputPort.execute(inputData);
+  //
+  //    } catch (Exception e) {
+  //      throw new AmqpRejectAndDontRequeueException(e);
+  //    }
+  //
+  //  }
 }

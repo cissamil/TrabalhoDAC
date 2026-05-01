@@ -1,4 +1,4 @@
-package br.ufpr.model.response;
+package br.ufpr.entrypoint.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -10,19 +10,11 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ClienteResponse {
+public class AproveContaRequest {
 
-  private Integer id;
-  private String clienteId;
-  private String cpf;
-  private String nome;
-  private String email;
-  private String telefone;
-  private BigDecimal salario;
-  private String endereco;
-
+  private BigDecimal clienteSalario;
 }

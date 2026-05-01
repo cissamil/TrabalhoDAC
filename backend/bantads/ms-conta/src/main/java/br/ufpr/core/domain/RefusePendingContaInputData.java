@@ -3,14 +3,13 @@ package br.ufpr.core.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransferClienteDataInputData {
 
-  private String clienteId;
-  private BigDecimal salario;
+public class RefusePendingContaInputData {
+  private Integer contaId;
+  private String motivoRecusa;
 }

@@ -22,8 +22,6 @@ public class SaveContaAdapter implements SaveContaOutputPort {
 
       ContaEntity savedEntity = repository.save(entity);
 
-      System.out.println("Conta criada com sucesso!");
-
       return mapper.toDomain(savedEntity);
 
     } catch (Exception e) {

@@ -7,22 +7,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ClienteResponse {
+public class PedidosResponse {
 
-  private Integer id;
-  private String clienteId;
-  private String cpf;
-  private String nome;
-  private String email;
-  private String telefone;
-  private BigDecimal salario;
-  private String endereco;
-
+  private String gerenteId;
+  private List<ClientesPedidosResponse> clientesPedidosResponseList;
 }

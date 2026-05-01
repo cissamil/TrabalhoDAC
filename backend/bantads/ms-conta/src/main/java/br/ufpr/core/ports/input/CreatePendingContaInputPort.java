@@ -1,9 +1,8 @@
 package br.ufpr.core.ports.input;
 
 import br.ufpr.core.domain.TransferClienteDataInputData;
-import br.ufpr.core.domain.TransferContaCreationDataInputData;
 
-public interface CreateContaInputPort {
+public interface CreatePendingContaInputPort {
 
   void execute(TransferClienteDataInputData inputData);
 }

@@ -21,6 +21,8 @@ public class ContaEntityMapper {
     conta.setNumeroConta(entity.getNumeroConta());
     conta.setDataCriacao(entity.getDataCriacao());
     conta.setStatusConta(entity.getStatusConta());
+    conta.setDataDecisao(entity.getDataDecisao());
+    conta.setMotivoRecusa(entity.getMotivoRecusa());
 
     return conta;
   }
@@ -39,6 +41,8 @@ public class ContaEntityMapper {
     entity.setNumeroConta(conta.getNumeroConta());
     entity.setDataCriacao(conta.getDataCriacao());
     entity.setStatusConta(conta.getStatusConta());
+    entity.setDataDecisao(conta.getDataDecisao());
+    entity.setMotivoRecusa(conta.getMotivoRecusa());
 
     return entity;
   }
