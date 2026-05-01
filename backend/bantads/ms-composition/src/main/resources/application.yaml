@@ -6,9 +6,9 @@ server:
   port: 8086
 
 endpoints:
-  cliente: "http://localhost:8082/api"
-  conta: "http://localhost:8083/api"
-  gerente: "http://localhost:8084/api"
+  cliente: "http://localhost:8082/api/clientes"
+  conta: "http://localhost:8083/api/contas"
+  gerente: "http://localhost:8084/api/gerentes"
 
 springdoc:
   api-docs:

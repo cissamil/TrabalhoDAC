@@ -1,6 +1,5 @@
-package br.ufpr.model.response;
+package br.ufpr.entrypoint.request;
 
-import br.ufpr.model.enumerator.StatusPedido;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -8,19 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.math.BigDecimal;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PendingPedidoResponse {
-  private Integer id;
-  private String clienteId;
-  private String gerenteId;
-  private Date dataSolicitacao;
-  private Date dataDecisao;
-  private String motivoRecusa;
-  private StatusPedido statusPedido;
+public class ApproveContaRequest {
+
+  private BigDecimal clienteSalario;
 }

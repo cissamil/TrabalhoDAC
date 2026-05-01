@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AprovePendingContaInputData {
+public class PendingContaOutputData {
 
-  private Integer contaId;
-  private BigDecimal clienteSalario;
+  private Integer id;
+  private String clienteId;
+  private String gerenteId;
+
 }

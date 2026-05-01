@@ -1,0 +1,20 @@
+package br.ufpr.dataprovider.client;
+
+import br.ufpr.model.response.PendingContaResponse;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+
+import java.util.List;
+
+
+// MS-COMPOSITION
+
+@FeignClient(name = "MsConta", url = "${endpoints.conta}")
+public interface MsContaClient {
+
+  @GetMapping(value = "/pendentes")
+  List<PendingContaResponse> consultPendingContas(@RequestHeader("X-Gerente-Id") String gerenteId);
+
+
+}

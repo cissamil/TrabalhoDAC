@@ -1,12 +1,10 @@
 package br.ufpr.core.usecases;
 
-import br.ufpr.core.domain.AprovePendingContaInputData;
+import br.ufpr.core.domain.ApprovePendingContaInputData;
 import br.ufpr.core.domain.Conta;
-import br.ufpr.core.domain.TransferClienteDataInputData;
-import br.ufpr.core.ports.input.AprovePendingContaInputPort;
+import br.ufpr.core.ports.input.ApprovePendingContaInputPort;
 import br.ufpr.core.ports.output.FindContaByIdOutputPort;
 import br.ufpr.core.ports.output.FindContaByNumeroContaOutputPort;
-import br.ufpr.core.ports.output.FindGerenteIdWithFewerClientesOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
 import br.ufpr.model.enumerator.StatusConta;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +16,13 @@ import java.util.Random;
 
 @Component
 @RequiredArgsConstructor
-public class AprovePendingContaUsecase implements AprovePendingContaInputPort {
+public class ApprovePendingContaUsecase implements ApprovePendingContaInputPort {
 
   private final SaveContaOutputPort saveContaOutputPort;
   private final FindContaByNumeroContaOutputPort findContaByNumeroContaOutputPort;
   private final FindContaByIdOutputPort findContaByIdOutputPort;
 
-  public void execute(AprovePendingContaInputData inputData){
+  public void execute(ApprovePendingContaInputData inputData){
 
     System.out.println("Aprovando conta do usuário");
 

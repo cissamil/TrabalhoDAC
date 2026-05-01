@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @FeignClient(name = "MsCliente", url = "${endpoints.cliente}")
-public interface ClienteClient {
+public interface MsClienteClient {
 
   @GetMapping(value = "/busca-lote")
   List<PendingClienteResponse> batchSearchClientes(@RequestParam(name = "clienteIds") List<String> clienteIds);
