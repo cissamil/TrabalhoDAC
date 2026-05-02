@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GerenteRepository extends JpaRepository<GerenteEntity, Integer> {
 
+  GerenteEntity findByGerenteId(String string);
+
 }

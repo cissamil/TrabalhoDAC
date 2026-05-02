@@ -4,7 +4,7 @@ import br.ufpr.core.domain.PendingContaOutputData;
 import br.ufpr.core.ports.output.ConsultPendingContasOutputPort;
 import br.ufpr.dataprovider.client.MsContaClient;
 import br.ufpr.dataprovider.mapper.PendingContaResponseMapper;
-import br.ufpr.model.response.PendingContaResponse;
+import br.ufpr.dataprovider.client.domain.PendingContaResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

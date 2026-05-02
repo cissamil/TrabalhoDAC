@@ -1,13 +1,13 @@
 package br.ufpr.dataprovider.mapper;
 
 import br.ufpr.core.domain.PendingClienteOutputData;
-import br.ufpr.model.response.PendingClienteResponse;
+import br.ufpr.dataprovider.client.domain.PendingClienteResponse;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PendingClienteResponseMapper {
 
-  public PendingClienteOutputData toResponse(PendingClienteResponse clienteResponse){
+  public PendingClienteOutputData toOutputData(PendingClienteResponse clienteResponse){
 
     if(clienteResponse == null) return null;
 

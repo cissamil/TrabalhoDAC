@@ -1,6 +1,6 @@
 package br.ufpr.dataprovider.client;
 
-import br.ufpr.model.response.PendingContaResponse;
+import br.ufpr.dataprovider.client.domain.PendingContaResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

@@ -4,7 +4,6 @@ import br.ufpr.core.domain.Conta;
 import br.ufpr.core.ports.input.FindPendingContasInputPort;
 import br.ufpr.core.ports.output.FindContasByGerenteAndStatusOutputPort;
 import br.ufpr.model.enumerator.StatusConta;
-import br.ufpr.model.response.PendingContaResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

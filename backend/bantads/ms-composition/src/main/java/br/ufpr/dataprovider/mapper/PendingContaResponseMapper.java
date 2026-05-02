@@ -1,7 +1,7 @@
 package br.ufpr.dataprovider.mapper;
 
 import br.ufpr.core.domain.PendingContaOutputData;
-import br.ufpr.model.response.PendingContaResponse;
+import br.ufpr.dataprovider.client.domain.PendingContaResponse;
 import org.springframework.stereotype.Component;
 
 @Component

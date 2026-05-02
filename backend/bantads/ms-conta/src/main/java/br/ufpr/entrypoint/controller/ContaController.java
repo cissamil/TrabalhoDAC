@@ -6,15 +6,14 @@ import br.ufpr.core.domain.RefusePendingContaInputData;
 import br.ufpr.core.ports.input.ApprovePendingContaInputPort;
 import br.ufpr.core.ports.input.FindPendingContasInputPort;
 import br.ufpr.core.ports.input.RefusePendingContaInputPort;
-import br.ufpr.entrypoint.mapper.PendingContaResponseMapper;
+import br.ufpr.entrypoint.mapper.ContaResponseMapper;
 import br.ufpr.entrypoint.request.ApproveContaRequest;
 import br.ufpr.entrypoint.request.RefuseContaRequest;
-import br.ufpr.model.response.PendingContaResponse;
+import br.ufpr.entrypoint.response.ContaResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 // MS-CONTA
@@ -24,19 +23,19 @@ import java.util.List;
 @RequestMapping(value = "api/contas")
 public class ContaController {
 
-  private final PendingContaResponseMapper mapper;
+  private final ContaResponseMapper mapper;
   private final FindPendingContasInputPort findPendingContasInputPort;
   private final RefusePendingContaInputPort refusePendingContaInputPort;
   private final ApprovePendingContaInputPort approvePendingContaInputPort;
 
   @GetMapping(value = "/pendentes")
-  ResponseEntity<List<PendingContaResponse>> findPendingContas(@RequestHeader("X-Gerente-Id") String gerenteId){
+  ResponseEntity<List<ContaResponse>> findPendingContas(@RequestHeader("X-Gerente-Id") String gerenteId){
 
     System.out.println("Rota de contas acionada");
 
     List<Conta> contas = findPendingContasInputPort.find(gerenteId);
 
-    List<PendingContaResponse> responseList = contas.stream()
+    List<ContaResponse> responseList = contas.stream()
       .map(mapper::toResponse)
       .toList();
 

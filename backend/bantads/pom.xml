@@ -26,10 +26,9 @@
       <module>ms-gerente</module>
       <module>ms-cliente</module>
       <module>ms-auth</module>
-      <module>ms-saga</module>
       <module>ms-core</module>
       <module>bantads-common-lib</module>
-        <module>ms-composition</module>
+      <module>ms-composition</module>
     </modules>
     <scm>
 		<connection/>
