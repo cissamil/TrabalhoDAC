@@ -1,6 +1,6 @@
 package br.ufpr.entrypoint.response;
 
-import br.ufpr.model.enumerator.TipoGerente;
+import br.ufpr.core.domain.TipoGerente;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

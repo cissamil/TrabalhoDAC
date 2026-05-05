@@ -1,4 +1,4 @@
-package br.ufpr.model.enumerator;
+package br.ufpr.core.domain;
 
 public enum StatusConta {
   CONTA_PENDENTE,

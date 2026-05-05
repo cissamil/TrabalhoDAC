@@ -22,8 +22,6 @@ public class PublishCreatedClienteAccountAdapter implements PublishCreatedClient
   @Override
   public void send(Cliente cliente){
 
-    //@TODO TRANSFORMAR A MENSAGEM EM UMA STRING ANTES DE PUBLICAR
-
     TransferClienteDataSagaMessage transferClienteDataSagaMessage = new TransferClienteDataSagaMessage();
 
     transferClienteDataSagaMessage.setClienteId(cliente.getClienteId());
@@ -38,7 +36,7 @@ public class PublishCreatedClienteAccountAdapter implements PublishCreatedClient
         message
       );
 
-      System.out.println("[MS-CLIENTE] Cadastro de cliente criado e atributos enviados para MS-CONTA");
+      System.out.println("Cliente cadastro e evento publicado");
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }

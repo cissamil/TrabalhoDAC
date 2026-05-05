@@ -1,11 +1,12 @@
 package br.ufpr.core.usecases;
 
+import br.ufpr.core.domain.ClienteOutputData;
 import br.ufpr.core.domain.TransferClienteIdInputData;
 import br.ufpr.core.domain.Usuario;
 import br.ufpr.core.ports.input.CreateClienteCredentialInputPort;
-import br.ufpr.core.ports.output.GetClienteEmailFromClienteIdOutputPort;
+import br.ufpr.core.ports.output.ConsultClienteOutputPort;
 import br.ufpr.core.ports.output.SaveUsuarioCredentialOutputPort;
-import br.ufpr.model.enumerator.TipoUsuario;
+import br.ufpr.core.domain.TipoUsuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,29 +17,27 @@ import java.security.SecureRandom;
 public class CreateClienteCredentialUseCase implements CreateClienteCredentialInputPort {
 
   private final SaveUsuarioCredentialOutputPort saveUsuarioCredentialOutputPort;
-  private final GetClienteEmailFromClienteIdOutputPort getClienteEmailFromClienteIdOutputPort;
+  private final ConsultClienteOutputPort consultClienteOutputPort;
 
   @Override
   public void execute(TransferClienteIdInputData inputData) {
 
     String clienteId = inputData.getClienteId();
-    String clienteEmail = getClienteEmailFromClienteIdOutputPort.get(clienteId);
+    ClienteOutputData clienteOutputData = consultClienteOutputPort.consult(clienteId);
+
+    String clienteEmail = clienteOutputData.getClienteEmail();
+
     validateEmailCliente(clienteEmail);
 
     Usuario newUsuario = new Usuario();
 
     String senhaUsuario = generateNewSenha();
 
-
-
     newUsuario.setLogin(clienteEmail);
     newUsuario.setSenha(senhaUsuario);
     newUsuario.setTipoUsuario(TipoUsuario.CLIENTE);
 
-
     saveUsuarioCredentialOutputPort.save(newUsuario);
-
-    System.out.println("Credenciais criadas no MongoDB para: " + newUsuario.getLogin());
 
   }
 

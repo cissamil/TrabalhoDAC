@@ -1,20 +1,18 @@
-package br.ufpr.model.message;
+package br.ufpr.dataprovider.client.domain;
 
-import br.ufpr.model.enumerator.StatusPedido;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.math.BigDecimal;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class TransferPedidoAutocadastroSagaMessage {
+public class ClienteResponse {
 
-  private String clienteId;
-  private String gerenteId;
-  private BigDecimal salario;
-  private StatusPedido statusPedido;
+  private String email;
 }

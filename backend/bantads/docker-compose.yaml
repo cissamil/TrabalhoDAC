@@ -9,15 +9,29 @@ services:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql #mapeamento do script de criação
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql #mapeamento do roteiro de criação
 
-  mongodb:
+  mongo:
     image: mongo:latest
     container_name: bantads-mongodb
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: tads
+#      MONGO_INITDB_ROOT_PASSWORD: tads
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+
+  mongo-express:
+    image: mongo-express:latest
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: tads
+      ME_CONFIG_BASICAUTH_PASSWORD: tads
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+    links:
+      - mongo
 
   rabbitmq:
     image: rabbitmq:3-management

@@ -47,10 +47,10 @@ public class ClienteController {
       return ResponseEntity.status(HttpStatusCode.valueOf(201)).build();
   }
 
-  @GetMapping(value = "/{id}")
-  public ResponseEntity<ClienteResponse> getByClienteId(@Valid @RequestBody ClienteTransferRequest request){
+  @GetMapping(value = "/{clienteId}")
+  public ResponseEntity<ClienteResponse> getByClienteId(@PathVariable("clienteId") String clienteId){
 
-    ClienteRequestInputData inputData = new ClienteRequestInputData(request.getClienteId());
+    ClienteRequestInputData inputData = new ClienteRequestInputData(clienteId);
 
     Cliente cliente = getClienteInputPort.get(inputData);
 

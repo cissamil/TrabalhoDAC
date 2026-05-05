@@ -5,7 +5,7 @@ import br.ufpr.core.domain.RefusePendingContaInputData;
 import br.ufpr.core.ports.input.RefusePendingContaInputPort;
 import br.ufpr.core.ports.output.FindContaByIdOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
-import br.ufpr.model.enumerator.StatusConta;
+import br.ufpr.core.domain.StatusConta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -22,6 +22,8 @@ public class SaveUsuarioCredentialAdapter implements SaveUsuarioCredentialOutput
 
     UsuarioEntity newEntity = repository.save(entity);
 
+    System.out.println("Credenciais criadas no repositório para: " + newEntity.getLogin());
+
     return mapper.toDomain(newEntity);
   }
 }

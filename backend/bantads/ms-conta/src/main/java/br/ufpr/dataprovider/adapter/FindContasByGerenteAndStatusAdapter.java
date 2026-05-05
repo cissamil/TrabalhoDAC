@@ -6,7 +6,7 @@ import br.ufpr.core.ports.output.FindContasByGerenteAndStatusOutputPort;
 import br.ufpr.dataprovider.adapter.domain.ContaEntity;
 import br.ufpr.dataprovider.client.ContaRepository;
 import br.ufpr.dataprovider.mapper.ContaEntityMapper;
-import br.ufpr.model.enumerator.StatusConta;
+import br.ufpr.core.domain.StatusConta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

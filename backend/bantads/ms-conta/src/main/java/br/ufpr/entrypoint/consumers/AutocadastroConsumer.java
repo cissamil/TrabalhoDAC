@@ -19,8 +19,6 @@ public class AutocadastroConsumer {
 
     private final ObjectMapper objectMapper;
 
-    @Autowired
-    private final RabbitTemplate rabbitTemplate;
     private final CreatePendingContaInputPort createPendingContaInputPort;
 
     @RabbitListener(queues = RabbitMQConfigMsConta.REGISTER_QUEUE)
@@ -44,26 +42,4 @@ public class AutocadastroConsumer {
       }
 
     }
-
-
-  //  @RabbitListener(queues = RabbitMQConfigMsConta.REGISTER_QUEUE)
-  //  public void receivePedido(String message) throws JsonProcessingException {
-  //
-  //    try {
-  //
-  //      TransferClienteDataSagaMessage payload = objectMapper.readValue(message, TransferClienteDataSagaMessage.class);
-  //
-  //      System.out.println("[MS-CONTA] Cadastro de cliente recebido, criando pedido com dados: Id: " + payload.getClienteId());
-  //
-  //      TransferClienteDataInputData inputData = new TransferClienteDataInputData();
-  //
-  //      inputData.setClienteId(payload.getClienteId());
-  //
-  //      createPedidoInputPort.execute(inputData);
-  //
-  //    } catch (Exception e) {
-  //      throw new AmqpRejectAndDontRequeueException(e);
-  //    }
-  //
-  //  }
 }

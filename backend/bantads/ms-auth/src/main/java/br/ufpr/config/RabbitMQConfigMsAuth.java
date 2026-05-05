@@ -4,31 +4,15 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
-// @TODO CONSERTAR LISTENERS E PRODUCERS DE MENSAGERIA
 @Configuration
-public class RabbitMQConfigMsConta {
+public class RabbitMQConfigMsAuth {
 
-  public static final String REGISTER_EXCHANGE = "fluxo.autocadastro";
-  public static final String REGISTER_QUEUE = "cadastrar-conta";
 
   public static final String APPROVED_ACCOUNT_EXCHANGE = "fluxo.conta-aprovada";
   public static final String APPROVED_ACCOUNT_QUEUE = "gerar-credencial";
-
-  @Bean
-  public DirectExchange registerExchange(){
-    return new DirectExchange(REGISTER_EXCHANGE);
-  }
-
-  @Bean
-  public Queue registerQueue(){
-    return new Queue(REGISTER_QUEUE, true, false, false);
-  }
 
   @Bean
   public DirectExchange approvedAccountExchange(){
@@ -41,14 +25,7 @@ public class RabbitMQConfigMsConta {
   }
 
   @Bean
-  public Binding bindingRegisterChannel(Queue registerQueue, DirectExchange registerExchange) {
-    return BindingBuilder.bind(registerQueue).to(registerExchange).with("fluxo.autocadastro.key");
-  }
-
-  @Bean
   public Binding bindingApprovedAccountChannel(Queue registerQueue, DirectExchange registerExchange) {
     return BindingBuilder.bind(registerQueue).to(registerExchange).with("fluxo.conta-aprovada.key");
   }
-
-
 }

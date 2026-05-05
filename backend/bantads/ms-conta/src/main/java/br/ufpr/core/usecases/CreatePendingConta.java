@@ -3,14 +3,12 @@ package br.ufpr.core.usecases;
 import br.ufpr.core.domain.Conta;
 import br.ufpr.core.domain.TransferClienteDataInputData;
 import br.ufpr.core.ports.input.CreatePendingContaInputPort;
-import br.ufpr.core.ports.output.FindContaByNumeroContaOutputPort;
 import br.ufpr.core.ports.output.FindGerenteIdWithFewerClientesOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
-import br.ufpr.model.enumerator.StatusConta;
+import br.ufpr.core.domain.StatusConta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Component

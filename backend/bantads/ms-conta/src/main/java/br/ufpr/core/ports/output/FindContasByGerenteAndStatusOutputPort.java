@@ -1,7 +1,7 @@
 package br.ufpr.core.ports.output;
 
 import br.ufpr.core.domain.Conta;
-import br.ufpr.model.enumerator.StatusConta;
+import br.ufpr.core.domain.StatusConta;
 
 import java.util.List;
 

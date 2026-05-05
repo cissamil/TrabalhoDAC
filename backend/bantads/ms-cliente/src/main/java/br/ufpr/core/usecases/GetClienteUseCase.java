@@ -12,22 +12,16 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class GetClienteUseCase implements GetClienteInputPort {
 
-  public FindClienteByClienteIdOutputPort findClienteByClienteIdOutputPort;
+  private final FindClienteByClienteIdOutputPort findClienteByClienteIdOutputPort;
 
   @Override
   public Cliente get(ClienteRequestInputData inputData) {
 
-    ClienteResponseOutputData outputData = new ClienteResponseOutputData();
-
     String clienteId = inputData.getClienteId();
 
-    Cliente cliente = findClienteByClienteIdOutputPort.find(clienteId);
+    System.out.println("Procurando cliente com id: " + clienteId);
 
-    if(cliente == null){
-      throw new RuntimeException("Usuário não encontrado");
-    }
+    return findClienteByClienteIdOutputPort.find(clienteId);
 
-
-    return cliente;
   }
 }

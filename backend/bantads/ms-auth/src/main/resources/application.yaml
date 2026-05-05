@@ -1,12 +1,27 @@
+server:
+  port: 8087
+
 spring:
   application:
       name: "MsAuth"
   data:
     mongodb:
-      uri: mongodb://localhost:27017/ms_auth_db
+      uri: mongodb://localhost:27017/ms_auth_db   # mongodb://tads:tads@localhost:27017/ms_auth_db?authSource=admin
 
-server:
-  port: 8081
+  docker:
+    compose:
+      enabled: false
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: tads
+    password: tads
+
+
+endpoints:
+  cliente: "http://localhost:8082/api/clientes"
+
 
 springdoc:
   api-docs:
@@ -14,3 +29,4 @@ springdoc:
   swagger-ui:
     path: /
     disable-swagger-default-url: true
+

@@ -3,7 +3,7 @@ package br.ufpr.core.usecases;
 import br.ufpr.core.domain.Conta;
 import br.ufpr.core.ports.input.FindPendingContasInputPort;
 import br.ufpr.core.ports.output.FindContasByGerenteAndStatusOutputPort;
-import br.ufpr.model.enumerator.StatusConta;
+import br.ufpr.core.domain.StatusConta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

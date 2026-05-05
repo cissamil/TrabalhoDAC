@@ -1,6 +1,5 @@
 package br.ufpr.core.domain;
 
-import br.ufpr.model.enumerator.StatusConta;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

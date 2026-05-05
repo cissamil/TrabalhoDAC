@@ -3,7 +3,6 @@ package br.ufpr.core.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import br.ufpr.model.enumerator.TipoGerente;
 
 @Data
 @AllArgsConstructor
