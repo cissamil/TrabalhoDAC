@@ -3,6 +3,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+import cors from 'cors';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 
@@ -16,7 +17,7 @@ const app = express();
 const port = Number(process.env.PORT || 8080);
 
 
-// Mapeia os enderecos dos microservicos que o gateway vai usar no proxy.
+// enderecos dos ms
 const services = {
 	auth: process.env.AUTH_SERVICE_URL || 'http://localhost:8081',
 	cliente: process.env.CLIENTE_SERVICE_URL || 'http://localhost:8082',
@@ -24,6 +25,7 @@ const services = {
 	gerente: process.env.GERENTE_SERVICE_URL || 'http://localhost:8084',
 	saga: process.env.SAGA_SERVICE_URL || 'http://localhost:8085'
 };
+
 
 function createServiceProxy(target, routePrefix) {
 	return createProxyMiddleware({
@@ -46,10 +48,22 @@ function createServiceProxy(target, routePrefix) {
 }
 
 
-// MIDDLEWARE 1: Aceita JSON nas requisições
+// MIDDLEWARE 1: Habilita CORS
+app.use(cors({
+	origin: [
+		'http://localhost:4200',  
+		'http://127.0.0.1:4200'
+	
+	],
+	credentials: true,
+	methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+	allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// MIDDLEWARE 2: Aceita JSON nas requisições
 app.use(express.json());
 
-// MIDDLEWARE 2: Log de requisições
+// MIDDLEWARE 3: Log de requisições
 app.use(morgan('dev'));
 
 
@@ -74,7 +88,7 @@ app.use('/saga', createServiceProxy(services.saga, 'saga'));
 // GET /health, retorna status do gateway
 app.get('/health', (req, res) => {
 	res.json({
-		status: 'Gateway funcionando!',
+		status: 'Gateway ta funcionando!',
 		porta: port,
 		serviços: services
 	});
