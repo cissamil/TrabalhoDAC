@@ -5,6 +5,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
+import { Cliente } from '../../../core/models/entities';
 
 interface ClienteTabela {
   cpf: string;
@@ -32,44 +33,59 @@ export class TodosClientes {
     private gerenteService: GerenteService,
   ) {}
 
-  get clientes(): ClienteTabela[] {
-    const gerenteLogado = this.gerenteService.getGerenteLogado();
-    if (!gerenteLogado) {
-      return [];
-    }
+  ngOnInit(): void{
+    this.listarClientes();
+  }
 
-    const clientes = this.clienteService.listarTodos();
-    const contas = this.contaService.listarTodos();
+  clientes: ClienteTabela[]=[];
 
-    return clientes
-      .map((cliente) => {
-        const contaCliente = contas.find((conta) => conta.cpfCliente === cliente.cpf);
-        if (!contaCliente) {
-          return null;
-        }
-
-        const pertenceAoGerenteLogado =
-          contaCliente.cpfGerente === gerenteLogado.cpf ||
-          contaCliente.gerente === gerenteLogado.nome;
-
-        if (!pertenceAoGerenteLogado) {
-          return null;
-        }
-
-        const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco);
-        return {
+  //revisar ----------------------------------------
+  listarClientes(): void {
+    this.clienteService.listarTodos().subscribe({
+      next: (data: Cliente[])=>{
+        this.clientes=data.map((cliente)=>{
+          return {
           cpf: cliente.cpf,
           nome: cliente.nome,
-          cidade,
-          estado,
+          cidade:'',
+          estado: '',
           email: cliente.email,
           salario: cliente.salario,
-          saldo: contaCliente.saldo,
-          limite: contaCliente.limite,
+          saldo:0,
+          limite:0
         };
-      })
-      .filter((cliente): cliente is ClienteTabela => cliente !== null)
-      .sort((a, b) => a.nome.localeCompare(b.nome));
+      });
+      this.clientes.sort((a, b) => a.nome.localeCompare(b.nome));
+    },
+      error: (erro)=>{
+        console.log('erro ao listar clientes', erro);
+        this.clientes=[];
+      }
+    })
+
+    // const gerenteLogado = this.gerenteService.getGerenteLogado();
+    // if (!gerenteLogado) {
+    //   return [];
+    // }
+    // return clientes
+    //   .map((cliente) => {
+    //     const contaCliente = contas.find((conta) => conta.cpfCliente === cliente.cpf);
+    //     if (!contaCliente) {
+    //       return null;
+    //     }
+
+    //     const pertenceAoGerenteLogado =
+    //       contaCliente.cpfGerente === gerenteLogado.cpf ||
+    //       contaCliente.gerente === gerenteLogado.nome;
+
+    //     if (!pertenceAoGerenteLogado) {
+    //       return null;
+    //     }
+
+    //     const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco);
+
+    //   })
+    //   .filter((cliente): cliente is ClienteTabela => cliente !== null)
   }
 
   get clientesFiltrados(): ClienteTabela[] {
