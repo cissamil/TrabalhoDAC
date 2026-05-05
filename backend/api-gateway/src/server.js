@@ -4,6 +4,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import cors from 'cors';
+import jwt from 'jsonwebtoken';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 
@@ -26,7 +27,7 @@ const services = {
 	saga: process.env.SAGA_SERVICE_URL || 'http://localhost:8085'
 };
 
-
+//tratamento de erro
 function createServiceProxy(target, routePrefix) {
 	return createProxyMiddleware({
 		target,
@@ -70,19 +71,70 @@ app.use(morgan('dev'));
 // ----------------- PROXY (ENCAMINHAMENTO) -----------------------------------//
 
 // ROTA 1
+// JWT 
+function verifyJWT(req, res, next) {
+	if (req.method === 'OPTIONS') return next(); 
+
+	const authHeader = req.headers['authorization'] || req.headers['Authorization'];
+	if (!authHeader || typeof authHeader !== 'string' || !authHeader.startsWith('Bearer ')) {
+		return res.status(401).json({ error: 'Unauthorized', message: 'Token ausente' });
+	}
+
+	const token = authHeader.split(' ')[1];
+	try {
+		const secret = process.env.JWT_SECRET || 'changeme';
+		const payload = jwt.verify(token, secret);
+		req.user = payload;
+		return next();
+	} catch (err) {
+		return res.status(401).json({ error: 'Unauthorized', message: 'Token inválido' });
+	}
+}
+
+function requireRole(allowedRoles) {
+	return (req, res, next) => {
+		if (!allowedRoles || allowedRoles.length === 0) return next();
+		const user = req.user;
+		if (!user) return res.status(403).json({ error: 'Forbidden', message: 'Usuário não autenticado' });
+
+			// ele aceita esses formatos de payload JWT:
+			//  { role: 'GERENTE' }
+			//  { roles: ['GERENTE'] }
+			//  { tipoUsuario: 'GERENTE' } = ms-auth
+			let userRoles = [];
+			if (user.roles && Array.isArray(user.roles)) userRoles = user.roles;
+			else if (user.role) userRoles = Array.isArray(user.role) ? user.role : [user.role];
+			else if (user.tipoUsuario) userRoles = [user.tipoUsuario];
+
+			// normalizar para string simples e comparar em maiúsculas
+			const ok = userRoles.some(r => allowedRoles.includes(String(r).toUpperCase()));
+		if (!ok) return res.status(403).json({ error: 'Forbidden', message: 'Permissão insuficiente' });
+		return next();
+	};
+}
+
+// mapeamento de roles por rota. ms-auth usa TipoUsuario { CLIENTE, GERENTE, ADMIN }
+const routeRoles = {
+	'/cliente': ['CLIENTE', 'GERENTE', 'ADMIN'],
+	'/conta': ['CLIENTE', 'GERENTE', 'ADMIN'],
+	'/gerente': ['GERENTE', 'ADMIN'],
+	'/saga': ['ADMIN']
+};
+
+// ROTA 1 (auth não exige token)
 app.use('/auth', createServiceProxy(services.auth, 'auth'));
 
-// ROTA 2
-app.use('/cliente', createServiceProxy(services.cliente, 'cliente'));
+// ROTA 2 - proteger com JWT
+app.use('/cliente', verifyJWT, requireRole(routeRoles['/cliente']), createServiceProxy(services.cliente, 'cliente'));
 
 // ROTA 3
-app.use('/conta', createServiceProxy(services.conta, 'conta'));
+app.use('/conta', verifyJWT, requireRole(routeRoles['/conta']), createServiceProxy(services.conta, 'conta'));
 
 // ROTA 4
-app.use('/gerente', createServiceProxy(services.gerente, 'gerente'));
+app.use('/gerente', verifyJWT, requireRole(routeRoles['/gerente']), createServiceProxy(services.gerente, 'gerente'));
 
 // ROTA 5
-app.use('/saga', createServiceProxy(services.saga, 'saga'));
+app.use('/saga', verifyJWT, requireRole(routeRoles['/saga']), createServiceProxy(services.saga, 'saga'));
 
 
 // GET /health, retorna status do gateway
