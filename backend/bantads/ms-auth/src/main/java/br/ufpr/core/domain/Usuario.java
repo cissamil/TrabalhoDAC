@@ -10,7 +10,8 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Usuario {
   private String id;
-  private String login;
+  private String userId;
+  private String email;
   private TipoUsuario tipoUsuario;
   private String senha;
 }

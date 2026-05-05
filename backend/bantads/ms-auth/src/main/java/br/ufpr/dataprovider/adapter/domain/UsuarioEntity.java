@@ -17,10 +17,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class UsuarioEntity {
 
   @Id
-  private String id;
+  private String documentId;
+
+  private String userId;
 
   @Indexed(unique = true)
-  private String login; // E-mail (RF01)
+  private String email; // E-mail (RF01)
   private String senha;
 
   @Field(name = "tipo_usuario")

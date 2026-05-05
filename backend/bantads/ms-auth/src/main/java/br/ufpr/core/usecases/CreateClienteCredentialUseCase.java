@@ -8,6 +8,8 @@ import br.ufpr.core.ports.output.ConsultClienteOutputPort;
 import br.ufpr.core.ports.output.SaveUsuarioCredentialOutputPort;
 import br.ufpr.core.domain.TipoUsuario;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -16,8 +18,11 @@ import java.security.SecureRandom;
 @RequiredArgsConstructor
 public class CreateClienteCredentialUseCase implements CreateClienteCredentialInputPort {
 
-  private final SaveUsuarioCredentialOutputPort saveUsuarioCredentialOutputPort;
+  @Autowired
+  private final PasswordEncoder passwordEncoder;
+
   private final ConsultClienteOutputPort consultClienteOutputPort;
+  private final SaveUsuarioCredentialOutputPort saveUsuarioCredentialOutputPort;
 
   @Override
   public void execute(TransferClienteIdInputData inputData) {
@@ -33,7 +38,8 @@ public class CreateClienteCredentialUseCase implements CreateClienteCredentialIn
 
     String senhaUsuario = generateNewSenha();
 
-    newUsuario.setLogin(clienteEmail);
+    newUsuario.setUserId(clienteId);
+    newUsuario.setEmail(clienteEmail);
     newUsuario.setSenha(senhaUsuario);
     newUsuario.setTipoUsuario(TipoUsuario.CLIENTE);
 
@@ -59,6 +65,8 @@ public class CreateClienteCredentialUseCase implements CreateClienteCredentialIn
       senha.append(characters.charAt(index));
     }
 
+    // @TODO CRIPTOGRAFAR AS SENHAS ANTES DE SALVAR NO BANCO. MANTER ATÉ O LOGIN FUNCIONAR
+    // return  passwordEncoder.encode(senha.toString());
     return senha.toString();
 
   }

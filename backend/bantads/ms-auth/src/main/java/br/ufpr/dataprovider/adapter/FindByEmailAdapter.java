@@ -1,7 +1,7 @@
 package br.ufpr.dataprovider.adapter;
 
 import br.ufpr.core.domain.Usuario;
-import br.ufpr.core.ports.output.SaveUsuarioCredentialOutputPort;
+import br.ufpr.core.ports.output.FindByEmailOutputPort;
 import br.ufpr.dataprovider.adapter.domain.UsuarioEntity;
 import br.ufpr.dataprovider.client.UsuarioRepository;
 import br.ufpr.dataprovider.mapper.UsuarioEntityMapper;
@@ -10,20 +10,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class SaveUsuarioCredentialAdapter implements SaveUsuarioCredentialOutputPort {
+public class FindByEmailAdapter implements FindByEmailOutputPort {
 
   private final UsuarioRepository repository;
   private final UsuarioEntityMapper mapper;
 
   @Override
-  public Usuario save(Usuario usuario) {
+  public Usuario find(String email) {
 
-    UsuarioEntity entity = mapper.toEntity(usuario);
+    UsuarioEntity entity = repository.findByEmail(email);
 
-    UsuarioEntity newEntity = repository.save(entity);
+    return mapper.toDomain(entity);
 
-    System.out.println("Credenciais criadas no repositório para: " + newEntity.getEmail());
-
-    return mapper.toDomain(newEntity);
   }
 }

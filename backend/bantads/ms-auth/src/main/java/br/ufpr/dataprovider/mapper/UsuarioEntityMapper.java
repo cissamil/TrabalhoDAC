@@ -12,9 +12,10 @@ public class UsuarioEntityMapper {
 
     Usuario usuario = new Usuario();
 
-    usuario.setId(entity.getId());
-    usuario.setLogin(entity.getLogin());
+    usuario.setId(entity.getDocumentId());
+    usuario.setEmail(entity.getEmail());
     usuario.setSenha(entity.getSenha());
+    usuario.setUserId(entity.getUserId());
     usuario.setTipoUsuario(entity.getTipoUsuario());
 
     return usuario;
@@ -25,9 +26,10 @@ public class UsuarioEntityMapper {
 
     UsuarioEntity entity = new UsuarioEntity();
 
-    entity.setId(usuario.getId());
-    entity.setLogin(usuario.getLogin());
+    entity.setDocumentId(usuario.getId());
+    entity.setEmail(usuario.getEmail());
     entity.setSenha(usuario.getSenha());
+    entity.setUserId(usuario.getUserId());
     entity.setTipoUsuario(usuario.getTipoUsuario());
 
     return entity;

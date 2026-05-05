@@ -1,6 +1,10 @@
 server:
   port: 8087
 
+jwt:
+  secret: 1e4df1d8ccb556e6a6c8c3933f24547ad356fac795e0b83515fb11c34868382f
+  expiration: 864000000
+
 spring:
   application:
       name: "MsAuth"

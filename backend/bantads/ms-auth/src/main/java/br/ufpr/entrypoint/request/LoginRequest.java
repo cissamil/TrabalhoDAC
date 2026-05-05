@@ -1,19 +1,21 @@
-package br.ufpr.dataprovider.client.domain;
+package br.ufpr.entrypoint.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ClienteResponse {
+public class LoginRequest {
 
-  private String email;
-  private String clienteId;
+  @Email
+  @NotNull
+  private String userEmail;
+
+  @NotNull
+  private String userPassword;
 }
