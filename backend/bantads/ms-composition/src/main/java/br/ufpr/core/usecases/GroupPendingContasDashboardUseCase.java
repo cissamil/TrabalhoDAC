@@ -1,27 +1,22 @@
 package br.ufpr.core.usecases;
 
 import br.ufpr.core.domain.*;
-import br.ufpr.core.ports.input.BuildPendingContasDashboardInputPort;
+import br.ufpr.core.ports.input.GroupPendingContasDashboardInputPort;
 import br.ufpr.core.ports.output.ConsultClientesListFromIdsOutputPort;
 import br.ufpr.core.ports.output.ConsultGerenteOutputPort;
 import br.ufpr.core.ports.output.ConsultPendingContasOutputPort;
-import br.ufpr.entrypoint.response.ContaClienteDetailResponse;
-import br.ufpr.entrypoint.response.GerenteSummaryResponse;
-import br.ufpr.entrypoint.response.PendingContasDashboardResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 // MS-COMPOSITION
 
 @Component
 @RequiredArgsConstructor
-public class BuildPendingContasDashboardUseCase implements BuildPendingContasDashboardInputPort {
+public class GroupPendingContasDashboardUseCase implements GroupPendingContasDashboardInputPort {
 
   private final ConsultGerenteOutputPort consultGerenteOutputPort;
   private final ConsultPendingContasOutputPort consultPendingContasOutputPort;

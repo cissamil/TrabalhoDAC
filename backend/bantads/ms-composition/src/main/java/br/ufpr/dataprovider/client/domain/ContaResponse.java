@@ -1,4 +1,4 @@
-package br.ufpr.entrypoint.response;
+package br.ufpr.dataprovider.client.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -7,15 +7,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PendingContasDashboardResponse {
+public class ContaResponse {
 
-  private GerenteSummaryResponse gerente;
-  private List<ContaClienteDetailResponse> contas;
+  private Integer id;
+  private BigDecimal saldo;
+  private BigDecimal limite;
+  private String gerenteId;
+  private String numeroConta;
 }

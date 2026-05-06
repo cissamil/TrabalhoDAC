@@ -7,15 +7,23 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PendingContasDashboardResponse {
+public class ClienteContaDashboardResponse {
 
-  private GerenteSummaryResponse gerente;
-  private List<ContaClienteDetailResponse> contas;
+  private String cpf;
+  private String nome;
+  private String email;
+  private String endereco;
+  private String telefone;
+  private String clienteId;
+  private BigDecimal salario;
+  private ContaResponse conta;
+
+
 }

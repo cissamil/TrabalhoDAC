@@ -4,6 +4,7 @@ import br.ufpr.core.domain.ApprovePendingContaInputData;
 import br.ufpr.core.domain.Conta;
 import br.ufpr.core.domain.RefusePendingContaInputData;
 import br.ufpr.core.ports.input.ApprovePendingContaInputPort;
+import br.ufpr.core.ports.input.FindContaByClienteIdInputPort;
 import br.ufpr.core.ports.input.FindPendingContasInputPort;
 import br.ufpr.core.ports.input.RefusePendingContaInputPort;
 import br.ufpr.entrypoint.mapper.ContaResponseMapper;
@@ -27,6 +28,7 @@ public class ContaController {
   private final FindPendingContasInputPort findPendingContasInputPort;
   private final RefusePendingContaInputPort refusePendingContaInputPort;
   private final ApprovePendingContaInputPort approvePendingContaInputPort;
+  private final FindContaByClienteIdInputPort findContaByClienteIdInputPort;
 
   @GetMapping(value = "/pendentes")
   ResponseEntity<List<ContaResponse>> findPendingContas(@RequestHeader("X-Gerente-Id") String gerenteId){
@@ -45,7 +47,7 @@ public class ContaController {
   }
 
   @PostMapping("/{id}/aprovar")
-  public ResponseEntity<?> approveConta(@PathVariable("id") Integer contaId, @RequestBody ApproveContaRequest request){
+  public ResponseEntity<Void> approveConta(@PathVariable("id") Integer contaId, @RequestBody ApproveContaRequest request){
 
       System.out.println("Id da conta: " + contaId + "Salario: " + request.getClienteSalario());
 
@@ -60,7 +62,7 @@ public class ContaController {
   }
 
   @PostMapping("/{id}/rejeitar")
-  public ResponseEntity<?> refuseConta(@PathVariable("id") Integer contaId, @RequestBody RefuseContaRequest request){
+  public ResponseEntity<Void> refuseConta(@PathVariable("id") Integer contaId, @RequestBody RefuseContaRequest request){
 
     System.out.println("Id da conta: " + contaId + " Motivo de recusa: " + request.getMotivoRecusa());
 
@@ -72,6 +74,15 @@ public class ContaController {
     refusePendingContaInputPort.execute(inputData);
 
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping
+  public ResponseEntity<ContaResponse> findByClienteId(@RequestParam String clienteId){
+
+    Conta conta = findContaByClienteIdInputPort.find(clienteId);
+
+    return ResponseEntity.ok(mapper.toResponse(conta));
+
   }
 
 

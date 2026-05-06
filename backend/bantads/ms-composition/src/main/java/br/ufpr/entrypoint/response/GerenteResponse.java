@@ -7,15 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PendingContasDashboardResponse {
-
-  private GerenteSummaryResponse gerente;
-  private List<ContaClienteDetailResponse> contas;
+public class GerenteResponse {
+  private String nomeGerente;
 }
