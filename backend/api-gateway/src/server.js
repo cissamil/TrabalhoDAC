@@ -15,17 +15,27 @@ dotenv.config();
 // INICIALIZA EXPRESS E PORTA
 
 const app = express();
-const port = Number(process.env.PORT || 8080);
+const port = Number(process.env.PORT);
 
 
 // enderecos dos ms
 const services = {
-	auth: process.env.AUTH_SERVICE_URL || 'http://localhost:8087',
-	cliente: process.env.CLIENTE_SERVICE_URL || 'http://localhost:8082',
-	conta: process.env.CONTA_SERVICE_URL || 'http://localhost:8083',
-	gerente: process.env.GERENTE_SERVICE_URL || 'http://localhost:8084',
-	saga: process.env.SAGA_SERVICE_URL || 'http://localhost:8085'
+	authService:        process.env.AUTH_SERVICE_URL,
+	contaService:       process.env.CONTA_SERVICE_URL,
+	clienteService:     process.env.CLIENTE_SERVICE_URL,
+	gerenteService:     process.env.GERENTE_SERVICE_URL,
+	compositionService: process.env.COMPOSITION_SERVICE_URL,
 };
+
+
+ const interpreters = {
+
+	clienteInterpreter: '/clientes',
+	gerenteInterpreter: '/gerentes',
+	contaInterpreter: '/contas',
+	authInterpreter: '/auth',
+	compositionInterpreter: ''
+} 
 
 //tratamento de erro
 function createServiceProxy(target, routePrefix) {
@@ -70,7 +80,7 @@ app.use(morgan('dev'));
 
 // ----------------- PROXY (ENCAMINHAMENTO) -----------------------------------//
 
-// ROTA 1
+
 // JWT 
 function verifyJWT(req, res, next) {
 	if (req.method === 'OPTIONS') return next(); 
@@ -121,23 +131,66 @@ const routeRoles = {
 	'/saga': ['ADMIN']
 };
 
-// ROTA 1 (auth não exige token)
-app.use('/auth', createServiceProxy(services.auth, 'auth'));
+// ROTA AUTOCADASTRO
+app.post('/clientes/autocadastro', createProxyMiddleware({
+	target: services.clienteService,
+	changeOrigin: true, 
+	proxyTimeout: 5000,
+	timeout: 5000,
+	pathRewrite: {'^/clientes/autocadastro' : '/autocadastro'},
+	on:{
+		proxyReq:(proxyReq, req, res) =>{
+			if(req.body && Object.keys(req.body).length){
+				const bodyData = JSON.stringify(req.body);
+				proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+				proxyReq.write(bodyData);
+			}
+		},
+		error:(err, req, res) =>{
+			console.error(`Rota: ${req} [GATEWAY] Erro no autocadastro:`, err.message);
+			res.status(502).json({ error: 'Bad Gateway'});
+		}
+	},
 
-// ROTA 2 - proteger com JWT
-app.use('/cliente', verifyJWT, requireRole(routeRoles['/cliente']), createServiceProxy(services.cliente, 'cliente'));
+}));
 
-// ROTA 3
-app.use('/conta', verifyJWT, requireRole(routeRoles['/conta']), createServiceProxy(services.conta, 'conta'));
+//ROTA CONTAS-PENDENTES
+app.get('/contas-pendentes', verifyJWT, (req, res, next) =>{
 
-// ROTA 4
-app.use('/gerente', verifyJWT, requireRole(routeRoles['/gerente']), createServiceProxy(services.gerente, 'gerente'));
+	const gerenteId = req.user?.id || "Sistema";
 
-// ROTA 5
-app.use('/saga', verifyJWT, requireRole(routeRoles['/saga']), createServiceProxy(services.saga, 'saga'));
+	return createProxyMiddleware({
+		target: services.compositionService,
+		changeOrigin: true,
+		pathRewrite: {'^/contas-pendentes': '/contas-pendentes'},
+		on: {
+            proxyReq: (proxyReq, req, res) => {
+                // 1. Repassando ou Criando o Header customizado
+                proxyReq.setHeader('X-Gerente-Id', gerenteId);
+                
+                // 2. Não esqueça do tratamento do Body que fizemos antes!
+				if (req.body && Object.keys(req.body).length) {
+                    const bodyData = JSON.stringify(req.body);
+                    proxyReq.setHeader('Content-Type', 'application/json');
+                    proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+                    proxyReq.write(bodyData);
+                }
+            },
 
+			error:(err, req, res) =>{
+				console.error(`Rota: ${req} [GATEWAY] Erro no pedido de contas:`, err.message);
+				res.status(502).json({ error: 'Bad Gateway'});
+			}
+        }
+	}) (req, res, next);
 
-// GET /health, retorna status do gateway
+});
+
+//aprovar conta
+
+//logar com a conta
+
+// GET /health
 app.get('/health', (req, res) => {
 	res.json({
 		status: 'Gateway ta funcionando!',
