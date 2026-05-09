@@ -20,7 +20,7 @@ const port = Number(process.env.PORT || 8080);
 
 // enderecos dos ms
 const services = {
-	auth: process.env.AUTH_SERVICE_URL || 'http://localhost:8081',
+	auth: process.env.AUTH_SERVICE_URL || 'http://localhost:8087',
 	cliente: process.env.CLIENTE_SERVICE_URL || 'http://localhost:8082',
 	conta: process.env.CONTA_SERVICE_URL || 'http://localhost:8083',
 	gerente: process.env.GERENTE_SERVICE_URL || 'http://localhost:8084',
