@@ -40,6 +40,8 @@ public class ClienteController {
   @PostMapping(value = "/autocadastro")
   public ResponseEntity<Void> cadastrar(@Valid @RequestBody ClienteRequest request){
 
+      System.out.println("Opa, me chamaram aqui hein!");
+
       Cliente cliente = clienteRequestMapper.toDomain(request);
 
       saveClienteInputPort.execute(cliente);
