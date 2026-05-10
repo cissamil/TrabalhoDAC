@@ -45,29 +45,37 @@ function verifyJWT(req, res, next) {
 
 //ROLES
 function requireRole(allowedRoles) {
+	
+	function parseUserRoles(user) {
+		if (!user) return [];
+		if (Array.isArray(user.roles)) return user.roles.map(String);
+		if (user.role) return (Array.isArray(user.role) ? user.role : [user.role]).map(String);
+		if (user.tipoUsuario) return [String(user.tipoUsuario)];
+		return [];
+	}
+
+	//valida se o usuário possui pelo menos uma role permitida
 	return (req, res, next) => {
 		if (!allowedRoles || allowedRoles.length === 0) return next();
+
 		const user = req.user;
-		if (!user) return res.status(403).json({ error: 'Forbidden', message: 'Usuário não autenticado' });
+		if (!user) {
+			return res.status(403).json({ error: 'Forbidden', message: 'Usuário não autenticado' });
+		}
 
-		// ele aceita esses formatos de payload JWT:
-		//  { role: 'GERENTE' }
-		//  { roles: ['GERENTE'] }
-		//  { tipoUsuario: 'GERENTE' } = ms-auth
-		let userRoles = [];
-		if (user.roles && Array.isArray(user.roles)) userRoles = user.roles;
-		else if (user.role) userRoles = Array.isArray(user.role) ? user.role : [user.role];
-		else if (user.tipoUsuario) userRoles = [user.tipoUsuario];
+		const userRoles = parseUserRoles(user).map(r => String(r).toUpperCase());
+		const allowed = allowedRoles.map(r => String(r).toUpperCase());
 
-		// normalizar para string simples e comparar em maiúsculas
-		const ok = userRoles.some(r => allowedRoles.includes(String(r).toUpperCase()));
-		if (!ok) return res.status(403).json({ error: 'Forbidden', message: 'Permissão insuficiente' });
+		const hasPermission = userRoles.some(r => allowed.includes(r));
+		if (!hasPermission) {
+			return res.status(403).json({ error: 'Forbidden', message: 'Permissão insuficiente' });
+		}
+
 		return next();
 	};
 }
 
 function registerRoutes(app, services) {
-	// mapeamento de roles por rota. ms-auth usa TipoUsuario { CLIENTE, GERENTE, ADMIN }
 	const routeRoles = {
 		'/cliente': ['CLIENTE', 'GERENTE', 'ADMIN'],
 		'/conta': ['CLIENTE', 'GERENTE', 'ADMIN'],
@@ -75,7 +83,7 @@ function registerRoutes(app, services) {
 		'/saga': ['ADMIN']
 	};
 
-	//--------------------------------------- Rotas ------------------------------------------------//
+	//------------------------------------------- Rotas ------------------------------------------------------//
 
 	/* ROTA AUTOCADASTRO */
 	app.post('/clientes/autocadastro', createProxyMiddleware({
@@ -130,7 +138,37 @@ function registerRoutes(app, services) {
 
 	/* APROVAR CONTA */
 
+    app.post('/contas/:id/aprovar', verifyJWT, requireRole(routeRoles['/gerente']), (req, res, next) => {
+        
+        return createProxyMiddleware({
+        target: services.contaService,
+        changeOrigin: true,
+        pathRewrite: {'^/contas': ''},
+        on: {
+			proxyReq: (proxyReq, req, res) => {
+				if (req.body && Object.keys(req.body).length) {
+					const bodyData = JSON.stringify(req.body);
+					proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+					proxyReq.write(bodyData);
+				}
+			},
+			error: (err, req, res) => {
+				console.error(`Rota: ${req} [GATEWAY] Erro na aprovação:`, err.message);
+				res.status(502).json({ error: 'Bad Gateway' });
+			}
+		},
+
+    })(req, res, next);
+
+});
+
 	/* logar com a conta */
+
+
+
+
+
+
 
 	//----------------------------------------------- Tratativas -------------------------------------------------//
 	// GET /health
