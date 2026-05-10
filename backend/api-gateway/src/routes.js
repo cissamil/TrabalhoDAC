@@ -1,0 +1,168 @@
+import jwt from 'jsonwebtoken';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+
+//Encaminha requisicoes para ms
+function createServiceProxy(target, routePrefix) {
+	return createProxyMiddleware({
+		target,
+		changeOrigin: true,
+		pathRewrite: { [`^/${routePrefix}`]: '' },
+		on: {
+			error: (err, req, res) => {
+				console.error(`[Gateway] Erro ao encaminhar ${req.method} ${req.originalUrl}:`, err.message);
+
+				if (!res.headersSent) {
+					res.status(502).json({
+						error: 'Bad Gateway',
+						message: `Falha ao comunicar com o microsservico ${routePrefix}`
+					});
+				}
+			}
+		}
+	});
+}
+
+// JWT
+function verifyJWT(req, res, next) {
+	if (req.method === 'OPTIONS') return next();
+
+	const authHeader = req.headers['authorization'] || req.headers['Authorization'];
+	if (!authHeader || typeof authHeader !== 'string' || !authHeader.startsWith('Bearer ')) {
+		return res.status(401).json({ error: 'Unauthorized', message: 'Token ausente' });
+	}
+
+	const token = authHeader.split(' ')[1];
+	try {
+		const secret = process.env.JWT_SECRET;
+		if (!secret) throw new Error('o JWT_SECRET não definido!!!!!');
+		const payload = jwt.verify(token, secret);
+		req.user = payload;
+		return next();
+	} catch (err) {
+		return res.status(401).json({ error: 'Unauthorized', message: 'Token inválido' });
+	}
+}
+
+//ROLES
+function requireRole(allowedRoles) {
+	return (req, res, next) => {
+		if (!allowedRoles || allowedRoles.length === 0) return next();
+		const user = req.user;
+		if (!user) return res.status(403).json({ error: 'Forbidden', message: 'Usuário não autenticado' });
+
+		// ele aceita esses formatos de payload JWT:
+		//  { role: 'GERENTE' }
+		//  { roles: ['GERENTE'] }
+		//  { tipoUsuario: 'GERENTE' } = ms-auth
+		let userRoles = [];
+		if (user.roles && Array.isArray(user.roles)) userRoles = user.roles;
+		else if (user.role) userRoles = Array.isArray(user.role) ? user.role : [user.role];
+		else if (user.tipoUsuario) userRoles = [user.tipoUsuario];
+
+		// normalizar para string simples e comparar em maiúsculas
+		const ok = userRoles.some(r => allowedRoles.includes(String(r).toUpperCase()));
+		if (!ok) return res.status(403).json({ error: 'Forbidden', message: 'Permissão insuficiente' });
+		return next();
+	};
+}
+
+function registerRoutes(app, services) {
+	// mapeamento de roles por rota. ms-auth usa TipoUsuario { CLIENTE, GERENTE, ADMIN }
+	const routeRoles = {
+		'/cliente': ['CLIENTE', 'GERENTE', 'ADMIN'],
+		'/conta': ['CLIENTE', 'GERENTE', 'ADMIN'],
+		'/gerente': ['GERENTE', 'ADMIN'],
+		'/saga': ['ADMIN']
+	};
+
+	//--------------------------------------- Rotas ------------------------------------------------//
+
+	/* ROTA AUTOCADASTRO */
+	app.post('/clientes/autocadastro', createProxyMiddleware({
+		target: services.clienteService,
+		changeOrigin: true,
+		proxyTimeout: 5000,
+		timeout: 5000,
+		pathRewrite: {'^/clientes/autocadastro' : '/autocadastro'},
+		on: {
+			proxyReq: (proxyReq, req, res) => {
+				if (req.body && Object.keys(req.body).length) {
+					const bodyData = JSON.stringify(req.body);
+					proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+					proxyReq.write(bodyData);
+				}
+			},
+			error: (err, req, res) => {
+				console.error(`Rota: ${req} [GATEWAY] Erro no autocadastro:`, err.message);
+				res.status(502).json({ error: 'Bad Gateway' });
+			}
+		},
+	}));
+
+	/*ROTA CONTAS-PENDENTES*/
+	app.get('/contas-pendentes', verifyJWT, (req, res, next) => {
+		const gerenteId = req.user?.id || 'Sistema';
+
+		return createProxyMiddleware({
+			target: services.compositionService,
+			changeOrigin: true,
+			pathRewrite: {'^/contas-pendentes': '/contas-pendentes'},
+			on: {
+				proxyReq: (proxyReq, req, res) => {
+					// 1. Repassando ou Criando o Header customizado
+					proxyReq.setHeader('X-Gerente-Id', gerenteId);
+
+					// 2. Não esqueça do tratamento do Body que fizemos antes!
+					if (req.body && Object.keys(req.body).length) {
+						const bodyData = JSON.stringify(req.body);
+						proxyReq.setHeader('Content-Type', 'application/json');
+						proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+						proxyReq.write(bodyData);
+					}
+				},
+				error: (err, req, res) => {
+					console.error(`Rota: ${req} [GATEWAY] Erro no pedido de contas:`, err.message);
+					res.status(502).json({ error: 'Bad Gateway' });
+				}
+			}
+		})(req, res, next);
+	});
+
+	/* APROVAR CONTA */
+
+	/* logar com a conta */
+
+	//----------------------------------------------- Tratativas -------------------------------------------------//
+	// GET /health
+	app.get('/health', (req, res) => {
+		res.json({
+			status: 'Gateway ta funcionando!',
+			porta: Number(process.env.PORT),
+			serviços: services
+		});
+	});
+
+	app.use((req, res) => {
+		res.status(404).json({
+			error: 'Not Found',
+			message: `Rota nao encontrada: ${req.method} ${req.originalUrl}`
+		});
+	});
+
+	app.use((err, req, res, next) => {
+		console.error('[Gateway] Erro interno:', err);
+
+		if (res.headersSent) {
+			return next(err);
+		}
+
+		res.status(500).json({
+			error: 'Internal Server Error',
+			message: 'Erro interno no API Gateway'
+		});
+	});
+
+	return { createServiceProxy, verifyJWT, requireRole, routeRoles };
+}
+
+export { registerRoutes };
