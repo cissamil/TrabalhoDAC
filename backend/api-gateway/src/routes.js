@@ -137,7 +137,6 @@ function registerRoutes(app, services) {
 	});
 
 	/* APROVAR CONTA */
-
     app.post('/contas/:id/aprovar', verifyJWT, requireRole(routeRoles['/gerente']), (req, res, next) => {
         
         return createProxyMiddleware({
@@ -162,14 +161,34 @@ function registerRoutes(app, services) {
 
 });
 
-	/* logar com a conta */
+	/* LOGAR COM A CONTA */
+    app.post('/auth/login', createProxyMiddleware({
+        target: services.authService,
+        changeOrigin: true,
+        pathRewrite: {'^/auth/login': '/login'},
+        on: {
+			proxyReq: (proxyReq, req, res) => {
+				if (req.body && Object.keys(req.body).length) {
+					const bodyData = JSON.stringify(req.body);
+					proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+					proxyReq.write(bodyData);
+				}
+			},
+			error: (err, req, res) => {
+				console.error(`Rota: ${req} [GATEWAY] Erro ao logar:`, err.message);
+				res.status(502).json({ error: 'Bad Gateway' });
+			}
+		},
 
+    }));
 
-
-
-
-
-
+	/* REJEITAR CONTA */
+	/* BUSCAR CONTA POR CLIENTE */
+	/* BUSCAR GERENTE */
+	/* BUSCAR CLIENTE */
+	/* LISTAR CLIENTES */
+	/* CLIENTE CONTA */
+	
 	//----------------------------------------------- Tratativas -------------------------------------------------//
 	// GET /health
 	app.get('/health', (req, res) => {
