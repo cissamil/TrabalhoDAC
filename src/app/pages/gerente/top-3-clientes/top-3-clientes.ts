@@ -26,35 +26,35 @@ export class Top3Clientes implements OnInit, OnDestroy {
   topClientes: TopCliente[] = [];
 
   ngOnInit(): void {
-    this.subscriptions.add(
-      combineLatest([this.clienteService.clientes$, this.contaService.contas$]).subscribe(
-        ([clientes, contas]) => {
-          const clientesPorCpf = new Map<string, Cliente>(
-            clientes.map((cliente) => [cliente.cpf, cliente])
-          );
+    // this.subscriptions.add(
+    //   combineLatest([this.clienteService.clientes$, this.contaService.contas$]).subscribe(
+    //     ([clientes, contas]) => {
+    //       const clientesPorCpf = new Map<string, Cliente>(
+    //         clientes.map((cliente) => [cliente.cpf, cliente])
+    //       );
 
-          this.topClientes = contas
-            .map((conta) => {
-              const cliente = clientesPorCpf.get(conta.cpfCliente);
-              if (!cliente) {
-                return null;
-              }
+    //       this.topClientes = contas
+    //         .map((conta) => {
+    //           const cliente = clientesPorCpf.get(conta.cpfCliente);
+    //           if (!cliente) {
+    //             return null;
+    //           }
 
-              const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco);
-              return {
-                cpf: cliente.cpf,
-                nome: cliente.nome,
-                cidade,
-                estado,
-                saldo: conta.saldo,
-              };
-            })
-            .filter((item): item is TopCliente => item !== null)
-            .sort((a, b) => b.saldo - a.saldo)
-            .slice(0, 3);
-        }
-      )
-    );
+    //           const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco);
+    //           return {
+    //             cpf: cliente.cpf,
+    //             nome: cliente.nome,
+    //             cidade,
+    //             estado,
+    //             saldo: conta.saldo,
+    //           };
+    //         })
+    //         .filter((item): item is TopCliente => item !== null)
+    //         .sort((a, b) => b.saldo - a.saldo)
+    //         .slice(0, 3);
+    //     }
+      //)
+    //);
   }
 
   ngOnDestroy(): void {

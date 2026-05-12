@@ -55,7 +55,7 @@ export class AdminGerenciarGerentes implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.contas = this.contaService.listarTodos();
+    this.listarContas();
     this.listarGerentes();
   }
 
@@ -65,49 +65,61 @@ export class AdminGerenciarGerentes implements OnInit {
     this.mensagemSucesso = '';
   }
 
-  fillGerentesTable(): void {
-    const novosDados = this.gerentes.map((gerente) => {
-      const quantidadeContas = this.contas.filter(
-        (conta) => conta.cpfGerente === gerente.cpf
-      ).length;
+  // fillGerentesTable(): void {
+  //   const novosDados = this.gerentes.map((gerente) => {
+  //     const quantidadeContas = this.contas.filter(
+  //       (conta) => conta.cpfGerente === gerente.cpf
+  //     ).length;
 
-      return {
-        id: gerente.id,
-        nome: gerente.nome,
-        cpf: gerente.cpf,
-        email: gerente.email,
-        telefone: gerente.telefone,
-        quantidadeClientes: quantidadeContas
-      };
-    });
+  //     return {
+  //       id: gerente.id,
+  //       nome: gerente.nome,
+  //       cpf: gerente.cpf,
+  //       email: gerente.email,
+  //       telefone: gerente.telefone,
+  //       quantidadeClientes: quantidadeContas
+  //     };
+  //   });
 
-    novosDados.sort((a, b) => a.nome.localeCompare(b.nome));
-    this.MANAGERS_TABLE = [...novosDados];
-  }
+  //   novosDados.sort((a, b) => a.nome.localeCompare(b.nome));
+  //   this.MANAGERS_TABLE = [...novosDados];
+  // }
 
   private atualizarTela(): void {
     this.listarGerentes();
-    this.contas = this.contaService.listarTodos();
-    this.fillGerentesTable();
+    this.listarContas();
+    //this.fillGerentesTable();
     this.calcularCards();
   }
 
   listarGerentes(): void{
     this.gerenteService.listarTodos().subscribe({
       next:(data: GerenteAdmin[])=>{
-        this.gerentes=data.filter((item)=>item.tipo==='gerente');
-        this.fillGerentesTable();
+        //this.gerentes=data.filter((item)=>item.tipo==='gerente');
+        //this.fillGerentesTable();
         this.calcularCards();
       },
       error: (erro)=>{
         console.error (' erro ao listar os gerentes ', erro);
         this.gerentes=[];
-        this.fillGerentesTable();
+        //this.fillGerentesTable();
         this.calcularCards();
 
       }
     })
   }
+
+    listarContas():void{
+      this.contaService.listarTodos().subscribe({
+        next:(contas: Conta[])=>{
+          this.contas=contas;
+        },
+        error: (erro: any)=>{
+          console.log('Erro ao listar contas', erro);
+          this.contas=[];
+        }
+      })
+    }
 
   buscarPorId(id:number){
     return this.gerentes.find((item)=>item.id===id);
