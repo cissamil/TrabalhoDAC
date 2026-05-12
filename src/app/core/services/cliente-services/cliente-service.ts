@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Cliente, GerenteAdmin, PedidoAutoCadastro } from '../../models/entities';
-import { CLIENTES_MOCK } from '../../mock/mock-data';
 import { PedidoAutoCadastroService } from '../pedido-autocadastro-services/pedido-autocadastro-service';
 import { ContaService } from '../conta-services/conta-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-const LS_CHAVE = 'clientes';
+//const LS_CHAVE = 'clientes';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClienteService {
 
-  CLIENTE_URL="http://localhost:8080/clientes"
+  CLIENTE_URL="http://localhost:8080"
 
   httpOptions={
     headers: new HttpHeaders({
@@ -24,8 +23,10 @@ export class ClienteService {
   // private clientesSubject: BehaviorSubject<Cliente[]>;
   // public clientes$: Observable<Cliente[]>
 
-  constructor(private httpClient: HttpClient){}
-  // constructor(private pedidoAutoCadastroService: PedidoAutoCadastroService, private contaService: ContaService){
+  constructor(private httpClient: HttpClient,
+    private pedidoAutoCadastroService: PedidoAutoCadastroService,
+    private contaService: ContaService){}
+
   //   if(!localStorage[LS_CHAVE]){
 
   //     localStorage[LS_CHAVE] = JSON.stringify(CLIENTES_MOCK);
@@ -40,6 +41,7 @@ export class ClienteService {
   //}
 
   private atualizarDados(clientes: Cliente[]){
+
     return this.httpClient.post<Cliente>(
     this.CLIENTE_URL,
     JSON.stringify(clientes),
@@ -133,18 +135,10 @@ export class ClienteService {
       this.httpOptions
     );
   }
-
-  // buscarPorCPF(cpf: string){
-  //   const clientes = this.listarTodos();
-
-  //   return clientes.find((cliente) => cliente.cpf === cpf);
-  // }
-
   remover(id: number) : Observable<Cliente>{
     // const clientes = this.listarTodos()
     //   .filter((c) => c.id !== id);
-
-    // this.atualizarDados(clientes);
+      //this.atualizarDados(clientes);
 
     return this.httpClient.delete<Cliente>(
       this.CLIENTE_URL + "/" + id,
@@ -152,23 +146,25 @@ export class ClienteService {
     )
   }
 
-  // buscarClientePorEmail(email:string){
-  //   const clientes = this.listarTodos();
-
-  //   return clientes.find((cliente) => cliente.email === email);
+  // buscarClientePorEmail(email:string) : Observable<Cliente | undefined>{
+  //   return this.listarTodos().pipe(
+  //   map((clientes: Cliente[]) =>
+  //     clientes.find((cliente) =>
+  //       cliente.email === email)));
   // }
 
-  // buscarClientePorCPF(cpf:string){
-  //   const clientes = this.listarTodos();
+  // buscarClientePorCPF(cpf: string) : Observable<Cliente | undefined>{
+  //   return this.listarTodos().pipe(
+  //   map((clientes:Cliente[])=>
+  //       clientes.find((cliente) =>
+  //         cliente.cpf === cpf)));
+  //   }
 
-  //   // console.log("Clientes: ", clientes);
-  //   return clientes.find((cliente) => cliente.cpf === cpf);
+  // buscarClientePorEmailESenha(email:string, senha:string): Observable<Cliente | undefined>{
+  //   return this.listarTodos().pipe(
+  //   map((clientes:Cliente[])=>
+  //       clientes.find((cliente) =>
+  //         cliente.email === email && cliente.senha === senha)));
   // }
-
-  // buscarClientePorEmailESenha(email:string, senha:string){
-  //   const clientes = this.listarTodos();
-  //   return clientes.find((cliente) => cliente.email === email && cliente.senha === senha);
-  // }
-
 
 }
