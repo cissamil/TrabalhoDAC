@@ -92,7 +92,9 @@ export class Login implements OnInit{
       const result = this.clienteService.buscarClientePorEmailESenha(
         this.email,
         this.senha,
-      );
+      ).subscribe({
+        this.contaService.busc-
+      });
       // console.log('result cliente: ', result);
 
       this.handleResult(result, this.acessProfile);
@@ -152,12 +154,14 @@ export class Login implements OnInit{
     if(profile == ProfileOptions.Cliente){
       const cliente = result as Cliente;
 
-      const conta = this.contaService.buscarPorCpfCliente(cliente.cpf);
-      // const movimentacoes = this.movimentacaoService.buscarMovimentacoesPorCPFCliente(cliente.cpf);
+      const conta = this.contaService.buscarPorCpfCliente(cliente.cpf).subscribe({
+
+      });
+      const movimentacoes = this.movimentacaoService.buscarMovimentacoesPorCPFCliente(cliente.cpf);
 
       this.clienteSessionService.setCliente(result as Cliente);
       this.clienteSessionService.setContaCliente(conta!);
-      // this.clienteSessionService.setMovimentacoesCliente(movimentacoes!);
+      this.clienteSessionService.setMovimentacoesCliente(movimentacoes!);
 
       this.redirect('/cliente-main-page');
       return;
