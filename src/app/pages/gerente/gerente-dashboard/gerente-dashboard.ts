@@ -5,7 +5,7 @@ import { ResponseModal } from '../../../core/models/response-modal';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 import { CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
 import { GerenteAdmin, Cliente, Conta, PedidoAutoCadastro} from '../../../core/models/entities';
-import {  GerenteAutocadastroService} from '../../../core/services/gerente-services/gerente-autocadastro.service';
+//import {  GerenteAutocadastroService} from '../../../core/services/gerente-services/gerente-autocadastro.service';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -18,7 +18,7 @@ export class GerenteDashboard  implements OnInit{
   constructor(
     private router:Router,
     private gerenteService: GerenteService,
-    private gerenteAutocadastroService: GerenteAutocadastroService,
+    //private gerenteAutocadastroService: GerenteAutocadastroService,
   ) {}
 
   pedidoEmRecusa: PedidoAutoCadastro | null = null;

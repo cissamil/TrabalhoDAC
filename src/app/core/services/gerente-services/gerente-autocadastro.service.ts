@@ -6,7 +6,7 @@ import { ContaService } from '../conta-services/conta-service';
 
 @Injectable({
   providedIn: 'root',
-})  
+})
 export class GerenteAutocadastroService {
 
   private readonly pedidosService = inject(PedidoAutoCadastroService);
@@ -28,10 +28,10 @@ export class GerenteAutocadastroService {
     return this.pedidos
       .filter((pedido) => pedido.status !== 'PENDENTE' && pedido.cpfGerente === cpfGerente)
       .sort((a, b) =>{
-        
+
         const dataA = a.dataDecisao? new Date(a.dataDecisao).getTime() : 0;
         const dataB = b.dataDecisao? new Date(b.dataDecisao).getTime() : 0;
-        
+
         return dataB - dataA;
       });
   }
@@ -54,11 +54,11 @@ export class GerenteAutocadastroService {
     }
 
     const senha:string = this.gerarSenhaTemporaria();
-    
-    cliente.senha = senha; 
+
+    cliente.senha = senha;
 
     this.clientesService.atualizar(cliente);
-    
+
 
     const contaGerada: Conta = {
       id: new Date().getTime(),
@@ -95,7 +95,7 @@ export class GerenteAutocadastroService {
     pedido.status = 'RECUSADO';
     pedido.dataDecisao = new Date();
     pedido.motivoRecusa = motivoRecusa;
-    
+
     this.pedidosService.atualizar(pedido);
     this.registrarEmailRecusa(pedido, motivoRecusa);
     return true;
