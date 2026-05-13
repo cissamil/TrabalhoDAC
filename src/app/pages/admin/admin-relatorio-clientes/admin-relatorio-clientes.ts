@@ -44,13 +44,37 @@ export class AdminRelatorioClientes implements OnInit {
 
 
   ngOnInit(): void {
-    this.clientes = this.clienteService.listarTodos();
+    this.listarClientes();
     this.contas = this.contaService.listarTodos();
-    this.gerentes = this.gerenteService.listarGerentes();
+    this.listarGerentes();
     console.log('clientes do service', this.clientes);
   console.log('contas do service', this.contas);
   console.log('gerentes do service', this.gerentes);
     this.fillClientsTable();
+  }
+
+  listarClientes():void{
+    this.clienteService.listarTodos().subscribe({
+      next: (clientes: Cliente[]) => {
+      this.clientes = clientes;
+    },
+    error: (erro) => {
+      console.log('Erro ao listar clientes', erro);
+      this.clientes = [];
+    }
+    })
+  }
+
+  listarGerentes():void{
+    this.gerenteService.listarTodos().subscribe({
+      next: (gerentes: GerenteAdmin[]) => {
+      this.gerentes = gerentes;
+    },
+    error: (erro) => {
+      console.log('Erro ao listar gerentes', erro);
+      this.gerentes = [];
+    }
+    })
   }
 
   fillClientsTable() {

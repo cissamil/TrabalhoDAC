@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {NgxMaskDirective, NgxMaskPipe} from "ngx-mask";
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
-import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { validateCEP, validateCPF, validateEmail } from '../../../core/shared/helpers';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { Cliente,} from '../../../core/models/entities';
@@ -18,8 +17,8 @@ import { ResponseModal } from '../../../core/models/response-modal';
 })
 export class Registro {
   constructor(
-    private router: Router, 
-    private clienteService: ClienteService, 
+    private router: Router,
+    private clienteService: ClienteService,
   ){}
 
   currencyFormatter: CurrencyFormatter = new CurrencyFormatter();
@@ -50,6 +49,25 @@ export class Registro {
   cidade: string = '';
   estado: string = '';
 
+  clientes: Cliente[]=[];
+
+    ngOnInit():void{
+      this.redirectToLoginPage();
+      this.listarClientes();
+    }
+
+  listarClientes():void{
+    this.clienteService.listarTodos().subscribe({
+      next: (clientes: Cliente[]) => {
+      this.clientes = clientes;
+    },
+    error: (erro) => {
+      console.log('Erro ao listar clientes', erro);
+      this.clientes = [];
+    }
+    })
+  }
+
   redirectToLoginPage() {
     this.router.navigate(['/login']);
   }
@@ -72,50 +90,55 @@ export class Registro {
   }
 
   registrarUsuario() {
+  const validationMessage = this.validateFields();
+  if (validationMessage) {
+    this.responseModal = {
+      title: "campo inválido",
+      message: validationMessage,
+      messageIcon: "error",
+      type: 'error'
+    };
+    return;
+  }
 
-    const verifyFields = this.validateFields();
+  this.cliente.nome = this.cliente.nome.trim();
+  this.cliente.email = this.cliente.email.trim();
+  this.cliente.salario = Number(this.currencyFormatter.removeCurrencyMaskFromString(this.salario));
+  this.cliente.endereco = `${this.cep} - ${this.rua} - ${this.cidade} - ${this.estado}`;
 
-    this.cliente.nome = this.cliente.nome.trim();
-    this.cliente.email = this.cliente.email.trim();
-
-    if(verifyFields != null){
+  this.clienteService.inserir(this.cliente).subscribe({
+    next: (clienteCriado) => {
       this.responseModal = {
-        title: "Campo Inválido",
-        message: verifyFields,
+        title: "Registro realizado com sucesso!",
+        message: "Aguarde a aprovação da sua conta, você receberá um e-mail com a sua senha.",
+        messageIcon: "check",
+        type: 'success'
+      };
+    },
+    error: (erro) => {
+      console.error(erro);
+      this.responseModal = {
+        title: "Erro no Cadastro",
+        message: erro.error?.message || "Ocorreu um erro ao tentar se cadastrar. Tente novamente.",
         messageIcon: "error",
         type: 'error'
       };
-      return;
     }
-    
-    const salario = this.currencyFormatter.removeCurrencyMaskFromString(this.salario);
-    const enderecoCompleto = `${this.cep} - ${this.rua} - ${this.cidade} - ${this.estado}`;
-
-    this.cliente.salario = salario;
-    this.cliente.endereco = enderecoCompleto;
-
-    this.clienteService.inserir(this.cliente);
-
-    this.responseModal = {
-      title: "Registro realizado com sucesso!.",
-      message: "Aguarde a aprovação da sua conta, você receberá um e-mail com a sua senha",
-      messageIcon: "check",
-      type: 'success'
-    };
-  }
+  });
+}
 
   validateFields(): string | null{
 
     if(!this.cliente.nome) return "Preencha o nome corretamente";
-    
+
     if(!this.cliente.email) return "Preencha o email corretamente";
 
     if(!this.cliente.cpf) return "Preencha o CPF corretamente";
-    
+
     if(!this.cliente.telefone) return "Preencha o telefone corretamente";
 
     if(this.salario === "0,00") return "Preencha o campo de salário";
-    
+
     if(!this.cep) return "Preencha o o CEP corretamente";
 
     if(!this.rua) return "Preencha a rua corretamente";
@@ -131,10 +154,10 @@ export class Registro {
 
     if(!validateCEP(this.cep)) return "Preencha o cep corretamente";
 
-    const validateRegister = this.clienteService.buscarClientePorEmail(this.cliente.email);
+    //const validateRegister = this.clienteService.buscarClientePorEmail(this.cliente.email);
 
-    if(validateRegister !== undefined) return "Email já está em uso. Faça o login";
-    
+    //if(validateRegister !== undefined) return "Email já está em uso. Faça o login";
+
     return null;
 
   }

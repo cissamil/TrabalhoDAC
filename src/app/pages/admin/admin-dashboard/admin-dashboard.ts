@@ -36,10 +36,22 @@ export class AdminDashboard implements OnInit {
     'Saldo Total'];
 
   ngOnInit(): void {
-    this.gerentes=this.gerentesService.listarGerentes();
+    this.listarGerentes();
     this.contas=this.contasService.listarTodos();
     this.fillManagersTable();
     this.fillInfoCards();
+  }
+
+    listarGerentes():void{
+    this.gerentesService.listarTodos().subscribe({
+      next: (gerentes: GerenteAdmin[]) => {
+      this.gerentes = gerentes;
+    },
+    error: (erro) => {
+      console.log('Erro ao listar gerentes', erro);
+      this.gerentes = [];
+    }
+    })
   }
 
   fillManagersTable(){
