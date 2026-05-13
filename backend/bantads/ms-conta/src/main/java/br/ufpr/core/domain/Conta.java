@@ -12,6 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class Conta {
   private Integer id;
+  private String contaId;
   private BigDecimal saldo;
   private BigDecimal limite;
   private String clienteId;

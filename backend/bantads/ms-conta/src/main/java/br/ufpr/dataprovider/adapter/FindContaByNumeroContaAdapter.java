@@ -16,7 +16,7 @@ public class FindContaByNumeroContaAdapter implements FindContaByNumeroContaOutp
   private final ContaRepository repository;
 
   @Override
-  public Conta find(Integer numeroConta) {
+  public Conta find(String numeroConta) {
 
     ContaEntity entity = repository.findByNumeroConta(numeroConta);
 
