@@ -86,7 +86,7 @@ export class ContaService {
     // }
   }
 
-  // realizarTransferencia(contaOrigem: Conta, contaDestino: Conta, valor:number){
+  realizarTransferencia(contaOrigem: Conta, contaDestino: Conta, valor:number){
   // try{
   //   const contas = this.listarTodos();
   //   this.listarConta(contaDestino.numeroConta);
@@ -103,7 +103,8 @@ export class ContaService {
   // }catch(e){
   //   console.error("Erro ao atualizar conta ", e);
   // }
-  // }
+  return []
+  }
 
   // registrarMovimentacao(valor: number, contaOrigem: Conta, contaDestino:Conta){
   //   const movimentacao: Movimentacao = {
@@ -152,16 +153,18 @@ export class ContaService {
   //   })
   //}
 
-  // buscarPorCpfCliente(cpf:string){
-  //   const contas = this.listarTodos();
-  //   return contas.find((conta) => conta.cpfCliente == cpf);
-  // }
+  buscarPorCpfCliente(cpf: string):Observable<Conta>{
+      return this.httpClient.get<Conta>(
+        this.CONTA_URL + "/cliente/cpf" + cpf,
+        this.httpOptions);
+    }
 
-  // buscarPorNumeroConta(numero: string){
-  //   const numeroConta = Number(numero);
-  //   const contas = this.listarTodos();
-  //   return contas.find((conta) => conta.numeroConta === numeroConta);
-  // }
+  buscarPorNumeroConta(numero: string){
+    const numeroConta = Number(numero);
+    const contas = this.listarTodos();
+    return []
+    //contas.find((conta: Conta) => conta.numeroConta === numeroConta);
+  }
 
   // contarContasGerente(cpfGerente: string): number {
   //   const contas = this.listarTodos();
@@ -179,4 +182,4 @@ export class ContaService {
   //   this.atualizarDados(contasAtualizadas);
   // }
 
-} 
+}

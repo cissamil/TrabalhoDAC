@@ -160,11 +160,20 @@ export class ClienteService {
   //         cliente.cpf === cpf)));
   //   }
 
-  // buscarClientePorEmailESenha(email:string, senha:string): Observable<Cliente | undefined>{
-  //   return this.listarTodos().pipe(
-  //   map((clientes:Cliente[])=>
-  //       clientes.find((cliente) =>
-  //         cliente.email === email && cliente.senha === senha)));
-  // }
+  buscarClientePorEmailESenha(email: string, senha: string): Observable<Cliente> {
+  return this.httpClient.get<Cliente>(this.CLIENTE_URL + "/login", {
+    ...this.httpOptions,
+    params: { email, senha }
+  });
+}
+
+
+  buscarPorCPF(cpf: string): Observable<Cliente> {
+    return this.httpClient.get<Cliente>(
+      this.CLIENTE_URL + "/cpf/" + cpf,
+      this.httpOptions);
+  }
+
+
 
 }
