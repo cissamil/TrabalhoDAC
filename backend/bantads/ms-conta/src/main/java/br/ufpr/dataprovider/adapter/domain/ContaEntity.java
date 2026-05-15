@@ -21,6 +21,9 @@ public class ContaEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+  @Column(name = "conta_id")
+  private String contaId;
+
   @Column(name = "numero_conta", unique = true)
   private String numeroConta;
 

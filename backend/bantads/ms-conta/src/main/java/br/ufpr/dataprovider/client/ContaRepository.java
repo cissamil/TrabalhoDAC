@@ -22,7 +22,7 @@ public interface ContaRepository extends JpaRepository<ContaEntity, Integer> {
   String findGerenteIdWithFewerClientes();
 
   boolean existsByNumeroConta(Integer numeroConta);
-  ContaEntity findByNumeroConta(Integer numeroConta);
+  ContaEntity findByNumeroConta(String numeroConta);
 
   List<ContaEntity> findByGerenteIdAndStatusConta(String gerenteId, StatusConta statusConta);
 

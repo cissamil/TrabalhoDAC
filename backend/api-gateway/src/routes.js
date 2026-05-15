@@ -136,6 +136,28 @@ function registerRoutes(app, services) {
 		})(req, res, next);
 	});
 
+	/* LOGAR COM A CONTA */
+    app.post('/auth/login', createProxyMiddleware({
+        target: services.authService,
+        changeOrigin: true,
+        pathRewrite: {'^/auth/login': '/login'},
+        on: {
+			proxyReq: (proxyReq, req, res) => {
+				if (req.body && Object.keys(req.body).length) {
+					const bodyData = JSON.stringify(req.body);
+					proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+					proxyReq.write(bodyData);
+				}
+			},
+			error: (err, req, res) => {
+				console.error(`Rota: ${req} [GATEWAY] Erro ao logar:`, err.message);
+				res.status(502).json({ error: 'Bad Gateway' });
+			}
+		},
+
+    }));
+
+
 	/* APROVAR CONTA */
     app.post('/contas/:id/aprovar', verifyJWT, requireRole(routeRoles['/gerente']), (req, res, next) => {
         
@@ -161,11 +183,13 @@ function registerRoutes(app, services) {
 
 });
 
-	/* LOGAR COM A CONTA */
-    app.post('/auth/login', createProxyMiddleware({
-        target: services.authService,
+	/* REJEITAR CONTA */
+	 app.post('/contas/:id/rejeitar', verifyJWT, requireRole(routeRoles['/gerente']), (req, res, next) => {
+        
+        return createProxyMiddleware({
+        target: services.contaService,
         changeOrigin: true,
-        pathRewrite: {'^/auth/login': '/login'},
+        pathRewrite: {'^/contas': ''},
         on: {
 			proxyReq: (proxyReq, req, res) => {
 				if (req.body && Object.keys(req.body).length) {
@@ -175,19 +199,101 @@ function registerRoutes(app, services) {
 				}
 			},
 			error: (err, req, res) => {
-				console.error(`Rota: ${req} [GATEWAY] Erro ao logar:`, err.message);
+				console.error(`Rota: ${req} [GATEWAY] Erro na rejeição:`, err.message);
 				res.status(502).json({ error: 'Bad Gateway' });
 			}
 		},
 
-    }));
+    })(req, res, next);
 
-	/* REJEITAR CONTA */
+});
+	
 	/* BUSCAR CONTA POR CLIENTE */
-	/* BUSCAR GERENTE */
-	/* BUSCAR CLIENTE */
-	/* LISTAR CLIENTES */
-	/* CLIENTE CONTA */
+		app.get('/contas', verifyJWT, requireRole(routeRoles['/conta']), (req, res, next) => {
+		
+
+		return createProxyMiddleware({
+			target: services.contaService,
+			changeOrigin: true,
+			pathRewrite: {'^/contas': ''},
+			on: {
+				proxyReq: (proxyReq, req, res) => {
+					
+
+					if (req.body && Object.keys(req.body).length) {
+						const bodyData = JSON.stringify(req.body);
+						proxyReq.setHeader('Content-Type', 'application/json');
+						proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+						proxyReq.write(bodyData);
+					}
+				},
+				error: (err, req, res) => {
+					console.error(`Rota: ${req} [GATEWAY] Erro na busca por cliente`, err.message);
+					res.status(502).json({ error: 'Bad Gateway' });
+				}
+			}
+		})(req, res, next);
+	});
+
+	/* BUSCAR CLIENTE*/
+	app.get('/clientes', verifyJWT, requireRole(routeRoles['/cliente']), (req, res, next) => {
+		
+
+		return createProxyMiddleware({
+			target: services.clienteService,
+			changeOrigin: true,
+			pathRewrite: {'^/clientes': ''},
+			on: {
+				proxyReq: (proxyReq, req, res) => {
+					
+
+					if (req.body && Object.keys(req.body).length) {
+						const bodyData = JSON.stringify(req.body);
+						proxyReq.setHeader('Content-Type', 'application/json');
+						proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+						proxyReq.write(bodyData);
+					}
+				},
+				error: (err, req, res) => {
+					console.error(`Rota: ${req} [GATEWAY] Erro na busca do cliente`, err.message);
+					res.status(502).json({ error: 'Bad Gateway' });
+				}
+			}
+		})(req, res, next);
+	});
+
+
+	/* BUSCAR GERENTE*/
+	app.get('/gerentes', verifyJWT, requireRole(routeRoles['/gerente']), (req, res, next) => {
+		
+
+		return createProxyMiddleware({
+			target: services.gerenteService,
+			changeOrigin: true,
+			pathRewrite: {'^/gerentes': ''},
+			on: {
+				proxyReq: (proxyReq, req, res) => {
+					
+
+					if (req.body && Object.keys(req.body).length) {
+						const bodyData = JSON.stringify(req.body);
+						proxyReq.setHeader('Content-Type', 'application/json');
+						proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+						proxyReq.write(bodyData);
+					}
+				},
+				error: (err, req, res) => {
+					console.error(`Rota: ${req} [GATEWAY] Erro na busca do gerente`, err.message);
+					res.status(502).json({ error: 'Bad Gateway' });
+				}
+			}
+		})(req, res, next);
+	});
+
+
+
+
+
 	
 	//----------------------------------------------- Tratativas -------------------------------------------------//
 	// GET /health

@@ -16,6 +16,7 @@ public class ContaEntityMapper {
     conta.setId(entity.getId());
     conta.setSaldo(entity.getSaldo());
     conta.setLimite(entity.getLimite());
+    conta.setContaId(entity.getContaId());
     conta.setClienteId(entity.getClienteId());
     conta.setGerenteId(entity.getGerenteId());
     conta.setNumeroConta(entity.getNumeroConta());
@@ -36,6 +37,7 @@ public class ContaEntityMapper {
     entity.setId(conta.getId());
     entity.setSaldo(conta.getSaldo());
     entity.setLimite(conta.getLimite());
+    entity.setContaId(conta.getContaId());
     entity.setClienteId(conta.getClienteId());
     entity.setGerenteId(conta.getGerenteId());
     entity.setNumeroConta(conta.getNumeroConta());

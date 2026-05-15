@@ -1,15 +1,9 @@
 package br.ufpr.entrypoint.controller;
 
-import br.ufpr.core.domain.ApprovePendingContaInputData;
-import br.ufpr.core.domain.Conta;
-import br.ufpr.core.domain.RefusePendingContaInputData;
-import br.ufpr.core.ports.input.ApprovePendingContaInputPort;
-import br.ufpr.core.ports.input.FindContaByClienteIdInputPort;
-import br.ufpr.core.ports.input.FindPendingContasInputPort;
-import br.ufpr.core.ports.input.RefusePendingContaInputPort;
+import br.ufpr.core.domain.*;
+import br.ufpr.core.ports.input.*;
 import br.ufpr.entrypoint.mapper.ContaResponseMapper;
-import br.ufpr.entrypoint.request.ApproveContaRequest;
-import br.ufpr.entrypoint.request.RefuseContaRequest;
+import br.ufpr.entrypoint.request.*;
 import br.ufpr.entrypoint.response.ContaResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +23,9 @@ public class ContaController {
   private final RefusePendingContaInputPort refusePendingContaInputPort;
   private final ApprovePendingContaInputPort approvePendingContaInputPort;
   private final FindContaByClienteIdInputPort findContaByClienteIdInputPort;
+  private final DepositValueOnContaInputPort depositValueOnContaInputPort;
+  private final WithDrawValueOfContaInputPort withDrawValueFromContaInputPort;
+  private final TransferMoneyToAnotherContaInputPort transferMoneyToAnotherContaInputPort;
 
   @GetMapping(value = "/pendentes")
   ResponseEntity<List<ContaResponse>> findPendingContas(@RequestHeader("X-Gerente-Id") String gerenteId){
@@ -82,8 +79,54 @@ public class ContaController {
     Conta conta = findContaByClienteIdInputPort.find(clienteId);
 
     return ResponseEntity.ok(mapper.toResponse(conta));
+  }
+
+  @PostMapping("/{id}/depositar")
+  ResponseEntity<Void> depositValueOnConta(@RequestBody DepositValueRequest request){
+
+    DepositValueInputData inputData = new DepositValueInputData();
+
+    inputData.setContaNumber(request.getContaNumber());
+    inputData.setValue(request.getValue());
+
+    depositValueOnContaInputPort.execute(inputData);
+
+    return ResponseEntity.noContent().build();
 
   }
+
+  @PostMapping("/{id}/sacar")
+  ResponseEntity<Void> withdrawValueOfConta(@RequestBody WithdrawValueRequest request){
+
+    WithdrawValueInputData inputData = new WithdrawValueInputData();
+
+    inputData.setContaNumber(request.getContaNumber());
+    inputData.setValue(request.getValue());
+
+    withDrawValueFromContaInputPort.execute(inputData);
+    return ResponseEntity.noContent().build();
+
+
+  }
+
+  @PostMapping("/{id}/transferir")
+  ResponseEntity<Void> transferMoneyToAnotherConta(@RequestBody TransferValueRequest request){
+
+    TransferValueInputData inputData = new TransferValueInputData();
+
+    inputData.setOriginContaNumber(request.getOriginContaNumber());
+    inputData.setDestinyContaNumber(request.getDestinyContaNumber());
+    inputData.setValue(request.getValue());
+
+    transferMoneyToAnotherContaInputPort.execute(inputData);
+    return ResponseEntity.noContent().build();
+
+  }
+
+
+
+
+
 
 
 }

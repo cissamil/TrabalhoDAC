@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class CreatePendingConta implements CreatePendingContaInputPort {
     validateGerenteId(gerenteId);
 
     novaConta.setId(null);
+    novaConta.setContaId(UUID.randomUUID().toString());
     novaConta.setDataCriacao(today);
     novaConta.setClienteId(clienteId);
     novaConta.setGerenteId(gerenteId);
