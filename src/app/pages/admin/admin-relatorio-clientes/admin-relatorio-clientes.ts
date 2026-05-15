@@ -45,7 +45,7 @@ export class AdminRelatorioClientes implements OnInit {
 
   ngOnInit(): void {
     this.listarClientes();
-    this.contas = this.contaService.listarTodos();
+    //this.contas = this.contaService.listarTodos();
     this.listarGerentes();
     console.log('clientes do service', this.clientes);
   console.log('contas do service', this.contas);

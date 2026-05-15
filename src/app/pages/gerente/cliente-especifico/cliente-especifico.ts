@@ -40,8 +40,7 @@ export class ClienteEspecifico implements OnInit {
   clienteSelecionado: ClienteDetalhado | null = null;
 
   ngOnInit(): void {
-    this.listarClientes();
-    this.listarContas();
+
     this.route.queryParamMap.subscribe((params) => {
       const cpf = params.get('cpf');
       if (cpf) {
@@ -51,33 +50,11 @@ export class ClienteEspecifico implements OnInit {
     });
   }
 
-  listarClientes():void{
-    this.clienteService.listarTodos().subscribe({
-      next: (clientes: Cliente[]) => {
-      this.clientes = clientes;
-    },
-    error: (erro) => {
-      console.log('Erro ao listar clientes', erro);
-      this.clientes = [];
-    }
-    })
-  }
-  listarContas():void{
-    this.contaService.listarTodos().subscribe({
-      next: (contas: Conta[]) => {
-      this.contas = contas;
-    },
-    error: (erro) => {
-      console.log('Erro ao listar contas', erro);
-      this.contas = [];
-    }
-    })
-  }
 
   consultarCliente(): void {
+    const termoNormalizado = this.termoBusca.trim();
     const termoCpf = termoNormalizado.replace(/\D/g, '');
 
-    const termoNormalizado = this.termoBusca.trim();
     if (!termoNormalizado) {
       this.clienteSelecionado = null;
       return;
@@ -85,39 +62,30 @@ export class ClienteEspecifico implements OnInit {
 
 
     this.clienteService.buscarPorCPF(termoCpf).subscribe({
-        next:(cliente)=>{
-          if(cliente){
-            this.contaService.buscarPorCpfCliente(cliente.cpf).subscribe({
-              next: (conta)=>{
-                this.clienteSelecionado={
-                  ...cliente,
-                  saldo: conta.saldo,
-                  limite: conta.limite,
-                  numeroConta: conta.numeroConta,
-                  gerente: conta.gerente
-                }
-              }
-            })
-          }
-        }
-    })
+    next: (cliente: Cliente) => {
+      if (!cliente) {
+        this.clienteSelecionado = null;
+        return;
+      }
 
-    const cliente = this.clientes.find((item) => {
-      const cpfNumerico = item.cpf.replace(/\D/g, '');
-      return cpfNumerico.includes(termoCpf);
-    });
-
-    if (!cliente || !termoCpf) {
+      this.contaService.buscarPorCpfCliente(cliente.cpf).subscribe({
+        next: (conta: Conta) => {
+          this.clienteSelecionado = {
+            ...cliente,
+            saldo: conta.saldo,
+            limite: conta.limite,
+            numeroConta: conta.numeroConta,
+            gerente: conta.gerente
+          };
+        },
+        error: (erro: any) => console.error('Erro ao buscar conta', erro)
+      });
+    },
+    error: (erro: any) => {
+      console.error('Erro ao buscar cliente', erro);
       this.clienteSelecionado = null;
-      return;
     }
-
-    // const conta = this.contas.find((item) => item.cpfCliente === cliente.cpf);
-    // if (!conta) {
-    //   this.clienteSelecionado = null;
-    //   return;
-    // }
-
+  });
 
   }
 

@@ -37,7 +37,7 @@ export class AdminDashboard implements OnInit {
 
   ngOnInit(): void {
     this.listarGerentes();
-    this.contas=this.contasService.listarTodos();
+    //this.contas=this.contasService.listarTodos();
     this.fillManagersTable();
     this.fillInfoCards();
   }

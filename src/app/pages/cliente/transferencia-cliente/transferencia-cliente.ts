@@ -61,7 +61,7 @@ export class TransferenciaCliente implements OnInit{
   }
 
   get valorASacar():number{
-    
+
     return this.currencyFormatter.removeCurrencyMaskFromString(this.valorTransferencia);
   }
 
@@ -104,7 +104,7 @@ export class TransferenciaCliente implements OnInit{
 
   inicializarTransferencia(){
     this.saldo = this.contaCliente.saldo;
-    this.limite = this.contaCliente.limite;    
+    this.limite = this.contaCliente.limite;
   }
 
   handleValorTransferencia(e: any) {
@@ -128,7 +128,7 @@ export class TransferenciaCliente implements OnInit{
       this.corMensagem = 'red';
       return;
     }
-    
+
     if(this.numeroContaDestino.length < 4){
       this.mensagem = "Preencha a conta corretamente (4 dígitos)";
       this.tipoErro = 'erroCONTA';
@@ -140,19 +140,19 @@ export class TransferenciaCliente implements OnInit{
       this.mensagem="Valor inválido"
       this.tipoErro = 'erroTR'
       this.corMensagem = 'red';
-      return; 
+      return;
     }
 
     if(valor > (this.saldo+this.limite)){
       this.mensagem="Saldo insuficiente"
       this.tipoErro = 'erroTR';
       this.corMensagem = 'red';
-      return; 
+      return;
     }
 
 
 
-    const contaDestino = this.contaService.buscarPorNumeroConta(this.numeroContaDestino); 
+    const contaDestino = this.contaService.buscarPorNumeroConta(this.numeroContaDestino);
 
     console.log("Conta de destino: ", contaDestino);
     if(!contaDestino){
@@ -164,16 +164,16 @@ export class TransferenciaCliente implements OnInit{
       return;
     }
 
-    this.saldo= this.saldo - valor 
+    this.saldo= this.saldo - valor
     this.valorTransferencia = "0,00";
     this.numeroContaDestino = "";
 
-    contaDestino.saldo += valor;
+    //contaDestino.saldo += valor;
     this.contaCliente.saldo = this.saldo;
 
     const contaOrigem = this.contaCliente;
 
-    this.contaService.realizarTransferencia(contaOrigem, contaDestino, valor)
+    //this.contaService.realizarTransferencia(contaOrigem, contaDestino, valor)
 
     this.corMensagem = 'green';
     this.mensagem = "Transferência realizada com sucesso";

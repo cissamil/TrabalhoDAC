@@ -13,7 +13,7 @@ export class GerenteAutocadastroService {
   private readonly clientesService = inject(ClienteService);
   private readonly contaService = inject(ContaService);
 
-  private readonly pedidos: PedidoAutoCadastro[] = this.pedidosService.listarTodos();
+  private readonly pedidos: PedidoAutoCadastro[] = [];
   private readonly contasCriadas: Conta[] = [];
   private readonly emailsEnviados: EmailNotificacao[] = [];
 
@@ -44,10 +44,10 @@ export class GerenteAutocadastroService {
 
   aprovarPedido(cpf: string, gerente: GerenteAdmin): Conta | null {
     const pedido = this.pedidos.find((item) => item.cpfCliente === cpf && item.status === 'PENDENTE');
-    const cliente = this.clientesService.buscarClientePorCPF(cpf);
+    const cliente = this.clientesService.buscarPorCPF(cpf);
 
     console.log("CPF:", cpf);
-    console.log(`pedido: ${pedido?.id}. Cliente: ${cliente?.id}`);
+    //console.log(`pedido: ${pedido?.id}. Cliente: ${cliente?.id}`);
 
     if (!pedido || !cliente) {
       return null;
@@ -55,35 +55,36 @@ export class GerenteAutocadastroService {
 
     const senha:string = this.gerarSenhaTemporaria();
 
-    cliente.senha = senha;
+    //cliente.senha = senha;
 
-    this.clientesService.atualizar(cliente);
+    //this.clientesService.atualizar(cliente);
 
 
-    const contaGerada: Conta = {
-      id: new Date().getTime(),
-      cliente: cliente.nome,
-      cpfCliente: pedido.cpfCliente,
-      numeroConta: this.gerarNumeroConta(),
-      limite: this.calcularLimite(pedido.salario),
-      gerente: gerente.nome,
-      cpfGerente: gerente.cpf,
-      saldo: 0,
-      dataCriacao: new Date(),
-    };
+    //const contaGerada: Conta = {
+    //   id: new Date().getTime(),
+    //   //cliente: cliente.nome,
+    //   cpfCliente: pedido.cpfCliente,
+    //   numeroConta: this.gerarNumeroConta(),
+    //   limite: this.calcularLimite(pedido.salario),
+    //   gerente: gerente.nome,
+    //   cpfGerente: gerente.cpf,
+    //   saldo: 0,
+    //   dataCriacao: new Date(),
+    // };
 
     pedido.status = 'APROVADO';
     pedido.dataDecisao = new Date();
-    pedido.contaGerada = contaGerada;
+    //pedido.contaGerada = contaGerada;
 
     this.pedidosService.atualizar(pedido);
-    this.contasCriadas.push(contaGerada);
-    this.registrarEmailAprovacao(pedido, contaGerada, senha);
+    //this.contasCriadas.push(contaGerada);
+    //this.registrarEmailAprovacao(pedido, contaGerada, senha);
 
-    this.contaService.inserir(contaGerada);
+    //this.contaService.inserir(contaGerada);
 
     console.log("Senha gerada para o usuário: ", senha);
-    return contaGerada;
+    //return contaGerada;
+    return null;
   }
 
   recusarPedido(cpf: string, motivoRecusa: string): boolean {
