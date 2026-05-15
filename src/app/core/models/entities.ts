@@ -74,3 +74,15 @@ export interface Movimentacao{
     cpfClienteDestino:string;
     valor:number;
 }
+
+export interface Usuario{
+  userId: string;
+  email: string;
+  tipoUsuario: TipoUsuario;
+}
+
+export enum TipoUsuario{
+  CLIENTE,
+  GERENTE,
+  ADMIN
+}
