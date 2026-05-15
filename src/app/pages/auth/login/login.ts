@@ -4,13 +4,14 @@ import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { validateEmail } from '../../../core/shared/helpers';
 import { ResponseModal } from '../../../core/models/response-modal';
-import { Cliente, GerenteAdmin } from '../../../core/models/entities';
+//import { Cliente, Conta, GerenteAdmin } from '../../../core/models/entities';
 import {ProfileOptions } from '../../../core/models/navigationOptions';
-import { ContaService } from '../../../core/services/conta-services/conta-service';
-import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
-import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
+//import { ContaService } from '../../../core/services/conta-services/conta-service';
+//import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+//import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
-import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
+//import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
+import { AuthServices } from '../../../core/services/auth-services/auth-services';
 
 @Component({
   selector: 'app-login',
@@ -21,11 +22,12 @@ import { MovimentacaoService } from '../../../core/services/movimentacoes-servic
 export class Login implements OnInit{
   constructor(
     private router: Router,
-    private clienteService: ClienteService,
-    private gerenteService: GerenteService,
+    //private clienteService: ClienteService,
+    //private gerenteService: GerenteService,
     private clienteSessionService: ClienteSessionService,
-    private movimentacoesService: MovimentacaoService,
-    private contaService: ContaService
+    //private movimentacaoService: MovimentacaoService,
+    //private contaService: ContaService,
+    private authService: AuthServices
   ) {}
 
   ngOnInit(): void {
@@ -66,12 +68,19 @@ export class Login implements OnInit{
 
   }
 
-
   email: string = '';
   senha: string = '';
 
+    private exibirErro(mensagem: string) {
+      this.responseModal = {
+        title: "Falha no Acesso",
+        message: mensagem,
+        messageIcon: "error",
+        type: 'error'
+      };
+    }
   loginUser() {
-    // console.log(`Email inserido: ${this.email}. Senha inserida: ${this.senha}`);
+
 
     const verifyFields = this.validateFields();
 
@@ -82,48 +91,15 @@ export class Login implements OnInit{
         messageIcon: "error",
         type: 'error'
       };
-
       return;
-
     }
 
-    if(this.acessProfile == ProfileOptions.Cliente){
-      // console.log('validando dado cliente');
-      const result = this.clienteService.buscarClientePorEmailESenha(
-        this.email,
-        this.senha,
-      ).subscribe({
-        this.contaService.busc-
-      });
-      // console.log('result cliente: ', result);
-
-      this.handleResult(result, this.acessProfile);
-    }
-
-    if(this.acessProfile === ProfileOptions.Gerente){
-      // console.log('validando dado gerente');
-      const result = this.gerenteService.buscarGerentePorEmailESenhaETipo(
-        this.email,
-        this.senha,
-        "gerente"
-      );
-      // console.log('result ger: ', result);
-
-      this.handleResult(result, this.acessProfile);
-    }
-
-    if(this.acessProfile === ProfileOptions.Admin){
-      // console.log('validando dado admin');
-      const result = this.gerenteService.buscarGerentePorEmailESenhaETipo(
-        this.email,
-        this.senha,
-        "administrador"
-      );
-      // console.log('result adm: ', result);
-
-      this.handleResult(result, this.acessProfile);
-    }
-
+    this.authService.login(this.email,this.senha).subscribe({
+      next:() =>{
+        const token =this.authService.usuarioLogado;
+        console.log(token)
+      }
+    })
   }
 
   validateFields() : string | null{
@@ -138,47 +114,49 @@ export class Login implements OnInit{
   }
 
 
+  // handleResult(result : any, profile:ProfileOptions){
 
-  handleResult(result : any, profile:ProfileOptions){
+  //   if(result === undefined){
+  //     this.responseModal = {
+  //       title: "Campo Inválido",
+  //       message: 'Usuário não encontrado. Verifique suas informações e tente novamente',
+  //       messageIcon: "error",
+  //       type: 'error'
+  //     };
+  //     return;
+  //   }
 
-    if(result === undefined){
-      this.responseModal = {
-        title: "Campo Inválido",
-        message: 'Usuário não encontrado. Verifique suas informações e tente novamente',
-        messageIcon: "error",
-        type: 'error'
-      };
-      return;
-    }
+  //   if(profile == ProfileOptions.Cliente){
+  //     const cliente = result as Cliente;
 
-    if(profile == ProfileOptions.Cliente){
-      const cliente = result as Cliente;
+  //     const conta = this.contaService.buscarPorCpfCliente(cliente.cpf).subscribe({
 
-      const conta = this.contaService.buscarPorCpfCliente(cliente.cpf).subscribe({
+  //     });
+  //     const movimentacoes = this.movimentacaoService.buscarMovimentacoesPorCPFCliente(cliente.cpf);
 
-      });
-      const movimentacoes = this.movimentacaoService.buscarMovimentacoesPorCPFCliente(cliente.cpf);
+  //     this.clienteSessionService.setCliente(result as Cliente);
+  //     this.clienteSessionService.setContaCliente(conta!);
+  //     this.clienteSessionService.setMovimentacoesCliente(movimentacoes!);
 
-      this.clienteSessionService.setCliente(result as Cliente);
-      this.clienteSessionService.setContaCliente(conta!);
-      this.clienteSessionService.setMovimentacoesCliente(movimentacoes!);
+  //     this.redirect('/cliente-main-page');
+  //     return;
+  //   }
 
-      this.redirect('/cliente-main-page');
-      return;
-    }
+  //   if(profile == ProfileOptions.Gerente){
+  //     const gerente = result as GerenteAdmin;
+  //     this.gerenteService.setGerenteLogado(gerente);
+  //     this.redirect('/gerente-main-page');
+  //     return;
+  //   }
 
-    if(profile == ProfileOptions.Gerente){
-      const gerente = result as GerenteAdmin;
-      this.gerenteService.setGerenteLogado(gerente);
-      this.redirect('/gerente-main-page');
-      return;
-    }
-
-    if(profile == ProfileOptions.Admin){
-      const gerente = result as GerenteAdmin;
-      this.gerenteService.setGerenteLogado(gerente);
-      this.redirect('/admin-main-page');
-      return;
-    }
-  }
+  //   if(profile == ProfileOptions.Admin){
+  //     const gerente = result as GerenteAdmin;
+  //     this.gerenteService.setGerenteLogado(gerente).subscribe({
+  //       next:
+  //       this.redirect('/admin-main-page');
+  //     });
+  //     this.redirect('/admin-main-page');
+  //     return;
+  //   }
+  //}
 }

@@ -49,24 +49,10 @@ export class Registro {
   cidade: string = '';
   estado: string = '';
 
-  clientes: Cliente[]=[];
-
     ngOnInit():void{
       this.redirectToLoginPage();
-      this.listarClientes();
     }
 
-  listarClientes():void{
-    this.clienteService.listarTodos().subscribe({
-      next: (clientes: Cliente[]) => {
-      this.clientes = clientes;
-    },
-    error: (erro) => {
-      console.log('Erro ao listar clientes', erro);
-      this.clientes = [];
-    }
-    })
-  }
 
   redirectToLoginPage() {
     this.router.navigate(['/login']);
