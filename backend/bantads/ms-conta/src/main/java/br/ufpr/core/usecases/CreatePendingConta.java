@@ -3,7 +3,7 @@ package br.ufpr.core.usecases;
 import br.ufpr.core.domain.Conta;
 import br.ufpr.core.domain.TransferClienteDataInputData;
 import br.ufpr.core.ports.input.CreatePendingContaInputPort;
-import br.ufpr.core.ports.output.FindGerenteIdWithFewerClientesOutputPort;
+import br.ufpr.core.ports.output.FindGerenteWithFewerClientesIdOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
 import br.ufpr.core.domain.StatusConta;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.UUID;
 public class CreatePendingConta implements CreatePendingContaInputPort {
 
   private final SaveContaOutputPort saveContaOutputPort;
-  private final FindGerenteIdWithFewerClientesOutputPort findGerenteIdWithFewerClientesOutputPort;
+  private final FindGerenteWithFewerClientesIdOutputPort findGerenteWithFewerClientesIdOutputPort;
 
   @Override
   public void execute(TransferClienteDataInputData inputData) {
@@ -29,7 +29,7 @@ public class CreatePendingConta implements CreatePendingContaInputPort {
     Date today = new Date();
 
     String clienteId = inputData.getClienteId();
-    String gerenteId = findGerenteIdWithFewerClientesOutputPort.find();
+    String gerenteId = findGerenteWithFewerClientesIdOutputPort.find();
 
     validateGerenteId(gerenteId);
 

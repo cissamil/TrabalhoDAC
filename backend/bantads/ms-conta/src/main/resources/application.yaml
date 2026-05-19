@@ -18,6 +18,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc.batch_size: 50
+        order_inserts: true
+        order_updates: true
   datasource:
     url: jdbc:postgresql://localhost:5432/ms_conta_cud_db
     username: tads

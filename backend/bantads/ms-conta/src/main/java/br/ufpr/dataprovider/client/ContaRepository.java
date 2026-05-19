@@ -19,7 +19,22 @@ public interface ContaRepository extends JpaRepository<ContaEntity, Integer> {
       "ORDER BY COUNT(cliente_id) ASC LIMIT 1",
     nativeQuery = true
   )
-  String findGerenteIdWithFewerClientes();
+  String findGerenteWithFewerClientesId();
+
+
+  @Query(
+    value =
+      "SELECT gerente_id FROM contas " +
+      "WHERE status_conta = 'CONTA_APROVADA' " +
+      "GROUP BY gerente_id " +
+      "ORDER BY COUNT(cliente_id) DESC LIMIT 1",
+    nativeQuery = true
+  )
+  String findGerenteWithMostClientesId();
+
+  List<ContaEntity> findByGerenteId(String gerenteId);
+
+  ContaEntity findFirstByGerenteId(String gerenteId);
 
   boolean existsByNumeroConta(Integer numeroConta);
   ContaEntity findByNumeroConta(String numeroConta);
