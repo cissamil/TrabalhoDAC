@@ -18,7 +18,7 @@ public class GerenteEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column(name = "gerente_id")
+  @Column(name = "gerente_id", unique = true)
   private String gerenteId;
 
   // @CPF @TODO REMOVER ESSE COMENTÁRIO PARA QUE HAJA VALIDAÇÃO DE CPF QUANDO TERMINAR DE TESTAR

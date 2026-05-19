@@ -17,6 +17,10 @@ public class AssignNewGerenteToContaUseCase implements AssignNewGerenteToContaIn
   private final FindFirstContaByGerenteIdOutputPort findFirstContaByGerenteIdOutputPort;
   private final FindGerenteWithMostClientesIdOutputPort findGerenteIdWithMostClientesOutputPort;
 
+
+  // @TODO FAZER COM QUE A CONTA ADICIONADA SEJA A COM MENOR SALDO POSITIVO CASO EMPATE
+  // @TODO FAZER COM QUE O USECASE ACEITE O PRIMEIRO GERENTE SEM NENHUMA CONTA
+
   @Override
   public void execute(AssignGerenteToContaInputData inputData) {
 
@@ -33,7 +37,6 @@ public class AssignNewGerenteToContaUseCase implements AssignNewGerenteToContaIn
     contaByNewGerente.setGerenteId(gerenteId);
 
     saveContaOutputPort.save(contaByNewGerente);
-
 
 
   }

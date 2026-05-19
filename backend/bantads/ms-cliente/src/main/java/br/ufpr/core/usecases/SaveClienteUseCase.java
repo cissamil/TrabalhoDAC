@@ -5,7 +5,7 @@ import br.ufpr.core.ports.input.SaveClienteInputPort;
 import br.ufpr.core.ports.output.FindClienteByClienteIdOutputPort;
 import br.ufpr.core.ports.output.FindClienteByCpfOutputPort;
 import br.ufpr.core.ports.output.SaveClienteOutputPort;
-import br.ufpr.core.ports.output.PublishCreatedClienteAccountEvent;
+import br.ufpr.core.ports.output.PublishCreatedClienteAccountEventOutputPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public class SaveClienteUseCase implements SaveClienteInputPort {
   private final FindClienteByCpfOutputPort findClienteByCpfOutputPort;
   private final FindClienteByClienteIdOutputPort findClienteByClienteIdOutputPort;
 
-  private final PublishCreatedClienteAccountEvent publishCreatedClienteAccountEvent;
+  private final PublishCreatedClienteAccountEventOutputPort publishCreatedClienteAccountEventOutputPort;
 
   @Override
   public void execute (Cliente cliente){
@@ -32,7 +32,7 @@ public class SaveClienteUseCase implements SaveClienteInputPort {
 
     saveClienteOutputPort.save(cliente);
 
-    publishCreatedClienteAccountEvent.send(cliente);
+    publishCreatedClienteAccountEventOutputPort.publish(cliente);
   }
 
   private void validateCliente(Cliente cliente) {

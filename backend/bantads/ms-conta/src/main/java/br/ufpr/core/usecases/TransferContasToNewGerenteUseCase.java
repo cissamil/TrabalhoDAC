@@ -16,6 +16,8 @@ public class TransferContasToNewGerenteUseCase implements TransferContasToNewGer
   private final FindContasByGerenteIdOutputPort findContasByGerenteIdOutputPort;
   private final FindGerenteWithFewerClientesIdOutputPort findGerenteWithFewerClientesIdOutputPort;
 
+  // @TODO IMPEDIR QUE O ÚLTIMO GERENTE DO BANCO SEJA REMOVIDO
+
   @Override
   public void execute(TransferContasToGerenteInputData inputData) {
     String gerenteId = inputData.getGerenteId();

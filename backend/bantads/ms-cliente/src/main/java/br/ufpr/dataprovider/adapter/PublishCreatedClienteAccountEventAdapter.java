@@ -2,7 +2,7 @@ package br.ufpr.dataprovider.adapter;
 
 import br.ufpr.config.RabbitMQConfigMsCliente;
 import br.ufpr.core.domain.Cliente;
-import br.ufpr.core.ports.output.PublishCreatedClienteAccountEvent;
+import br.ufpr.core.ports.output.PublishCreatedClienteAccountEventOutputPort;
 import br.ufpr.model.message.TransferClienteDataSagaMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PublishCreatedClienteAccountAdapter implements PublishCreatedClienteAccountEvent {
+public class PublishCreatedClienteAccountEventAdapter implements PublishCreatedClienteAccountEventOutputPort {
 
   @Autowired
   private final RabbitTemplate rabbitTemplate;
   private final ObjectMapper objectMapper;
 
   @Override
-  public void send(Cliente cliente){
+  public void publish(Cliente cliente){
 
     TransferClienteDataSagaMessage transferClienteDataSagaMessage = new TransferClienteDataSagaMessage();
 

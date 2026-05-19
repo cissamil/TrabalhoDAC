@@ -2,7 +2,6 @@ package br.ufpr.dataprovider.mapper;
 
 import br.ufpr.core.domain.Gerente;
 import br.ufpr.dataprovider.adapter.domain.GerenteEntity;
-import br.ufpr.entrypoint.response.GerenteResponse;
 import org.springframework.stereotype.Component;
 
 @Component

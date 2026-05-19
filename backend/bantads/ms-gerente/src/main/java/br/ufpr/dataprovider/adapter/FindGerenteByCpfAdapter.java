@@ -1,7 +1,7 @@
 package br.ufpr.dataprovider.adapter;
 
 import br.ufpr.core.domain.Gerente;
-import br.ufpr.core.ports.output.FindGerenteByGerenteIdOutputPort;
+import br.ufpr.core.ports.output.FindGerenteByCpfOutputPort;
 import br.ufpr.dataprovider.adapter.domain.GerenteEntity;
 import br.ufpr.dataprovider.client.GerenteRepository;
 import br.ufpr.dataprovider.mapper.GerenteEntityMapper;
@@ -10,22 +10,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class FindGerenteByGerenteIdAdapter implements FindGerenteByGerenteIdOutputPort {
+public class FindGerenteByCpfAdapter implements FindGerenteByCpfOutputPort {
 
   private final GerenteRepository repository;
   private final GerenteEntityMapper mapper;
 
   @Override
-  public Gerente find(String gerenteId) {
+  public Gerente find(String cpf) {
 
-    GerenteEntity entity = repository.findByGerenteId(gerenteId);
+    GerenteEntity entity = repository.findByCpf(cpf);
 
     return mapper.toDomain(entity);
-
   }
 
   @Override
-  public boolean exists(String gerenteId){
-    return repository.existsByGerenteId(gerenteId);
+  public boolean exists(String cpf) {
+    return repository.existsByCpf(cpf);
   }
 }
