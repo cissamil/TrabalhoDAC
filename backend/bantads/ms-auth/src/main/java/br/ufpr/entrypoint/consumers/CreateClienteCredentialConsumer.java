@@ -2,7 +2,7 @@ package br.ufpr.entrypoint.consumers;
 
 import br.ufpr.config.RabbitMQConfigMsAuth;
 import br.ufpr.core.domain.TransferClienteIdInputData;
-import br.ufpr.core.ports.input.CreateClienteCredentialInputPort;
+import br.ufpr.core.ports.input.PrepareClienteCredentialInputPort;
 import br.ufpr.model.message.TransferClienteIdSagaMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CreateCredentialConsumer {
+public class CreateClienteCredentialConsumer {
 
   private final ObjectMapper objectMapper;
-  private final CreateClienteCredentialInputPort createClienteCredentialInputPort;
+  private final PrepareClienteCredentialInputPort prepareClienteCredentialInputPort;
 
   @RabbitListener(queues = RabbitMQConfigMsAuth.APPROVED_ACCOUNT_QUEUE)
   public void criarCredencial(String message) throws JsonProcessingException {
@@ -30,7 +30,7 @@ public class CreateCredentialConsumer {
 
       System.out.println("Id de cliente recebido. Gerando conta. Id: " + inputData.getClienteId());
 
-      createClienteCredentialInputPort.execute(inputData);
+      prepareClienteCredentialInputPort.execute(inputData);
 
     } catch (Exception e){
       throw new AmqpRejectAndDontRequeueException(e);

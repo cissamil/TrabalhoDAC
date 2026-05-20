@@ -1,12 +1,9 @@
 package br.ufpr.core.usecases;
 
-import br.ufpr.core.domain.ClienteOutputData;
-import br.ufpr.core.domain.TransferClienteIdInputData;
-import br.ufpr.core.domain.Usuario;
-import br.ufpr.core.ports.input.CreateClienteCredentialInputPort;
+import br.ufpr.core.domain.*;
+import br.ufpr.core.ports.input.PrepareClienteCredentialInputPort;
+import br.ufpr.core.ports.input.CreateUserCredentialInputPort;
 import br.ufpr.core.ports.output.ConsultClienteOutputPort;
-import br.ufpr.core.ports.output.SaveUsuarioCredentialOutputPort;
-import br.ufpr.core.domain.TipoUsuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,13 +13,13 @@ import java.security.SecureRandom;
 
 @Component
 @RequiredArgsConstructor
-public class CreateClienteCredentialUseCase implements CreateClienteCredentialInputPort {
+public class PrepareClienteCredentialUseCase implements PrepareClienteCredentialInputPort {
 
   @Autowired
   private final PasswordEncoder passwordEncoder;
 
   private final ConsultClienteOutputPort consultClienteOutputPort;
-  private final SaveUsuarioCredentialOutputPort saveUsuarioCredentialOutputPort;
+  private final CreateUserCredentialInputPort createUserCredentialInputPort;
 
   @Override
   public void execute(TransferClienteIdInputData inputData) {
@@ -34,17 +31,16 @@ public class CreateClienteCredentialUseCase implements CreateClienteCredentialIn
 
     validateEmailCliente(clienteEmail);
 
-    Usuario newUsuario = new Usuario();
+    UserInputData userInputData = new UserInputData();
 
     String senhaUsuario = generateNewSenha();
 
-    newUsuario.setUserId(clienteId);
-    newUsuario.setEmail(clienteEmail);
-    newUsuario.setSenha(senhaUsuario);
-    newUsuario.setTipoUsuario(TipoUsuario.CLIENTE);
+    userInputData.setUserId(clienteId);
+    userInputData.setSenha(senhaUsuario);
+    userInputData.setEmail(clienteEmail);
+    userInputData.setTipoUsuario(TipoUsuario.CLIENTE);
 
-    saveUsuarioCredentialOutputPort.save(newUsuario);
-
+    createUserCredentialInputPort.execute(userInputData);
   }
 
   private static void validateEmailCliente(String clienteEmail) {

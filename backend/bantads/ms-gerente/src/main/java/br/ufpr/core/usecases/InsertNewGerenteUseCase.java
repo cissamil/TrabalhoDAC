@@ -1,13 +1,11 @@
 package br.ufpr.core.usecases;
 
+import br.ufpr.core.domain.GerenteEventPublisher;
 import br.ufpr.core.domain.Gerente;
 import br.ufpr.core.domain.GerenteInputData;
 import br.ufpr.core.domain.TipoGerente;
 import br.ufpr.core.ports.input.InsertNewGerenteInputPort;
-import br.ufpr.core.ports.output.FindGerenteByCpfOutputPort;
-import br.ufpr.core.ports.output.FindGerenteByGerenteIdOutputPort;
-import br.ufpr.core.ports.output.PublishCreatedGerenteAccountEventOutputPort;
-import br.ufpr.core.ports.output.SaveGerenteOutputPort;
+import br.ufpr.core.ports.output.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +18,8 @@ public class InsertNewGerenteUseCase implements InsertNewGerenteInputPort {
   private final SaveGerenteOutputPort saveGerenteOutputPort;
   private final FindGerenteByCpfOutputPort findGerenteByCpfOutputPort;
   private final FindGerenteByGerenteIdOutputPort findGerenteByGerenteIdOutputPort;
-  private final PublishCreatedGerenteAccountEventOutputPort publishCreatedGerenteAccountEventOutputPort;
+  private final PublishAssignContaToGerenteEventOutputPort publishAssignContaToGerenteEventOutputPort;
+  private final PublishCreateGerenteCredentialEventOutputPort publishCreateGerenteCredentialEventOutputPort;
 
   @Override
   public void execute(GerenteInputData inputData) {
@@ -39,9 +38,12 @@ public class InsertNewGerenteUseCase implements InsertNewGerenteInputPort {
 
     gerente.setGerenteId(gerenteId);
 
+    String senha = inputData.getSenha();
+
 
     saveGerenteOutputPort.save(gerente);
-    publishCreatedGerenteAccountEventOutputPort.publish(gerente);
+    publishAssignContaToGerenteEventOutputPort.publish(gerente);
+    publishEventMessage(gerente, senha);
 
   }
 
@@ -61,5 +63,16 @@ public class InsertNewGerenteUseCase implements InsertNewGerenteInputPort {
     }
 
     return gerenteId;
+  }
+
+  private void publishEventMessage(Gerente gerente, String senha){
+
+    GerenteEventPublisher eventPublisher = new GerenteEventPublisher();
+
+    eventPublisher.setGerenteId(gerente.getGerenteId());
+    eventPublisher.setEmail(gerente.getEmail());
+    eventPublisher.setSenha(senha);
+
+    publishCreateGerenteCredentialEventOutputPort.publish(eventPublisher);
   }
 }

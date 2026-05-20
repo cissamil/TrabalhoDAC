@@ -2,7 +2,7 @@ package br.ufpr.dataprovider.adapter;
 
 import br.ufpr.config.RabbitMQConfigMsGerente;
 import br.ufpr.core.domain.Gerente;
-import br.ufpr.core.ports.output.PublishCreatedGerenteAccountEventOutputPort;
+import br.ufpr.core.ports.output.PublishAssignContaToGerenteEventOutputPort;
 import br.ufpr.model.message.AssignGerenteToContaMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PublishCreatedGerenteAccountEventAdapter implements PublishCreatedGerenteAccountEventOutputPort {
+public class PublishAssignContaToGerenteEventAdapter implements PublishAssignContaToGerenteEventOutputPort {
 
   @Autowired
   private final RabbitTemplate rabbitTemplate;

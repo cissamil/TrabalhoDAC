@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GerenteInputData {
-  private String nome;
+
   private String email;
-  private String cpf;
   private String senha;
+  private String gerenteId;
 }

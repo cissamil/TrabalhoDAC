@@ -17,6 +17,9 @@ public class RabbitMQConfigMsGerente {
   public static final String TRANSFER_ACCOUNTS_TO_MANAGER_EXCHANGE = "fluxo.remover-gerente";
   public static final String TRANSFER_ACCOUNTS_TO_MANAGER_QUEUE = "atribuir-contas";
 
+  public static final String GENERATE_MANAGER_CREDENTIAL_EXCHANGE = "fluxo.credencial-gerente";
+  public static final String GENERATE_MANAGER_CREDENTIAL_QUEUE = "gerar-credencial";
+
 
   @Bean
   public DirectExchange assignAccountToNewManagerExchange(){
@@ -39,6 +42,16 @@ public class RabbitMQConfigMsGerente {
   }
 
   @Bean
+  public DirectExchange generateManagerCredentialExchange(){
+    return new DirectExchange(GENERATE_MANAGER_CREDENTIAL_EXCHANGE);
+  }
+
+  @Bean
+  public Queue generateManagerCredentialQueue(){
+    return new Queue(GENERATE_MANAGER_CREDENTIAL_QUEUE, true, false, false);
+  }
+
+  @Bean
   public Binding bindingAssignAccountToNewManagerChannel(Queue assignAccountToNewManagerQueue, DirectExchange assignAccountToNewManagerExchange) {
     return BindingBuilder.bind(assignAccountToNewManagerQueue).to(assignAccountToNewManagerExchange).with("fluxo.atribuir-conta.key");
   }
@@ -46,6 +59,11 @@ public class RabbitMQConfigMsGerente {
   @Bean
   public Binding bindingTransferAccountsToNewManagerChannel(Queue transferAccountsToNewManagerQueue, DirectExchange transferAccountsToNewManagerExchange) {
     return BindingBuilder.bind(transferAccountsToNewManagerQueue).to(transferAccountsToNewManagerExchange).with("fluxo.atribuir-contas.key");
+  }
+
+  @Bean
+  public Binding bindingGenerateManagerCredentialChannel(Queue generateManagerCredentialQueue, DirectExchange generateManagerCredentialExchange) {
+    return BindingBuilder.bind(generateManagerCredentialQueue).to(generateManagerCredentialExchange).with("fluxo.gerar-credencial.key");
   }
 
 
