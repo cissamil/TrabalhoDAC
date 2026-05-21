@@ -38,8 +38,8 @@ public class RabbitMQConfigMsAuth {
   }
 
   @Bean
-  public Binding bindingApprovedAccountChannel(Queue registerQueue, DirectExchange registerExchange) {
-    return BindingBuilder.bind(registerQueue).to(registerExchange).with("fluxo.conta-aprovada.key");
+  public Binding bindingApprovedAccountChannel(Queue approvedAccountQueue, DirectExchange approvedAccountExchange) {
+    return BindingBuilder.bind(approvedAccountQueue).to(approvedAccountExchange).with("fluxo.conta-aprovada.key");
   }
 
   @Bean

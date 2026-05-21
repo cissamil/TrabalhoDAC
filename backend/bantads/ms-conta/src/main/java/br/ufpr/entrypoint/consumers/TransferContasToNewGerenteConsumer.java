@@ -18,7 +18,7 @@ public class TransferContasToNewGerenteConsumer {
   private final ObjectMapper objectMapper;
   private final TransferContasToNewGerenteInputPort transferContasToNewGerenteInputPort;
 
-  @RabbitListener(queues = RabbitMQConfigMsConta.TRANSFER_ACCOUNTS_TO_MANAGER_EXCHANGE)
+  @RabbitListener(queues = RabbitMQConfigMsConta.TRANSFER_ACCOUNTS_TO_MANAGER_QUEUE)
   public void receiveEvent(String message) throws JsonProcessingException{
 
     try{
