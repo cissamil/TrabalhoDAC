@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { Usuario } from '../../models/entities';
+//import { Usuario } from '../../models/entities';
 
 const AUTH_TOKEN_KEY = "auth_token";
 
@@ -28,10 +28,10 @@ export class AuthServices {
     return token;
   }
 
-  login(email:string, senha:string): Observable<{token:string}>{
+  login(userEmail:string, userPassword:string): Observable<{token:string}>{
     const credentals = {
-      email: email,
-      senha: senha
+      userEmail: userEmail,
+      userPassword: userPassword
     }
     return this.httpClient.post<{token:string}>(
       `${this.AUTH_URL}/login`,
