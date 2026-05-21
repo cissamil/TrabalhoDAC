@@ -15,7 +15,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class ContaService {
 
-  CONTA_URL = "http://localhost:8080"
+  CONTA_URL = "http://localhost:8080/contas"
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -86,7 +86,7 @@ export class ContaService {
     // }
   }
 
-  realizarTransferencia(contaOrigem: Conta, contaDestino: Conta, valor:number){
+  //realizarTransferencia(contaOrigem: Conta, contaDestino: Conta, valor:number){
   // try{
   //   const contas = this.listarTodos();
   //   this.listarConta(contaDestino.numeroConta);
@@ -103,8 +103,8 @@ export class ContaService {
   // }catch(e){
   //   console.error("Erro ao atualizar conta ", e);
   // }
-  return []
-  }
+  //return []
+  //}
 
   // registrarMovimentacao(valor: number, contaOrigem: Conta, contaDestino:Conta){
   //   const movimentacao: Movimentacao = {
@@ -155,16 +155,21 @@ export class ContaService {
 
   buscarPorCpfCliente(cpf: string):Observable<Conta>{
       return this.httpClient.get<Conta>(
-        this.CONTA_URL + "/cliente/cpf" + cpf,
+        this.CONTA_URL + "/cliente/" + cpf,
         this.httpOptions);
     }
-
-  buscarPorNumeroConta(numero: string){
-    const numeroConta = Number(numero);
-    const contas = this.listarTodos();
-    return []
-    //contas.find((conta: Conta) => conta.numeroConta === numeroConta);
-  }
+  buscarPorId(id: number): Observable<Conta> {
+      return this.httpClient.get<Conta>(
+        this.CONTA_URL + "/" + id,
+        this.httpOptions
+      );
+    }
+  // buscarPorNumeroConta(numero: string){
+  //   const numeroConta = Number(numero);
+  //   //const contas = this.listarTodos();
+  //   return []
+  //   //contas.find((conta: Conta) => conta.numeroConta === numeroConta);
+  // }
 
   // contarContasGerente(cpfGerente: string): number {
   //   const contas = this.listarTodos();
@@ -183,3 +188,18 @@ export class ContaService {
   // }
 
 }
+
+// // 1. Para listagens administrativas
+// listarTodos(): Observable<Conta[]> { ... }
+
+// // 2. Para a busca do painel do Cliente após o Login
+// buscarPorCpfCliente(cpf: string): Observable<Conta> { ... }
+
+// // 3. Para buscar a conta destino na tela de transferência
+// buscarPorNumeroConta(numero: number): Observable<Conta> { ... }
+
+// // 4. A rota que dispara a transferência e faz toda a mágica no Back
+// realizarTransferencia(numeroOrigem: number, numeroDestino: number, valor: number): Observable<any> { ... }
+
+// // 5. Caso precise atualizar dados da conta (como alterar o limite)
+// atualizarConta(conta: Conta): Observable<Conta> { ... }

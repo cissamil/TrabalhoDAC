@@ -58,12 +58,14 @@ export class ClientePerfil implements OnInit {
   }
 
   initalizeProfileData() {
-    this.updatedCliente = this.cliente;
-    const enderecoParts = this.cliente.endereco.split(' - ');
-    this.cep = enderecoParts[0] || '';
-    this.rua = enderecoParts[1] || '';
-    this.cidade = enderecoParts[2] || '';
-    this.estado = enderecoParts[3] || '';
+    this.updatedCliente = {...this.cliente};
+    if (this.cliente.endereco) {
+      const enderecoParts = this.cliente.endereco.split(' - ');
+      this.cep = enderecoParts[0] || '';
+      this.rua = enderecoParts[1] || '';
+      this.cidade = enderecoParts[2] || '';
+      this.estado = enderecoParts[3] || '';
+    }
 
     // Formata o salário para exibição inicial
     this.salario = this.currencyFormatter.applyCurrencyMaskOnNumber(
@@ -104,7 +106,7 @@ export class ClientePerfil implements OnInit {
     if(this.contaCliente.saldo < 0){
 
       const saldoPositivo = this.contaCliente.saldo * -1;
-      
+
       if(novoLimite < saldoPositivo){
         novoLimite = saldoPositivo;
       }
@@ -124,7 +126,7 @@ export class ClientePerfil implements OnInit {
     this.clienteSessionService.setContaCliente(this.contaCliente);
 
     this.contaService.atualizarConta(this.contaCliente);
-  
+
 
     this.responseModal = {
       title: "Sucesso",
@@ -138,15 +140,15 @@ export class ClientePerfil implements OnInit {
   validateFields(): string | null{
 
     if(!this.cliente.nome) return "Preencha o nome corretamente";
-    
+
     if(!this.cliente.email) return "Preencha o email corretamente";
 
     if(!this.cliente.cpf) return "Preencha o CPF corretamente";
-    
+
     if(!this.cliente.telefone) return "Preencha o telefone corretamente";
 
     if(this.salario === "0,00") return "Preencha o campo de salário";
-    
+
     if(!this.cep) return "Preencha o o CEP corretamente";
 
     if(!this.rua) return "Preencha a rua corretamente";
@@ -159,7 +161,7 @@ export class ClientePerfil implements OnInit {
 
     if(!validateCEP(this.cep)) return "Preencha o cep corretamente";
 
-    
+
     return null;
 
   }

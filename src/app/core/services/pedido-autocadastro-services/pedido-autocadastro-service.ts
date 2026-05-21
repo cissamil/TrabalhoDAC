@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PedidoAutoCadastro } from '../../models/entities';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CONTAS_MOCK, PEDIDOS_MOCK } from '../../mock/mock-data';
+//import { CONTAS_MOCK, PEDIDOS_MOCK } from '../../mock/mock-data';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 //const LS_CHAVE = 'pedidos-conta';
@@ -11,7 +11,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class PedidoAutoCadastroService {
 
-  AUTOCADASTRO_URL ="http://localhost:8080"
+  AUTOCADASTRO_URL ="http://localhost:8080/autocadastro"
 
   httpOptions={
     headers: new HttpHeaders({
@@ -22,10 +22,10 @@ export class PedidoAutoCadastroService {
   //private pedidosSubject: BehaviorSubject<PedidoAutoCadastro[]>;
   //public pedidos$: Observable<PedidoAutoCadastro[]>
 
-  constructor(private httpClient : HttpClient){
+  constructor(private httpClient : HttpClient){}
    // if(!localStorage[LS_CHAVE]){
      // localStorage[LS_CHAVE] = JSON.stringify(PEDIDOS_MOCK);
-    }
+    //}
 
     // localStorage[LS_CHAVE] = JSON.stringify(PEDIDOS_MOCK);
 
@@ -44,7 +44,7 @@ export class PedidoAutoCadastroService {
   //   );
     //localStorage[LS_CHAVE] = JSON.stringify(pedidos);
     //this.pedidosSubject.next(pedidos);
-  //}
+
 
   listarTodos() : Observable<PedidoAutoCadastro[]>{
     return this.httpClient.get<PedidoAutoCadastro[]>(
@@ -53,7 +53,11 @@ export class PedidoAutoCadastroService {
   }
 
   inserir(pedido: PedidoAutoCadastro): Observable<PedidoAutoCadastro>{
-
+    return this.httpClient.post<PedidoAutoCadastro>(
+          this.AUTOCADASTRO_URL,
+          JSON.stringify(pedido),
+          this.httpOptions
+        );
     // console.log(`
     //   Pedido a inserir:
     //   Nome Cliente: ${pedido.nomeCliente},
@@ -68,14 +72,16 @@ export class PedidoAutoCadastroService {
     //pedidos.push(pedido);
     //this.atualizarDados(pedidos);
 
-    return this.httpClient.post<PedidoAutoCadastro>(
-      this.AUTOCADASTRO_URL,
-      JSON.stringify(pedido),
-      this.httpOptions
-    );
+
   }
 
   atualizar(pedido: PedidoAutoCadastro) : Observable<PedidoAutoCadastro>{
+    return this.httpClient.put<PedidoAutoCadastro>(
+      this.AUTOCADASTRO_URL + "/" + pedido.id,
+      JSON.stringify(pedido),
+      this.httpOptions
+    )}
+
     // console.log(`
     //   Pedido a inserir:
     //   Cliente: ${pedido.nomeCliente},
@@ -92,13 +98,5 @@ export class PedidoAutoCadastroService {
     //   pedidos[index] = pedido;
     //   this.atualizarDados(pedidos);
     // }
-    return this.httpClient.put<PedidoAutoCadastro>(
-      this.AUTOCADASTRO_URL,
-      JSON.stringify(pedido),
-      this.httpOptions
-    )
-  }
-
-
 
 }

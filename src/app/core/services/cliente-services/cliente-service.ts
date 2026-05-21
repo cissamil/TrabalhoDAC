@@ -12,7 +12,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class ClienteService {
 
-  CLIENTE_URL="http://localhost:8080"
+  CLIENTE_URL="http://localhost:8080/clientes"
 
   httpOptions={
     headers: new HttpHeaders({
@@ -40,14 +40,14 @@ export class ClienteService {
     //console.log(`MOCK de clientes inseridos, quantidade: ${clientes.length}`);
   //}
 
-  private atualizarDados(clientes: Cliente[]){
+  // private atualizarDados(clientes: Cliente[]){
 
-    return this.httpClient.post<Cliente>(
-    this.CLIENTE_URL,
-    JSON.stringify(clientes),
-    this.httpOptions
-  );
-  }
+  //   return this.httpClient.post<Cliente>(
+  //   this.CLIENTE_URL,
+  //   JSON.stringify(clientes),
+  //   this.httpOptions
+  // );
+  // }
 
   listarTodos() : Observable<Cliente[]>{
     return this.httpClient.get<Cliente[]>(
@@ -59,7 +59,7 @@ export class ClienteService {
   inserir(cliente:Cliente): Observable<Cliente>{
 
     return this.httpClient.post<Cliente>(
-      this.CLIENTE_URL,
+      this.CLIENTE_URL + '/autocadastro/' ,
       JSON.stringify(cliente),
       this.httpOptions
     );
@@ -113,6 +113,12 @@ export class ClienteService {
   // }
 
   atualizar(cliente: Cliente) : Observable<Cliente>{
+    return this.httpClient.put<Cliente>(
+      this.CLIENTE_URL + "/" + cliente.id,
+      JSON.stringify(cliente),
+      this.httpOptions
+    );
+  }
     // console.log(`
     //   Dados a atualizar:
     //   Id: ${cliente.id}
@@ -129,12 +135,7 @@ export class ClienteService {
     //   clientes[index] = cliente;
     //   this.atualizarDados(clientes);
     // }
-    return this.httpClient.put<Cliente>(
-      this.CLIENTE_URL + "/" + cliente.id,
-      JSON.stringify(cliente),
-      this.httpOptions
-    );
-  }
+
   remover(id: number) : Observable<Cliente>{
     // const clientes = this.listarTodos()
     //   .filter((c) => c.id !== id);
@@ -167,13 +168,10 @@ export class ClienteService {
   });
 }
 
-
   buscarPorCPF(cpf: string): Observable<Cliente> {
     return this.httpClient.get<Cliente>(
       this.CLIENTE_URL + "/cpf/" + cpf,
       this.httpOptions);
   }
-
-
 
 }

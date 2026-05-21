@@ -7,6 +7,11 @@ import { ManagerListTableData } from '../../../core/models/table-data';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 
+export interface DashboardGerenciarGerentes {
+  totalGerentes: number;
+  totalContas: number;
+  mediaPorGerente: number;
+}
 @Component({
   selector: 'app-admin-gerenciar-gerentes',
   imports: [MatTableModule, NgxMaskPipe, FormsModule, NgxMaskDirective],
@@ -19,19 +24,20 @@ export class AdminGerenciarGerentes implements OnInit {
     private contaService: ContaService,
   ) {}
 
-  calcularCards(): void {
-    this.totalGerentes = this.gerentes.length;
-    this.totalContas = this.contas.length;
-    this.mediaPorGerente = this.totalGerentes > 0 ? this.totalContas / this.totalGerentes : 0;
-  }
+  // calcularCards(): void {
+  //   this.totalGerentes = this.gerentes.length;
+  //   this.totalContas = this.contas.length;
+  //   this.mediaPorGerente = this.totalGerentes > 0 ? this.totalContas / this.totalGerentes : 0;
+  // }
 
   gerentes: GerenteAdmin[] = [];
-  contas: Conta[] = [];
+  //contas: Conta[] = [];
   MANAGERS_TABLE: ManagerListTableData[] = [];
+  dashboardGerenciarGerentes!: DashboardGerenciarGerentes;
 
-  totalGerentes: number = 0;
-  totalContas: number = 0;
-  mediaPorGerente: number = 0;
+  // totalGerentes: number = 0;
+  // totalContas: number = 0;
+  // mediaPorGerente: number = 0;
   exibirFormularioNovoGerente = false;
   mensagemErro = '';
   mensagemSucesso = '';
@@ -45,7 +51,7 @@ export class AdminGerenciarGerentes implements OnInit {
     senha: '',
   };
 
-  displayedcColunas: string[] = [
+  displayedColunas: string[] = [
     'Nome',
     'CPF',
     'E-mail',
@@ -55,8 +61,10 @@ export class AdminGerenciarGerentes implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.listarContas();
+    // this.listarContas();
     this.listarGerentes();
+    //this.atualizarTela();
+    this.carregarDashboardGerenciarGerentes();
   }
 
   toggleFormularioNovoGerente(): void {
@@ -85,42 +93,63 @@ export class AdminGerenciarGerentes implements OnInit {
   //   this.MANAGERS_TABLE = [...novosDados];
   // }
 
-  private atualizarTela(): void {
-    this.listarGerentes();
-    this.listarContas();
-    //this.fillGerentesTable();
-    this.calcularCards();
-  }
+  // private atualizarTela(): void {
+  //   this.listarGerentes();
+  //   //this.listarContas();
+  //   //this.fillGerentesTable();
+
+  // }
 
   listarGerentes(): void{
     this.gerenteService.listarTodos().subscribe({
       next:(data: GerenteAdmin[])=>{
         //this.gerentes=data.filter((item)=>item.tipo==='gerente');
-        //this.fillGerentesTable();
-        this.calcularCards();
+        this.gerentes=data;
+        this.MANAGERS_TABLE = data.map(gerente => ({
+        id: gerente.id,
+        nome: gerente.nome,
+        cpf: gerente.cpf,
+        email: gerente.email,
+        telefone: gerente.telefone,
+        // deixei 0 temporariamente para sumir o erro, mas dps pode ser substituido por gerente.quantidadeContas.
+        quantidadeClientes: (gerente as any).quantidadeContas || 0
+      }));
       },
       error: (erro)=>{
         console.error (' erro ao listar os gerentes ', erro);
-        this.gerentes=[];
-        //this.fillGerentesTable();
-        this.calcularCards();
-
+        this.MANAGERS_TABLE = [];
       }
     })
   }
+//-----------retirei esse método pq ele só carregaria todas as contas,
+// ----------baixando um tantao de contas e deixando pesado
+//-----------o atributo quantidadeContas calculado viria direto do SQL,
+// ---------puxa pelo listarGerentes() e no endpoint /gerentes/dashboard
+    // listarContas():void{
+    //   this.contaService.listarTodos().subscribe({
+    //     next:(data: Conta[])=>{
+    //       this.contas=data;
+    //     },
+    //     error: (erro: any)=>{
+    //       console.log('Erro ao listar contas', erro);
+    //       this.contas=[];
+    //     }
+    //   })
+    // }
 
-    listarContas():void{
-      this.contaService.listarTodos().subscribe({
-        next:(contas: Conta[])=>{
-          this.contas=contas;
-        },
-        error: (erro: any)=>{
-          console.log('Erro ao listar contas', erro);
-          this.contas=[];
-        }
-      })
-    }
-
+  carregarDashboardGerenciarGerentes(): void {
+    // Fazemos o subscribe no serviço purista. O Java processa a matemática e nos dá o resultado.
+    this.gerenteService.obterDashboardGerenciarGerentes().subscribe({
+      next: (dadosProntos: DashboardGerenciarGerentes) => {
+        this.dashboardGerenciarGerentes = dadosProntos;
+        // Agora, no seu HTML, os cards vão ler direto de:
+        // {{ estatisticas?.totalGerentes }}, {{ estatisticas?.totalContas }}, etc.
+      },
+      error: (erro) => {
+        console.error('Erro ao carregar os cards do painel', erro);
+      }
+    });
+  }
   buscarPorId(id:number){
     return this.gerentes.find((item)=>item.id===id);
   }
@@ -137,7 +166,7 @@ export class AdminGerenciarGerentes implements OnInit {
     this.mensagemErro = 'Preencha todos os campos, incluindo a senha.';
     return;
   }
-    if (this.novoGerente.cpf.length !== 11) {
+    if (cpf.length !== 11) {
       console.log('CPF invalido. Informe 11 digitos.');
       return;
     }
@@ -307,7 +336,26 @@ export class AdminGerenciarGerentes implements OnInit {
     // alert(`Contas de ${gerenteEmExclusao.nome} transferidas para ${sucessor.nome}`);
 
 
+  atualizarGerente(id: number): void {
+    //prepara a edição do gerente
+
+    const gerente=this.buscarPorId(id);
+    if (!gerente) return;
+
+    this.idGerenteEditando = id;
+    this.exibirFormularioNovoGerente = true;
+
+  this.novoGerente = {
+      nome: gerente.nome,
+      cpf: gerente.cpf,
+      email: gerente.email,
+      telefone: gerente.telefone,
+      senha: gerente.senha
+    };
+  }
+
   editarGerente(): void {
+    //faz req rest
     if (this.idGerenteEditando===null) return;
 
     const gerenteOriginal = this.buscarPorId(this.idGerenteEditando);
@@ -346,24 +394,8 @@ export class AdminGerenciarGerentes implements OnInit {
   }
 
 
-  atualizarGerente(id: number): void {
-
-    const gerente=this.buscarPorId(id);
-    if (!gerente) return;
-
-    this.idGerenteEditando = id;
-    this.exibirFormularioNovoGerente = true;
-
-  this.novoGerente = {
-      nome: gerente.nome,
-      cpf: gerente.cpf,
-      email: gerente.email,
-      telefone: gerente.telefone,
-      senha: gerente.senha
-    };
-  }
-
   salvarGerente(): void {
+    //separa se não for atualização é inserção
     if (this.idGerenteEditando !== null) {
       this.editarGerente();
     } else {
