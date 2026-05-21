@@ -5,7 +5,7 @@ import { ClienteSessionService } from '../../../core/services/session-controller
 import { Router } from '@angular/router';
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
 import { DecimalPipe } from '@angular/common';
-import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+// import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
 
@@ -35,9 +35,9 @@ export class DepositoCliente implements OnInit {
     const valor = this.currencyFormatter.removeCurrencyMaskFromString(
       this.valorDeposito,
     );
-
     return this.saldo + valor;
   }
+
   cliente!: Cliente;
   contaCliente!: Conta;
 
@@ -48,8 +48,8 @@ export class DepositoCliente implements OnInit {
     if (dadosCliente && dadosConta) {
       this.cliente = dadosCliente;
       this.contaCliente = dadosConta;
-
       this.inicializarDeposito();
+
     } else {
       this.router.navigate(['/login']);
     }
@@ -68,7 +68,7 @@ export class DepositoCliente implements OnInit {
 
   depositar() {
     const valor = this.currencyFormatter.removeCurrencyMaskFromString(
-      this.valorDeposito,
+      this.valorDeposito
     );
     //user digita valor para deposito
     if (valor <= 0) {
@@ -76,35 +76,52 @@ export class DepositoCliente implements OnInit {
       this.mensagem= 'O valor do depósito deve ser maior que zero'
       return;
     }
-
-    this.saldo = this.saldo + valor;
-    this.valorDeposito = '0,00';
-    this.corMensagem= 'green';
-    this.mensagem = 'Depósito realizado com sucesso';
-
-    this.contaCliente.saldo = this.saldo;
-
-    this.contaService.atualizarConta(this.contaCliente);
-    this.clienteSessionService.setContaCliente(this.contaCliente);
-
-    this.registrarMovimentacao(valor);
-    return;
+//criado para mostrar como seria se ele depossitasse aquele valor
+const contaAtualizada: Conta={
+    ...this.contaCliente,
+    saldo: this.saldo + valor
+}
+this.contaService.atualizarConta(contaAtualizada).subscribe({
+      next: (contaBanco: Conta) => {
+        this.saldo = contaBanco.saldo;
+        // atualiza a tela com dado real
+        this.contaCliente = contaBanco;
+        this.valorDeposito = '0,00';
+        this.corMensagem = 'green';
+        this.mensagem = 'Depósito realizado com sucesso';
+        this.clienteSessionService.setContaCliente(contaBanco);
+        this.registrarMovimentacao(valor);
+      },
+      error: (erro) => {
+        console.error('Erro ao efetuar depósito', erro);
+        this.corMensagem = 'red';
+        this.mensagem = 'Erro ao processar o depósito no servidor';
+      }
+    });
   }
+    //this.contaCliente.saldo = this.saldo;
+    //this.contaService.atualizarConta(this.contaCliente);
+
 
   registrarMovimentacao(valor:number){
-
     const movimentacao: Movimentacao = {
-      id:0,
-      data_hora: new Date(),
-      tipo:'deposito',
-      clienteDestino: '',
-      cpfClienteDestino: '',
-      valor: valor,
-      clienteOrigem: this.cliente.nome,
-      cpfClienteOrigem: this.cliente.cpf,
-    }
+          id:0,
+          data_hora: new Date(),
+          tipo:'deposito',
+          clienteDestino: '',
+          cpfClienteDestino: '',
+          valor: valor,
+          clienteOrigem: this.cliente.nome,
+          cpfClienteOrigem: this.cliente.cpf,
+        }
 
-    this.movimentacaoService.inserir(movimentacao);    
-
+    this.movimentacaoService.inserir(movimentacao).subscribe({
+      next:(movimentacaoSalva)=>{
+        console.log('Movimentação registrada com sucesso')
+      },
+      error: (erro)=>{
+        console.error(' erro ao registrar movimentação no extrato ', erro);
+      }
+    })
   }
 }

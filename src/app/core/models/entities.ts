@@ -4,7 +4,6 @@ export interface Cliente{
     nome:string;
     email:string;
     telefone:string;
-    senha:string;
     salario:number;
     endereco:string;
 }
@@ -15,7 +14,6 @@ export interface GerenteAdmin{
     nome:string;
     email:string;
     telefone:string;
-    senha:string;
     tipo:string; // gerente / administrador
 }
 
@@ -36,7 +34,6 @@ export interface Conta{
 export interface ContaGerada {
   cpfCliente: string;
   numeroConta: string;
-  senha: string;
   limite: number;
   gerente: string;
   dataCriacao: Date;

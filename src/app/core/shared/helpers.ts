@@ -1,6 +1,6 @@
-const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;    
+const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const cpfRegex : RegExp = /^\d{11}$/
-const cepRegex : RegExp = /^\d{5}-\d{3}$/
+const cepRegex : RegExp = /^\d{8}$/
 
 export function validateEmail(email: string): boolean{
     return emailRegex.test(email);
@@ -8,7 +8,7 @@ export function validateEmail(email: string): boolean{
 
 export function validateCPF(cpf: string): boolean{
     if(!cpf) return false;
-    
+
     console.log("CPF a validar:", cpf);
     return cpfRegex.test(cpf);
 }

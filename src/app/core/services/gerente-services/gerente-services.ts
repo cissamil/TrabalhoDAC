@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable } from 'rxjs';
 import { GerenteAdmin } from '../../models/entities';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { DashboardGerenciarGerentes } from '../../../pages/admin/adm-gerenciar-gerentes/adm-gerenciar-gerentes';
 
-const LS_CHAVE = 'gerentes';
+//const LS_CHAVE = 'gerentes';
 const LS_CHAVE_LOGADO = 'gerenteLogado';
 
 @Injectable({
@@ -11,25 +12,25 @@ const LS_CHAVE_LOGADO = 'gerenteLogado';
 })
 export class GerenteService {
 
-  GERENTE_URL="http://localhost:8080";
+  GERENTE_URL="http://localhost:8080/gerentes";
 
   httpOptions={
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
     })
   }
-  private gerentesSubject: BehaviorSubject<GerenteAdmin[]>;
-  //onde os dados atuais ficam guardados
-  public gerentes$: Observable<GerenteAdmin[]>
-  //versão que mostra as mudanças
+  // private gerentesSubject: BehaviorSubject<GerenteAdmin[]>;
+  // //onde os dados atuais ficam guardados
+  // public gerentes$: Observable<GerenteAdmin[]>
+  // //versão que mostra as mudanças
 
 
   constructor(private httpClient: HttpClient){
 
-    this.gerentesSubject = new BehaviorSubject<GerenteAdmin[]>([]);
-    //cria o behavior com os dados do local
-    this.gerentes$ = this.gerentesSubject.asObservable();
-    //deixa publico
+    // this.gerentesSubject = new BehaviorSubject<GerenteAdmin[]>([]);
+    // //cria o behavior com os dados do local
+    // this.gerentes$ = this.gerentesSubject.asObservable();
+    // //deixa publico
   }
 
 
@@ -50,7 +51,7 @@ export class GerenteService {
 
     buscarPorId(id:number):Observable<GerenteAdmin>{
       return this.httpClient.get<GerenteAdmin>(
-        this.GERENTE_URL + id,
+        this.GERENTE_URL + "/" + id,
         this.httpOptions);
     }
 
@@ -86,20 +87,20 @@ export class GerenteService {
   }
 
 
-  buscarGerentePorEmailESenhaETipo(email:string, senha:string, tipo:string){
-    const gerentes = this.listarTodos();
+  // buscarGerentePorEmailESenhaETipo(email:string, senha:string, tipo:string){
+  //   const gerentes = this.listarTodos();
 
-    return []
-    // gerentes.find(
-    //   (gerente) =>
-    //     gerente.email === email &&
-    //     gerente.senha === senha &&
-    //     gerente.tipo === tipo,
-    // ) ;
-    //busca o gerente que tenha o email, senha e tipo estritamente iguais
-  }
+  //   return []
+  //   // gerentes.find(
+  //   //   (gerente) =>
+  //   //     gerente.email === email &&
+  //   //     gerente.senha === senha &&
+  //   //     gerente.tipo === tipo,
+  //   // ) ;
+  //   //busca o gerente que tenha o email, senha e tipo estritamente iguais
+  // }
 
-buscarGerentePorEmailESenha(email: string, senha: string, tipo:string): Observable<GerenteAdmin> {
+buscarGerentePorEmailESenhaETipo(email: string, senha: string, tipo:string): Observable<GerenteAdmin> {
   return this.httpClient.get<GerenteAdmin>(this.GERENTE_URL + "/login", {
     ...this.httpOptions,
     params: {
@@ -107,6 +108,13 @@ buscarGerentePorEmailESenha(email: string, senha: string, tipo:string): Observab
       senha,
       tipo}
   });
+}
+
+obterDashboardGerenciarGerentes(): Observable<DashboardGerenciarGerentes> {
+  return this.httpClient.get<DashboardGerenciarGerentes>(
+    this.GERENTE_URL + '/dashboard/',
+    this.httpOptions
+  );
 }
 
   //---------- Métodos para gerenciamento de sessão do gerente logado

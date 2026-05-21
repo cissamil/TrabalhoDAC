@@ -17,10 +17,22 @@ import { ClienteSessionService } from '../../../core/services/session-controller
   templateUrl: './cliente-main-page.html',
   styleUrl: './cliente-main-page.css',
 })
-export class ClienteMainPage{
-  constructor(private router:Router, private clienteSessionService: ClienteSessionService){}
+export class ClienteMainPage implements OnInit{
+  constructor(private router:Router,
+    private clienteSessionService: ClienteSessionService){}
   cliente!: Cliente;
+  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Dashboard;
 
+  ngOnInit(): void {
+    // Busca os dados do cliente logado na sessão local assim que a página abre
+    const clienteLogado = this.clienteSessionService.getCliente();
+
+    if (clienteLogado) {
+      this.cliente = clienteLogado;
+    } else {
+      //se não tiver logado ele redireciona para login
+      this.router.navigate(['/login']);
+    }}
 
   public get clientNavigationOptions() : typeof ClientNavigationOptions{
     return ClientNavigationOptions;
@@ -29,13 +41,9 @@ export class ClienteMainPage{
   logOut(){
     this.clienteSessionService.clearSession();
     this.router.navigate(['/login']);
-
   }
 
-  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Dashboard;
-
   changeNavigationOptions(option: ClientNavigationOptions){
-
     this.navigationOption = option;
   }
 
