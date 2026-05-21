@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {NgxMaskDirective, NgxMaskPipe} from "ngx-mask";
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
@@ -15,7 +15,7 @@ import { ResponseModal } from '../../../core/models/response-modal';
   templateUrl: './registro.html',
   styleUrls: ['./registro.css', '../../shared/css/responseModal.css'],
 })
-export class Registro {
+export class Registro implements OnInit {
   constructor(
     private router: Router,
     private clienteService: ClienteService,
@@ -39,7 +39,6 @@ export class Registro {
     nome: '',
     email: '',
     telefone:'',
-    senha: '',
     salario: 0,
     endereco: '',
   };
@@ -50,7 +49,7 @@ export class Registro {
   estado: string = '';
 
     ngOnInit():void{
-      this.redirectToLoginPage();
+      //this.redirectToLoginPage();
     }
 
 
