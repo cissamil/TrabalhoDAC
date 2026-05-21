@@ -7,6 +7,7 @@ import { ContaService } from '../../../core/services/conta-services/conta-servic
 import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
 import { DecimalPipe } from '@angular/common';
+import { error } from 'console';
 
 
 interface valorInfo{
@@ -27,6 +28,7 @@ export class TransferenciaCliente implements OnInit{
     private router: Router,
     private contaService: ContaService,
     private clienteSessionService: ClienteSessionService,
+    private movimentacaoService: MovimentacaoService
   ) {}
 
   numeroContaDestino: string = "";
@@ -150,36 +152,89 @@ export class TransferenciaCliente implements OnInit{
       return;
     }
 
+    const transferencia: Movimentacao = {
+      id: 0,
+      data_hora: new Date(),
+      tipo: 'transferencia',
+      valor: valor,
+      clienteOrigem: this.cliente.nome,
+      cpfClienteOrigem: this.cliente.cpf,
+      clienteDestino: '',
+      cpfClienteDestino: this.numeroContaDestino
+    };
 
+    this.movimentacaoService.inserir(transferencia).subscribe({
+      next: () => {
+        this.corMensagem = 'green';
+        this.mensagem = "Transferência realizada com sucesso";
+        this.valorTransferencia = "0,00";
+        this.numeroContaDestino = "";
+        this.recarregarContaCliente();
+      },
+      error: (erro:any) => {
+        console.error("Erro na transferência via REST:", erro);
+        this.corMensagem = 'red';
+        // Se o back-end retornar 404, significa que a conta destino não existe
+        if (erro.status === 404) {
+          this.mensagem = 'Conta de destino não encontrada';
+          this.tipoErro = 'erroCONTA';
+        } else {
+          this.mensagem = 'Transferência não realizada. Erro no servidor.';
+          this.tipoErro = 'erroTR';
+        }
+      }
+    });
+  }
+  private recarregarContaCliente() {
+    this.contaService.buscarPorId(this.contaCliente.id).subscribe({
+      next: (contaAtualizada: Conta) => {
+        this.saldo = contaAtualizada.saldo;
+        this.contaCliente = contaAtualizada;
+        this.clienteSessionService.setContaCliente(contaAtualizada); // Sincroniza a sessão local
+      }
+    });
+  }
+}
 
-    const contaDestino = this.contaService.buscarPorNumeroConta(this.numeroContaDestino);
+    // const contaDestino = this.contaService.buscarPorNumeroConta(this.numeroContaDestino).subscribe({
+    //   next:(contaDestino:any)=>{
+    //     this.contaService.realizarTransferencia(contaOrigem, contaDestino, valor).subscribe({
+    //     const contaOrigem = this.contaCliente;
+    //       next:()=>{
+    //       this.saldo=contaBanco.saldo;
+    //       this.contaOrigem=contaBanco;
+    //       this.valorTransferencia = "0,00";
+    //       this.numeroContaDestino = "";
+    //       this.corMensagem = 'green';
+    //       this.mensagem = "Transferência realizada com sucesso";
+    //       console.log("Conta de destino: ", contaDestino);
+    //   },
+    //   error: (erro:any) =>{
+    //     this.mensagem = 'Transferência não realizada';
+    //     this.tipoErro = 'erroTR';
+    //     this.corMensagem = 'red';
+    //     console.error("Transferência não realizada", erro);
+    //   }
 
-    console.log("Conta de destino: ", contaDestino);
-    if(!contaDestino){
-      this.mensagem = 'Conta de desino não encontrada';
-      this.tipoErro = 'erroCONTA';
-      this.corMensagem = 'red';
+    // },
+    //   error: (erro:any) =>{
+    //     this.mensagem = 'Conta de desino não encontrada';
+    //     this.tipoErro = 'erroCONTA';
+    //     this.corMensagem = 'red';
+    //     console.error("Conta não encontrada", erro);
+    //   }
+    // });
 
-      console.error("Conta não encontrada");
-      return;
-    }
+    // console.log("Conta de destino: ", contaDestino);
+    // if(!contaDestino){
+    //   this.mensagem = 'Conta de desino não encontrada';
+    //   this.tipoErro = 'erroCONTA';
+    //   this.corMensagem = 'red';
 
-    this.saldo= this.saldo - valor
-    this.valorTransferencia = "0,00";
-    this.numeroContaDestino = "";
+    //   console.error("Conta não encontrada");
+    //   return;
+    // }
 
     //contaDestino.saldo += valor;
-    this.contaCliente.saldo = this.saldo;
-
-    const contaOrigem = this.contaCliente;
-
-    //this.contaService.realizarTransferencia(contaOrigem, contaDestino, valor)
-
-    this.corMensagem = 'green';
-    this.mensagem = "Transferência realizada com sucesso";
 
 
-  }
-
-
-}

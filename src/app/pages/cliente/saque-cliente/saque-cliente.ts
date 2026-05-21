@@ -36,8 +36,8 @@ export class SaqueCliente implements OnInit{
   valorSaque: string = '0,00';
   mensagem = '';
   corMensagem = '';
-  
-  valoresInfo: valorInfo[] = [];
+
+  //valoresInfo: valorInfo[] = [];
   private currencyFormatter:CurrencyFormatter = new CurrencyFormatter();
 
   //saldoCalculado = this.saldo + this.limite;
@@ -64,7 +64,7 @@ export class SaqueCliente implements OnInit{
   }
 
   get valorASacar():number{
-    
+
     return this.currencyFormatter.removeCurrencyMaskFromString(this.valorSaque);
   }
 
@@ -107,7 +107,7 @@ export class SaqueCliente implements OnInit{
 
   inicializarSaque(){
     this.saldo = this.contaCliente.saldo;
-    this.limite = this.contaCliente.limite;    
+    this.limite = this.contaCliente.limite;
   }
 
   handleValorSaque(e: any) {
@@ -132,27 +132,31 @@ export class SaqueCliente implements OnInit{
       return;
     }
 
-    this.saldo = this.saldo - valor;
-    
-    
+  const contaAtualizada: Conta={
+    ...this.contaCliente,
+    saldo: this.saldo - valor
+}
+
+this.contaService.atualizarConta(contaAtualizada).subscribe({
+  next:(contaBanco:Conta)=>{
+    this.saldo=contaBanco.saldo;
+    this.contaCliente=contaBanco;
     this.valorSaque = '0,00';
     this.corMensagem = 'green';
     this.mensagem = 'Saque realizado com sucesso';
-    
-    
-    this.contaCliente.saldo = this.saldo;
-    
-    
-    this.contaService.atualizarConta(this.contaCliente);
-    this.clienteSessionService.setContaCliente(this.contaCliente);
-    
+    this.clienteSessionService.setContaCliente(contaBanco);
     this.registrarMovimentacao(valor);
-    return;
-  }
+
+  },
+  error:(erro)=>{
+      console.error('Erro ao efetuar saque', erro);
+        this.corMensagem = 'red';
+        this.mensagem = 'Erro ao processar o saque no servidor';
+  },
+})
+}
 
   registrarMovimentacao(valor: number){
-
-
     const movimentacao: Movimentacao = {
       id:0,
       data_hora: new Date(),
@@ -164,7 +168,14 @@ export class SaqueCliente implements OnInit{
       cpfClienteOrigem: this.cliente.cpf,
     }
 
-    this.movimentacaoService.inserir(movimentacao);    
+    this.movimentacaoService.inserir(movimentacao).subscribe({
+      next:(movimentacaoSalva)=>{
+        console.log('Movimentação registrada com sucesso')
+      },
+      error: (erro)=>{
+        console.error(' erro ao registrar movimentação no extrato ', erro);
+      }
+    })
 
   }
 }
