@@ -1,13 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ClientNavigationOptions } from '../../../core/models/navigationOptions';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import{MatIconModule} from "@angular/material/icon";
 import { InfoCard } from '../../../core/models/info-card';
-import { CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
 import { DecimalPipe } from '@angular/common';
-import { ClienteSessionService } from '../../../core/services/session-controller.service';
-import { Cliente, Conta } from '../../../core/models/entities';
-import { Router } from '@angular/router';
-
+import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { ClienteConta } from '../../../core/models/ClienteConta';
 @Component({
   selector: 'app-dashboard-cliente',
   imports: [MatIconModule, DecimalPipe],
@@ -16,48 +12,49 @@ import { Router } from '@angular/router';
 })
 export class DashboardCliente implements OnInit {
 
-  constructor(private router:Router, private clienteSessionService: ClienteSessionService){}
-  
-  cliente!: Cliente;
-  conta_cliente!: Conta;
-  infoCards: InfoCard[] = []; 
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private clienteService: ClienteService){}
+
+  clienteConta!: ClienteConta;
+
+  infoCards: InfoCard[] = [];
   nomeGerente:string =  "";
+  nomeCliente:string =  "";
 
   ngOnInit(): void {
 
-    const dadosCliente = this.clienteSessionService.getCliente();
-    const dadosConta = this.clienteSessionService.getConta();
+    const dadosCarregados = this.clienteService.clienteContaLogado;
 
-    if(dadosCliente && dadosConta){
-      this.cliente = dadosCliente;
-      this.conta_cliente = dadosConta;
-
+    if (dadosCarregados) {
+      this.clienteConta = dadosCarregados;
       this.inicializarDashboard();
-    }else{
-
-      this.router.navigate(['/login']);
+    } else {
+      console.log("Nenhum dado encontrado no localStorage para o Dashboard.");
     }
   }
-  
+
+
 inicializarDashboard() {
-    const saldoStatus = this.conta_cliente.saldo >= 0;
-    const saldoDisponivel = this.conta_cliente.limite + this.conta_cliente.saldo;
+    const saldoStatus = this.clienteConta.conta.saldo >= 0;
+    const saldoDisponivel = this.clienteConta.conta.limite + this.clienteConta.conta.saldo;
     const color = saldoStatus ? 'black' : 'red';
     const saldoInfo = saldoStatus ? 'Saldo Positivo' : 'Saldo Negativo';
-    this.nomeGerente = this.conta_cliente.gerente;
+    this.nomeGerente = this.clienteConta.conta.gerente?.nomeGerente
+    this.nomeCliente = this.clienteConta.nome;
 
     this.infoCards = [
       {
         topTitle: 'Saldo Atual',
         icon: 'account_balance_wallet',
-        middleContent: this.conta_cliente.saldo.toString(),
+        middleContent: this.clienteConta.conta.saldo.toString(),
         color: color,
         bottomText: saldoInfo,
       },
       {
         topTitle: 'Limite',
         icon: 'trending_up',
-        middleContent: this.conta_cliente.limite.toString(),
+        middleContent: this.clienteConta.conta.limite.toString(),
         color: 'black',
         bottomText: 'Limite Disponível',
       },
@@ -69,5 +66,6 @@ inicializarDashboard() {
         bottomText: 'Saldo + Limite',
       }
     ];
+    this.cdr.detectChanges();
   }
 }

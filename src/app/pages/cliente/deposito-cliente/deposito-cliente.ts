@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Cliente, Conta, Movimentacao } from '../../../core/models/entities';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
@@ -8,6 +8,10 @@ import { DecimalPipe } from '@angular/common';
 // import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
+import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { ClienteConta } from '../../../core/models/ClienteConta';
+import { ContaGerente } from '../../../core/models/ContaGerente';
 
 @Component({
   selector: 'app-deposito-cliente',
@@ -17,11 +21,10 @@ import { MovimentacaoService } from '../../../core/services/movimentacoes-servic
 })
 export class DepositoCliente implements OnInit {
   constructor(
-    private router: Router,
-    private contaService: ContaService,
-    private clienteSessionService: ClienteSessionService,
-    private movimentacaoService: MovimentacaoService
-  ) {}
+  private cdr: ChangeDetectorRef,
+  private clienteService: ClienteService,
+  private contaService: ContaService,
+  private movimentacaoService: MovimentacaoService) {}
 
   private currencyFormatter: CurrencyFormatter = new CurrencyFormatter();
 
@@ -38,26 +41,24 @@ export class DepositoCliente implements OnInit {
     return this.saldo + valor;
   }
 
-  cliente!: Cliente;
-  contaCliente!: Conta;
+  clienteConta!: ClienteConta;
 
   ngOnInit(): void {
-    const dadosCliente = this.clienteSessionService.getCliente();
-    const dadosConta = this.clienteSessionService.getConta();
+    const dadosCarregados = this.clienteService.clienteContaLogado;
 
-    if (dadosCliente && dadosConta) {
-      this.cliente = dadosCliente;
-      this.contaCliente = dadosConta;
+    if (dadosCarregados) {
+      this.clienteConta = dadosCarregados;
       this.inicializarDeposito();
-
     } else {
-      this.router.navigate(['/login']);
+      console.log("Nenhum dado de cliente e conta encontrado no localStorage.");
     }
   }
 
   inicializarDeposito() {
-    this.saldo = this.contaCliente.saldo;
-    this.limite = this.contaCliente.limite;
+    const conta= this.clienteConta.conta;
+    this.saldo = conta.saldo;
+    this.limite = conta.limite;
+    this.cdr.detectChanges();
   }
 
   handleValorDeposito(e: any) {
@@ -77,20 +78,21 @@ export class DepositoCliente implements OnInit {
       return;
     }
 //criado para mostrar como seria se ele depossitasse aquele valor
-const contaAtualizada: Conta={
-    ...this.contaCliente,
+const contaAtualizada: ContaGerente={
+    ...this.clienteConta.conta,
     saldo: this.saldo + valor
 }
-this.contaService.atualizarConta(contaAtualizada).subscribe({
-      next: (contaBanco: Conta) => {
-        this.saldo = contaBanco.saldo;
+this.contaService.atualizarConta(contaAtualizada as any).subscribe({
+      next: (contaBanco: any) => {
+    const contaConvertida = contaBanco as ContaGerente;
         // atualiza a tela com dado real
-        this.contaCliente = contaBanco;
+        this.clienteConta.conta = contaBanco;
+        this.clienteService.setClienteConta(this.clienteConta);
         this.valorDeposito = '0,00';
         this.corMensagem = 'green';
         this.mensagem = 'Depósito realizado com sucesso';
-        this.clienteSessionService.setContaCliente(contaBanco);
         this.registrarMovimentacao(valor);
+        this.cdr.detectChanges();
       },
       error: (erro) => {
         console.error('Erro ao efetuar depósito', erro);
@@ -111,8 +113,8 @@ this.contaService.atualizarConta(contaAtualizada).subscribe({
           clienteDestino: '',
           cpfClienteDestino: '',
           valor: valor,
-          clienteOrigem: this.cliente.nome,
-          cpfClienteOrigem: this.cliente.cpf,
+          clienteOrigem: this.clienteConta.nome,
+          cpfClienteOrigem: this.clienteConta.cpf,
         }
 
     this.movimentacaoService.inserir(movimentacao).subscribe({

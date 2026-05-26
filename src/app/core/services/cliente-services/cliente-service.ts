@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
-import { Cliente, GerenteAdmin, PedidoAutoCadastro } from '../../models/entities';
+import { Observable } from 'rxjs';
+import { Cliente } from '../../models/entities';
 import { PedidoAutoCadastroService } from '../pedido-autocadastro-services/pedido-autocadastro-service';
 import { ContaService } from '../conta-services/conta-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ClienteConta } from '../../models/ClienteConta';
 
 //const LS_CHAVE = 'clientes';
+const CLIENTE_CONTA_LOGADO = 'cliente_conta_logado';
 
 @Injectable({
   providedIn: 'root',
@@ -24,13 +26,33 @@ export class ClienteService {
   // public clientes$: Observable<Cliente[]>
 
   constructor(private httpClient: HttpClient,
-    private pedidoAutoCadastroService: PedidoAutoCadastroService,
-    private contaService: ContaService){}
+    //private pedidoAutoCadastroService: PedidoAutoCadastroService,
+    //private contaService: ContaService,
+    ){}
 
-  //   if(!localStorage[LS_CHAVE]){
 
-  //     localStorage[LS_CHAVE] = JSON.stringify(CLIENTES_MOCK);
-  //   }
+    public get clienteContaLogado(): ClienteConta | null {
+    const clienteContaStr = localStorage.getItem(CLIENTE_CONTA_LOGADO);
+    if (!clienteContaStr) return null;
+
+    try {
+      return JSON.parse(clienteContaStr) as ClienteConta;
+    } catch (e) {
+      console.error("Erro ao fazer parse de clienteContaLogado:", e);
+      return null;
+    }
+  }
+
+    // Salva o objeto transformando-o em String JSON
+  public setClienteConta(clienteConta: ClienteConta): void {
+    localStorage.setItem(CLIENTE_CONTA_LOGADO, JSON.stringify(clienteConta));
+  }
+
+  public clearClienteConta(): void {
+    localStorage.removeItem(CLIENTE_CONTA_LOGADO);
+  }
+
+
 
     // localStorage[LS_CHAVE] = JSON.stringify(CLIENTES_MOCK);
     //const clientes: Cliente[]= localStorage[LS_CHAVE] ? JSON.parse(localStorage[LS_CHAVE]) : [];
