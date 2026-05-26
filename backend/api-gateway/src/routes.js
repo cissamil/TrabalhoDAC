@@ -357,6 +357,9 @@ function registerRoutes(app, services) {
 
 	//COMPOSITION CLIENTE + CONTA
 	app.get('/cliente-conta', verifyJWT, requireRole(routeRoles['/cliente']), (req, res, next) => {
+
+		const clienteId = req.user?.sub || 'Sistema';
+
 		return createProxyMiddleware({
 			target: services.compositionService,
 			changeOrigin: true,
@@ -364,6 +367,7 @@ function registerRoutes(app, services) {
 			on: {
 				proxyReq: (proxyReq, req, res) => {
 					
+					proxyReq.setHeader('X-Cliente-Id', clienteId);
 
 					if (req.body && Object.keys(req.body).length) {
 						const bodyData = JSON.stringify(req.body);

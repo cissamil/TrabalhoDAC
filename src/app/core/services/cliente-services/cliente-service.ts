@@ -25,10 +25,7 @@ export class ClienteService {
   // private clientesSubject: BehaviorSubject<Cliente[]>;
   // public clientes$: Observable<Cliente[]>
 
-  constructor(private httpClient: HttpClient,
-    //private pedidoAutoCadastroService: PedidoAutoCadastroService,
-    //private contaService: ContaService,
-    ){}
+  constructor(private httpClient: HttpClient){}
 
 
     public get clienteContaLogado(): ClienteConta | null {

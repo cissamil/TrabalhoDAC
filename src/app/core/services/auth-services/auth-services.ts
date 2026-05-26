@@ -28,6 +28,10 @@ export class AuthServices {
     return token;
   }
 
+  public clearUsuarioLogado(){
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+  }
+
   login(userEmail:string, userPassword:string): Observable<{token:string}>{
     const credentals = {
       userEmail: userEmail,

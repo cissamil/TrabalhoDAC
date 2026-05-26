@@ -28,7 +28,11 @@ export class DashboardCliente implements OnInit {
 
     if (dadosCarregados) {
       this.clienteConta = dadosCarregados;
+
       this.inicializarDashboard();
+
+      this.cdr.detectChanges();
+
     } else {
       console.log("Nenhum dado encontrado no localStorage para o Dashboard.");
     }
@@ -66,6 +70,5 @@ inicializarDashboard() {
         bottomText: 'Saldo + Limite',
       }
     ];
-    this.cdr.detectChanges();
   }
 }

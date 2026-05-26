@@ -12,6 +12,7 @@ import {ProfileOptions } from '../../../core/models/navigationOptions';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
 //import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
 import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import {JwtHelperService} from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-login',
@@ -22,26 +23,48 @@ import { AuthServices } from '../../../core/services/auth-services/auth-services
 export class Login implements OnInit{
   constructor(
     private router: Router,
-    //private clienteService: ClienteService,
-    //private gerenteService: GerenteService,
     private clienteSessionService: ClienteSessionService,
-    //private movimentacaoService: MovimentacaoService,
-    //private contaService: ContaService,
     private authService: AuthServices
   ) {}
 
-  ngOnInit(): void {
+  checkIfUserIsAuthenticated(){
 
-    console.log("Verificando se cliente já está logado");
-    const isLogged = this.clienteSessionService.checkIfClienteIsLogged();
+    const decoder = new JwtHelperService();
 
-    if(isLogged){
-      console.log("Cliente está logado, redirecionando");
+    const storedToken = this.authService.usuarioLogado;
 
-      this.router.navigate(['cliente-main-page']);
+    console.log("Token de login: ", storedToken);
+
+    if(storedToken){
+
+      const decodedToken = decoder.decodeToken(storedToken);
+
+      if(!decodedToken){
+        return;
+      }
+      
+      const role : string = decodedToken.role;
+
+
+      this.redirectBasedOnUserRole(role);
+
     }
+
   }
 
+  
+  redirectBasedOnUserRole(role:string){
+    switch(role){
+      case 'CLIENTE': return this.router.navigate(['cliente-main-page']);
+      case 'GERENTE': return this.router.navigate(['gerente-main-page']);
+      case 'ADMIN': return this.router.navigate(['admin-main-page']);
+      default: return;
+    }
+  }
+  
+  ngOnInit(): void {
+    this.checkIfUserIsAuthenticated();
+  }
   responseModal: ResponseModal | null = null;
 
 
@@ -71,14 +94,16 @@ export class Login implements OnInit{
   email: string = '';
   senha: string = '';
 
-    private exibirErro(mensagem: string) {
-      this.responseModal = {
-        title: "Falha no Acesso",
-        message: mensagem,
-        messageIcon: "error",
-        type: 'error'
-      };
-    }
+  private exibirErro(mensagem: string) {
+    this.responseModal = {
+      title: "Falha no Acesso",
+      message: mensagem,
+      messageIcon: "error",
+      type: 'error'
+    };
+  }
+
+
   loginUser() {
 
 
@@ -96,8 +121,7 @@ export class Login implements OnInit{
 
     this.authService.login(this.email,this.senha).subscribe({
       next:() =>{
-        const token =this.authService.usuarioLogado;
-        console.log(token)
+        this.checkIfUserIsAuthenticated();
       }
     })
   }

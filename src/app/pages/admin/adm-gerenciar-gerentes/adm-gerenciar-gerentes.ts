@@ -35,9 +35,9 @@ export class AdminGerenciarGerentes implements OnInit {
   MANAGERS_TABLE: ManagerListTableData[] = [];
   dashboardGerenciarGerentes!: DashboardGerenciarGerentes;
 
-  // totalGerentes: number = 0;
-  // totalContas: number = 0;
-  // mediaPorGerente: number = 0;
+  totalGerentes: number = 0;
+  totalContas: number = 0;
+  mediaPorGerente: number = 0;
   exibirFormularioNovoGerente = false;
   mensagemErro = '';
   mensagemSucesso = '';
@@ -183,7 +183,6 @@ export class AdminGerenciarGerentes implements OnInit {
       cpf,
       email,
       telefone,
-      senha,
       tipo: 'gerente',
     };
 
@@ -345,13 +344,12 @@ export class AdminGerenciarGerentes implements OnInit {
     this.idGerenteEditando = id;
     this.exibirFormularioNovoGerente = true;
 
-  this.novoGerente = {
-      nome: gerente.nome,
-      cpf: gerente.cpf,
-      email: gerente.email,
-      telefone: gerente.telefone,
-      senha: gerente.senha
-    };
+    // this.novoGerente = {
+    //     nome: gerente.nome,
+    //     cpf: gerente.cpf,
+    //     email: gerente.email,
+    //     telefone: gerente.telefone,
+    //   };
   }
 
   editarGerente(): void {
@@ -369,7 +367,6 @@ export class AdminGerenciarGerentes implements OnInit {
       nome: this.novoGerente.nome.trim(),
       email: this.novoGerente.email.toLowerCase(),
       telefone: this.novoGerente.telefone.replace(/\D/g, ''),
-      senha: this.novoGerente.senha,
     };
 
     this.gerenteService.atualizar(gerenteAtualizado).subscribe({

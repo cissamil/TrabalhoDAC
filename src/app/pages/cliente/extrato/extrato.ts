@@ -25,45 +25,45 @@ export class Extrato {
   get movimentacoesAgrupadasPorDia(): Map<string, { movimentacoes: Movimentacao[], saldoConsolidado: number }> {
     const mapa = new Map<string, { movimentacoes: Movimentacao[], saldoConsolidado: number }>();
     
-    //movimentações ORDENADAS pela data (mais nova para mais antiga)
-    const todasMovs = this.movimentacaoService.listarTodos()
-      .filter(m => m.cpfClienteOrigem === this.cliente.cpf || m.cpfClienteDestino === this.cliente.cpf)
-      .sort((a, b) => new Date(b.data_hora).getTime() - new Date(a.data_hora).getTime());
+    // //movimentações ORDENADAS pela data (mais nova para mais antiga)
+    // const todasMovs = this.movimentacaoService.listarTodos()
+    //   .filter(m => m.cpfClienteOrigem === this.cliente.cpf || m.cpfClienteDestino === this.cliente.cpf)
+    //   .sort((a, b) => new Date(b.data_hora).getTime() - new Date(a.data_hora).getTime());
 
-    // saldo que o cliente tem AGORA 
-    let saldoAuxiliar = this.contaCliente.saldo;
+    // // saldo que o cliente tem AGORA 
+    // let saldoAuxiliar = this.contaCliente.saldo;
 
-    //range de datas (do fim para o início)
-    let dataAtual = new Date(this.dataFim! + 'T00:00:00');
-    const dataInicial = new Date(this.dataInicio!+ 'T00:00:00' );
+    // //range de datas (do fim para o início)
+    // let dataAtual = new Date(this.dataFim! + 'T00:00:00');
+    // const dataInicial = new Date(this.dataInicio!+ 'T00:00:00' );
 
-    while (dataAtual >= dataInicial) {
-      const key = dataAtual.toLocaleDateString('pt-BR');
+    // while (dataAtual >= dataInicial) {
+    //   const key = dataAtual.toLocaleDateString('pt-BR');
       
-      // movimentações EXATAMENTE deste dia
-      const movsDoDia = todasMovs.filter(m => 
-        new Date(m.data_hora).toLocaleDateString('pt-BR') === key
-      );
+    //   // movimentações EXATAMENTE deste dia
+    //   const movsDoDia = todasMovs.filter(m => 
+    //     new Date(m.data_hora).toLocaleDateString('pt-BR') === key
+    //   );
 
-      //saldoAuxiliar antes de "descontar" as movs do dia anterior
-      mapa.set(key, {
-        movimentacoes: movsDoDia,
-        saldoConsolidado: saldoAuxiliar
-      });
+    //   //saldoAuxiliar antes de "descontar" as movs do dia anterior
+    //   mapa.set(key, {
+    //     movimentacoes: movsDoDia,
+    //     saldoConsolidado: saldoAuxiliar
+    //   });
 
-      //"desfazer" as transações deste dia
-      movsDoDia.forEach(m => {
-        const isEntrada = m.tipo === 'deposito' || (m.tipo === 'transferencia' && m.cpfClienteDestino === this.cliente.cpf);
+    //   //"desfazer" as transações deste dia
+    //   movsDoDia.forEach(m => {
+    //     const isEntrada = m.tipo === 'deposito' || (m.tipo === 'transferencia' && m.cpfClienteDestino === this.cliente.cpf);
         
-        if (isEntrada) {
-          saldoAuxiliar -= m.valor; // Se entrou dinheiro hoje, no dia anterior o saldo era menor
-        } else {
-          saldoAuxiliar += m.valor; // Se saiu dinheiro hoje, no dia anterior o saldo era maior
-        }
-      });
+    //     if (isEntrada) {
+    //       saldoAuxiliar -= m.valor; // Se entrou dinheiro hoje, no dia anterior o saldo era menor
+    //     } else {
+    //       saldoAuxiliar += m.valor; // Se saiu dinheiro hoje, no dia anterior o saldo era maior
+    //     }
+    //   });
 
-      dataAtual.setDate(dataAtual.getDate() - 1);
-    }
+    //   dataAtual.setDate(dataAtual.getDate() - 1);
+    // }
 
     return mapa;
   }
@@ -98,20 +98,20 @@ export class Extrato {
   movimentacoes!: Movimentacao[];
 
   ngOnInit(): void {
-    const dadosCliente = this.clienteSessionService.getCliente();
-    const dadosConta = this.clienteSessionService.getConta();
+    // const dadosCliente = this.clienteSessionService.getCliente();
+    // const dadosConta = this.clienteSessionService.getConta();
     
-    if (dadosCliente && dadosConta) {
-      this.cliente = dadosCliente;
-      this.contaCliente = dadosConta;
-      this.movimentacoes = this.movimentacaoService.buscarMovimentacoesPorCPFCliente(dadosCliente.cpf);
+    // if (dadosCliente && dadosConta) {
+    //   this.cliente = dadosCliente;
+    //   this.contaCliente = dadosConta;
+    //   this.movimentacoes = this.movimentacaoService.buscarMovimentacoesPorCPFCliente(dadosCliente.cpf);
 
-      console.log(`Movimentações do ${this.cliente.nome} : `, this.movimentacoes);
+    //   console.log(`Movimentações do ${this.cliente.nome} : `, this.movimentacoes);
 
 
-    } else {
-      this.router.navigate(['/login']);
-    }
+    // } else {
+    //   this.router.navigate(['/login']);
+    // }
   }
 
 

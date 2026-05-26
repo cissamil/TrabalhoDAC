@@ -25,7 +25,7 @@ export class CompositionServices {
 //   }
 // }
 
-getClienteConta(token: string): Observable<ClienteConta> {
+public getClienteConta(token: string): Observable<ClienteConta> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
