@@ -17,6 +17,7 @@ public class GerenteRequestMapper {
     inputData.setCpf(request.getCpf());
     inputData.setNome(request.getNome());
     inputData.setEmail(request.getEmail());
+    inputData.setSenha(request.getSenha());
 
     return inputData;
   }

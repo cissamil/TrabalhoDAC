@@ -15,9 +15,6 @@ import java.security.SecureRandom;
 @RequiredArgsConstructor
 public class PrepareClienteCredentialUseCase implements PrepareClienteCredentialInputPort {
 
-  @Autowired
-  private final PasswordEncoder passwordEncoder;
-
   private final ConsultClienteOutputPort consultClienteOutputPort;
   private final CreateUserCredentialInputPort createUserCredentialInputPort;
 
@@ -61,9 +58,6 @@ public class PrepareClienteCredentialUseCase implements PrepareClienteCredential
       senha.append(characters.charAt(index));
     }
 
-    // @TODO CRIPTOGRAFAR AS SENHAS ANTES DE SALVAR NO BANCO. MANTER ATÉ O LOGIN FUNCIONAR
-    // return  passwordEncoder.encode(senha.toString());
     return senha.toString();
-
   }
 }

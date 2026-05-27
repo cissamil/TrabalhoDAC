@@ -33,6 +33,9 @@ public class CreateGerenteCredentialConsumer {
       inputData.setSenha(payload.getSenha());
 
       System.out.println("Dados do gerente recebidos: " + inputData.getGerenteId());
+      System.out.println("Senha: " + inputData.getSenha());
+
+
 
       prepareGerenteCredentialInputPort.execute(inputData);
 

@@ -22,7 +22,7 @@ public class PublishCreateGerenteCredentialEventAdapter implements PublishCreate
   @Override
   public void publish(GerenteEventPublisher publisher) {
 
-
+    System.out.println("Senha a ser enviada: " + publisher.getSenha());
     GenerateGerenteCredentialEventMessage generateGerenteCredentialEventMessage = new GenerateGerenteCredentialEventMessage();
 
     generateGerenteCredentialEventMessage.setGerenteId(publisher.getGerenteId());
@@ -35,7 +35,7 @@ public class PublishCreateGerenteCredentialEventAdapter implements PublishCreate
 
       rabbitTemplate.convertAndSend(
         RabbitMQConfigMsGerente.GENERATE_MANAGER_CREDENTIAL_EXCHANGE,
-        "fluxo.gerar-credencial.key",
+        "fluxo.gerar-credencial-gerente.key",
         message
       );
 

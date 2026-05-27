@@ -18,7 +18,7 @@ public class RabbitMQConfigMsGerente {
   public static final String TRANSFER_ACCOUNTS_TO_MANAGER_QUEUE = "atribuir-contas";
 
   public static final String GENERATE_MANAGER_CREDENTIAL_EXCHANGE = "fluxo.credencial-gerente";
-  public static final String GENERATE_MANAGER_CREDENTIAL_QUEUE = "gerar-credencial";
+  public static final String GENERATE_MANAGER_CREDENTIAL_QUEUE = "gerar-credencial-gerente";
 
 
   @Bean
@@ -63,7 +63,7 @@ public class RabbitMQConfigMsGerente {
 
   @Bean
   public Binding bindingGenerateManagerCredentialChannel(Queue generateManagerCredentialQueue, DirectExchange generateManagerCredentialExchange) {
-    return BindingBuilder.bind(generateManagerCredentialQueue).to(generateManagerCredentialExchange).with("fluxo.gerar-credencial.key");
+    return BindingBuilder.bind(generateManagerCredentialQueue).to(generateManagerCredentialExchange).with("fluxo.gerar-credencial-gerente.key");
   }
 
 
