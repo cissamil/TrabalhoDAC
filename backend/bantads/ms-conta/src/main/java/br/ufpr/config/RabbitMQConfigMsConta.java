@@ -16,7 +16,7 @@ public class RabbitMQConfigMsConta {
   public static final String REGISTER_QUEUE = "cadastrar-conta";
 
   public static final String APPROVED_ACCOUNT_EXCHANGE = "fluxo.conta-aprovada";
-  public static final String APPROVED_ACCOUNT_QUEUE = "gerar-credencial";
+  public static final String APPROVED_ACCOUNT_QUEUE = "gerar-credencial-cliente";
 
   public static final String ASSIGN_ACCOUNT_TO_NEW_MANAGER_EXCHANGE = "fluxo.adicionar-gerente";
   public static final String ASSIGN_ACCOUNT_TO_NEW_MANAGER_QUEUE = "atribuir-conta";

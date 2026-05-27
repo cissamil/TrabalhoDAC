@@ -1,13 +1,13 @@
 package br.ufpr.core.usecases;
 
-import br.ufpr.core.domain.Usuario;
-import lombok.RequiredArgsConstructor;
 import br.ufpr.core.domain.UserInputData;
+import br.ufpr.core.domain.Usuario;
+import br.ufpr.core.ports.input.CreateUserCredentialInputPort;
+import br.ufpr.core.ports.output.SaveUsuarioCredentialOutputPort;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import br.ufpr.core.ports.input.CreateUserCredentialInputPort;
-import br.ufpr.core.ports.output.SaveUsuarioCredentialOutputPort;
 
 @Component
 @RequiredArgsConstructor
@@ -31,10 +31,11 @@ public class CreateUserCredentialUseCase implements CreateUserCredentialInputPor
     usuario.setTipoUsuario(inputData.getTipoUsuario());
 
     saveUsuarioCredentialOutputPort.save(usuario);
-  }
 
+  }
 
   public String encodePassword(String password){
     return passwordEncoder.encode(password);
   }
+
 }

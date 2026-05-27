@@ -12,7 +12,7 @@ public class RabbitMQConfigMsAuth {
 
 
   public static final String APPROVED_ACCOUNT_EXCHANGE = "fluxo.conta-aprovada";
-  public static final String APPROVED_ACCOUNT_QUEUE = "gerar-credencial";
+  public static final String APPROVED_ACCOUNT_QUEUE = "gerar-credencial-cliente";
 
   public static final String GENERATE_MANAGER_CREDENTIAL_EXCHANGE = "fluxo.credencial-gerente";
   public static final String GENERATE_MANAGER_CREDENTIAL_QUEUE = "gerar-credencial-gerente";
