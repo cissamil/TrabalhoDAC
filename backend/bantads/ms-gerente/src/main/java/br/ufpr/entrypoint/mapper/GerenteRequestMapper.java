@@ -1,14 +1,13 @@
 package br.ufpr.entrypoint.mapper;
 
 import br.ufpr.core.domain.GerenteInputData;
-import br.ufpr.entrypoint.request.GerenteRequest;
-import lombok.RequiredArgsConstructor;
+import br.ufpr.entrypoint.request.AddGerenteRequest;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GerenteRequestMapper {
 
-  public GerenteInputData toInputData(GerenteRequest request){
+  public GerenteInputData toInputData(AddGerenteRequest request){
 
     if (request == null) return null;
 

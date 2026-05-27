@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GerenteRequest {
+public class AddGerenteRequest {
 
   //TODO DESCOMENTAR A CLAUSULA CPF PARA VALIDAÇÃO
   // @CPF

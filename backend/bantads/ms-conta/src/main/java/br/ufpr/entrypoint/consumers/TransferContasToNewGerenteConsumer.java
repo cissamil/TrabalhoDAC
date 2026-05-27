@@ -21,11 +21,13 @@ public class TransferContasToNewGerenteConsumer {
   @RabbitListener(queues = RabbitMQConfigMsConta.TRANSFER_ACCOUNTS_TO_MANAGER_QUEUE)
   public void receiveEvent(String message) throws JsonProcessingException{
 
+    System.out.println("Deu boa aqui hein!");
+
     try{
 
       TransferContasToGerenteMessage payload = objectMapper.readValue(message, TransferContasToGerenteMessage.class);
 
-      System.out.println("[MS-CONTA] Dados do gerente recebidos. Id: " + payload.getGerenteId());
+      System.out.println("[MS-CONTA-TRANSFER-CONTAS] Dados do gerente recebidos. Id: " + payload.getGerenteId());
 
       TransferContasToGerenteInputData inputData = new TransferContasToGerenteInputData();
 

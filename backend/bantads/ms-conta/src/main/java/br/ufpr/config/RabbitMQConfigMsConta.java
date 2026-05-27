@@ -22,7 +22,7 @@ public class RabbitMQConfigMsConta {
   public static final String ASSIGN_ACCOUNT_TO_NEW_MANAGER_QUEUE = "atribuir-conta";
 
   public static final String TRANSFER_ACCOUNTS_TO_MANAGER_EXCHANGE = "fluxo.remover-gerente";
-  public static final String TRANSFER_ACCOUNTS_TO_MANAGER_QUEUE = "atribuir-contas";
+  public static final String TRANSFER_ACCOUNTS_TO_MANAGER_QUEUE = "transferir-contas";
 
   @Bean
   public DirectExchange registerExchange(){
@@ -82,7 +82,7 @@ public class RabbitMQConfigMsConta {
 
   @Bean
   public Binding bindingTransferAccountsToNewManagerChannel(Queue transferAccountsToNewManagerQueue, DirectExchange transferAccountsToNewManagerExchange) {
-    return BindingBuilder.bind(transferAccountsToNewManagerQueue).to(transferAccountsToNewManagerExchange).with("fluxo.atribuir-contas.key");
+    return BindingBuilder.bind(transferAccountsToNewManagerQueue).to(transferAccountsToNewManagerExchange).with("fluxo.transferir-contas.key");
   }
 
 

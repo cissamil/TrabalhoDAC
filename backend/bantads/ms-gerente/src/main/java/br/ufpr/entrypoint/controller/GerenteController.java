@@ -2,9 +2,12 @@ package br.ufpr.entrypoint.controller;
 
 import br.ufpr.core.domain.Gerente;
 import br.ufpr.core.domain.GerenteInputData;
+import br.ufpr.core.domain.RemoveGerenteInputData;
 import br.ufpr.core.ports.input.InsertNewGerenteInputPort;
+import br.ufpr.core.ports.input.RemoveGerenteInputPort;
 import br.ufpr.entrypoint.mapper.GerenteRequestMapper;
-import br.ufpr.entrypoint.request.GerenteRequest;
+import br.ufpr.entrypoint.request.AddGerenteRequest;
+import br.ufpr.entrypoint.request.RemoveGerenteRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +23,30 @@ public class GerenteController {
 
   private final GerenteRequestMapper gerenteRequestMapper;
   private final GerenteResponseMapper gerenteResponseMapper;
-  private final FindGerenteByGerenteIdInputPort findGerenteByGerenteIdInputPort;
+
+  private final RemoveGerenteInputPort removeGerenteInputPort;
   private final InsertNewGerenteInputPort insertNewGerenteInputPort;
+  private final FindGerenteByGerenteIdInputPort findGerenteByGerenteIdInputPort;
 
   @PostMapping(value = "/adicionar-gerente")
-  ResponseEntity<Void> insertGerente(@Valid @RequestBody GerenteRequest request){
+  ResponseEntity<Void> insertGerente(@Valid @RequestBody AddGerenteRequest request){
 
     GerenteInputData inputData = gerenteRequestMapper.toInputData(request);
 
     insertNewGerenteInputPort.execute(inputData);
+
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping(value = "/remover-gerente")
+  ResponseEntity<Void> removeGerente(@Valid @RequestBody RemoveGerenteRequest request){
+
+    RemoveGerenteInputData inputData = new RemoveGerenteInputData();
+
+    inputData.setGerenteId(request.getGerenteId());
+
+
+    removeGerenteInputPort.execute(inputData);
 
     return ResponseEntity.ok().build();
   }

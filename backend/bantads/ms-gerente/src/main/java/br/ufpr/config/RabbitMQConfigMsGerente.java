@@ -15,7 +15,7 @@ public class RabbitMQConfigMsGerente {
   public static final String ASSIGN_ACCOUNT_TO_NEW_MANAGER_QUEUE = "atribuir-conta";
 
   public static final String TRANSFER_ACCOUNTS_TO_MANAGER_EXCHANGE = "fluxo.remover-gerente";
-  public static final String TRANSFER_ACCOUNTS_TO_MANAGER_QUEUE = "atribuir-contas";
+  public static final String TRANSFER_ACCOUNTS_TO_MANAGER_QUEUE = "transferir-contas";
 
   public static final String GENERATE_MANAGER_CREDENTIAL_EXCHANGE = "fluxo.credencial-gerente";
   public static final String GENERATE_MANAGER_CREDENTIAL_QUEUE = "gerar-credencial-gerente";
@@ -58,7 +58,7 @@ public class RabbitMQConfigMsGerente {
 
   @Bean
   public Binding bindingTransferAccountsToNewManagerChannel(Queue transferAccountsToNewManagerQueue, DirectExchange transferAccountsToNewManagerExchange) {
-    return BindingBuilder.bind(transferAccountsToNewManagerQueue).to(transferAccountsToNewManagerExchange).with("fluxo.atribuir-contas.key");
+    return BindingBuilder.bind(transferAccountsToNewManagerQueue).to(transferAccountsToNewManagerExchange).with("fluxo.transferir-contas.key");
   }
 
   @Bean
