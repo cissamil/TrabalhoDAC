@@ -2,6 +2,7 @@ package br.ufpr.entrypoint.controller;
 
 import br.ufpr.core.domain.Cliente;
 import br.ufpr.core.domain.ClienteRequestInputData;
+import br.ufpr.core.ports.input.FindClientesInputPort;
 import br.ufpr.entrypoint.mapper.ClienteResponseMapper;
 import br.ufpr.core.ports.input.FindClientesFromIdListInputPort;
 import br.ufpr.core.ports.input.GetClienteInputPort;
@@ -29,6 +30,7 @@ public class ClienteController {
 
   private final SaveClienteInputPort saveClienteInputPort;
   private final GetClienteInputPort getClienteInputPort;
+  private final FindClientesInputPort findClientesInputPort;
   private final FindClientesFromIdListInputPort findClientesFromIdListInputPort;
 
   private final ClienteRequestMapper clienteRequestMapper;
@@ -59,6 +61,16 @@ public class ClienteController {
     ClienteResponse clienteResponse = clienteResponseMapper.toResponse(cliente);
 
     return ResponseEntity.ok(clienteResponse);
+  }
+
+  @GetMapping()
+  public ResponseEntity<List<ClienteResponse>> getClientes(){
+
+    List<Cliente> clientes = findClientesInputPort.find();
+
+    List<ClienteResponse> responseList = clientes.stream().map(clienteResponseMapper::toResponse).toList();
+
+    return ResponseEntity.ok(responseList);
   }
 
   @PostMapping(value = "/lista-clientes-por-id")

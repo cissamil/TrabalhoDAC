@@ -3,6 +3,7 @@ package br.ufpr.entrypoint.controller;
 import br.ufpr.core.domain.Gerente;
 import br.ufpr.core.domain.GerenteInputData;
 import br.ufpr.core.domain.RemoveGerenteInputData;
+import br.ufpr.core.ports.input.FindGerentesInputPort;
 import br.ufpr.core.ports.input.InsertNewGerenteInputPort;
 import br.ufpr.core.ports.input.RemoveGerenteInputPort;
 import br.ufpr.entrypoint.mapper.GerenteRequestMapper;
@@ -16,6 +17,9 @@ import br.ufpr.entrypoint.mapper.GerenteResponseMapper;
 import org.springframework.web.bind.annotation.*;
 import br.ufpr.core.ports.input.FindGerenteByGerenteIdInputPort;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/gerentes")
@@ -24,10 +28,21 @@ public class GerenteController {
   private final GerenteRequestMapper gerenteRequestMapper;
   private final GerenteResponseMapper gerenteResponseMapper;
 
+  private final FindGerentesInputPort findGerentesInputPort;
   private final RemoveGerenteInputPort removeGerenteInputPort;
   private final InsertNewGerenteInputPort insertNewGerenteInputPort;
   private final FindGerenteByGerenteIdInputPort findGerenteByGerenteIdInputPort;
 
+
+  @GetMapping()
+  ResponseEntity<List<GerenteResponse>> getGerentes(){
+
+    List<Gerente> gerentes = findGerentesInputPort.find();
+
+    List<GerenteResponse> responseList = gerentes.stream().map(gerenteResponseMapper::toResponse).toList();
+
+    return ResponseEntity.ok(responseList);
+  }
   @PostMapping(value = "/adicionar-gerente")
   ResponseEntity<Void> insertGerente(@Valid @RequestBody AddGerenteRequest request){
 
