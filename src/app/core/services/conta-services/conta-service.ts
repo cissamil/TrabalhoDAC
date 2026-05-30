@@ -67,7 +67,7 @@ export class ContaService {
   // }
 
   atualizarConta(conta: Conta): Observable<Conta> {
-    return this.httpClient.put<Conta>(
+    return this.httpClient.post<Conta>(
       this.CONTA_URL + "/" + conta.id,
       JSON.stringify(conta),
       this.httpOptions
