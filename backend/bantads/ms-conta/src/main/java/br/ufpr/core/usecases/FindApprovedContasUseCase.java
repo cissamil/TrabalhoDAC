@@ -19,11 +19,9 @@ public class FindApprovedContasUseCase implements FindApprovedContasInputPort {
   private final FindContasByGerenteAndStatusOutputPort findContasByGerenteAndStatusOutputPort;
 
   @Override
-  public List<Conta> find() {
+  public List<Conta> find(String gerenteId) {
 
-    String emptyGerenteId = "";
-
-    return findContasByGerenteAndStatusOutputPort.find(emptyGerenteId, StatusConta.CONTA_APROVADA);
+    return findContasByGerenteAndStatusOutputPort.find(gerenteId, StatusConta.CONTA_APROVADA);
 
   }
 }

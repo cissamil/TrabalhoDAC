@@ -1,26 +1,13 @@
 package br.ufpr.entrypoint.controller;
 
-import br.ufpr.core.domain.ClienteContaDashboardOutputData;
-import br.ufpr.core.domain.ClientesReportDashboardOutputData;
-import br.ufpr.core.domain.LargestBalanceContasDashboardOutputData;
-import br.ufpr.core.domain.PendingContasDashboardOutputData;
-import br.ufpr.core.ports.input.GroupClienteContaGerenteInputPort;
-import br.ufpr.core.ports.input.GroupClientesReportInputPort;
-import br.ufpr.core.ports.input.GroupLargestBalanceContasWIthClienteInputPort;
-import br.ufpr.core.ports.input.GroupPendingContasDashboardInputPort;
-import br.ufpr.entrypoint.mapper.ClienteContaDashboardAssembler;
-import br.ufpr.entrypoint.mapper.ClientesReportDashboardAssembler;
-import br.ufpr.entrypoint.mapper.LargestBalanceContaDashboardAssembler;
-import br.ufpr.entrypoint.mapper.PendingContasDashboardAssembler;
-import br.ufpr.entrypoint.response.ClienteContaDashboardResponse;
-import br.ufpr.entrypoint.response.ClientesReportDashboardResponse;
-import br.ufpr.entrypoint.response.LargestBalanceContaDashboardResponse;
-import br.ufpr.entrypoint.response.PendingContasDashboardResponse;
+import br.ufpr.core.domain.*;
+import br.ufpr.core.ports.input.*;
+import br.ufpr.entrypoint.mapper.*;
+import br.ufpr.entrypoint.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,9 +16,11 @@ import java.util.List;
 public class CompositionController {
 
   private final GroupClientesReportInputPort groupClientesReportInputPort;
+  private final GroupClientesContasInputPort groupClientesContasInputPort;
   private final ClienteContaDashboardAssembler clienteContaDashboardMapper;
   private final PendingContasDashboardAssembler pendingContasDashboardAssembler;
   private final ClientesReportDashboardAssembler clientesReportDashboardAssembler;
+  private final ClientesContasDashboardAssembler clientesContasDashboardAssembler;
   private final GroupClienteContaGerenteInputPort groupClienteContaGerenteInputPort;
   private final GroupPendingContasDashboardInputPort groupPendingContasDashboardInputPort;
   private final LargestBalanceContaDashboardAssembler largestBalanceContaDashboardAssembler;
@@ -67,8 +56,17 @@ public class CompositionController {
 
     ClientesReportDashboardOutputData outputData = groupClientesReportInputPort.execute();
 
-
     List<ClientesReportDashboardResponse> response = clientesReportDashboardAssembler.assemble(outputData);
+
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping(value = "/consultar-clientes")
+  public ResponseEntity<List<ClientesContasDashboardResponse>> clientesConsult(@RequestHeader("X-Gerente-id") String gerenteId){
+
+    ClientesContasDashboardOutputData outputData = groupClientesContasInputPort.execute(gerenteId);
+
+    List<ClientesContasDashboardResponse> response = clientesContasDashboardAssembler.assemble(outputData);
 
     return ResponseEntity.ok(response);
   }

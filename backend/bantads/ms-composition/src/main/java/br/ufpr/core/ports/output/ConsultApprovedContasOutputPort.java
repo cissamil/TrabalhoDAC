@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ConsultApprovedContasOutputPort {
 
-  List<ContaOutputData> consult();
+  List<ContaOutputData> consult(String gerenteId);
 }

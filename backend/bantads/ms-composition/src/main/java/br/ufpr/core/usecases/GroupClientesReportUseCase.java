@@ -25,7 +25,9 @@ public class GroupClientesReportUseCase implements GroupClientesReportInputPort 
 
     ClientesReportDashboardOutputData clientesReportDashboardOutputData = new ClientesReportDashboardOutputData();
 
-    List<ContaOutputData> contaOutputDataList = consultApprovedContasOutputPort.consult();
+    List<ContaOutputData> contaOutputDataList = consultApprovedContasOutputPort.consult(" ");
+
+    validateContasList(contaOutputDataList);
     List<String> clientesIds = extractClientesIdAndConsultOutputPort(contaOutputDataList);
     List<String> gerentesIds = extractGerentesIdAndConsultOutputPort(contaOutputDataList);
 
@@ -44,6 +46,11 @@ public class GroupClientesReportUseCase implements GroupClientesReportInputPort 
     return clientesReportDashboardOutputData;
   }
 
+  private void validateContasList(List<ContaOutputData> contaOutputDataList) {
+    if(contaOutputDataList == null){
+      throw new RuntimeException("Erro ao pegar as contas");
+    }
+  }
   private ClientesGerentesAsyncConsult clienteAndGerenteOutputPortsMultipleAsyncConsult(List<String> clienteIds, List<String> gerenteIds) {
     CompletableFuture<List<ClienteOutputData>> clienteFuture = CompletableFuture.supplyAsync(() ->
       consultClientesListFromIdsOutputPort.consult(clienteIds)

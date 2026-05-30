@@ -1,9 +1,8 @@
 package br.ufpr.core.ports.input;
 
 import br.ufpr.core.domain.ClientesContasDashboardOutputData;
-import br.ufpr.core.domain.ClientesReportDashboardOutputData;
 
-public interface GroupClientesConsultInputPort {
+public interface GroupClientesContasInputPort {
 
   ClientesContasDashboardOutputData execute(String gerenteId);
 }

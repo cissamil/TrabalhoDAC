@@ -47,11 +47,11 @@ public class ContaController {
   }
 
   @GetMapping(value = "/aprovadas")
-  ResponseEntity<List<ContaResponse>> findApprovedContas(){
+  ResponseEntity<List<ContaResponse>> findApprovedContas(@RequestHeader("X-Gerente-Id") String gerenteId){
 
-    System.out.println("Rota de contas acionada");
+    System.out.println("Rota de contas acionada. Id do gerente: '" + gerenteId + "'");
 
-    List<Conta> contas = findApprovedContasInputPort.find();
+    List<Conta> contas = findApprovedContasInputPort.find(gerenteId);
 
     List<ContaResponse> responseList = contas.stream()
       .map(contaResponseMapper::toResponse)

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface FindApprovedContasInputPort {
 
-  List<Conta> find();
+  List<Conta> find(String gerenteId);
 }

@@ -17,30 +17,36 @@ public class LargestBalanceContaDashboardAssembler {
     List<ClienteOutputData> clientes = outputData.getClientes();
     List<LargestBalancesContasOutputData> contas = outputData.getContas();
 
-    List<LargestBalanceContaDashboardResponse> responseList = contas.stream().map(conta -> {
+    return contas.stream().map(conta -> {
 
       if(conta == null) return null;
 
-      LargestBalanceContaDashboardResponse response = new LargestBalanceContaDashboardResponse();
+      ClienteOutputData cliente = findClienteFromList(conta, clientes);
 
-      ClienteOutputData cliente = clientes.stream().filter(
-        clienteOutputData -> clienteOutputData.getClienteId().equals(conta.getClienteId()))
-        .findFirst()
-        .orElse(null);
+      if (cliente == null) return null;
 
-        if(cliente == null) return null;
-
-        response.setNome(cliente.getNome());
-        response.setSaldo(conta.getSaldo());
-        response.setCpf(cliente.getCpf());
-        response.setEndereco(cliente.getEndereco());
-        response.setClienteId(cliente.getClienteId());
-        response.setContaId(conta.getContaId());
-
-        return response;
+      return convertToDashboardResponse(conta, cliente);
     }).toList();
+  }
 
+  private LargestBalanceContaDashboardResponse convertToDashboardResponse(LargestBalancesContasOutputData conta, ClienteOutputData cliente) {
+    LargestBalanceContaDashboardResponse response = new LargestBalanceContaDashboardResponse();
 
-    return responseList;
+    response.setNome(cliente.getNome());
+    response.setSaldo(conta.getSaldo());
+    response.setCpf(cliente.getCpf());
+    response.setEndereco(cliente.getEndereco());
+    response.setClienteId(cliente.getClienteId());
+    response.setContaId(conta.getContaId());
+
+    return response;
+  }
+
+  private ClienteOutputData findClienteFromList(LargestBalancesContasOutputData conta, List<ClienteOutputData> clientes) {
+    ClienteOutputData cliente = clientes.stream().filter(
+      clienteOutputData -> clienteOutputData.getClienteId().equals(conta.getClienteId()))
+      .findFirst()
+      .orElse(null);
+    return cliente;
   }
 }

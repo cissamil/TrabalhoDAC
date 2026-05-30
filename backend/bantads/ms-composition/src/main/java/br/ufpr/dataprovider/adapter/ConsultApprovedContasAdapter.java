@@ -20,11 +20,11 @@ public class ConsultApprovedContasAdapter implements ConsultApprovedContasOutput
   private final ContaResponseMapper mapper;
 
   @Override
-  public List<ContaOutputData> consult() {
+  public List<ContaOutputData> consult(String gerenteId) {
+    System.out.println("Gerente Id: '" + gerenteId + "'");
 
-    List<ContaResponse> responseList = msContaClient.consultApprovedContas();
+    List<ContaResponse> responseList = msContaClient.consultApprovedContas(gerenteId);
 
-    System.out.println("Contas aprovadas encontrdas " + responseList.size());
 
     return responseList.stream()
       .map(mapper::toOutputData)

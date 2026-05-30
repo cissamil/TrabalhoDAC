@@ -27,7 +27,7 @@ public class FindContasByGerenteAndStatusAdapter implements FindContasByGerenteA
 
     List<ContaEntity> entities;
 
-    if(gerenteId.isEmpty()){
+    if(gerenteId.equals(" ") || gerenteId.isEmpty()){
 
       System.out.println("Id do gerente vazio, pegando contas aprovadas gerais");
       entities = repository.findByStatusConta(statusConta);

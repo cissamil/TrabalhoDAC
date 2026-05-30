@@ -20,7 +20,7 @@ public interface MsContaClient {
   List<PendingContaResponse> consultPendingContas(@RequestHeader("X-Gerente-Id") String gerenteId);
 
   @GetMapping(value = "/aprovadas")
-  List<ContaResponse> consultApprovedContas();
+  List<ContaResponse> consultApprovedContas(@RequestHeader("X-Gerente-Id") String gerenteId);
 
   @GetMapping(value = "/contas-por-quantidade")
   List<LargestBalancesContasResponse> consultContasByQuantity(@RequestHeader("X-Quantidade") int quantity);

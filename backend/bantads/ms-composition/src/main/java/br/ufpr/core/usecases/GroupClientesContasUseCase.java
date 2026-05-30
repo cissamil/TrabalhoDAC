@@ -1,21 +1,18 @@
 package br.ufpr.core.usecases;
 
 import br.ufpr.core.domain.*;
-import br.ufpr.core.ports.input.GroupClientesConsultInputPort;
-import br.ufpr.core.ports.input.GroupClientesReportInputPort;
+import br.ufpr.core.ports.input.GroupClientesContasInputPort;
 import br.ufpr.core.ports.output.ConsultApprovedContasOutputPort;
 import br.ufpr.core.ports.output.ConsultClientesListFromIdsOutputPort;
-import br.ufpr.core.ports.output.ConsultGerentesListFromIdsOutputPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Component
 @RequiredArgsConstructor
-public class GroupClientesConsultUseCase implements GroupClientesConsultInputPort {
+public class GroupClientesContasUseCase implements GroupClientesContasInputPort {
 
   private final ConsultApprovedContasOutputPort consultApprovedContasOutputPort;
   private final ConsultClientesListFromIdsOutputPort consultClientesListFromIdsOutputPort;
