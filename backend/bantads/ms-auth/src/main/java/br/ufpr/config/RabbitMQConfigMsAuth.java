@@ -17,6 +17,9 @@ public class RabbitMQConfigMsAuth {
   public static final String GENERATE_MANAGER_CREDENTIAL_EXCHANGE = "fluxo.credencial-gerente";
   public static final String GENERATE_MANAGER_CREDENTIAL_QUEUE = "gerar-credencial-gerente";
 
+  public static final String UPDATE_USER_EMAIL_EXCHANGE = "fluxo.login-usuario";
+  public static final String UPDATE_USER_EMAIL_QUEUE = "atualizar-login-usuario";
+
   @Bean
   public DirectExchange approvedAccountExchange(){
     return new DirectExchange(APPROVED_ACCOUNT_EXCHANGE);
@@ -25,6 +28,16 @@ public class RabbitMQConfigMsAuth {
   @Bean
   public Queue approvedAccountQueue(){
     return new Queue(APPROVED_ACCOUNT_QUEUE, true, false, false);
+  }
+
+  @Bean
+  public DirectExchange updateUserEmailExchange(){
+    return new DirectExchange(UPDATE_USER_EMAIL_EXCHANGE);
+  }
+
+  @Bean
+  public Queue updateUserEmailQueue(){
+    return new Queue(UPDATE_USER_EMAIL_QUEUE, true, false, false);
   }
 
   @Bean
@@ -45,6 +58,11 @@ public class RabbitMQConfigMsAuth {
   @Bean
   public Binding bindingGenerateManagerCredentialChannel(Queue generateManagerCredentialQueue, DirectExchange generateManagerCredentialExchange) {
     return BindingBuilder.bind(generateManagerCredentialQueue).to(generateManagerCredentialExchange).with("fluxo.gerar-credencial-gerente.key");
+  }
+
+  @Bean
+  public Binding bindingUpdateUserEmailChannel(Queue updateUserEmailQueue, DirectExchange updateUserEmailExchange) {
+    return BindingBuilder.bind(updateUserEmailQueue).to(updateUserEmailExchange).with("fluxo.atualizar-login-usuario.key");
   }
 
 }

@@ -1,7 +1,7 @@
 package br.ufpr.core.usecases;
 
 import br.ufpr.core.domain.Cliente;
-import br.ufpr.core.ports.input.SaveClienteInputPort;
+import br.ufpr.core.ports.input.CreateClienteInputPort;
 import br.ufpr.core.ports.output.FindClienteByClienteIdOutputPort;
 import br.ufpr.core.ports.output.FindClienteByCpfOutputPort;
 import br.ufpr.core.ports.output.SaveClienteOutputPort;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class SaveClienteUseCase implements SaveClienteInputPort {
+public class CreateClienteUseCase implements CreateClienteInputPort {
 
   private final SaveClienteOutputPort saveClienteOutputPort;
   private final FindClienteByCpfOutputPort findClienteByCpfOutputPort;
