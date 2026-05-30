@@ -16,7 +16,7 @@ import java.util.List;
 public interface MsClienteClient {
 
   @PostMapping(value = "/lista-clientes-por-id")
-  List<PendingClienteResponse> consultClientesListFromIds(@RequestBody List<String> clienteIds);
+  List<ClienteResponse> consultClientesListFromIds(@RequestBody List<String> clienteIds);
 
   @GetMapping(value = "/{clienteId}")
   ClienteResponse consultClienteByClienteId(@PathVariable("clienteId") String clienteId);

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // MS-CONTA
@@ -18,7 +19,8 @@ import java.util.List;
 @RequestMapping(value = "api/contas")
 public class ContaController {
 
-  private final ContaResponseMapper mapper;
+  private final ContaResponseMapper contaResponseMapper;
+  private final FindContasByQuantityInputPort findContasByQuantityInputPort;
   private final FindPendingContasInputPort findPendingContasInputPort;
   private final RefusePendingContaInputPort refusePendingContaInputPort;
   private final ApprovePendingContaInputPort approvePendingContaInputPort;
@@ -35,7 +37,7 @@ public class ContaController {
     List<Conta> contas = findPendingContasInputPort.find(gerenteId);
 
     List<ContaResponse> responseList = contas.stream()
-      .map(mapper::toResponse)
+      .map(contaResponseMapper::toResponse)
       .toList();
 
     System.out.println("Retornando lista de contas");
@@ -78,7 +80,7 @@ public class ContaController {
 
     Conta conta = findContaByClienteIdInputPort.find(clienteId);
 
-    return ResponseEntity.ok(mapper.toResponse(conta));
+    return ResponseEntity.ok(contaResponseMapper.toResponse(conta));
   }
 
   @PostMapping("/{id}/depositar")
@@ -120,7 +122,16 @@ public class ContaController {
 
     transferMoneyToAnotherContaInputPort.execute(inputData);
     return ResponseEntity.noContent().build();
+  }
 
+  @GetMapping("/contas-por-quantidade")
+  ResponseEntity<List<ContaResponse>> findContasByQuantity(@RequestHeader("X-Quantidade") int quantity){
+
+    List<Conta> contaList = findContasByQuantityInputPort.find(quantity);
+
+    List<ContaResponse> responseList = contaList.stream().map(contaResponseMapper::toResponse).toList();
+
+    return ResponseEntity.ok(responseList);
   }
 
 

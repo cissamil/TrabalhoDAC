@@ -67,7 +67,19 @@ public class GroupPendingContasDashboardUseCase implements GroupPendingContasDas
 
     System.out.println("Buscando clientes pendentes \n");
 
-    return consultClientesListFromIdsOutputPort.consult(clienteIdList);
+    List<ClienteOutputData> clienteOutputDataList = consultClientesListFromIdsOutputPort.consult(clienteIdList);
+
+    return clienteOutputDataList.stream().map(outputData ->{
+      PendingClienteOutputData pendingClienteOutputData = new PendingClienteOutputData();
+
+      pendingClienteOutputData.setClienteId(outputData.getClienteId());
+      pendingClienteOutputData.setSalario(outputData.getSalario());
+      pendingClienteOutputData.setNome(outputData.getNome());
+      pendingClienteOutputData.setCpf(outputData.getCpf());
+      pendingClienteOutputData.setEmail(outputData.getEmail());
+
+      return pendingClienteOutputData;
+    }).toList();
 
   }
 

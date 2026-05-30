@@ -36,6 +36,7 @@ public class ContaResponseMapper {
     response.setId(conta.getId());
     response.setSaldo(conta.getSaldo());
     response.setLimite(conta.getLimite());
+    response.setContaId(conta.getContaId());
     response.setClienteId(conta.getClienteId());
     response.setGerenteId(conta.getGerenteId());
     response.setNumeroConta(conta.getNumeroConta());

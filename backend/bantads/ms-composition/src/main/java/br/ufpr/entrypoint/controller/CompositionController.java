@@ -1,16 +1,22 @@
 package br.ufpr.entrypoint.controller;
 
 import br.ufpr.core.domain.ClienteContaDashboardOutputData;
+import br.ufpr.core.domain.LargestBalanceContasDashboardOutputData;
 import br.ufpr.core.domain.PendingContasDashboardOutputData;
 import br.ufpr.core.ports.input.GroupClienteContaGerenteInputPort;
+import br.ufpr.core.ports.input.GroupLargestBalanceContasWIthClienteInputPort;
 import br.ufpr.core.ports.input.GroupPendingContasDashboardInputPort;
 import br.ufpr.entrypoint.mapper.ClienteContaDashboardAssembler;
+import br.ufpr.entrypoint.mapper.LargestBalanceContaDashboardAssembler;
 import br.ufpr.entrypoint.mapper.PendingContasDashboardAssembler;
 import br.ufpr.entrypoint.response.ClienteContaDashboardResponse;
+import br.ufpr.entrypoint.response.LargestBalanceContaDashboardResponse;
 import br.ufpr.entrypoint.response.PendingContasDashboardResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +27,8 @@ public class CompositionController {
   private final PendingContasDashboardAssembler pendingContasDashboardAssembler;
   private final GroupClienteContaGerenteInputPort groupClienteContaGerenteInputPort;
   private final GroupPendingContasDashboardInputPort groupPendingContasDashboardInputPort;
+  private final LargestBalanceContaDashboardAssembler largestBalanceContaDashboardAssembler;
+  private final GroupLargestBalanceContasWIthClienteInputPort groupLargestBalanceContasWIthClienteInputPort;
 
   @GetMapping(value = "/contas-pendentes")
   public ResponseEntity <PendingContasDashboardResponse> listPendingContas(@RequestHeader(value = "X-Gerente-Id", required = true) String gerenteId){
@@ -32,6 +40,18 @@ public class CompositionController {
     PendingContasDashboardResponse dashboardResponse = pendingContasDashboardAssembler.assemble(outputData);
 
     return ResponseEntity.ok(dashboardResponse);
+
+  }
+
+
+  @GetMapping(value = "/melhores-clientes")
+  public ResponseEntity<List<LargestBalanceContaDashboardResponse>> listBestClientes(){
+
+    LargestBalanceContasDashboardOutputData outputData = groupLargestBalanceContasWIthClienteInputPort.execute();
+
+    List<LargestBalanceContaDashboardResponse> responseList = largestBalanceContaDashboardAssembler.assemble(outputData);
+
+    return ResponseEntity.ok(responseList);
 
   }
 
