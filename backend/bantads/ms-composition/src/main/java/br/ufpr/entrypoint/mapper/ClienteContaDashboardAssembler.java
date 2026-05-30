@@ -25,7 +25,6 @@ public class ClienteContaDashboardAssembler {
     GerenteResponse gerenteResponse = buildGerenteResponseObject(gerente);
     ContaResponse contaResponse = buildContaResponseObject(conta, gerenteResponse);
 
-
     dashboardResponse.setClienteId(cliente.getClienteId());
     dashboardResponse.setCpf(cliente.getCpf());
     dashboardResponse.setNome(cliente.getNome());
@@ -49,7 +48,6 @@ public class ClienteContaDashboardAssembler {
     ContaResponse contaResponse = new ContaResponse();
 
     contaResponse.setNumeroConta(conta.getNumeroConta());
-    contaResponse.setId(conta.getId());
     contaResponse.setSaldo(conta.getSaldo());
     contaResponse.setLimite(conta.getLimite());
     contaResponse.setGerente(gerenteResponse);

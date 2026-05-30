@@ -11,8 +11,9 @@ public class GerenteResponseMapper {
 
     GerenteOutputData outputData = new GerenteOutputData();
 
-    outputData.setGerenteId(response.getGerenteId());
     outputData.setNome(response.getNome());
+    outputData.setCpf(response.getCpf());
+    outputData.setGerenteId(response.getGerenteId());
 
     return outputData;
   }

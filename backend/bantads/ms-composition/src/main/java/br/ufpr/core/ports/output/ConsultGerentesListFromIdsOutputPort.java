@@ -5,7 +5,7 @@ import br.ufpr.core.domain.GerenteOutputData;
 
 import java.util.List;
 
-public interface ConsultClientesListFromIdsOutputPort {
+public interface ConsultGerentesListFromIdsOutputPort {
 
-  List<ClienteOutputData> consult(List<String> clienteIds);
+  List<GerenteOutputData> consult(List<String> gerentesIds);
 }

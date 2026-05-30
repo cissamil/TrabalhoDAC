@@ -12,10 +12,11 @@ public class ContaResponseMapper {
 
     ContaOutputData outputData = new ContaOutputData();
 
-    outputData.setId(response.getId());
     outputData.setSaldo(response.getSaldo());
     outputData.setLimite(response.getLimite());
+    outputData.setContaId(response.getContaId());
     outputData.setGerenteId(response.getGerenteId());
+    outputData.setClienteId(response.getClienteId());
     outputData.setNumeroConta(response.getNumeroConta());
 
     return outputData;

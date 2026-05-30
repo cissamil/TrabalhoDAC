@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GerenteOutputData {
+public class ClientesGerentesAsyncConsult {
 
-  private String cpf;
-  private String nome;
-  private String gerenteId;
+  private List<ClienteOutputData> clientes;
+  private List<GerenteOutputData> gerentes;
 
 }

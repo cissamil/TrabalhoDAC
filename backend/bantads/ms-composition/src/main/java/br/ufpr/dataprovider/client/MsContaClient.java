@@ -3,7 +3,6 @@ package br.ufpr.dataprovider.client;
 import br.ufpr.dataprovider.client.domain.ContaResponse;
 import br.ufpr.dataprovider.client.domain.LargestBalancesContasResponse;
 import br.ufpr.dataprovider.client.domain.PendingContaResponse;
-import jakarta.websocket.server.PathParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -19,6 +18,9 @@ public interface MsContaClient {
 
   @GetMapping(value = "/pendentes")
   List<PendingContaResponse> consultPendingContas(@RequestHeader("X-Gerente-Id") String gerenteId);
+
+  @GetMapping(value = "/aprovadas")
+  List<ContaResponse> consultApprovedContas();
 
   @GetMapping(value = "/contas-por-quantidade")
   List<LargestBalancesContasResponse> consultContasByQuantity(@RequestHeader("X-Quantidade") int quantity);

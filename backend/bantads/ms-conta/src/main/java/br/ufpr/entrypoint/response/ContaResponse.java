@@ -19,7 +19,6 @@ import java.util.Date;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ContaResponse {
 
-  private Integer id;
   private String contaId;
   private BigDecimal saldo;
   private BigDecimal limite;

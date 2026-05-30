@@ -12,8 +12,10 @@ import java.math.BigDecimal;
 public class ContaOutputData {
 
   private Integer id;
+  private String contaId;
+  private String gerenteId;
+  private String clienteId;
   private BigDecimal saldo;
   private BigDecimal limite;
-  private String gerenteId;
   private String numeroConta;
 }

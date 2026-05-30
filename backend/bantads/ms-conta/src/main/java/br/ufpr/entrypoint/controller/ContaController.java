@@ -28,6 +28,7 @@ public class ContaController {
   private final DepositValueOnContaInputPort depositValueOnContaInputPort;
   private final WithDrawValueOfContaInputPort withDrawValueFromContaInputPort;
   private final TransferMoneyToAnotherContaInputPort transferMoneyToAnotherContaInputPort;
+  private final FindApprovedContasInputPort findApprovedContasInputPort;
 
   @GetMapping(value = "/pendentes")
   ResponseEntity<List<ContaResponse>> findPendingContas(@RequestHeader("X-Gerente-Id") String gerenteId){
@@ -35,6 +36,22 @@ public class ContaController {
     System.out.println("Rota de contas acionada");
 
     List<Conta> contas = findPendingContasInputPort.find(gerenteId);
+
+    List<ContaResponse> responseList = contas.stream()
+      .map(contaResponseMapper::toResponse)
+      .toList();
+
+    System.out.println("Retornando lista de contas");
+
+    return ResponseEntity.ok(responseList);
+  }
+
+  @GetMapping(value = "/aprovadas")
+  ResponseEntity<List<ContaResponse>> findApprovedContas(){
+
+    System.out.println("Rota de contas acionada");
+
+    List<Conta> contas = findApprovedContasInputPort.find();
 
     List<ContaResponse> responseList = contas.stream()
       .map(contaResponseMapper::toResponse)

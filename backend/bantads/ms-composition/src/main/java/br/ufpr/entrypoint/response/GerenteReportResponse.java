@@ -1,4 +1,4 @@
-package br.ufpr.dataprovider.client.domain;
+package br.ufpr.entrypoint.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -12,11 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class GerenteResponse {
+public class GerenteReportResponse {
 
   private String nome;
   private String cpf;
   private String gerenteId;
-
 
 }

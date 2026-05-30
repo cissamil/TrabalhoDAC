@@ -1,4 +1,4 @@
-package br.ufpr.dataprovider.client.domain;
+package br.ufpr.entrypoint.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -7,16 +7,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class GerenteResponse {
-
+public class ClienteReportResponse {
   private String nome;
   private String cpf;
-  private String gerenteId;
-
-
+  private String email;
+  private String clienteId;
+  private BigDecimal salario;
 }

@@ -13,7 +13,6 @@ public class ContaResponseMapper {
 
     Conta conta = new Conta();
 
-    conta.setId(response.getId());
     conta.setSaldo(response.getSaldo());
     conta.setLimite(response.getLimite());
     conta.setClienteId(response.getClienteId());
@@ -33,7 +32,6 @@ public class ContaResponseMapper {
 
     ContaResponse response = new ContaResponse();
 
-    response.setId(conta.getId());
     response.setSaldo(conta.getSaldo());
     response.setLimite(conta.getLimite());
     response.setContaId(conta.getContaId());

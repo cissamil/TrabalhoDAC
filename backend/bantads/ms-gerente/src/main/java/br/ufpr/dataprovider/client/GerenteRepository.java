@@ -24,4 +24,6 @@ public interface GerenteRepository extends JpaRepository<GerenteEntity, Integer>
   @Query(value = "SELECT * FROM gerentes WHERE tipo_gerente = 'GERENTE'",nativeQuery = true)
   List<GerenteEntity> findGerentes();
 
+  List<GerenteEntity> findByGerenteIdIn(List<String> gerenteIds);
+
 }

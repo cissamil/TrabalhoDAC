@@ -1,0 +1,29 @@
+package br.ufpr.core.usecases;
+
+import br.ufpr.core.domain.Conta;
+import br.ufpr.core.domain.StatusConta;
+import br.ufpr.core.ports.input.FindApprovedContasInputPort;
+import br.ufpr.core.ports.input.FindPendingContasInputPort;
+import br.ufpr.core.ports.output.FindContasByGerenteAndStatusOutputPort;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+// MS-CONTA
+
+@Component
+@RequiredArgsConstructor
+public class FindApprovedContasUseCase implements FindApprovedContasInputPort {
+
+  private final FindContasByGerenteAndStatusOutputPort findContasByGerenteAndStatusOutputPort;
+
+  @Override
+  public List<Conta> find() {
+
+    String emptyGerenteId = "";
+
+    return findContasByGerenteAndStatusOutputPort.find(emptyGerenteId, StatusConta.CONTA_APROVADA);
+
+  }
+}

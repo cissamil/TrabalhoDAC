@@ -3,9 +3,7 @@ package br.ufpr.entrypoint.controller;
 import br.ufpr.core.domain.Gerente;
 import br.ufpr.core.domain.GerenteInputData;
 import br.ufpr.core.domain.RemoveGerenteInputData;
-import br.ufpr.core.ports.input.FindGerentesInputPort;
-import br.ufpr.core.ports.input.InsertNewGerenteInputPort;
-import br.ufpr.core.ports.input.RemoveGerenteInputPort;
+import br.ufpr.core.ports.input.*;
 import br.ufpr.entrypoint.mapper.GerenteRequestMapper;
 import br.ufpr.entrypoint.request.AddGerenteRequest;
 import br.ufpr.entrypoint.request.RemoveGerenteRequest;
@@ -15,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import br.ufpr.entrypoint.response.GerenteResponse;
 import br.ufpr.entrypoint.mapper.GerenteResponseMapper;
 import org.springframework.web.bind.annotation.*;
-import br.ufpr.core.ports.input.FindGerenteByGerenteIdInputPort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +29,10 @@ public class GerenteController {
   private final RemoveGerenteInputPort removeGerenteInputPort;
   private final InsertNewGerenteInputPort insertNewGerenteInputPort;
   private final FindGerenteByGerenteIdInputPort findGerenteByGerenteIdInputPort;
+  private final FindGerentesFromIdListInputPort findGerentesFromIdListInputPort;
 
 
-  @GetMapping()
+  @GetMapping
   ResponseEntity<List<GerenteResponse>> getGerentes(){
 
     List<Gerente> gerentes = findGerentesInputPort.find();
@@ -74,6 +72,21 @@ public class GerenteController {
     GerenteResponse response = gerenteResponseMapper.toResponse(gerente);
 
     return ResponseEntity.ok(response);
+  }
 
+  @PostMapping(value = "/lista-gerentes-por-id")
+  public ResponseEntity<List<GerenteResponse>> batchSearchGerentes(@RequestBody List<String> gerenteIds){
+
+    System.out.println("Rota de gerentes acionada");
+
+    List<Gerente> gerentes = findGerentesFromIdListInputPort.find(gerenteIds);
+
+    System.out.println("Gerentes encontrados: " + gerentes.size());
+
+    List<GerenteResponse> responseList = gerentes.stream().map(gerenteResponseMapper::toResponse).toList();
+
+    System.out.println("Retornando lista de gerentes");
+
+    return ResponseEntity.ok(responseList);
   }
 }

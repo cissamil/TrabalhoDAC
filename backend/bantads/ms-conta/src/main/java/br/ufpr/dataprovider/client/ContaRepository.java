@@ -41,6 +41,9 @@ public interface ContaRepository extends JpaRepository<ContaEntity, Integer> {
 
   List<ContaEntity> findByGerenteIdAndStatusConta(String gerenteId, StatusConta statusConta);
 
+  List<ContaEntity> findByStatusConta(StatusConta statusConta);
+
+
   ContaEntity findByClienteId(String clienteId);
 
   @Query(
