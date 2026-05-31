@@ -26,11 +26,11 @@ public class TransferContasToNewGerenteUseCase implements TransferContasToNewGer
 
     validateGerenteWithFewerClientesId(gerentesWithFewerClientesId);
 
-    List<Conta> newContasForGerente = findContasByGerenteIdOutputPort.find(gerentesWithFewerClientesId);
+    List<Conta> newContasForGerente = findContasByGerenteIdOutputPort.find(gerenteId);
 
     validateContasForNewGerente(newContasForGerente);
 
-    newContasForGerente.forEach(conta -> conta.setGerenteId(gerenteId));
+    newContasForGerente.forEach(conta -> conta.setGerenteId(gerentesWithFewerClientesId));
 
     saveContasOutputPort.save(newContasForGerente);
   }

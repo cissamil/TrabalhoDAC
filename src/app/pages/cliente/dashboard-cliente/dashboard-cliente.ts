@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import{MatIconModule} from "@angular/material/icon";
-import { InfoCard } from '../../../core/models/info-card';
 import { DecimalPipe } from '@angular/common';
-import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatIconModule } from "@angular/material/icon";
 import { ClienteConta } from '../../../core/models/ClienteConta';
+import { InfoCard } from '../../../core/models/info-card';
+import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 @Component({
   selector: 'app-dashboard-cliente',
   imports: [MatIconModule, DecimalPipe],

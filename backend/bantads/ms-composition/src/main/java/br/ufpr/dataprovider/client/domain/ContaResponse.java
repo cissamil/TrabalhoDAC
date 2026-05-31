@@ -15,11 +15,12 @@ import java.util.Date;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ContaResponse {
 
-  private Integer id;
+public class ContaResponse {
+  private String contaId;
   private BigDecimal saldo;
   private BigDecimal limite;
   private String gerenteId;
+  private String clienteId;
   private String numeroConta;
 }

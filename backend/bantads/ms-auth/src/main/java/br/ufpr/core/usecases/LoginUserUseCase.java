@@ -36,11 +36,9 @@ public class LoginUserUseCase implements LoginUserInputPort {
     }
 
     // @TODO VALIDAÇÃO DA SENHA CRIPTOGRAFADA
-    // passwordEncoder.matches(senha, usuario.getSenha());
+    boolean correctPassword = passwordEncoder.matches(password, usuario.getSenha());
 
-    boolean validPassword = password.equals(usuario.getSenha());
-
-    if (!validPassword) {
+    if (!correctPassword) {
       throw new RuntimeException("Senha incorreta. Tente novamente");
     }
   }

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class Cliente implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+  // TODO SERIALIZAR A ENTIDADE DE ENDEREÇO
 
   private Integer id;
   private String clienteId;

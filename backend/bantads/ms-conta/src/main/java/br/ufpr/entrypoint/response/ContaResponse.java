@@ -4,6 +4,7 @@ import br.ufpr.core.domain.StatusConta;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.Date;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ContaResponse {
 
-  private Integer id;
+  private String contaId;
   private BigDecimal saldo;
   private BigDecimal limite;
   private String clienteId;

@@ -25,7 +25,7 @@ public class AssignContaToNewGerenteConsumer {
 
       AssignGerenteToContaMessage payload = objectMapper.readValue(message, AssignGerenteToContaMessage.class);
 
-      System.out.println("[MS-CONTA] Dados do gerente recebidos. Id: " + payload.getGerenteId());
+      System.out.println("[MS-CONTA-ASSIGN-CONTA] Dados do gerente recebidos. Id: " + payload.getGerenteId());
 
       AssignGerenteToContaInputData inputData = new AssignGerenteToContaInputData();
 

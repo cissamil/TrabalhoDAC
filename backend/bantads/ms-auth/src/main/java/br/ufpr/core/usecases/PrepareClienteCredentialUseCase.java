@@ -4,6 +4,7 @@ import br.ufpr.core.domain.*;
 import br.ufpr.core.ports.input.PrepareClienteCredentialInputPort;
 import br.ufpr.core.ports.input.CreateUserCredentialInputPort;
 import br.ufpr.core.ports.output.ConsultClienteOutputPort;
+import br.ufpr.core.ports.output.SendEmailOutputPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,9 +16,7 @@ import java.security.SecureRandom;
 @RequiredArgsConstructor
 public class PrepareClienteCredentialUseCase implements PrepareClienteCredentialInputPort {
 
-  @Autowired
-  private final PasswordEncoder passwordEncoder;
-
+  private final SendEmailOutputPort sendEmailOutputPort;
   private final ConsultClienteOutputPort consultClienteOutputPort;
   private final CreateUserCredentialInputPort createUserCredentialInputPort;
 
@@ -41,6 +40,7 @@ public class PrepareClienteCredentialUseCase implements PrepareClienteCredential
     userInputData.setTipoUsuario(TipoUsuario.CLIENTE);
 
     createUserCredentialInputPort.execute(userInputData);
+    sendPasswordEmailToCliente(clienteEmail, senhaUsuario);
   }
 
   private static void validateEmailCliente(String clienteEmail) {
@@ -61,9 +61,15 @@ public class PrepareClienteCredentialUseCase implements PrepareClienteCredential
       senha.append(characters.charAt(index));
     }
 
-    // @TODO CRIPTOGRAFAR AS SENHAS ANTES DE SALVAR NO BANCO. MANTER ATÉ O LOGIN FUNCIONAR
-    // return  passwordEncoder.encode(senha.toString());
     return senha.toString();
+  }
+
+  public void sendPasswordEmailToCliente(String clienteEmail, String password){
+
+    String subject = "Sua conta bancária foi aprovada!";
+    String message = "Olá! Sua conta bancária foi criada com sucesso! Sua senha de acesso é: " + password;
+
+    sendEmailOutputPort.send(clienteEmail, subject, message);
 
   }
 }

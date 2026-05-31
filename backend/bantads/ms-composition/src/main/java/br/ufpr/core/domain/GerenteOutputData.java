@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GerenteOutputData {
 
-  private String gerenteId;
+  private String cpf;
   private String nome;
+  private String gerenteId;
 
 }

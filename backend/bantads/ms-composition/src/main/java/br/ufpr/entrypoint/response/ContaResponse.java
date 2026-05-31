@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ContaResponse {
 
-  private Integer id;
+  private String contaId;
   private BigDecimal saldo;
   private BigDecimal limite;
   private String numeroConta;

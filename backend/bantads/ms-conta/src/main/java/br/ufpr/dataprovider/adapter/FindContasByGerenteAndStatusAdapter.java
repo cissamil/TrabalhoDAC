@@ -1,5 +1,6 @@
 package br.ufpr.dataprovider.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 import br.ufpr.core.domain.Conta;
 import br.ufpr.core.ports.output.FindContasByGerenteAndStatusOutputPort;
@@ -9,6 +10,8 @@ import br.ufpr.dataprovider.mapper.ContaEntityMapper;
 import br.ufpr.core.domain.StatusConta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import javax.swing.plaf.synth.SynthTextAreaUI;
 
 // MS-CONTA
 
@@ -22,13 +25,21 @@ public class FindContasByGerenteAndStatusAdapter implements FindContasByGerenteA
   @Override
   public List<Conta> find(String gerenteId, StatusConta statusConta) {
 
+    List<ContaEntity> entities;
 
-    List<ContaEntity> entities = repository.findByGerenteIdAndStatusConta(gerenteId, statusConta);
+    if(gerenteId.equals(" ") || gerenteId.isEmpty()){
 
-    List<Conta> contas = entities.stream()
+      System.out.println("Id do gerente vazio, pegando contas aprovadas gerais");
+      entities = repository.findByStatusConta(statusConta);
+    } else{
+
+      entities = repository.findByGerenteIdAndStatusConta(gerenteId, statusConta);
+    }
+
+    System.out.println("Contas aprovadas encontradas: " + entities.size());
+
+    return entities.stream()
       .map(mapper::toDomain)
       .toList();
-
-    return contas;
   }
 }

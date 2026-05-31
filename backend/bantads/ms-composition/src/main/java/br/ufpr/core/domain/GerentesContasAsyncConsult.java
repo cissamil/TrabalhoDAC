@@ -3,7 +3,6 @@ package br.ufpr.core.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -12,6 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 public class GerentesContasAsyncConsult {
 
-  GerenteOutputData gerenteOutputData;
-  List<PendingContaOutputData> contaOutputDataList;
+  List<GerenteOutputData> gerentes;
+  List<ContaOutputData> contas;
 }

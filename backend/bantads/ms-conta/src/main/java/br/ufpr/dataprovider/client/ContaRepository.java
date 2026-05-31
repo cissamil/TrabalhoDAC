@@ -41,6 +41,19 @@ public interface ContaRepository extends JpaRepository<ContaEntity, Integer> {
 
   List<ContaEntity> findByGerenteIdAndStatusConta(String gerenteId, StatusConta statusConta);
 
+  List<ContaEntity> findByStatusConta(StatusConta statusConta);
+
+
   ContaEntity findByClienteId(String clienteId);
+
+  @Query(
+    value =
+      "SELECT * FROM contas " +
+      "WHERE status_conta = 'CONTA_APROVADA' " +
+      "ORDER BY saldo DESC " +
+      "LIMIT ?1" ,
+      nativeQuery = true
+  )
+  List<ContaEntity> findContasOrderedBySaldoBasedOnQuantity(int quantity);
 
 }

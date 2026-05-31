@@ -2,13 +2,10 @@ package br.ufpr.entrypoint.controller;
 
 import br.ufpr.core.domain.Cliente;
 import br.ufpr.core.domain.ClienteRequestInputData;
+import br.ufpr.core.ports.input.*;
 import br.ufpr.entrypoint.mapper.ClienteResponseMapper;
-import br.ufpr.core.ports.input.FindClientesFromIdListInputPort;
-import br.ufpr.core.ports.input.GetClienteInputPort;
-import br.ufpr.core.ports.input.SaveClienteInputPort;
 import br.ufpr.entrypoint.mapper.ClienteRequestMapper;
 import br.ufpr.entrypoint.request.ClienteRequest;
-import br.ufpr.model.request.ClienteTransferRequest;
 import br.ufpr.entrypoint.response.ClienteResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +24,10 @@ import java.util.List;
 @RequestMapping("api/clientes")
 public class ClienteController {
 
-  private final SaveClienteInputPort saveClienteInputPort;
+  private final CreateClienteInputPort createClienteInputPort;
+  private final UpdateClienteInputPort updateClienteInputPort;
   private final GetClienteInputPort getClienteInputPort;
+  private final FindClientesInputPort findClientesInputPort;
   private final FindClientesFromIdListInputPort findClientesFromIdListInputPort;
 
   private final ClienteRequestMapper clienteRequestMapper;
@@ -40,11 +39,9 @@ public class ClienteController {
   @PostMapping(value = "/autocadastro")
   public ResponseEntity<Void> cadastrar(@Valid @RequestBody ClienteRequest request){
 
-      System.out.println("Opa, me chamaram aqui hein!");
-
       Cliente cliente = clienteRequestMapper.toDomain(request);
 
-      saveClienteInputPort.execute(cliente);
+      createClienteInputPort.execute(cliente);
 
       return ResponseEntity.status(HttpStatusCode.valueOf(201)).build();
   }
@@ -59,6 +56,28 @@ public class ClienteController {
     ClienteResponse clienteResponse = clienteResponseMapper.toResponse(cliente);
 
     return ResponseEntity.ok(clienteResponse);
+  }
+
+  @PutMapping(value = "/{clienteId}")
+  public ResponseEntity<Void> updateClienteData(@PathVariable("clienteId") String clienteId, @Valid @RequestBody ClienteRequest request){
+
+    Cliente cliente = clienteRequestMapper.toDomain(request);
+
+    cliente.setClienteId(clienteId);
+
+    updateClienteInputPort.execute(cliente);
+
+    return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping()
+  public ResponseEntity<List<ClienteResponse>> getClientes(){
+
+    List<Cliente> clientes = findClientesInputPort.find();
+
+    List<ClienteResponse> responseList = clientes.stream().map(clienteResponseMapper::toResponse).toList();
+
+    return ResponseEntity.ok(responseList);
   }
 
   @PostMapping(value = "/lista-clientes-por-id")

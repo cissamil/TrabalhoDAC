@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class GerenteResponse {
 
   private String nome;
+  private String cpf;
   private String gerenteId;
 
 
