@@ -2,12 +2,15 @@ package br.ufpr.entrypoint.controller;
 
 import br.ufpr.core.domain.*;
 import br.ufpr.core.ports.input.*;
+import br.ufpr.dataprovider.mapper.MovimentacaoResponseMapper;
 import br.ufpr.entrypoint.mapper.*;
 import br.ufpr.entrypoint.response.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -22,8 +25,10 @@ public class CompositionController {
   private final ClientesReportDashboardAssembler clientesReportDashboardAssembler;
   private final ClientesContasDashboardAssembler clientesContasDashboardAssembler;
   private final GroupClienteContaGerenteInputPort groupClienteContaGerenteInputPort;
+  private final GroupClienteMovimentacoesInputPort groupClienteMovimentacoesInputPort;
   private final GroupPendingContasDashboardInputPort groupPendingContasDashboardInputPort;
   private final LargestBalanceContaDashboardAssembler largestBalanceContaDashboardAssembler;
+  private final ClienteMovimentacoesDashboardAssembler clienteMovimentacoesDashboardAssembler;
   private final GroupLargestBalanceContasWIthClienteInputPort groupLargestBalanceContasWIthClienteInputPort;
 
   @GetMapping(value = "/contas-pendentes")
@@ -62,7 +67,7 @@ public class CompositionController {
   }
 
   @GetMapping(value = "/consultar-clientes")
-  public ResponseEntity<List<ClientesContasDashboardResponse>> clientesConsult(@RequestHeader("X-Gerente-id") String gerenteId){
+  public ResponseEntity<List<ClientesContasDashboardResponse>> clientesConsult(@RequestHeader("X-Gerente-Id") String gerenteId){
 
     ClientesContasDashboardOutputData outputData = groupClientesContasInputPort.execute(gerenteId);
 
@@ -71,9 +76,28 @@ public class CompositionController {
     return ResponseEntity.ok(response);
   }
 
-  @GetMapping(value = "/cliente-conta")
-  public ResponseEntity <ClienteContaDashboardResponse> agroupClienteAndConta(@RequestHeader(value = "X-Cliente-Id", required = true) String clienteId){
+  @GetMapping(value = "/consultar-extrato")
+  public ResponseEntity<ClienteMovimentacoesDashboardResponse> consultBankStatement(
+    @RequestHeader("X-Cliente-Id") String clienteId,
+    @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
+    @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim
+  ){
 
+    ConsultBankStatementInputData inputData = new ConsultBankStatementInputData();
+
+    inputData.setClienteId(clienteId);
+    inputData.setDataInicio(dataInicio);
+    inputData.setDataFim(dataFim);
+
+    ClienteMovimentacoesDashboardOutputData outputData = groupClienteMovimentacoesInputPort.execute(inputData);
+
+    ClienteMovimentacoesDashboardResponse response = clienteMovimentacoesDashboardAssembler.assemble(outputData);
+
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping(value = "/cliente-conta")
+  public ResponseEntity <ClienteContaDashboardResponse> groupClienteAndConta(@RequestHeader(value = "X-Cliente-Id", required = true) String clienteId){
 
     System.out.println("Buscando Perfil e Conta do Cliente: " + clienteId);
 
@@ -84,4 +108,6 @@ public class CompositionController {
     return ResponseEntity.ok(response);
 
   }
+
+
 }

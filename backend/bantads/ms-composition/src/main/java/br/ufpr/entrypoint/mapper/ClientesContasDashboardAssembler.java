@@ -15,7 +15,6 @@ public class ClientesContasDashboardAssembler {
     List<ContaOutputData> contas = outputData.getContas();
     List<ClienteOutputData> clientes = outputData.getClientes();
 
-
     return contas.stream().map(contaOutputData ->{
 
       if(contaOutputData == null) return null;

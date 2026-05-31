@@ -3,13 +3,15 @@ package br.ufpr.entrypoint.controller;
 import br.ufpr.core.domain.*;
 import br.ufpr.core.ports.input.*;
 import br.ufpr.entrypoint.mapper.ContaResponseMapper;
+import br.ufpr.entrypoint.mapper.MovimentacaoResponseMapper;
 import br.ufpr.entrypoint.request.*;
 import br.ufpr.entrypoint.response.ContaResponse;
+import br.ufpr.entrypoint.response.MovimentacaoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 // MS-CONTA
@@ -20,15 +22,17 @@ import java.util.List;
 public class ContaController {
 
   private final ContaResponseMapper contaResponseMapper;
-  private final FindContasByQuantityInputPort findContasByQuantityInputPort;
   private final FindPendingContasInputPort findPendingContasInputPort;
+  private final MovimentacaoResponseMapper movimentacaoResponseMapper;
   private final RefusePendingContaInputPort refusePendingContaInputPort;
-  private final ApprovePendingContaInputPort approvePendingContaInputPort;
-  private final FindContaByClienteIdInputPort findContaByClienteIdInputPort;
+  private final FindApprovedContasInputPort findApprovedContasInputPort;
   private final DepositValueOnContaInputPort depositValueOnContaInputPort;
+  private final ApprovePendingContaInputPort approvePendingContaInputPort;
+  private final FindContasByQuantityInputPort findContasByQuantityInputPort;
+  private final FindContaByClienteIdInputPort findContaByClienteIdInputPort;
   private final WithDrawValueOfContaInputPort withDrawValueFromContaInputPort;
   private final TransferMoneyToAnotherContaInputPort transferMoneyToAnotherContaInputPort;
-  private final FindApprovedContasInputPort findApprovedContasInputPort;
+  private final FindMovimentacoesBetweenDatesInputPort findMovimentacoesBetweenDatesInputPort;
 
   @GetMapping(value = "/pendentes")
   ResponseEntity<List<ContaResponse>> findPendingContas(@RequestHeader("X-Gerente-Id") String gerenteId){
@@ -75,6 +79,26 @@ public class ContaController {
       approvePendingContaInputPort.execute(inputData);
 
       return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/movimentacoes")
+  public ResponseEntity<List<MovimentacaoResponse>> findContaMovimentacoes(
+    @RequestParam("clienteId") String clienteId,
+    @RequestParam("dataInicio") LocalDate dataInicio, // Pode passar como String ISO
+    @RequestParam("dataFim") LocalDate dataFim
+  ){
+
+    ConsultBankStatementInputData inputData = new ConsultBankStatementInputData(
+      clienteId,
+      dataInicio,
+      dataFim
+    );
+
+    List<Movimentacao> movimentacoes = findMovimentacoesBetweenDatesInputPort.find(inputData);
+
+    List<MovimentacaoResponse> movimentacaoResponseList = movimentacoes.stream().map(movimentacaoResponseMapper::toResponse).toList();
+
+    return ResponseEntity.ok(movimentacaoResponseList);
   }
 
   @PostMapping("/{id}/rejeitar")
