@@ -27,7 +27,7 @@ public class GroupPendingContasDashboardUseCase implements GroupPendingContasDas
 
     System.out.println("Buscando contas pendentes e dados do gerente \n");
 
-    GerentesContasAsyncConsult asyncConsult = gerenteAndContaOutputPortsMultipleAsyncConsult(gerenteId);
+    GerenteContasAsyncConsult asyncConsult = gerenteAndContaOutputPortsMultipleAsyncConsult(gerenteId);
 
     GerenteOutputData gerente = asyncConsult.getGerenteOutputData();
     List<PendingContaOutputData> contas = asyncConsult.getContaOutputDataList();
@@ -38,7 +38,7 @@ public class GroupPendingContasDashboardUseCase implements GroupPendingContasDas
 
   }
 
-  private GerentesContasAsyncConsult gerenteAndContaOutputPortsMultipleAsyncConsult(String gerenteId) {
+  private GerenteContasAsyncConsult gerenteAndContaOutputPortsMultipleAsyncConsult(String gerenteId) {
     CompletableFuture<List<PendingContaOutputData>> contaFuture = CompletableFuture.supplyAsync(() ->
       consultPendingContasOutputPort.consult(gerenteId)
     );
@@ -49,7 +49,7 @@ public class GroupPendingContasDashboardUseCase implements GroupPendingContasDas
 
     CompletableFuture.allOf(contaFuture, gerenteFuture).join();
 
-    GerentesContasAsyncConsult asyncConsult = new GerentesContasAsyncConsult();
+    GerenteContasAsyncConsult asyncConsult = new GerenteContasAsyncConsult();
 
     asyncConsult.setGerenteOutputData(gerenteFuture.join());
     asyncConsult.setContaOutputDataList(contaFuture.join());

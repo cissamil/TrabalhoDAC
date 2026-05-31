@@ -17,4 +17,7 @@ public interface MsGerenteClient {
 
   @GetMapping(value = "/{id}")
   GerenteResponse consultGerente(@PathVariable("id") String gerenteId);
+
+  @GetMapping
+  List<GerenteResponse> consultGerentes();
 }

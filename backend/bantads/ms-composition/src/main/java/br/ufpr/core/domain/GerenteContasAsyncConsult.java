@@ -9,8 +9,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GerentesContasAsyncConsult {
+public class GerenteContasAsyncConsult {
 
-  List<GerenteOutputData> gerentes;
-  List<ContaOutputData> contas;
+  GerenteOutputData gerenteOutputData;
+  List<PendingContaOutputData> contaOutputDataList;
 }

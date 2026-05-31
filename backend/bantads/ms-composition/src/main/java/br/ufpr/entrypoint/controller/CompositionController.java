@@ -21,11 +21,13 @@ public class CompositionController {
   private final GroupClientesReportInputPort groupClientesReportInputPort;
   private final GroupClientesContasInputPort groupClientesContasInputPort;
   private final ClienteContaDashboardAssembler clienteContaDashboardMapper;
+  private final GroupGerenteStatisticsInputPort groupGerenteStatisticsInputPort;
   private final PendingContasDashboardAssembler pendingContasDashboardAssembler;
   private final ClientesReportDashboardAssembler clientesReportDashboardAssembler;
   private final ClientesContasDashboardAssembler clientesContasDashboardAssembler;
   private final GroupClienteContaGerenteInputPort groupClienteContaGerenteInputPort;
   private final GroupClienteMovimentacoesInputPort groupClienteMovimentacoesInputPort;
+  private final GerenteStatisticsDashboardAssembler gerenteStatisticsDashboardAssembler;
   private final GroupPendingContasDashboardInputPort groupPendingContasDashboardInputPort;
   private final LargestBalanceContaDashboardAssembler largestBalanceContaDashboardAssembler;
   private final ClienteMovimentacoesDashboardAssembler clienteMovimentacoesDashboardAssembler;
@@ -109,5 +111,14 @@ public class CompositionController {
 
   }
 
+  @GetMapping(value = "/dashboard-admin")
+  public ResponseEntity<List<GerenteStatisticsDashboardResponse>> groupGerentesStatistics(){
 
+    GerentesStatisticsDashboardOutputData outputData = groupGerenteStatisticsInputPort.execute();
+
+    List<GerenteStatisticsDashboardResponse> response = gerenteStatisticsDashboardAssembler.assemble(outputData);
+
+    return ResponseEntity.ok(response);
+
+  }
 }

@@ -9,6 +9,8 @@ public class GerenteResponseMapper {
 
   public GerenteOutputData toOutputData(GerenteResponse response){
 
+    if(response == null) return null;
+
     GerenteOutputData outputData = new GerenteOutputData();
 
     outputData.setNome(response.getNome());
