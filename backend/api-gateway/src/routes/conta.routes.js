@@ -1,0 +1,42 @@
+import express from 'express';
+import { createProxyRoute } from '../utils/proxy.js';
+import { verifyJWT } from '../middlewares/auth.js';
+import { requireRole, routeRoles } from '../middlewares/roles.js';
+
+function contaRouter(services) {
+	const router = express.Router();
+
+	router.get('/', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
+		target: services.contaService,
+		errorMessage: '[Gateway] Erro na busca por cliente'
+	}));
+
+	router.post('/:id/aprovar', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+		target: services.contaService,
+		errorMessage: '[Gateway] Erro na aprovação:'
+	}));
+
+	router.post('/:id/rejeitar', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+		target: services.contaService,
+		errorMessage: '[Gateway] Erro na rejeição:'
+	}));
+
+	router.post('/:id/depositar', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
+		target: services.contaService,
+		errorMessage: '[Gateway] Erro em depositar:'
+	}));
+
+	router.post('/:id/sacar', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
+		target: services.contaService,
+		errorMessage: '[Gateway] Erro em sacar:'
+	}));
+
+	router.post('/:id/transferir', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
+		target: services.contaService,
+		errorMessage: '[Gateway] Erro em trasnferir:'
+	}));
+
+	return router;
+}
+
+export { contaRouter };
