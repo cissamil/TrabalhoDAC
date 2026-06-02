@@ -13,7 +13,7 @@ function clienteRouter(services) {
 		errorMessage: '[Gateway] Erro no autocadastro:'
 	}));
 
-	router.post('/cliente-por-id', verifyJWT, requireRole(routeRoles['/cliente']), createProxyRoute({
+	router.post('/lista-clientes-por-id', verifyJWT, requireRole(routeRoles['/cliente']), createProxyRoute({
 		target: services.clienteService,
 		errorMessage: '[Gateway] Erro em buscar cliente por id:'
 	}));
@@ -22,6 +22,9 @@ function clienteRouter(services) {
 		target: services.clienteService,
 		errorMessage: '[Gateway] Erro na busca do cliente:'
 	}));
+
+	// PUT /api/clientes/{clienteId} atualizar
+	//GET /api/clientes  listar clientes
 
 	return router;
 }

@@ -23,6 +23,11 @@ function compositionRouter(services) {
 			proxyReq.setHeader('X-Cliente-Id', clienteId);
 		}
 	}));
+	//GET /api/melhores-clientes
+	//GET /api/relatorio-clientes
+	//GET /api/consultar-clientes
+	//GET /api/consultar-extrato (consulta de extrato com query params dataInicio/dataFim)
+	//GET /api/dashboard-admin
 
 	return router;
 }

@@ -11,6 +11,11 @@ function gerenteRouter(services) {
 		errorMessage: '[Gateway] Erro na busca do gerente'
 	}));
 
+	// GET /api/gerentes — listar gerentes 
+	// POST /api/gerentes/adicionar-gerente
+	// POST /api/gerentes/remover-gerente
+	// POST /api/gerentes/lista-gerentes-por-id
+
 	return router;
 }
 

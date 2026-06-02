@@ -36,6 +36,10 @@ function contaRouter(services) {
 		errorMessage: '[Gateway] Erro em trasnferir:'
 	}));
 
+	//GET /api/contas/pendentes
+	//GET /api/contas/aprovadas
+	//GET /api/contas/movimentacoes — consulta de extrato por query params
+
 	return router;
 }
 
