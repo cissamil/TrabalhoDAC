@@ -3,13 +3,14 @@ import { clienteRouter } from './routes/cliente.routes.js';
 import { contaRouter } from './routes/conta.routes.js';
 import { gerenteRouter } from './routes/gerente.routes.js';
 import { compositionRouter } from './routes/composition.routes.js';
+import { interpreters} from './config.js';
 
 function registerRoutes(app, services) {
-	app.use('/auth', authRouter(services));
-	app.use('/clientes', clienteRouter(services));
-	app.use('/contas', contaRouter(services));
-	app.use('/gerentes', gerenteRouter(services));
-	app.use('/', compositionRouter(services));
+	app.use(interpreters.authInterpreter, authRouter(services));
+	app.use(interpreters.clienteInterpreter, clienteRouter(services));
+	app.use(interpreters.contaInterpreter, contaRouter(services));
+	app.use(interpreters.gerenteInterpreter, gerenteRouter(services));
+	app.use(interpreters.compositionInterpreter, compositionRouter(services));
 
 	app.get('/health', (req, res) => {
 		res.json({

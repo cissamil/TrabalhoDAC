@@ -6,15 +6,32 @@ import { requireRole, routeRoles } from '../middlewares/roles.js';
 function gerenteRouter(services) {
 	const router = express.Router();
 
+	router.get('/', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+		target: services.gerenteService,
+		errorMessage: '[Gateway] Erro na busca dos gerentes'
+	}));
+
+	router.post('/adicionar-gerente', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+		target: services.gerenteService,
+		errorMessage: '[Gateway] Erro ao adicionar gerente:'
+	}));
+
+	router.post('/remover-gerente', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+		target: services.gerenteService,
+		errorMessage: '[Gateway] Erro ao remover gerente:'
+	}));
+
+	router.get('/lista-gerentes-por-id', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+		target: services.gerenteService,
+		errorMessage: '[Gateway] Erro ao listar gerente por id:'
+	}));
+
+	
 	router.get('/:gerenteId', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
 		target: services.gerenteService,
 		errorMessage: '[Gateway] Erro na busca do gerente'
 	}));
 
-	// GET /api/gerentes — listar gerentes 
-	// POST /api/gerentes/adicionar-gerente
-	// POST /api/gerentes/remover-gerente
-	// POST /api/gerentes/lista-gerentes-por-id
 
 	return router;
 }
