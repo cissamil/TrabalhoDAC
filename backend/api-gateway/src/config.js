@@ -24,7 +24,7 @@ const interpreters = {
 	gerenteInterpreter: '/gerentes',
 	contaInterpreter: '/contas',
 	authInterpreter: '/auth',
-	compositionInterpreter: ''
+	compositionInterpreter: '/'
 };
 
 function setupMiddlewares(app) {
