@@ -1,9 +1,8 @@
 package br.ufpr.entrypoint.mapper;
 
-import br.ufpr.core.domain.ClienteContaDashboardOutputData;
-import br.ufpr.core.domain.ClienteOutputData;
-import br.ufpr.core.domain.ContaOutputData;
-import br.ufpr.core.domain.GerenteOutputData;
+import br.ufpr.core.domain.*;
+import br.ufpr.dataprovider.client.domain.ClienteResponse;
+import br.ufpr.dataprovider.client.domain.EnderecoResponse;
 import br.ufpr.entrypoint.response.ClienteContaDashboardResponse;
 import br.ufpr.entrypoint.response.ContaResponse;
 import br.ufpr.entrypoint.response.GerenteResponse;
@@ -24,33 +23,63 @@ public class ClienteContaDashboardAssembler {
 
     GerenteResponse gerenteResponse = buildGerenteResponseObject(gerente);
     ContaResponse contaResponse = buildContaResponseObject(conta, gerenteResponse);
+    ClienteResponse clienteResponse = buildClienteResponseObject(cliente);
 
-    dashboardResponse.setClienteId(cliente.getClienteId());
-    dashboardResponse.setCpf(cliente.getCpf());
-    dashboardResponse.setNome(cliente.getNome());
-    dashboardResponse.setEmail(cliente.getEmail());
-    dashboardResponse.setTelefone(cliente.getTelefone());
-    dashboardResponse.setSalario(cliente.getSalario());
-    dashboardResponse.setEndereco(cliente.getEndereco());
+    dashboardResponse.setCliente(clienteResponse);
     dashboardResponse.setConta(contaResponse);
 
     return dashboardResponse;
   }
 
-  private static GerenteResponse buildGerenteResponseObject(GerenteOutputData gerente) {
+  private GerenteResponse buildGerenteResponseObject(GerenteOutputData gerente) {
     GerenteResponse gerenteResponse = new GerenteResponse();
 
     gerenteResponse.setNomeGerente(gerente.getNome());
     return gerenteResponse;
   }
 
-  private static ContaResponse buildContaResponseObject(ContaOutputData conta, GerenteResponse gerenteResponse) {
+  private ContaResponse buildContaResponseObject(ContaOutputData conta, GerenteResponse gerenteResponse) {
     ContaResponse contaResponse = new ContaResponse();
 
+    contaResponse.setContaId(conta.getContaId());
     contaResponse.setNumeroConta(conta.getNumeroConta());
     contaResponse.setSaldo(conta.getSaldo());
     contaResponse.setLimite(conta.getLimite());
     contaResponse.setGerente(gerenteResponse);
     return contaResponse;
   }
+
+  private ClienteResponse buildClienteResponseObject(ClienteOutputData cliente){
+
+    ClienteResponse clienteResponse = new ClienteResponse();
+    EnderecoResponse endereco = buildEnderecoResponseObject(cliente);
+
+    clienteResponse.setClienteId(cliente.getClienteId());
+    clienteResponse.setCpf(cliente.getCpf());
+    clienteResponse.setNome(cliente.getNome());
+    clienteResponse.setEmail(cliente.getEmail());
+    clienteResponse.setTelefone(cliente.getTelefone());
+    clienteResponse.setSalario(cliente.getSalario());
+    clienteResponse.setEndereco(endereco);
+
+    return clienteResponse;
+  }
+
+
+
+  private EnderecoResponse buildEnderecoResponseObject(ClienteOutputData clienteOutputData) {
+
+    EnderecoOutputData enderecoOutputData = clienteOutputData.getEndereco();
+    EnderecoResponse enderecoResponse = new EnderecoResponse();
+
+    enderecoResponse.setId(enderecoOutputData.getId());
+    enderecoResponse.setCep(enderecoOutputData.getCep());
+    enderecoResponse.setNumero(enderecoOutputData.getNumero());
+    enderecoResponse.setCidade(enderecoOutputData.getCidade());
+    enderecoResponse.setEstado(enderecoOutputData.getEstado());
+    enderecoResponse.setLogradouro(enderecoOutputData.getLogradouro());
+
+    return enderecoResponse;
+  }
+
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.validator.constraints.br.CPF;
 
 @Entity
 @Data
@@ -21,12 +22,14 @@ public class GerenteEntity {
   @Column(name = "gerente_id", unique = true)
   private String gerenteId;
 
-  // @CPF @TODO REMOVER ESSE COMENTÁRIO PARA QUE HAJA VALIDAÇÃO DE CPF QUANDO TERMINAR DE TESTAR
+//  @CPF
   @Column(unique = true, nullable = false)
   private String cpf;
 
   private String nome;
   private String email;
+
+  private String telefone;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "tipo_gerente")

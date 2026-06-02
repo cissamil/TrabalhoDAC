@@ -25,7 +25,7 @@ public class SaveContaAdapter implements SaveContaOutputPort {
       return mapper.toDomain(savedEntity);
 
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException("Erro ao salvar cliente. Tente novamente");
     }
 
   }

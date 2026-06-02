@@ -1,5 +1,7 @@
 package br.ufpr.entrypoint.response;
 
+import br.ufpr.core.domain.Endereco;
+import br.ufpr.entrypoint.request.EnderecoDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -23,6 +25,6 @@ public class ClienteResponse {
   private String email;
   private String telefone;
   private BigDecimal salario;
-  private String endereco;
+  private Endereco endereco;
 
 }

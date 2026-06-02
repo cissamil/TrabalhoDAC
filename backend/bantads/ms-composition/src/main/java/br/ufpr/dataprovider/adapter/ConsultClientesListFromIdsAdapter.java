@@ -8,6 +8,8 @@ import br.ufpr.dataprovider.client.domain.ClienteResponse;
 import br.ufpr.dataprovider.mapper.ClienteResponseMapper;
 import br.ufpr.dataprovider.mapper.PendingClienteResponseMapper;
 import br.ufpr.dataprovider.client.domain.PendingClienteResponse;
+import feign.FeignException;
+import infrastructure.exceptions.UnavailableServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,11 +24,17 @@ public class ConsultClientesListFromIdsAdapter implements ConsultClientesListFro
 
   @Override
   public List<ClienteOutputData> consult(List<String> clienteIds) {
+    try{
 
-    List<ClienteResponse> responseList = msClienteClient.consultClientesListFromIds(clienteIds);
+      List<ClienteResponse> responseList = msClienteClient.consultClientesListFromIds(clienteIds);
 
-    List<ClienteOutputData> outputDataList = responseList.stream().map(mapper::toOutputData).toList();
+      List<ClienteOutputData> outputDataList = responseList.stream().map(mapper::toOutputData).toList();
 
-    return outputDataList;
+      return outputDataList;
+
+    }catch (FeignException e){
+
+      throw new UnavailableServiceException("Serviço de clientes indisponível");
+    }
   }
 }

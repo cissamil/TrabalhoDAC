@@ -5,6 +5,8 @@ import br.ufpr.core.ports.output.ConsultContaByClienteIdOutputPort;
 import br.ufpr.dataprovider.client.MsContaClient;
 import br.ufpr.dataprovider.client.domain.ContaResponse;
 import br.ufpr.dataprovider.mapper.ContaResponseMapper;
+import feign.FeignException;
+import infrastructure.exceptions.UnavailableServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +20,16 @@ public class ConsultContaByClienteIdAdapter implements ConsultContaByClienteIdOu
   @Override
   public ContaOutputData consult(String clienteId) {
 
-    ContaResponse response = msContaClient.consultContaByClienteId(clienteId);
+    try{
+      ContaResponse response = msContaClient.consultContaByClienteId(clienteId);
 
-    return mapper.toOutputData(response);
+      return mapper.toOutputData(response);
+
+    }catch (FeignException e){
+
+      throw new UnavailableServiceException("Serviço de contas indisponível");
+    }
+
 
   }
 }

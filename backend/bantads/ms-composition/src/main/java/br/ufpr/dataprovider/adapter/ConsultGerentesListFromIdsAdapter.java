@@ -10,6 +10,8 @@ import br.ufpr.dataprovider.client.domain.ClienteResponse;
 import br.ufpr.dataprovider.client.domain.GerenteResponse;
 import br.ufpr.dataprovider.mapper.ClienteResponseMapper;
 import br.ufpr.dataprovider.mapper.GerenteResponseMapper;
+import feign.FeignException;
+import infrastructure.exceptions.UnavailableServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -25,10 +27,16 @@ public class ConsultGerentesListFromIdsAdapter implements ConsultGerentesListFro
   @Override
   public List<GerenteOutputData> consult(List<String> gerenteIds) {
 
-    List<GerenteResponse> responseList = msGerenteClient.consultGerentesListFromIds(gerenteIds);
+    try{
+      List<GerenteResponse> responseList = msGerenteClient.consultGerentesListFromIds(gerenteIds);
 
-    List<GerenteOutputData> outputDataList = responseList.stream().map(mapper::toOutputData).toList();
+      List<GerenteOutputData> outputDataList = responseList.stream().map(mapper::toOutputData).toList();
 
-    return outputDataList;
+      return outputDataList;
+
+    } catch (FeignException e){
+      throw new UnavailableServiceException("Serviço de gerentes indisponível");
+
+    }
   }
 }

@@ -10,9 +10,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cliente implements Serializable {
-
-  // TODO SERIALIZAR A ENTIDADE DE ENDEREÇO
+public class Cliente {
 
   private Integer id;
   private String clienteId;
@@ -21,6 +19,6 @@ public class Cliente implements Serializable {
   private String email;
   private String telefone;
   private BigDecimal salario;
-  private String endereco;
+  private Endereco endereco;
 
 }

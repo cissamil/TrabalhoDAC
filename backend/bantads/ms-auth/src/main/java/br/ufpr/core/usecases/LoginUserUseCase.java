@@ -2,10 +2,11 @@ package br.ufpr.core.usecases;
 
 import br.ufpr.core.domain.LoginInputData;
 import br.ufpr.core.ports.output.GenerateAccessTokenOutputPort;
-import br.ufpr.dataprovider.security.TokenService;
 import br.ufpr.core.domain.Usuario;
 import br.ufpr.core.ports.input.LoginUserInputPort;
 import br.ufpr.core.ports.output.FindByEmailOutputPort;
+import infrastructure.exceptions.ForbiddenResourceException;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -32,14 +33,13 @@ public class LoginUserUseCase implements LoginUserInputPort {
 
   private void validateUserCredential(Usuario usuario, String password) {
     if (usuario == null) {
-      throw new RuntimeException("Usuário não encontrado. Verifique o seu e-mail e tente novamente");
+      throw new ResourceNotFoundException("Usuário não encontrado. Verifique o seu e-mail e tente novamente");
     }
 
-    // @TODO VALIDAÇÃO DA SENHA CRIPTOGRAFADA
     boolean correctPassword = passwordEncoder.matches(password, usuario.getSenha());
 
     if (!correctPassword) {
-      throw new RuntimeException("Senha incorreta. Tente novamente");
+      throw new ForbiddenResourceException("Senha incorreta. Tente novamente");
     }
   }
 }

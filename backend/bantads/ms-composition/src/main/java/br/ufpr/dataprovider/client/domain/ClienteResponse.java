@@ -3,6 +3,9 @@ package br.ufpr.dataprovider.client.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +24,8 @@ public class ClienteResponse {
   private String telefone;
   private String clienteId;
   private BigDecimal salario;
-  private String endereco;
-
+  private EnderecoResponse endereco;
 }
+
+
+

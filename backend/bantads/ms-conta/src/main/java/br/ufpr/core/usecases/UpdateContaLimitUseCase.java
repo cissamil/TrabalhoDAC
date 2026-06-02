@@ -5,6 +5,7 @@ import br.ufpr.core.domain.UpdateContaLimitInputData;
 import br.ufpr.core.ports.input.UpdateContaLimitInputPort;
 import br.ufpr.core.ports.output.FindContaByClienteIdOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,8 @@ public class UpdateContaLimitUseCase implements UpdateContaLimitInputPort {
     Conta conta = findContaByClienteIdOutputPort.find(clienteId);
 
     validateConta(conta);
+
+    System.out.println("Conta: " + conta);
 
     BigDecimal newLimit = generateNewLimit(conta, clienteSalary);
 
@@ -57,7 +60,7 @@ public class UpdateContaLimitUseCase implements UpdateContaLimitInputPort {
 
   private void validateConta(Conta conta) {
     if(conta == null){
-      throw new RuntimeException("Conta não encontrada");
+      throw new ResourceNotFoundException("Conta não encontrada");
     }
   }
 }

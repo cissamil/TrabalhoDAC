@@ -1,5 +1,7 @@
 package br.ufpr.entrypoint.response;
 
+import br.ufpr.core.domain.EnderecoOutputData;
+import br.ufpr.dataprovider.client.domain.ClienteResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -16,14 +18,15 @@ import java.math.BigDecimal;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ClienteContaDashboardResponse {
 
-  private String cpf;
-  private String nome;
-  private String email;
-  private String endereco;
-  private String telefone;
-  private String clienteId;
-  private BigDecimal salario;
+  private ClienteResponse cliente;
+//  private String cpf;
+//  private String nome;
+//  private String email;
+//  private String telefone;
+//  private String clienteId;
+//  private BigDecimal salario;
   private ContaResponse conta;
+//  private EnderecoOutputData endereco;
 
 
 }

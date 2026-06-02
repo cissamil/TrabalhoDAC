@@ -6,6 +6,7 @@ import br.ufpr.core.ports.input.CreatePendingContaInputPort;
 import br.ufpr.core.ports.output.FindGerenteWithFewerClientesIdOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
 import br.ufpr.core.domain.StatusConta;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +51,7 @@ public class CreatePendingConta implements CreatePendingContaInputPort {
 
     System.out.println("Id do gerente atribuido: " + gerenteId);
     if(gerenteId == null) {
-      throw new RuntimeException("Gerente não encontrado");
+      throw new ResourceNotFoundException("Gerente não encontrado");
     }
   }
 }

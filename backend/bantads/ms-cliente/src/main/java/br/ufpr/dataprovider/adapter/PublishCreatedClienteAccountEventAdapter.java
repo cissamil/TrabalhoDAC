@@ -38,7 +38,8 @@ public class PublishCreatedClienteAccountEventAdapter implements PublishCreatedC
 
       System.out.println("Cliente cadastro e evento publicado");
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException("Erro ao publicar mensagem" + e);
+
     }
 
   }

@@ -6,6 +6,8 @@ import br.ufpr.core.ports.output.FindClienteByClienteIdOutputPort;
 import br.ufpr.core.ports.output.FindClienteByCpfOutputPort;
 import br.ufpr.core.ports.output.SaveClienteOutputPort;
 import br.ufpr.core.ports.output.PublishCreatedClienteAccountEventOutputPort;
+import infrastructure.exceptions.BusinessRuleException;
+import infrastructure.exceptions.DuplicateResourceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +39,7 @@ public class CreateClienteUseCase implements CreateClienteInputPort {
 
   private void validateCliente(Cliente cliente) {
     if (findClienteByCpfOutputPort.exists(cliente.getCpf())){
-      throw new RuntimeException("CPF já cadastrado");
+      throw new DuplicateResourceException("CPF já cadastrado");
     }
   }
 

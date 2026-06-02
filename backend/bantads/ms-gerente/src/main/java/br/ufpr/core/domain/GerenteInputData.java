@@ -13,4 +13,5 @@ public class GerenteInputData {
   private String email;
   private String cpf;
   private String senha;
+  private String telefone;
 }

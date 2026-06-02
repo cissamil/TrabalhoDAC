@@ -4,6 +4,7 @@ import br.ufpr.core.domain.*;
 import br.ufpr.core.ports.input.GroupClientesContasInputPort;
 import br.ufpr.core.ports.output.ConsultApprovedContasOutputPort;
 import br.ufpr.core.ports.output.ConsultClientesListFromIdsOutputPort;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +37,7 @@ public class GroupClientesContasUseCase implements GroupClientesContasInputPort 
 
   private void validateContasList(List<ContaOutputData> contaOutputDataList) {
     if(contaOutputDataList == null || contaOutputDataList.isEmpty()){
-      throw new RuntimeException("Erro ao pegar as contas");
+      throw new ResourceNotFoundException("Contas não encontradas");
     }
   }
 

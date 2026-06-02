@@ -18,6 +18,6 @@ public class ClienteResponseOutputData {
   private String email;
   private String telefone;
   private BigDecimal salario;
-  private String endereco;
+  private Endereco endereco;
 
 }

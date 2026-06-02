@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ContaOutputData {
 
-  private Integer id;
   private String contaId;
   private String gerenteId;
   private String clienteId;

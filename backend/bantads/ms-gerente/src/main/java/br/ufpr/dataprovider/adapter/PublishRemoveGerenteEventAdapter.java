@@ -39,7 +39,8 @@ public class PublishRemoveGerenteEventAdapter implements PublishRemoveGerenteEve
       System.out.println("Evento enviado com sucesso!");
 
     }catch (JsonProcessingException e){
-      throw new RuntimeException(e);
+      throw new RuntimeException("Erro ao publicar mensagem" + e);
+
     }
 
   }

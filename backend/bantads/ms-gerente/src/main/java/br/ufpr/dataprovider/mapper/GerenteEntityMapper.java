@@ -17,6 +17,7 @@ public class GerenteEntityMapper {
     gerente.setCpf(entity.getCpf());
     gerente.setNome(entity.getNome());
     gerente.setEmail(entity.getEmail());
+    gerente.setTelefone(entity.getTelefone());
     gerente.setGerenteId(entity.getGerenteId());
     gerente.setTipoGerente(entity.getTipoGerente());
 
@@ -33,7 +34,9 @@ public class GerenteEntityMapper {
     entity.setCpf(gerente.getCpf());
     entity.setNome(gerente.getNome());
     entity.setEmail(gerente.getEmail());
+    entity.setTelefone(gerente.getTelefone());
     entity.setGerenteId(gerente.getGerenteId());
+
     entity.setTipoGerente(gerente.getTipoGerente());
 
     return entity;

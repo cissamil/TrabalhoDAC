@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
 
 @Data
 @NoArgsConstructor
@@ -17,14 +18,17 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AddGerenteRequest {
 
-  //TODO DESCOMENTAR A CLAUSULA CPF PARA VALIDAÇÃO
-  // @CPF
+//  @CPF
   @NotBlank
   @Pattern(regexp = "\\d{11}", message = "CPF deve conter 11 dígitos")
   private String cpf;
 
   @NotBlank
   private String nome;
+
+  @NotBlank
+  @Pattern(regexp = "\\d{11}", message = "CPF deve conter 11 dígitos")
+  private String telefone;
 
   @Email(message = "E-mail inválido")
   @NotBlank

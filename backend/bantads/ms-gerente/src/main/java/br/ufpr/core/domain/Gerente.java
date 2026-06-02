@@ -8,12 +8,11 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Gerente {
-  //@TODO ADICIONAR CAMPO DE TELEFONE
-
   private Integer id;
   private String cpf;
   private String nome;
   private String email;
+  private String telefone;
   private String gerenteId;
   private TipoGerente tipoGerente;
 

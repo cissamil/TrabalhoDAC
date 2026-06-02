@@ -17,6 +17,6 @@ public class ClienteOutputData {
   private String telefone;
   private String clienteId;
   private BigDecimal salario;
-  private String endereco;
+  private EnderecoOutputData endereco;
 
 }

@@ -5,6 +5,7 @@ import br.ufpr.core.ports.input.DepositValueOnContaInputPort;
 import br.ufpr.core.ports.output.FindContaByNumeroContaOutputPort;
 import br.ufpr.core.ports.output.RegisterNewMovimentacaoOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -57,7 +58,7 @@ public class DepositValueOnContaUseCase implements DepositValueOnContaInputPort 
 
   private void validateContaToDeposit(Conta contaToDeposit) {
     if(contaToDeposit == null){
-      throw new RuntimeException("Conta não encontrada");
+      throw new ResourceNotFoundException("Conta não encontrada");
     }
   }
 }

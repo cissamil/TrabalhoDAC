@@ -5,6 +5,8 @@ import br.ufpr.core.ports.output.ConsultClienteByClienteIdOutputPort;
 import br.ufpr.dataprovider.client.MsClienteClient;
 import br.ufpr.dataprovider.client.domain.ClienteResponse;
 import br.ufpr.dataprovider.mapper.ClienteResponseMapper;
+import feign.FeignException;
+import infrastructure.exceptions.UnavailableServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +20,17 @@ public class ConsultClienteByClienteIdAdapter implements ConsultClienteByCliente
   @Override
   public ClienteOutputData consult(String clienteId) {
 
-    ClienteResponse clienteResponse = msClienteClient.consultClienteByClienteId(clienteId);
+    try{
 
-    return mapper.toOutputData(clienteResponse);
+      ClienteResponse clienteResponse = msClienteClient.consultClienteByClienteId(clienteId);
+
+      return mapper.toOutputData(clienteResponse);
+
+    } catch (FeignException e){
+
+      throw new UnavailableServiceException("Serviço de clientes indisponível");
+
+    }
+
   }
 }

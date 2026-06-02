@@ -1,5 +1,6 @@
 package br.ufpr.entrypoint.response;
 
+import br.ufpr.core.domain.EnderecoOutputData;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -20,7 +21,7 @@ public class LargestBalanceContaDashboardResponse {
   private String nome;
   private String cpf;
   private String clienteId;
-  private String endereco;
   private String contaId;
   private BigDecimal saldo;
+  private EnderecoOutputData endereco;
 }

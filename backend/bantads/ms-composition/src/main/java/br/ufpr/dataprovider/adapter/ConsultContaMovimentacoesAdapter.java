@@ -6,6 +6,8 @@ import br.ufpr.core.ports.output.ConsultContaMovimentacoesOutputPort;
 import br.ufpr.dataprovider.client.MsContaClient;
 import br.ufpr.dataprovider.client.domain.MovimentacaoResponse;
 import br.ufpr.dataprovider.mapper.MovimentacaoResponseMapper;
+import feign.FeignException;
+import infrastructure.exceptions.UnavailableServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,13 +24,21 @@ public class ConsultContaMovimentacoesAdapter implements ConsultContaMovimentaco
   @Override
   public List<MovimentacaoOutputData> consult(ConsultBankStatementInputData inputData) {
 
-    String clienteId = inputData.getClienteId();
-    LocalDate dataInicio = inputData.getDataInicio();
-    LocalDate dataFim = inputData.getDataFim();
+    try{
 
-    List<MovimentacaoResponse> responseList = msContaClient.consultContaMovimentacoes(clienteId, dataInicio, dataFim);
+      String clienteId = inputData.getClienteId();
+      LocalDate dataInicio = inputData.getDataInicio();
+      LocalDate dataFim = inputData.getDataFim();
 
-    return responseList.stream().map(mapper::toResponse).toList();
+      List<MovimentacaoResponse> responseList = msContaClient.consultContaMovimentacoes(clienteId, dataInicio, dataFim);
+
+      return responseList.stream().map(mapper::toResponse).toList();
+
+    }catch (FeignException e){
+      throw new UnavailableServiceException("Serviço de contas indisponível");
+
+    }
+
 
   }
 }

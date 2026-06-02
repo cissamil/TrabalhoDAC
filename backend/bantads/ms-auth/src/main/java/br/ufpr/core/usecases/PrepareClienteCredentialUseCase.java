@@ -5,6 +5,7 @@ import br.ufpr.core.ports.input.PrepareClienteCredentialInputPort;
 import br.ufpr.core.ports.input.CreateUserCredentialInputPort;
 import br.ufpr.core.ports.output.ConsultClienteOutputPort;
 import br.ufpr.core.ports.output.SendEmailOutputPort;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,7 +46,7 @@ public class PrepareClienteCredentialUseCase implements PrepareClienteCredential
 
   private static void validateEmailCliente(String clienteEmail) {
     if(clienteEmail == null){
-      throw new RuntimeException("Usuário não encontrado");
+      throw new ResourceNotFoundException("Usuário não encontrado");
     }
   }
 

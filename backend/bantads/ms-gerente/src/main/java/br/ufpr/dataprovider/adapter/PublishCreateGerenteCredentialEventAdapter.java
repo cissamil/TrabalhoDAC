@@ -40,7 +40,8 @@ public class PublishCreateGerenteCredentialEventAdapter implements PublishCreate
       );
 
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException("Erro ao publicar mensagem" + e);
+
     }
 
   }

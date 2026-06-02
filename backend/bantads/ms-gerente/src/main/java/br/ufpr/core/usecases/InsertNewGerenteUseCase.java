@@ -6,6 +6,7 @@ import br.ufpr.core.domain.GerenteInputData;
 import br.ufpr.core.domain.TipoGerente;
 import br.ufpr.core.ports.input.InsertNewGerenteInputPort;
 import br.ufpr.core.ports.output.*;
+import infrastructure.exceptions.DuplicateResourceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +31,7 @@ public class InsertNewGerenteUseCase implements InsertNewGerenteInputPort {
     gerente.setCpf(inputData.getCpf());
     gerente.setNome(inputData.getNome());
     gerente.setEmail(inputData.getEmail());
+    gerente.setTelefone(inputData.getTelefone());
     gerente.setTipoGerente(TipoGerente.GERENTE);
 
     validateGerente(gerente);
@@ -49,7 +51,7 @@ public class InsertNewGerenteUseCase implements InsertNewGerenteInputPort {
 
   private void validateGerente(Gerente gerente) {
     if(findGerenteByCpfOutputPort.exists(gerente.getCpf())){
-      throw new RuntimeException("CPF já cadastrado");
+      throw new DuplicateResourceException("CPF já cadastrado");
     }
   }
 

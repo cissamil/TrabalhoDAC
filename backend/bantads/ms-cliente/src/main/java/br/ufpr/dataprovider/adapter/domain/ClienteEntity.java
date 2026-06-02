@@ -22,7 +22,7 @@ public class ClienteEntity {
   @Column(name = "cliente_id")
   private String clienteId;
 
-  // @CPF @TODO REMOVER ESSE COMENTÁRIO PARA QUE HAJA VALIDAÇÃO DE CPF QUANDO TERMINAR DE TESTAR
+//  @CPF
   @Column(unique = true, nullable = false)
   private String cpf;
 
@@ -30,6 +30,9 @@ public class ClienteEntity {
   private String email;
   private String telefone;
   private BigDecimal salario;
-  private String endereco;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "endereco_id", referencedColumnName = "id")
+  private EnderecoEntity endereco;
 
 }

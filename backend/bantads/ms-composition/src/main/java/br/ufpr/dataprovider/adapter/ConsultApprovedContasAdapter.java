@@ -5,9 +5,12 @@ import br.ufpr.core.ports.output.ConsultApprovedContasOutputPort;
 import br.ufpr.dataprovider.client.MsContaClient;
 import br.ufpr.dataprovider.client.domain.ContaResponse;
 import br.ufpr.dataprovider.mapper.ContaResponseMapper;
+import feign.FeignException;
+import infrastructure.exceptions.UnavailableServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 // MS-COMPOSITION
@@ -21,13 +24,23 @@ public class ConsultApprovedContasAdapter implements ConsultApprovedContasOutput
 
   @Override
   public List<ContaOutputData> consult(String gerenteId) {
-    System.out.println("Gerente Id: '" + gerenteId + "'");
+    try{
+      System.out.println("Gerente Id: '" + gerenteId + "'");
 
-    List<ContaResponse> responseList = msContaClient.consultApprovedContas(gerenteId);
+      List<ContaResponse> responseList = msContaClient.consultApprovedContas(gerenteId);
 
 
-    return responseList.stream()
-      .map(mapper::toOutputData)
-      .toList();
+      return responseList.stream()
+        .map(mapper::toOutputData)
+        .toList();
+    }catch (FeignException e){
+      
+      if(e.status() == 404){
+        return Collections.emptyList();
+      }
+
+      throw new UnavailableServiceException("Serviço de contas indisponível");
+    }
+
   }
 }

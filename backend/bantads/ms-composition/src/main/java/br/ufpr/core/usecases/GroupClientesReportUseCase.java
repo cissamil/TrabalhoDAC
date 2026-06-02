@@ -5,6 +5,7 @@ import br.ufpr.core.ports.input.GroupClientesReportInputPort;
 import br.ufpr.core.ports.output.ConsultApprovedContasOutputPort;
 import br.ufpr.core.ports.output.ConsultClientesListFromIdsOutputPort;
 import br.ufpr.core.ports.output.ConsultGerentesListFromIdsOutputPort;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +49,7 @@ public class GroupClientesReportUseCase implements GroupClientesReportInputPort 
 
   private void validateContasList(List<ContaOutputData> contaOutputDataList) {
     if(contaOutputDataList == null){
-      throw new RuntimeException("Erro ao pegar as contas");
+      throw new ResourceNotFoundException("Contas não encontradas");
     }
   }
   private ClientesGerentesAsyncConsult clienteAndGerenteOutputPortsMultipleAsyncConsult(List<String> clienteIds, List<String> gerenteIds) {

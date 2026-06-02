@@ -6,6 +6,7 @@ import br.ufpr.core.ports.input.AssignNewGerenteToContaInputPort;
 import br.ufpr.core.ports.output.FindFirstContaByGerenteIdOutputPort;
 import br.ufpr.core.ports.output.FindGerenteWithMostClientesIdOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -43,13 +44,13 @@ public class AssignNewGerenteToContaUseCase implements AssignNewGerenteToContaIn
 
   private void validateContaByPreviousGerente(Conta contaByPreviousGerente) {
     if(contaByPreviousGerente == null){
-      throw new RuntimeException("Conta não encontrada");
+      throw new ResourceNotFoundException("Conta não encontrada");
     }
   }
 
   private void validateGerenteWithMostClientesId(String gerenteIdWithMostClientes) {
     if(gerenteIdWithMostClientes == null){
-      throw new RuntimeException("Gerente não encontrado");
+      throw new ResourceNotFoundException("Gerente não encontrado");
     }
   }
 }

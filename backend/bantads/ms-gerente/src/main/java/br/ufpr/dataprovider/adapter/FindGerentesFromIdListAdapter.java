@@ -20,8 +20,6 @@ public class FindGerentesFromIdListAdapter implements FindGerentesFromIdListOutp
   @Override
   public List<Gerente> find(List<String> gerenteIds) {
 
-    System.out.println("Adapter acionado");
-
     try{
       List<GerenteEntity> entities = repository.findByGerenteIdIn(gerenteIds);
 
@@ -30,7 +28,7 @@ public class FindGerentesFromIdListAdapter implements FindGerentesFromIdListOutp
       return gerentes;
 
     }catch (Exception e){
-      throw new RuntimeException("Erro ao pegar clientes: " + e);
+      throw new RuntimeException("Erro ao pegar gerentes: " + e);
     }
 
   }

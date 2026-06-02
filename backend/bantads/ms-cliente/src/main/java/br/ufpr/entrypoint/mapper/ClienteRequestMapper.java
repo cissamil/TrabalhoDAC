@@ -1,6 +1,7 @@
 package br.ufpr.entrypoint.mapper;
 
 import br.ufpr.core.domain.Cliente;
+import br.ufpr.core.domain.Endereco;
 import br.ufpr.entrypoint.request.ClienteRequest;
 import org.springframework.stereotype.Component;
 
@@ -9,12 +10,16 @@ import org.springframework.stereotype.Component;
 public class ClienteRequestMapper {
 
   public Cliente toDomain(ClienteRequest request){
-    String enderecoConcatenado = String.format("%s - %s - %s - %s",
-      request.getCep(),
-      request.getLogradouro(),
-      request.getCidade(),
-      request.getEstado()
+
+    Endereco endereco = new Endereco(
+      null,
+      request.getEndereco().getCep(),
+      request.getEndereco().getLogradouro(),
+      request.getEndereco().getNumero(),
+      request.getEndereco().getCidade(),
+      request.getEndereco().getEstado()
     );
+
 
     return new Cliente(
       null, // ID gerado pelo banco
@@ -24,7 +29,7 @@ public class ClienteRequestMapper {
       request.getEmail(),
       request.getTelefone(),
       request.getSalario(),
-      enderecoConcatenado
+      endereco
     );
   }
 

@@ -9,6 +9,8 @@ import br.ufpr.core.ports.output.FindContaByIdOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
 import br.ufpr.core.domain.StatusConta;
 import br.ufpr.core.ports.output.SendEmailOutputPort;
+import infrastructure.exceptions.BusinessRuleException;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -60,12 +62,12 @@ public class RefusePendingContaUseCase implements RefusePendingContaInputPort {
     RuntimeException runtimeException = null ;
 
     if(conta == null){
-      throw new RuntimeException("Conta não encontrada");
+      throw new ResourceNotFoundException("Conta não encontrada");
     }
 
     if(!conta.getStatusConta().equals(StatusConta.CONTA_PENDENTE)){
 
-      throw new RuntimeException("Aprovação/Recusa de conta só pode acontecer apenas uma vez");
+      throw new BusinessRuleException("Aprovação/Recusa de conta só pode acontecer apenas uma vez");
     }
 
   }

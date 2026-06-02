@@ -6,7 +6,9 @@ import br.ufpr.core.ports.output.FindClienteByClienteIdOutputPort;
 import br.ufpr.core.ports.output.PublishUpdateContaLimitEventOutputPort;
 import br.ufpr.core.ports.output.PublishUpdateUserEmailEventOutputPort;
 import br.ufpr.core.ports.output.SaveClienteOutputPort;
-import jakarta.persistence.Column;
+import infrastructure.exceptions.BusinessRuleException;
+import infrastructure.exceptions.ForbiddenResourceException;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -53,7 +55,7 @@ public class UpdateClienteUseCase implements UpdateClienteInputPort {
   private static void verifyIfCpfHasChanged(Cliente updatedClienteData, Cliente outdatedClienteData) {
     boolean cpfHasChanged  = !outdatedClienteData.getCpf().equals(updatedClienteData.getCpf());
     if(cpfHasChanged){
-      throw new RuntimeException("CPF do Cliente não pode ser alterado");
+      throw new ForbiddenResourceException("CPF do Cliente não pode ser alterado");
     }
   }
 
@@ -61,7 +63,7 @@ public class UpdateClienteUseCase implements UpdateClienteInputPort {
     Cliente outdatedClienteData = findClienteByClienteIdOutputPort.find(cliente.getClienteId());
 
     if(outdatedClienteData == null){
-      throw new RuntimeException("Cliente não encontrado no banco. Dados não atualizados");
+      throw new ResourceNotFoundException("Cliente não encontrado no banco. Dados não atualizados");
     }
 
     return outdatedClienteData;
@@ -69,7 +71,7 @@ public class UpdateClienteUseCase implements UpdateClienteInputPort {
 
   private void validateClienteId(Cliente cliente) {
     if(cliente.getClienteId() == null){
-      throw new RuntimeException("Id do cliente não pode ser nulo");
+      throw new BusinessRuleException("Id do cliente não pode ser nulo");
     }
   }
 }

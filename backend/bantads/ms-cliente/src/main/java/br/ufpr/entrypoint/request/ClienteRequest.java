@@ -1,5 +1,6 @@
 package br.ufpr.entrypoint.request;
 
+import br.ufpr.core.domain.Endereco;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -18,8 +19,7 @@ import java.math.BigDecimal;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ClienteRequest {
 
-  //TODO DESCOMENTAR A CLAUSULA CPF PARA VALIDAÇÃO
-  // @CPF
+//  @CPF
   @NotBlank
   @Pattern(regexp = "\\d{11}", message = "CPF deve conter 11 dígitos")
   private String cpf;
@@ -32,23 +32,13 @@ public class ClienteRequest {
   private String email;
 
   @NotBlank
-  // @TODO COLOCAR REGEX DE TELEFONE
+  @Pattern(regexp = "\\d{11}", message = "Telefone deve conter 11 dígitos")
   private String telefone;
 
   @NotNull(message = "Salário é obrigatório") // @NotNull para BigDecimal
   @PositiveOrZero
   private BigDecimal salario;
 
-  @NotBlank
-  private String logradouro;
-
-  @NotBlank
-  @Pattern(regexp = "\\d{8}", message = "CEP deve conter 8 dígitos")
-  private String cep;
-
-  @NotBlank
-  private String cidade;
-
-  @NotBlank
-  private String estado;
+  @NotNull
+  private EnderecoDTO endereco;
 }

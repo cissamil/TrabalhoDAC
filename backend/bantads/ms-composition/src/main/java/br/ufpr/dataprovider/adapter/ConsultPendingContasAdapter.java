@@ -5,6 +5,8 @@ import br.ufpr.core.ports.output.ConsultPendingContasOutputPort;
 import br.ufpr.dataprovider.client.MsContaClient;
 import br.ufpr.dataprovider.mapper.PendingContaResponseMapper;
 import br.ufpr.dataprovider.client.domain.PendingContaResponse;
+import feign.FeignException;
+import infrastructure.exceptions.UnavailableServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,12 +24,21 @@ public class ConsultPendingContasAdapter implements ConsultPendingContasOutputPo
   @Override
   public List<PendingContaOutputData> consult(String gerenteId) {
 
-    List<PendingContaResponse> responseList = msContaClient.consultPendingContas(gerenteId);
+    try{
 
-    List<PendingContaOutputData> contaOutputDataList = responseList.stream()
-      .map(mapper::toOutputData)
-      .toList();
+      List<PendingContaResponse> responseList = msContaClient.consultPendingContas(gerenteId);
 
-    return contaOutputDataList;
+      List<PendingContaOutputData> contaOutputDataList = responseList.stream()
+        .map(mapper::toOutputData)
+        .toList();
+
+      return contaOutputDataList;
+
+    }catch (FeignException e){
+
+      throw new UnavailableServiceException("Serviço de contas indisponível");
+
+    }
+
   }
 }

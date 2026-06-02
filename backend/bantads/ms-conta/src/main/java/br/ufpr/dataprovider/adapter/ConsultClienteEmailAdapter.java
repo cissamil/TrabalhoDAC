@@ -4,6 +4,7 @@ import br.ufpr.core.domain.ClienteOutputData;
 import br.ufpr.core.ports.output.ConsultClienteEmailOutputPort;
 import br.ufpr.dataprovider.adapter.domain.ClienteResponse;
 import br.ufpr.dataprovider.client.MsClienteClient;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class ConsultClienteEmailAdapter implements ConsultClienteEmailOutputPort
     ClienteResponse response = msClienteClient.consultClienteByClienteId(clienteId);
 
     if(response == null){
-      throw new RuntimeException("Email do cliente não encontrado");
+      throw new ResourceNotFoundException("Email do cliente não encontrado");
     }
 
     ClienteOutputData outputData = new ClienteOutputData();

@@ -8,6 +8,7 @@ import br.ufpr.core.ports.input.GroupClienteContaGerenteInputPort;
 import br.ufpr.core.ports.output.ConsultClienteByClienteIdOutputPort;
 import br.ufpr.core.ports.output.ConsultContaByClienteIdOutputPort;
 import br.ufpr.core.ports.output.ConsultGerenteOutputPort;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -29,19 +30,21 @@ public class GroupClienteContaGerenteUseCase implements GroupClienteContaGerente
 
     validateGerente(gerenteOutputData);
 
+    System.out.println("Cliente: " + clienteOutputData + " Conta: " + contaOutputData);
+
     return new ClienteContaDashboardOutputData(clienteOutputData, contaOutputData, gerenteOutputData);
   }
 
   private static void validateGerente(GerenteOutputData gerenteOutputData) {
     if(gerenteOutputData == null){
-      throw new RuntimeException("Gerente não encontrado");
+      throw new ResourceNotFoundException("Gerente não encontrado");
     }
   }
 
   private static void validateOutputDatas(ClienteOutputData clienteOutputData, ContaOutputData contaOutputData) {
     if (clienteOutputData == null || contaOutputData == null){
 
-      throw new RuntimeException("Cliente ou Conta não encontrados");
+      throw new ResourceNotFoundException("Cliente ou Conta não encontrados");
 
     }
   }

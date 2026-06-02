@@ -4,6 +4,7 @@ import br.ufpr.core.domain.*;
 import br.ufpr.core.ports.input.GroupLargestBalanceContasWIthClienteInputPort;
 import br.ufpr.core.ports.output.ConsultClientesListFromIdsOutputPort;
 import br.ufpr.core.ports.output.ConsultLargestBalanceContasOutputPort;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +39,7 @@ public class GroupLargestBalanceContasWIthClienteUseCase implements GroupLargest
 
   private void validateContasList(List<LargestBalancesContasOutputData> largestBalancesContas) {
     if(largestBalancesContas == null || largestBalancesContas.isEmpty()){
-      throw new RuntimeException("Erro ao pegar as contas");
+      throw new ResourceNotFoundException("Contas não encontradas");
     }
   }
 

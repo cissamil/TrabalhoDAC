@@ -9,6 +9,7 @@ import br.ufpr.entrypoint.request.AddGerenteRequest;
 import br.ufpr.entrypoint.request.RemoveGerenteRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import br.ufpr.entrypoint.response.GerenteResponse;
 import br.ufpr.entrypoint.mapper.GerenteResponseMapper;
@@ -48,7 +49,8 @@ public class GerenteController {
 
     insertNewGerenteInputPort.execute(inputData);
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.status(HttpStatusCode.valueOf(201)).build();
+
   }
 
   @PostMapping(value = "/remover-gerente")
@@ -57,7 +59,6 @@ public class GerenteController {
     RemoveGerenteInputData inputData = new RemoveGerenteInputData();
 
     inputData.setGerenteId(request.getGerenteId());
-
 
     removeGerenteInputPort.execute(inputData);
 

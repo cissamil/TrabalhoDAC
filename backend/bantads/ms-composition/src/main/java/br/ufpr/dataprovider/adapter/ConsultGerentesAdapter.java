@@ -5,6 +5,8 @@ import br.ufpr.core.ports.output.ConsultGerentesOutputPort;
 import br.ufpr.dataprovider.client.MsGerenteClient;
 import br.ufpr.dataprovider.client.domain.GerenteResponse;
 import br.ufpr.dataprovider.mapper.GerenteResponseMapper;
+import feign.FeignException;
+import infrastructure.exceptions.UnavailableServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,11 +22,20 @@ public class ConsultGerentesAdapter implements ConsultGerentesOutputPort {
   @Override
   public List<GerenteOutputData> consult() {
 
-    List<GerenteResponse> responseList = msGerenteClient.consultGerentes();
+    try{
 
-    return responseList
-      .stream()
-      .map(mapper::toOutputData)
-      .toList();
+      List<GerenteResponse> responseList = msGerenteClient.consultGerentes();
+
+      return responseList
+        .stream()
+        .map(mapper::toOutputData)
+        .toList();
+
+    }catch (FeignException e){
+
+      throw new UnavailableServiceException("Serviço de gerentes indisponível");
+
+    }
+
   }
 }

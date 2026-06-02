@@ -3,6 +3,7 @@ package br.ufpr.core.usecases;
 import br.ufpr.core.domain.Conta;
 import br.ufpr.core.domain.TransferContasToGerenteInputData;
 import br.ufpr.core.ports.output.*;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +16,6 @@ public class TransferContasToNewGerenteUseCase implements TransferContasToNewGer
   private final SaveContasOutputPort saveContasOutputPort;
   private final FindContasByGerenteIdOutputPort findContasByGerenteIdOutputPort;
   private final FindGerenteWithFewerClientesIdOutputPort findGerenteWithFewerClientesIdOutputPort;
-
-  // @TODO IMPEDIR QUE O ÚLTIMO GERENTE DO BANCO SEJA REMOVIDO
 
   @Override
   public void execute(TransferContasToGerenteInputData inputData) {
@@ -37,13 +36,13 @@ public class TransferContasToNewGerenteUseCase implements TransferContasToNewGer
 
   private void validateContasForNewGerente(List<Conta> contas) {
     if(contas == null){
-      throw new RuntimeException("Lista de contas inválida");
+      throw new ResourceNotFoundException("Lista de contas não encontrada");
     }
   }
 
   private void validateGerenteWithFewerClientesId(String gerenteIdWithFewerClientes) {
     if(gerenteIdWithFewerClientes == null){
-      throw new RuntimeException("Gerente não encontrado");
+      throw new ResourceNotFoundException("Gerente não encontrado");
     }
   }
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RemoveGerenteByGerenteIdAdapter implements RemoveGerenteByGerenteIdOutputPort {
 
-  // @TODO IMPEDIR QUE O GERENTE SEJA REMOVIDO CASO ELE SEJA O ÚLTIMO GERENTE DO BANCO.
   private final GerenteRepository repository;
 
   @Override
@@ -25,7 +24,7 @@ public class RemoveGerenteByGerenteIdAdapter implements RemoveGerenteByGerenteId
 
 
     }catch (Exception e){
-      throw new RuntimeException(e);
+      throw new RuntimeException("Erro ao deletar gerente: " + e);
     }
 
   }

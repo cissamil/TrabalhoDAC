@@ -8,6 +8,9 @@ import br.ufpr.core.ports.input.TransferMoneyToAnotherContaInputPort;
 import br.ufpr.core.ports.output.FindContaByNumeroContaOutputPort;
 import br.ufpr.core.ports.output.RegisterNewMovimentacaoOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
+import infrastructure.exceptions.BusinessRuleException;
+import infrastructure.exceptions.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -24,9 +27,8 @@ public class TransferMoneyToAnotherContaUseCase implements TransferMoneyToAnothe
   private final RegisterNewMovimentacaoOutputPort registerNewMovimentacaoOutputPort;
 
   @Override
+  @Transactional
   public void execute(TransferValueInputData inputData) {
-
-    try{
 
       Conta contaToWithdraw = findContaByNumeroContaOutputPort.find(inputData.getOriginContaNumber());
       Conta contaToTransfer = findContaByNumeroContaOutputPort.find(inputData.getDestinyContaNumber());
@@ -50,15 +52,11 @@ public class TransferMoneyToAnotherContaUseCase implements TransferMoneyToAnothe
       saveContaOutputPort.save(contaToWithdraw);
       saveContaOutputPort.save(contaToTransfer);
       registerMovimentacao(contaToWithdraw, contaToTransfer, valueToTransfer);
-
-    } catch (Exception e){
-      throw new RuntimeException("Erro ao transferir dinheiro para a conta " + inputData.getDestinyContaNumber());
-    }
   }
 
   private void validateContas(Conta contaToWithdraw, Conta contaToTransfer) {
     if (contaToWithdraw == null || contaToTransfer == null){
-      throw new RuntimeException("Contas não encontradas para a transferencia");
+      throw new ResourceNotFoundException("Contas não encontradas para a transferencia");
     }
   }
 
@@ -81,7 +79,7 @@ public class TransferMoneyToAnotherContaUseCase implements TransferMoneyToAnothe
     boolean valueToWithdrawIsGreaterThanAvailableSaldo = valueToWithdraw.compareTo(saldo) > 0;
 
     if(valueToWithdrawIsGreaterThanAvailableSaldo){
-      throw new RuntimeException("Saldo insuficiente");
+      throw new BusinessRuleException("Saldo insuficiente");
     }
   }
 

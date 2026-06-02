@@ -8,6 +8,8 @@ import br.ufpr.core.ports.input.WithDrawValueOfContaInputPort;
 import br.ufpr.core.ports.output.FindContaByNumeroContaOutputPort;
 import br.ufpr.core.ports.output.RegisterNewMovimentacaoOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
+import infrastructure.exceptions.BusinessRuleException;
+import infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -49,7 +51,7 @@ public class WithdrawValueOfContaUseCase implements WithDrawValueOfContaInputPor
     boolean valueToWithdrawIsGreaterThanAvailableSaldo = valueToWithdraw.compareTo(saldo) > 0;
 
     if(valueToWithdrawIsGreaterThanAvailableSaldo){
-      throw new RuntimeException("Saldo insuficiente");
+      throw new BusinessRuleException("Saldo insuficiente");
     }
   }
 
@@ -70,7 +72,7 @@ public class WithdrawValueOfContaUseCase implements WithDrawValueOfContaInputPor
 
   private static void validateContaToWithdraw(Conta contaToWithdraw) {
     if(contaToWithdraw == null){
-      throw new RuntimeException("Conta não encontrada");
+      throw new ResourceNotFoundException("Conta não encontrada");
     }
   }
 
