@@ -15,12 +15,7 @@ function clienteRouter(services) {
 
 	router.get('/', verifyJWT, requireRole(routeRoles['/cliente']), createProxyRoute({
 		target: services.clienteService,
-		errorMessage: '[Gateway] Erro ao listar clientes:'
-	}));
-
-	router.post('/lista-clientes-por-id', verifyJWT, requireRole(routeRoles['/cliente']), createProxyRoute({
-		target: services.clienteService,
-		errorMessage: '[Gateway] Erro em buscar cliente por id:'
+		errorMessage: '[Gateway] Erro ao buscar clientes:'
 	}));
 
 	router.get('/:clienteId', verifyJWT, requireRole(routeRoles['/cliente']), createProxyRoute({

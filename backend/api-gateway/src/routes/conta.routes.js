@@ -13,11 +13,7 @@ function contaRouter(services) {
 
 router.get('/', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
 		target: services.contaService,
-		errorMessage: '[Gateway] Erro na busca de conta por id:',
-		onProxyReq: (proxyReq, req) => {
-			const clienteId = req.user?.sub || 'Sistema';
-			proxyReq.setHeader('X-Cliente-Id', clienteId);
-		}
+		errorMessage: '[Gateway] Erro na busca de conta por clienteId:'
 		
 }));
 
