@@ -1,4 +1,4 @@
-package infrastructure.exceptions;
+package br.ufpr.infrastructure.exceptions;
 
 import br.ufpr.model.response.StandardErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;

@@ -8,7 +8,7 @@ import br.ufpr.core.ports.input.GroupClienteContaGerenteInputPort;
 import br.ufpr.core.ports.output.ConsultClienteByClienteIdOutputPort;
 import br.ufpr.core.ports.output.ConsultContaByClienteIdOutputPort;
 import br.ufpr.core.ports.output.ConsultGerenteOutputPort;
-import infrastructure.exceptions.ResourceNotFoundException;
+import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

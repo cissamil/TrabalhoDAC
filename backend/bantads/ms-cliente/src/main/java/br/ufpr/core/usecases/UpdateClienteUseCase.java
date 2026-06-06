@@ -6,9 +6,9 @@ import br.ufpr.core.ports.output.FindClienteByClienteIdOutputPort;
 import br.ufpr.core.ports.output.PublishUpdateContaLimitEventOutputPort;
 import br.ufpr.core.ports.output.PublishUpdateUserEmailEventOutputPort;
 import br.ufpr.core.ports.output.SaveClienteOutputPort;
-import infrastructure.exceptions.BusinessRuleException;
-import infrastructure.exceptions.ForbiddenResourceException;
-import infrastructure.exceptions.ResourceNotFoundException;
+import br.ufpr.infrastructure.exceptions.BusinessRuleException;
+import br.ufpr.infrastructure.exceptions.ForbiddenResourceException;
+import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

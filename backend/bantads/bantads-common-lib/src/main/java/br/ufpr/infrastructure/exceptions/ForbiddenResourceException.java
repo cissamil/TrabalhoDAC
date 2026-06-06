@@ -1,4 +1,4 @@
-package infrastructure.exceptions;
+package br.ufpr.infrastructure.exceptions;
 
 public class ForbiddenResourceException extends RuntimeException{
   public ForbiddenResourceException(String message){

@@ -6,7 +6,7 @@ import br.ufpr.dataprovider.client.MsClienteClient;
 import br.ufpr.dataprovider.client.domain.ClienteResponse;
 import br.ufpr.dataprovider.mapper.ClienteResponseMapper;
 import feign.FeignException;
-import infrastructure.exceptions.UnavailableServiceException;
+import br.ufpr.infrastructure.exceptions.UnavailableServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

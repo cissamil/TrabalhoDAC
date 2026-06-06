@@ -1,4 +1,4 @@
-package br.ufpr.entrypoint.consumers;
+package br.ufpr.consumers;
 
 import br.ufpr.config.RabbitMQConfigMsAuth;
 import br.ufpr.core.domain.TransferClienteIdInputData;

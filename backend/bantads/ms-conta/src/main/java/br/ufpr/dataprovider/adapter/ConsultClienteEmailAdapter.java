@@ -4,7 +4,7 @@ import br.ufpr.core.domain.ClienteOutputData;
 import br.ufpr.core.ports.output.ConsultClienteEmailOutputPort;
 import br.ufpr.dataprovider.adapter.domain.ClienteResponse;
 import br.ufpr.dataprovider.client.MsClienteClient;
-import infrastructure.exceptions.ResourceNotFoundException;
+import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

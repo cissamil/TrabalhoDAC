@@ -6,7 +6,7 @@ import br.ufpr.core.ports.input.CreatePendingContaInputPort;
 import br.ufpr.core.ports.output.FindGerenteWithFewerClientesIdOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
 import br.ufpr.core.domain.StatusConta;
-import infrastructure.exceptions.ResourceNotFoundException;
+import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

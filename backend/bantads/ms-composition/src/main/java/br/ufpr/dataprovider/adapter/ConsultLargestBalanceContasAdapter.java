@@ -6,7 +6,7 @@ import br.ufpr.dataprovider.client.MsContaClient;
 import br.ufpr.dataprovider.client.domain.LargestBalancesContasResponse;
 import br.ufpr.dataprovider.mapper.LargestBalancesContasResponseMapper;
 import feign.FeignException;
-import infrastructure.exceptions.UnavailableServiceException;
+import br.ufpr.infrastructure.exceptions.UnavailableServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

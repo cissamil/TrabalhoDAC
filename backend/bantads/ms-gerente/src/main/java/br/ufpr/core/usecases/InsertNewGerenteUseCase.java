@@ -6,7 +6,7 @@ import br.ufpr.core.domain.GerenteInputData;
 import br.ufpr.core.domain.TipoGerente;
 import br.ufpr.core.ports.input.InsertNewGerenteInputPort;
 import br.ufpr.core.ports.output.*;
-import infrastructure.exceptions.DuplicateResourceException;
+import br.ufpr.infrastructure.exceptions.DuplicateResourceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

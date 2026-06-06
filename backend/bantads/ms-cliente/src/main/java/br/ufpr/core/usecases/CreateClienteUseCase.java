@@ -6,8 +6,7 @@ import br.ufpr.core.ports.output.FindClienteByClienteIdOutputPort;
 import br.ufpr.core.ports.output.FindClienteByCpfOutputPort;
 import br.ufpr.core.ports.output.SaveClienteOutputPort;
 import br.ufpr.core.ports.output.PublishCreatedClienteAccountEventOutputPort;
-import infrastructure.exceptions.BusinessRuleException;
-import infrastructure.exceptions.DuplicateResourceException;
+import br.ufpr.infrastructure.exceptions.DuplicateResourceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +31,7 @@ public class CreateClienteUseCase implements CreateClienteInputPort {
 
     cliente.setClienteId(clienteId);
 
-    saveClienteOutputPort.save(cliente);
+    Cliente clienteSalvo = saveClienteOutputPort.save(cliente);
 
     publishCreatedClienteAccountEventOutputPort.publish(cliente);
   }

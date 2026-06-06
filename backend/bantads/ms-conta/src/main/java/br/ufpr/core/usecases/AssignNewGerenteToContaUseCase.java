@@ -6,7 +6,7 @@ import br.ufpr.core.ports.input.AssignNewGerenteToContaInputPort;
 import br.ufpr.core.ports.output.FindFirstContaByGerenteIdOutputPort;
 import br.ufpr.core.ports.output.FindGerenteWithMostClientesIdOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
-import infrastructure.exceptions.ResourceNotFoundException;
+import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

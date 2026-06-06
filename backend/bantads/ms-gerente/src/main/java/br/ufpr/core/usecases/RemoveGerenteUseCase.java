@@ -1,18 +1,14 @@
 package br.ufpr.core.usecases;
 
-import br.ufpr.core.domain.Gerente;
 import br.ufpr.core.domain.RemoveGerenteInputData;
-import br.ufpr.core.ports.input.FindGerentesInputPort;
 import br.ufpr.core.ports.input.RemoveGerenteInputPort;
 import br.ufpr.core.ports.output.FindGerenteByGerenteIdOutputPort;
 import br.ufpr.core.ports.output.FindGerentesOutputPort;
 import br.ufpr.core.ports.output.PublishRemoveGerenteEventOutputPort;
 import br.ufpr.core.ports.output.RemoveGerenteByGerenteIdOutputPort;
-import infrastructure.exceptions.ResourceNotFoundException;
+import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor

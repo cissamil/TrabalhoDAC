@@ -5,7 +5,7 @@ import br.ufpr.core.ports.input.GroupClientesReportInputPort;
 import br.ufpr.core.ports.output.ConsultApprovedContasOutputPort;
 import br.ufpr.core.ports.output.ConsultClientesListFromIdsOutputPort;
 import br.ufpr.core.ports.output.ConsultGerentesListFromIdsOutputPort;
-import infrastructure.exceptions.ResourceNotFoundException;
+import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

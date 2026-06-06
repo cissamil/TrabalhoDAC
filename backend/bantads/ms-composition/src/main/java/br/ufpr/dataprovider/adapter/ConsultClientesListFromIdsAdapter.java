@@ -1,15 +1,12 @@
 package br.ufpr.dataprovider.adapter;
 
 import br.ufpr.core.domain.ClienteOutputData;
-import br.ufpr.core.domain.PendingClienteOutputData;
 import br.ufpr.core.ports.output.ConsultClientesListFromIdsOutputPort;
 import br.ufpr.dataprovider.client.MsClienteClient;
 import br.ufpr.dataprovider.client.domain.ClienteResponse;
 import br.ufpr.dataprovider.mapper.ClienteResponseMapper;
-import br.ufpr.dataprovider.mapper.PendingClienteResponseMapper;
-import br.ufpr.dataprovider.client.domain.PendingClienteResponse;
 import feign.FeignException;
-import infrastructure.exceptions.UnavailableServiceException;
+import br.ufpr.infrastructure.exceptions.UnavailableServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
