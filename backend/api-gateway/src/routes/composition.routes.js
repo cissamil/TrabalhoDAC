@@ -23,11 +23,40 @@ function compositionRouter(services) {
 			proxyReq.setHeader('X-Cliente-Id', clienteId);
 		}
 	}));
-	//GET /api/melhores-clientes
-	//GET /api/relatorio-clientes
-	//GET /api/consultar-clientes
-	//GET /api/consultar-extrato (consulta de extrato com query params dataInicio/dataFim)
-	//GET /api/dashboard-admin
+
+	router.get('/melhores-clientes', createProxyRoute({
+		target: services.compositionService,
+		errorMessage: '[Gateway] Erro ao buscar melhores clientes:'
+	}));
+
+	router.get('/relatorio-clientes', createProxyRoute({
+		target: services.compositionService,
+		errorMessage: '[Gateway] Erro ao buscar relatório de clientes:'
+	}));
+
+
+	router.get('/consultar-clientes', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+		target: services.compositionService,
+		errorMessage: '[Gateway] Erro ao consultar clientes:',
+		onProxyReq: (proxyReq, req) => {
+			const gerenteId = req.user?.id || 'Sistema';
+			proxyReq.setHeader('X-Gerente-Id', gerenteId);
+		}
+	}));
+
+	router.get('/consultar-extrato', verifyJWT, requireRole(routeRoles['/cliente']), createProxyRoute({
+		target: services.compositionService,
+		errorMessage: '[Gateway] Erro ao consultar extrato:',
+		onProxyReq: (proxyReq, req) => {
+			const clienteId = req.user?.sub || 'Sistema';
+			proxyReq.setHeader('X-Cliente-Id', clienteId);
+		}
+	}));
+
+	router.get('/dashboard-admin', verifyJWT, requireRole(routeRoles['/saga']), createProxyRoute({
+		target: services.compositionService,
+		errorMessage: '[Gateway] Erro ao buscar dashboard admin:'
+	}));
 
 	return router;
 }

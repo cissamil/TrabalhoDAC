@@ -6,10 +6,20 @@ import { requireRole, routeRoles } from '../middlewares/roles.js';
 function contaRouter(services) {
 	const router = express.Router();
 
-	router.get('/', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
+	router.get('/aprovadas', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
 		target: services.contaService,
-		errorMessage: '[Gateway] Erro na busca por cliente'
+		errorMessage: '[Gateway] Erro na busca de contas aprovadas:'
 	}));
+
+router.get('/', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+		target: services.contaService,
+		errorMessage: '[Gateway] Erro na busca de conta por id:',
+		onProxyReq: (proxyReq, req) => {
+			const clienteId = req.user?.sub || 'Sistema';
+			proxyReq.setHeader('X-Cliente-Id', clienteId);
+		}
+		
+}));
 
 	router.post('/:id/aprovar', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
 		target: services.contaService,
@@ -36,9 +46,6 @@ function contaRouter(services) {
 		errorMessage: '[Gateway] Erro em trasnferir:'
 	}));
 
-	//GET /api/contas/pendentes
-	//GET /api/contas/aprovadas
-	//GET /api/contas/movimentacoes — consulta de extrato por query params
 
 	return router;
 }
