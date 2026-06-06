@@ -1,5 +1,6 @@
 package br.ufpr.dataprovider.adapter;
 
+import br.ufpr.common.constants.RabbitMQConstants;
 import br.ufpr.config.RabbitMQConfigMsConta;
 import br.ufpr.core.domain.ApprovedContaEvent;
 import br.ufpr.core.ports.output.PublishContaAprovadaEventOutputPort;
@@ -28,8 +29,8 @@ public class PublishContaAprovadaEventAdapter implements PublishContaAprovadaEve
       String message = objectMapper.writeValueAsString(transferClienteIdSagaMessage);
 
       rabbitTemplate.convertAndSend(
-        RabbitMQConfigMsConta.APPROVED_ACCOUNT_EXCHANGE,
-        "fluxo.conta-aprovada.key",
+        RabbitMQConstants.BANTADS_EXCHANGE,
+        RabbitMQConstants.RK_CONTA_APROVADA_SUCESSO,
         message
       );
 

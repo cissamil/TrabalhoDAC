@@ -2,6 +2,7 @@ package br.ufpr.entrypoint.consumers;
 
 import br.ufpr.common.constants.RabbitMQConstants;
 import br.ufpr.core.domain.SendEmailInputData;
+import br.ufpr.core.ports.SendEmailInputPort;
 import br.ufpr.model.message.SendEmailMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class SendEmailCommandConsumer {
 
   private final RabbitTemplate rabbitTemplate;
   private final ObjectMapper objectMapper;
+  private final SendEmailInputPort sendEmailInputPort;
 
   @RabbitListener(
     bindings = @QueueBinding(
@@ -39,17 +41,10 @@ public class SendEmailCommandConsumer {
       inputData.setSubject(payload.getSubject());
       inputData.setMessage(payload.getMessage());
 
-
-
-
+      sendEmailInputPort.send(inputData);
 
     } catch (Exception e){
       throw new AmqpRejectAndDontRequeueException("Erro ao enviar email: " + e);
     }
-
-
-
-
   }
-
 }
