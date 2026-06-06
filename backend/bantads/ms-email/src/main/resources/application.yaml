@@ -1,0 +1,28 @@
+server:
+  port: 8088
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: mmtads2025@gmail.com
+    password: xlidnbawcuojzhll
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  application:
+    name: "MsEmail"
+
+  docker:
+    compose:
+      enabled: false
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: tads
+    password: tads

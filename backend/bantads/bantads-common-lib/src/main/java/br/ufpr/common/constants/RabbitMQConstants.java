@@ -11,6 +11,10 @@ public final class RabbitMQConstants {
   public static final String RK_CLIENTE_CRIADO_SUCESSO = "cliente.criado.sucesso.evento";
   public static final String RK_CLIENTE_DELETAR_COMANDO = "cliente.deletar.comando";
 
+  //EMAIL
+  public static final String RK_EMAIL_ENVIADO_COM_SUCESSO = "email.enviado.sucesso.evento";
+  public static final String RK_EMAIL_ENVIAR_COMANDO = "email.enviar.comando";
+
   // CONTA
   public static final String RK_CONTA_CRIAR_COMANDO = "conta.criar.comando";
   public static final String RK_CONTA_CRIADA_SUCESSO = "conta.criada.sucesso.evento";
@@ -35,6 +39,9 @@ public final class RabbitMQConstants {
   public static final String FILA_SAGA_CONTA_CRIADA_FALHA = "ms-saga.conta.criada.falha.queue";
   public static final String FILA_SAGA_CREDENCIAL_GERADA_SUCESSO = "ms-saga.credencial.gerada.sucesso.queue";
   public static final String FILA_SAGA_CREDENCIAL_GERADA_FALHA = "ms-saga.credencial.gerada.falha.queue";
+
+  // FILAS MS-EMAIL
+  public static final String FILA_EMAIL_ENVIAR = "ms-email.email.enviar.queue";
 
   // FILAS DO MS-CONTA (O Trabalhador)
   // O MS-Conta escuta COMANDOS (Ordens)

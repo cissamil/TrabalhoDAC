@@ -29,6 +29,7 @@
       <module>bantads-common-lib</module>
       <module>ms-composition</module>
       <module>ms-saga</module>
+      <module>ms-email</module>
     </modules>
     <scm>
 		<connection/>
