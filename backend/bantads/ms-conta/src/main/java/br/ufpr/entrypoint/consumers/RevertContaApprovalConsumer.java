@@ -25,7 +25,7 @@ public class RevertContaApprovalConsumer {
   @RabbitListener(bindings = @QueueBinding(
     exchange = @Exchange(RabbitMQConstants.BANTADS_EXCHANGE),
     value = @Queue(RabbitMQConstants.FILA_CONTA_REVERTER),
-    key = RabbitMQConstants.RK_CONTA_REVERTER_APROVACAO_COMANDO
+    key = RabbitMQConstants.RK_CONTA_REVERTER_STATUS_COMANDO
   ))
   public void receiveCommand(String message) throws JsonProcessingException {
     try {

@@ -3,27 +3,28 @@ package br.ufpr.core.usecases;
 import br.ufpr.core.domain.AssignGerenteToContaInputData;
 import br.ufpr.core.domain.Conta;
 import br.ufpr.core.ports.input.AssignNewGerenteToContaInputPort;
-import br.ufpr.core.ports.output.FindFirstContaByGerenteIdOutputPort;
-import br.ufpr.core.ports.output.FindGerenteWithMostClientesIdOutputPort;
-import br.ufpr.core.ports.output.SaveContaOutputPort;
+import br.ufpr.core.ports.output.*;
 import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class AssignNewGerenteToContaUseCase implements AssignNewGerenteToContaInputPort {
 
   private final SaveContaOutputPort saveContaOutputPort;
-  private final FindFirstContaByGerenteIdOutputPort findFirstContaByGerenteIdOutputPort;
+  private final FindGerenteTotalClientesOutputPort findGerenteTotalClientesOutputPort;
   private final FindGerenteWithMostClientesIdOutputPort findGerenteIdWithMostClientesOutputPort;
-
-
-  // @TODO FAZER COM QUE A CONTA ADICIONADA SEJA A COM MENOR SALDO POSITIVO CASO EMPATE
-  // @TODO FAZER COM QUE O USECASE ACEITE O PRIMEIRO GERENTE SEM NENHUMA CONTA
+  private final FindContaWithMenorSaldoByGerenteIdOutputPort findContaWithMenorSaldoByGerenteIdOutputPort;
 
   @Override
   public void execute(AssignGerenteToContaInputData inputData) {
+
+    List<GerenteTotalClientesOutputData> gerentesClientesRelation = findGerenteTotalClientesOutputPort.find();
+
+    if (!isContaAllowedToAssign(gerentesClientesRelation)) return;
 
     String gerenteId = inputData.getGerenteId();
 
@@ -31,15 +32,37 @@ public class AssignNewGerenteToContaUseCase implements AssignNewGerenteToContaIn
 
     validateGerenteWithMostClientesId(gerenteWithMostClientesId);
 
-    Conta contaByNewGerente = findFirstContaByGerenteIdOutputPort.find(gerenteWithMostClientesId);
+    System.out.println("Relação de gerentes e quantidade de clientes: " + gerentesClientesRelation);
 
-    validateContaByPreviousGerente(contaByNewGerente);
+    String gerenteToReplace = gerentesClientesRelation.get(0).getGerente();
 
-    contaByNewGerente.setGerenteId(gerenteId);
+    Conta contaToAssign = findContaWithMenorSaldoByGerenteIdOutputPort.find(gerenteToReplace);
 
-    saveContaOutputPort.save(contaByNewGerente);
+    validateContaByPreviousGerente(contaToAssign);
 
+    contaToAssign.setGerenteId(gerenteId);
 
+    saveContaOutputPort.save(contaToAssign);
+  }
+
+  private static boolean isContaAllowedToAssign(List<GerenteTotalClientesOutputData> gerentesClientesRelation) {
+    if(gerentesClientesRelation.isEmpty()){
+      System.out.println("Primeiro gerente do banco. Sem contas a atrelar");
+      return false;
+    }
+
+    List<GerenteTotalClientesOutputData> gerentesWithMoreThanOneConta =
+      gerentesClientesRelation
+        .stream()
+        .filter(relation -> relation.getQtdClientes() > 1)
+        .toList();
+
+    if(gerentesWithMoreThanOneConta.isEmpty()){
+      System.out.println("Nenhum gerente possui mais de uma conta para ser atribuida para novo gerente");
+      return false;
+    }
+
+    return true;
   }
 
   private void validateContaByPreviousGerente(Conta contaByPreviousGerente) {

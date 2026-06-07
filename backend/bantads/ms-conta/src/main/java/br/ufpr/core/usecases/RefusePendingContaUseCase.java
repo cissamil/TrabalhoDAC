@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RefusePendingContaUseCase implements RefusePendingContaInputPort {
 
+  // @TODO arrumar essa porra aqui, não pode ter um feign aqui. Manda por mensageria
   private final SaveContaOutputPort saveContaOutputPort;
   private final SendEmailOutputPort sendEmailOutputPort;
   private final FindContaByIdOutputPort findContaByIdOutputPort;

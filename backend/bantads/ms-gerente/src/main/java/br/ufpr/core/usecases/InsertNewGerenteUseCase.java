@@ -10,6 +10,7 @@ import br.ufpr.infrastructure.exceptions.DuplicateResourceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -17,6 +18,7 @@ import java.util.UUID;
 public class InsertNewGerenteUseCase implements InsertNewGerenteInputPort {
 
   private final SaveGerenteOutputPort saveGerenteOutputPort;
+  private final FindGerentesOutputPort findGerentesOutputPort;
   private final FindGerenteByCpfOutputPort findGerenteByCpfOutputPort;
   private final FindGerenteByGerenteIdOutputPort findGerenteByGerenteIdOutputPort;
   private final PublishAssignContaToGerenteEventOutputPort publishAssignContaToGerenteEventOutputPort;
@@ -48,6 +50,7 @@ public class InsertNewGerenteUseCase implements InsertNewGerenteInputPort {
     publishEventMessage(gerente, senha);
 
   }
+
 
   private void validateGerente(Gerente gerente) {
     if(findGerenteByCpfOutputPort.exists(gerente.getCpf())){

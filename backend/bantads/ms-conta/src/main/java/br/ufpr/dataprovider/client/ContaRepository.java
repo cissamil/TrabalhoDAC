@@ -2,6 +2,8 @@ package br.ufpr.dataprovider.client;
 
 import br.ufpr.dataprovider.adapter.domain.ContaEntity;
 import br.ufpr.core.domain.StatusConta;
+import br.ufpr.dataprovider.adapter.domain.GerenteTotalClientesResponse;
+import feign.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -33,8 +35,8 @@ public interface ContaRepository extends JpaRepository<ContaEntity, Integer> {
   String findGerenteWithMostClientesId();
 
   List<ContaEntity> findByGerenteId(String gerenteId);
-
   ContaEntity findFirstByGerenteId(String gerenteId);
+
 
   boolean existsByNumeroConta(Integer numeroConta);
   ContaEntity findByNumeroConta(String numeroConta);
@@ -55,5 +57,31 @@ public interface ContaRepository extends JpaRepository<ContaEntity, Integer> {
       nativeQuery = true
   )
   List<ContaEntity> findContasOrderedBySaldoBasedOnQuantity(int quantity);
+
+  @Query(
+    value =
+      """
+        SELECT gerente_id as gerente,
+        COUNT(cliente_id) as qtd_clientes,
+        MIN(CASE WHEN saldo >= 0 then saldo else null end) as menor_saldo_positivo
+        FROM contas WHERE status_conta = 'CONTA_APROVADA'
+        GROUP BY gerente
+        ORDER BY qtd_clientes DESC, menor_saldo_positivo ASC nulls last
+      """,
+    nativeQuery = true
+  )
+  List<GerenteTotalClientesResponse> findGerentesTotalClientes();
+
+
+  @Query(
+    value =
+      """
+        SELECT * FROM contas
+        WHERE gerente_id = :gerenteId
+        ORDER BY saldo ASC limit 1
+      """,
+    nativeQuery = true
+  )
+  ContaEntity findContaWithMenorSaldoByGerenteId(@Param("gerenteId") String gerenteId);
 
 }

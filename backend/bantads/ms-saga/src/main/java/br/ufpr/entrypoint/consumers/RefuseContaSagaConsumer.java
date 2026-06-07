@@ -11,14 +11,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ApproveContaSagaConsumer {
+public class RefuseContaSagaConsumer {
+
+  // @TODO TERMINAR ESSE CONSUMER QUANDO ARRUMAR A ROTA DE RECUSAR CONTA
 
   private final RabbitTemplate rabbitTemplate;
 
   @RabbitListener(
     bindings = @QueueBinding(
       exchange = @Exchange(RabbitMQConstants.BANTADS_EXCHANGE),
-      value = @Queue(RabbitMQConstants.FILA_CONTA_APROVADA),
+      value = @Queue(RabbitMQConstants.FILA_CONTA_REPROVADA),
       key = RabbitMQConstants.RK_CONTA_APROVADA_SUCESSO
     )
   )
