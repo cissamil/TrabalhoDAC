@@ -1,5 +1,6 @@
 package br.ufpr.entrypoint.consumers;
 
+import br.ufpr.common.constants.RabbitMQConstants;
 import br.ufpr.config.RabbitMQConfigMsConta;
 import br.ufpr.core.domain.TransferContasToGerenteInputData;
 import br.ufpr.core.ports.output.TransferContasToNewGerenteInputPort;
@@ -8,6 +9,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
+import org.springframework.amqp.rabbit.annotation.Exchange;
+import org.springframework.amqp.rabbit.annotation.Queue;
+import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +22,14 @@ public class TransferContasToNewGerenteConsumer {
   private final ObjectMapper objectMapper;
   private final TransferContasToNewGerenteInputPort transferContasToNewGerenteInputPort;
 
-  @RabbitListener(queues = RabbitMQConfigMsConta.TRANSFER_ACCOUNTS_TO_MANAGER_QUEUE)
+  @RabbitListener(bindings = @QueueBinding(
+    exchange = @Exchange(RabbitMQConstants.BANTADS_EXCHANGE),
+    value = @Queue(RabbitMQConstants.FILA_CONTAS_TRANSFERIR),
+    key = RabbitMQConstants.RK_CONTAS_TRANSFERIR_COMANDO
+  ))
   public void receiveEvent(String message) throws JsonProcessingException{
 
-    System.out.println("Deu boa aqui hein!");
+    System.out.println("Evento de transferência de contas recebido com sucesso");
 
     try{
 

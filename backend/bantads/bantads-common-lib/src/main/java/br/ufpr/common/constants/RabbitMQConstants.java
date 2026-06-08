@@ -22,8 +22,10 @@ public final class RabbitMQConstants {
   public static final String RK_CONTA_REVERTER_STATUS_COMANDO = "conta.reverter.status.comando";
 
 
-  public static final String RK_CONTA_ATRIBUIR_GERENTE_COMANDO = "conta.atribuir.gerente.comando";
-  public static final String RK_CONTA_STATUS_MUDAR_COMANDO = "conta.status.mudar.comando";
+  public static final String RK_GERENTE_REMOVER_EVENTO = "gerente.remover.evento";
+  public static final String RK_CONTAS_TRANSFERIR_COMANDO = "contas.transferir.comando";
+  public static final String RK_CONTAS_TRANSFERIDAS_SUCESSO = "contas.transferidas.sucesso";
+  public static final String RK_GERENTE_REMOVER_COMANDO = "gerente.remover.comando";
 
   // AUTH
   public static final String RK_CLIENTE_CREDENCIAL_CRIAR_COMANDO = "cliente.credencial.criar.comando";
@@ -34,6 +36,10 @@ public final class RabbitMQConstants {
   public static final String FILA_SAGA_CONTA_CRIADA_FALHA = "ms-saga.conta.criada.falha.queue";
   public static final String FILA_CONTA_APROVADA = "ms-saga.conta.aprovada.queue";
   public static final String FILA_CONTA_REPROVADA = "ms-saga.conta.reprovada.queue";
+  public static final String FILA_GERENTE_REMOVER = "ms-saga.gerente.remover.queue";
+  public static final String FILA_CONTAS_TRANSFERIDAS = "ms-saga.contas.transferidas.queue";
+  public static final String FILA_CONTAS_TRANSFERIR = "ms-saga.contas.transferir.queue";
+  public static final String FILA_GERENTE_REMOVIDO = "ms-saga.gerente.removido.queue";
 
   // FILAS MS-AUTH
   public static final String FILA_CREDENCIAL_CLIENTE_GERADA_FALHA = "ms-saga.credencial.cliente.falha.queue";

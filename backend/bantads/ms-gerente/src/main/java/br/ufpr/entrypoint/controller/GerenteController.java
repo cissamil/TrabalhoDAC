@@ -15,7 +15,6 @@ import br.ufpr.entrypoint.response.GerenteResponse;
 import br.ufpr.entrypoint.mapper.GerenteResponseMapper;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,7 +26,7 @@ public class GerenteController {
   private final GerenteResponseMapper gerenteResponseMapper;
 
   private final FindGerentesInputPort findGerentesInputPort;
-  private final RemoveGerenteInputPort removeGerenteInputPort;
+  private final PrepareGerenteDeletionInputPort prepareGerenteDeletionInputPort;
   private final InsertNewGerenteInputPort insertNewGerenteInputPort;
   private final FindGerenteByGerenteIdInputPort findGerenteByGerenteIdInputPort;
   private final FindGerentesFromIdListInputPort findGerentesFromIdListInputPort;
@@ -54,13 +53,13 @@ public class GerenteController {
   }
 
   @PostMapping(value = "/remover-gerente")
-  ResponseEntity<Void> removeGerente(@Valid @RequestBody RemoveGerenteRequest request){
+  ResponseEntity<Void> prepareGerenteDeletion(@Valid @RequestBody RemoveGerenteRequest request){
 
     RemoveGerenteInputData inputData = new RemoveGerenteInputData();
 
     inputData.setGerenteId(request.getGerenteId());
 
-    removeGerenteInputPort.execute(inputData);
+    prepareGerenteDeletionInputPort.execute(inputData);
 
     return ResponseEntity.ok().build();
   }

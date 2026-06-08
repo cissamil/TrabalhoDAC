@@ -23,6 +23,17 @@ public interface ContaRepository extends JpaRepository<ContaEntity, Integer> {
   )
   String findGerenteWithFewerClientesId();
 
+  @Query(
+    value =
+      "SELECT gerente_id FROM contas " +
+      "WHERE status_conta = 'CONTA_APROVADA' " +
+      "AND gerente_id != :gerenteId " +
+      "GROUP BY gerente_id " +
+      "ORDER BY COUNT(cliente_id) ASC LIMIT 1",
+    nativeQuery = true
+  )
+  String findGerenteWithFewerClientesIdExceptSelectedGerente(@Param("gerenteId") String gerenteId);
+
 
   @Query(
     value =

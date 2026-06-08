@@ -15,4 +15,10 @@ public class FindGerenteWithFewerClientesAdapterId implements FindGerenteWithFew
 
     return repository.findGerenteWithFewerClientesId();
   }
+
+  @Override
+  public String findWithoutSelectedGerente(String gerenteId) {
+
+    return repository.findGerenteWithFewerClientesIdExceptSelectedGerente(gerenteId);
+  }
 }

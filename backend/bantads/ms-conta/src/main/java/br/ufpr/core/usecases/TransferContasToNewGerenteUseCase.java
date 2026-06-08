@@ -16,22 +16,30 @@ public class TransferContasToNewGerenteUseCase implements TransferContasToNewGer
   private final SaveContasOutputPort saveContasOutputPort;
   private final FindContasByGerenteIdOutputPort findContasByGerenteIdOutputPort;
   private final FindGerenteWithFewerClientesIdOutputPort findGerenteWithFewerClientesIdOutputPort;
+  private final PublishContasTransferidasEventOutputPort publishContasTransferidasEventOutputPort;
 
   @Override
   public void execute(TransferContasToGerenteInputData inputData) {
     String gerenteId = inputData.getGerenteId();
 
-    String gerentesWithFewerClientesId = findGerenteWithFewerClientesIdOutputPort.find();
+    System.out.println("Transferindo contas do gerente: " + gerenteId);
 
-    validateGerenteWithFewerClientesId(gerentesWithFewerClientesId);
+    String gerenteWithFewerClientesId = findGerenteWithFewerClientesIdOutputPort.findWithoutSelectedGerente(gerenteId);
+
+    System.out.println("Gerente selecionado: " + gerenteWithFewerClientesId);
+
+    validateGerenteWithFewerClientesId(gerenteWithFewerClientesId);
 
     List<Conta> newContasForGerente = findContasByGerenteIdOutputPort.find(gerenteId);
 
+    System.out.println("Quantidade de contas a serem transferidas: " + newContasForGerente.size());
+
     validateContasForNewGerente(newContasForGerente);
 
-    newContasForGerente.forEach(conta -> conta.setGerenteId(gerentesWithFewerClientesId));
+    newContasForGerente.forEach(conta -> conta.setGerenteId(gerenteWithFewerClientesId));
 
     saveContasOutputPort.save(newContasForGerente);
+    publishContasTransferidasEventOutputPort.publish(gerenteId);
   }
 
   private void validateContasForNewGerente(List<Conta> contas) {
