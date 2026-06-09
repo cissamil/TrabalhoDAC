@@ -90,8 +90,8 @@ export class MovimentacaoService {
   }
 
 
-  buscarMovimentacoesPorCPFCliente(cpfCliente:string): Observable<Movimentacao>{
-    return this.httpClient.get<Movimentacao>(
+  buscarMovimentacoesPorCPFCliente(cpfCliente:string): Observable<Movimentacao[]>{
+    return this.httpClient.get<Movimentacao[]>(
       this.MOVIMENTACAO_URL + "/cliente/" + cpfCliente,
       this.httpOptions
     )
@@ -104,7 +104,7 @@ export class MovimentacaoService {
     // );
   }
 
-  //-------- nao sei se esse método fica, mas acredito que nao 
+  //-------- nao sei se esse método fica, mas acredito que nao
   // listarMovimentacoes(){
   //   const movimentacoes = this.listarTodos();
 
