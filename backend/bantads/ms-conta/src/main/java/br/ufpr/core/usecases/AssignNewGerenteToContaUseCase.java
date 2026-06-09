@@ -36,7 +36,11 @@ public class AssignNewGerenteToContaUseCase implements AssignNewGerenteToContaIn
 
     String gerenteToReplace = gerentesClientesRelation.get(0).getGerente();
 
+    System.out.println("Gerente com maior quantidade de clientes e menor saldo positivo: " + gerenteToReplace);
+
     Conta contaToAssign = findContaWithMenorSaldoByGerenteIdOutputPort.find(gerenteToReplace);
+
+    System.out.println("Conta a ser atribuída para novo gerente: " + contaToAssign);
 
     validateContaByPreviousGerente(contaToAssign);
 

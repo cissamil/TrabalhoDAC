@@ -20,7 +20,7 @@ public class RefuseContaSagaConsumer {
   @RabbitListener(
     bindings = @QueueBinding(
       exchange = @Exchange(RabbitMQConstants.BANTADS_EXCHANGE),
-      value = @Queue(RabbitMQConstants.FILA_CONTA_REPROVADA),
+      value = @Queue(RabbitMQConstants.FILA_SAGA_CONTA_REPROVADA),
       key = RabbitMQConstants.RK_CONTA_APROVADA_SUCESSO
     )
   )
@@ -39,7 +39,7 @@ public class RefuseContaSagaConsumer {
   @RabbitListener(
     bindings = @QueueBinding(
       exchange = @Exchange(RabbitMQConstants.BANTADS_EXCHANGE),
-      value = @Queue(RabbitMQConstants.FILA_CREDENCIAL_CLIENTE_GERADA_FALHA),
+      value = @Queue(RabbitMQConstants.FILA_SAGA_CREDENCIAL_CLIENTE_GERADA_FALHA),
       key = RabbitMQConstants.RK_CLIENTE_CREDENCIAL_GERADA_FALHA
     )
   )

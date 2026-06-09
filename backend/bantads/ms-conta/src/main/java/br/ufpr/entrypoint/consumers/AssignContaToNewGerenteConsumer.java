@@ -1,5 +1,6 @@
 package br.ufpr.entrypoint.consumers;
 
+import br.ufpr.common.constants.RabbitMQConstants;
 import br.ufpr.config.RabbitMQConfigMsConta;
 import br.ufpr.core.domain.AssignGerenteToContaInputData;
 import br.ufpr.core.ports.input.AssignNewGerenteToContaInputPort;
@@ -8,7 +9,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
+import org.springframework.amqp.rabbit.annotation.Exchange;
+import org.springframework.amqp.rabbit.annotation.Queue;
+import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,9 +21,16 @@ import org.springframework.stereotype.Service;
 public class AssignContaToNewGerenteConsumer {
 
   private final ObjectMapper objectMapper;
+  private final RabbitTemplate rabbitTemplate;
   private final AssignNewGerenteToContaInputPort assignNewGerenteToContaInputPort;
 
-  @RabbitListener(queues = RabbitMQConfigMsConta.ASSIGN_ACCOUNT_TO_NEW_MANAGER_QUEUE)
+  @RabbitListener(
+    bindings = @QueueBinding(
+      exchange = @Exchange(RabbitMQConstants.BANTADS_EXCHANGE),
+      value = @Queue(RabbitMQConstants.FILA_CONTA_ATRIBUIR),
+      key = RabbitMQConstants.RK_CONTA_ATRIBUIR_COMANDO
+    )
+  )
   public void receiveEvent(String message) throws JsonProcessingException{
 
     try{
@@ -34,6 +46,13 @@ public class AssignContaToNewGerenteConsumer {
       assignNewGerenteToContaInputPort.execute(inputData);
 
     }catch (Exception e){
+
+      rabbitTemplate.convertAndSend(
+        RabbitMQConstants.BANTADS_EXCHANGE,
+        RabbitMQConstants.RK_CONTA_ATRIBUIR_FALHA_EVENTO,
+        message
+      );
+
       throw new AmqpRejectAndDontRequeueException(e);
     }
 

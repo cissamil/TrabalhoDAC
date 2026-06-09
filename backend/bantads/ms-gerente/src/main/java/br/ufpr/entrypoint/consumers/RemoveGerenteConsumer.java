@@ -2,7 +2,6 @@ package br.ufpr.entrypoint.consumers;
 
 import br.ufpr.common.constants.RabbitMQConstants;
 import br.ufpr.core.ports.input.RemoveGerenteInputPort;
-import br.ufpr.model.message.TransferClienteIdSagaMessage;
 import br.ufpr.model.message.TransferGerenteIdMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,10 +24,13 @@ public class RemoveGerenteConsumer {
 
   @RabbitListener(bindings = @QueueBinding(
     exchange = @Exchange(RabbitMQConstants.BANTADS_EXCHANGE),
-    value = @Queue(RabbitMQConstants.FILA_GERENTE_REMOVER),
+    value = @Queue(RabbitMQConstants.FILA_GERENTE_DELETAR),
     key = RabbitMQConstants.RK_GERENTE_REMOVER_COMANDO
   ))
   public void receiveCommand(String message) throws JsonProcessingException {
+
+    System.out.println("Comando para deletar gerente recebido.");
+    System.out.println("Mensagem: " + message);
     try {
       TransferGerenteIdMessage payload = objectMapper.readValue(message, TransferGerenteIdMessage.class);
 

@@ -1,7 +1,7 @@
 package br.ufpr.dataprovider.adapter;
 
-import br.ufpr.config.RabbitMQConfigMsGerente;
-import br.ufpr.core.ports.output.PublishCreateGerenteCredentialEventOutputPort;
+import br.ufpr.common.constants.RabbitMQConstants;
+import br.ufpr.core.ports.output.PublishCreatedGerenteEventOutputPort;
 import br.ufpr.core.domain.GerenteEventPublisher;
 import br.ufpr.model.message.GenerateGerenteCredentialEventMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PublishCreateGerenteCredentialEventAdapter implements PublishCreateGerenteCredentialEventOutputPort {
+public class PublishCreatedGerenteEventAdapter implements PublishCreatedGerenteEventOutputPort {
 
   @Autowired
   private final RabbitTemplate rabbitTemplate;
@@ -34,10 +34,12 @@ public class PublishCreateGerenteCredentialEventAdapter implements PublishCreate
       String message = objectMapper.writeValueAsString(generateGerenteCredentialEventMessage);
 
       rabbitTemplate.convertAndSend(
-        RabbitMQConfigMsGerente.GENERATE_MANAGER_CREDENTIAL_EXCHANGE,
-        "fluxo.gerar-credencial-gerente.key",
+        RabbitMQConstants.BANTADS_EXCHANGE,
+        RabbitMQConstants.RK_GERENTE_CRIADO_EVENTO,
         message
       );
+
+      System.out.println("Gerente criado e evento publicado");
 
     } catch (JsonProcessingException e) {
       throw new RuntimeException("Erro ao publicar mensagem" + e);

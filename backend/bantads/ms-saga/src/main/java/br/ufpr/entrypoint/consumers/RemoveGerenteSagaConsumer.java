@@ -18,7 +18,7 @@ public class RemoveGerenteSagaConsumer {
   @RabbitListener(
     bindings = @QueueBinding(
       exchange = @Exchange(RabbitMQConstants.BANTADS_EXCHANGE),
-      value = @Queue(RabbitMQConstants.FILA_GERENTE_REMOVER),
+      value = @Queue(RabbitMQConstants.FILA_SAGA_GERENTE_REMOVER),
       key = RabbitMQConstants.RK_GERENTE_REMOVER_EVENTO
     )
   )
@@ -38,7 +38,7 @@ public class RemoveGerenteSagaConsumer {
   @RabbitListener(
     bindings = @QueueBinding(
       exchange = @Exchange(RabbitMQConstants.BANTADS_EXCHANGE),
-      value = @Queue(RabbitMQConstants.FILA_CONTAS_TRANSFERIDAS),
+      value = @Queue(RabbitMQConstants.FILA_SAGA_CONTAS_TRANSFERIDAS),
       key = RabbitMQConstants.RK_CONTAS_TRANSFERIDAS_SUCESSO
     )
   )

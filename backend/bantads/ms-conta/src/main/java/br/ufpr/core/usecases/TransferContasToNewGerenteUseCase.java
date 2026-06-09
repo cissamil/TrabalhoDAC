@@ -20,7 +20,13 @@ public class TransferContasToNewGerenteUseCase implements TransferContasToNewGer
 
   @Override
   public void execute(TransferContasToGerenteInputData inputData) {
+
     String gerenteId = inputData.getGerenteId();
+
+    if(gerenteId == null){
+      System.out.println("Id de gerente não fornecido. Abortando...");
+      return;
+    }
 
     System.out.println("Transferindo contas do gerente: " + gerenteId);
 
