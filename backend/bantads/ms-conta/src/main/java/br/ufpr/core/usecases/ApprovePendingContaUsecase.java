@@ -4,13 +4,10 @@ import br.ufpr.core.domain.ApprovePendingContaInputData;
 import br.ufpr.core.domain.ApprovedContaEvent;
 import br.ufpr.core.domain.Conta;
 import br.ufpr.core.ports.input.ApprovePendingContaInputPort;
-import br.ufpr.core.ports.output.FindContaByIdOutputPort;
-import br.ufpr.core.ports.output.FindContaByNumeroContaOutputPort;
-import br.ufpr.core.ports.output.PublishContaAprovadaEventOutputPort;
-import br.ufpr.core.ports.output.SaveContaOutputPort;
+import br.ufpr.core.ports.output.*;
 import br.ufpr.core.domain.StatusConta;
-import infrastructure.exceptions.BusinessRuleException;
-import infrastructure.exceptions.ResourceNotFoundException;
+import br.ufpr.infrastructure.exceptions.BusinessRuleException;
+import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -24,14 +21,14 @@ public class ApprovePendingContaUsecase implements ApprovePendingContaInputPort 
 
   private final SaveContaOutputPort saveContaOutputPort;
   private final FindContaByNumeroContaOutputPort findContaByNumeroContaOutputPort;
-  private final FindContaByIdOutputPort findContaByIdOutputPort;
+  private final FindContaByContaIdOutputPort findContaByContaIdOutputPort;
   private final PublishContaAprovadaEventOutputPort publishContaAprovadaEventOutputPort;
 
   public void execute(ApprovePendingContaInputData inputData){
 
     System.out.println("Aprovando conta do usuário");
 
-    Conta conta = findContaByIdOutputPort.find(inputData.getContaId());
+    Conta conta = findContaByContaIdOutputPort.find(inputData.getContaId());
 
     validateConta(conta);
 
@@ -59,13 +56,13 @@ public class ApprovePendingContaUsecase implements ApprovePendingContaInputPort 
 
   private String generateValidFourDigitsNumeroConta(){
 
-    int fourRandomDigits= new Random().nextInt(9000) + 1000;
+    String fourRandomDigits = String.valueOf(new Random().nextInt(9000) + 1000);
 
     while (findContaByNumeroContaOutputPort.exists(fourRandomDigits)){
-      fourRandomDigits = new Random().nextInt(9000) + 1000;
+      fourRandomDigits = String.valueOf(new Random().nextInt(9000) + 1000);
     }
 
-    return String.valueOf(fourRandomDigits);
+    return fourRandomDigits;
   }
 
   private BigDecimal calculateLimiteContaBasedOnSalary(BigDecimal salary){

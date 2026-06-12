@@ -8,6 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients(basePackages = "br.ufpr")
 public class MsAuthApplication {
   public static void main(String[] args){
+
     SpringApplication.run(MsAuthApplication.class, args);
   }
 }

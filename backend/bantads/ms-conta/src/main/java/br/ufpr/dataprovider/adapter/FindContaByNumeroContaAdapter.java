@@ -24,7 +24,7 @@ public class FindContaByNumeroContaAdapter implements FindContaByNumeroContaOutp
   }
 
   @Override
-  public boolean exists(Integer numeroConta) {
+  public boolean exists(String numeroConta) {
     return repository.existsByNumeroConta(numeroConta);
   }
 }

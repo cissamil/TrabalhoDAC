@@ -5,6 +5,7 @@ import br.ufpr.core.domain.TipoUsuario;
 import br.ufpr.core.domain.UserInputData;
 import br.ufpr.core.ports.input.CreateUserCredentialInputPort;
 import br.ufpr.core.ports.input.PrepareGerenteCredentialInputPort;
+import br.ufpr.core.ports.output.PublishGerenteCredencialGeradaEventOutputPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class PrepareGerenteCredentialUseCase implements PrepareGerenteCredentialInputPort {
 
   private final CreateUserCredentialInputPort createUserCredentialInputPort;
+  private final PublishGerenteCredencialGeradaEventOutputPort publishGerenteCredencialGeradaEventOutputPort;
 
   @Override
   public void execute(GerenteInputData inputData) {
@@ -25,6 +27,8 @@ public class PrepareGerenteCredentialUseCase implements PrepareGerenteCredential
     userInputData.setSenha(inputData.getSenha());
 
     createUserCredentialInputPort.execute(userInputData);
+
+    publishGerenteCredencialGeradaEventOutputPort.publish(userInputData.getUserId());
 
   }
 }

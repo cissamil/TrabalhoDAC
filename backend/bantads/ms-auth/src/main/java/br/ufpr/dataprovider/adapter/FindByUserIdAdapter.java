@@ -22,4 +22,9 @@ public class FindByUserIdAdapter implements FindByUserIdOutputPort {
 
     return mapper.toDomain(entity);
   }
+
+  @Override
+  public boolean exists(String userId) {
+    return repository.existsByUserId(userId);
+  }
 }

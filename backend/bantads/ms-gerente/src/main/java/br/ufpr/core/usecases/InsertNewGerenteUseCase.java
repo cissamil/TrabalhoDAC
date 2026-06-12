@@ -6,7 +6,7 @@ import br.ufpr.core.domain.GerenteInputData;
 import br.ufpr.core.domain.TipoGerente;
 import br.ufpr.core.ports.input.InsertNewGerenteInputPort;
 import br.ufpr.core.ports.output.*;
-import infrastructure.exceptions.DuplicateResourceException;
+import br.ufpr.infrastructure.exceptions.DuplicateResourceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +17,11 @@ import java.util.UUID;
 public class InsertNewGerenteUseCase implements InsertNewGerenteInputPort {
 
   private final SaveGerenteOutputPort saveGerenteOutputPort;
+  private final FindGerentesOutputPort findGerentesOutputPort;
   private final FindGerenteByCpfOutputPort findGerenteByCpfOutputPort;
   private final FindGerenteByGerenteIdOutputPort findGerenteByGerenteIdOutputPort;
   private final PublishAssignContaToGerenteEventOutputPort publishAssignContaToGerenteEventOutputPort;
-  private final PublishCreateGerenteCredentialEventOutputPort publishCreateGerenteCredentialEventOutputPort;
+  private final PublishCreatedGerenteEventOutputPort publishCreatedGerenteEventOutputPort;
 
   @Override
   public void execute(GerenteInputData inputData) {
@@ -44,10 +45,10 @@ public class InsertNewGerenteUseCase implements InsertNewGerenteInputPort {
 
 
     saveGerenteOutputPort.save(gerente);
-    publishAssignContaToGerenteEventOutputPort.publish(gerente);
     publishEventMessage(gerente, senha);
 
   }
+
 
   private void validateGerente(Gerente gerente) {
     if(findGerenteByCpfOutputPort.exists(gerente.getCpf())){
@@ -75,6 +76,6 @@ public class InsertNewGerenteUseCase implements InsertNewGerenteInputPort {
     eventPublisher.setEmail(gerente.getEmail());
     eventPublisher.setSenha(senha);
 
-    publishCreateGerenteCredentialEventOutputPort.publish(eventPublisher);
+    publishCreatedGerenteEventOutputPort.publish(eventPublisher);
   }
 }

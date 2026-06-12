@@ -7,7 +7,7 @@ import br.ufpr.dataprovider.client.MsContaClient;
 import br.ufpr.dataprovider.client.domain.MovimentacaoResponse;
 import br.ufpr.dataprovider.mapper.MovimentacaoResponseMapper;
 import feign.FeignException;
-import infrastructure.exceptions.UnavailableServiceException;
+import br.ufpr.infrastructure.exceptions.UnavailableServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

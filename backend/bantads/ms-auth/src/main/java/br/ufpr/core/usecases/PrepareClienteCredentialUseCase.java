@@ -5,7 +5,7 @@ import br.ufpr.core.ports.input.PrepareClienteCredentialInputPort;
 import br.ufpr.core.ports.input.CreateUserCredentialInputPort;
 import br.ufpr.core.ports.output.ConsultClienteOutputPort;
 import br.ufpr.core.ports.output.SendEmailOutputPort;
-import infrastructure.exceptions.ResourceNotFoundException;
+import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +16,8 @@ import java.security.SecureRandom;
 @Component
 @RequiredArgsConstructor
 public class PrepareClienteCredentialUseCase implements PrepareClienteCredentialInputPort {
+
+  //@TODO MUDAR (SE DER TEMPO) O ENVIO DE EMAILS PARA O MS-EMAIL
 
   private final SendEmailOutputPort sendEmailOutputPort;
   private final ConsultClienteOutputPort consultClienteOutputPort;

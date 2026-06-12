@@ -21,7 +21,7 @@ public interface GerenteRepository extends JpaRepository<GerenteEntity, Integer>
   @Transactional
   void deleteByGerenteId(String gerenteId);
 
-  @Query(value = "SELECT * FROM gerentes WHERE tipo_gerente = 'GERENTE'",nativeQuery = true)
+  @Query(value = "SELECT * FROM gerentes WHERE tipo_gerente = 'GERENTE'", nativeQuery = true)
   List<GerenteEntity> findGerentes();
 
   List<GerenteEntity> findByGerenteIdIn(List<String> gerenteIds);

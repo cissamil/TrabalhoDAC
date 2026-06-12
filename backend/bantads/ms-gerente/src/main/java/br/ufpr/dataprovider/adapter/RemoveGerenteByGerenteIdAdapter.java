@@ -14,18 +14,8 @@ public class RemoveGerenteByGerenteIdAdapter implements RemoveGerenteByGerenteId
   @Override
   public void remove(String gerenteId) {
 
-    try{
-
-      System.out.println("Deletando conta do gerente");
-
       repository.deleteByGerenteId(gerenteId);
 
       System.out.println("Conta deletada com sucesso");
-
-
-    }catch (Exception e){
-      throw new RuntimeException("Erro ao deletar gerente: " + e);
-    }
-
   }
 }

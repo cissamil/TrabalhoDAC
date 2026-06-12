@@ -1,5 +1,6 @@
 package br.ufpr.dataprovider.adapter;
 
+import br.ufpr.common.constants.RabbitMQConstants;
 import br.ufpr.config.RabbitMQConfigMsCliente;
 import br.ufpr.core.domain.Cliente;
 import br.ufpr.core.ports.output.PublishCreatedClienteAccountEventOutputPort;
@@ -31,12 +32,12 @@ public class PublishCreatedClienteAccountEventAdapter implements PublishCreatedC
       String message = objectMapper.writeValueAsString(transferClienteDataSagaMessage);
 
       rabbitTemplate.convertAndSend(
-        RabbitMQConfigMsCliente.REGISTER_EXCHANGE,
-        "fluxo.autocadastro.key",
+        RabbitMQConstants.BANTADS_EXCHANGE,
+        RabbitMQConstants.RK_CLIENTE_CRIADO_SUCESSO,
         message
       );
 
-      System.out.println("Cliente cadastro e evento publicado");
+      System.out.println("Cliente cadastrado e evento publicado");
     } catch (JsonProcessingException e) {
       throw new RuntimeException("Erro ao publicar mensagem" + e);
 

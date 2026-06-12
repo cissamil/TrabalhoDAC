@@ -3,7 +3,7 @@ package br.ufpr.core.usecases;
 import br.ufpr.core.domain.Conta;
 import br.ufpr.core.domain.TransferContasToGerenteInputData;
 import br.ufpr.core.ports.output.*;
-import infrastructure.exceptions.ResourceNotFoundException;
+import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,22 +16,36 @@ public class TransferContasToNewGerenteUseCase implements TransferContasToNewGer
   private final SaveContasOutputPort saveContasOutputPort;
   private final FindContasByGerenteIdOutputPort findContasByGerenteIdOutputPort;
   private final FindGerenteWithFewerClientesIdOutputPort findGerenteWithFewerClientesIdOutputPort;
+  private final PublishContasTransferidasEventOutputPort publishContasTransferidasEventOutputPort;
 
   @Override
   public void execute(TransferContasToGerenteInputData inputData) {
+
     String gerenteId = inputData.getGerenteId();
 
-    String gerentesWithFewerClientesId = findGerenteWithFewerClientesIdOutputPort.find();
+    if(gerenteId == null){
+      System.out.println("Id de gerente não fornecido. Abortando...");
+      return;
+    }
 
-    validateGerenteWithFewerClientesId(gerentesWithFewerClientesId);
+    System.out.println("Transferindo contas do gerente: " + gerenteId);
+
+    String gerenteWithFewerClientesId = findGerenteWithFewerClientesIdOutputPort.findWithoutSelectedGerente(gerenteId);
+
+    System.out.println("Gerente selecionado: " + gerenteWithFewerClientesId);
+
+    validateGerenteWithFewerClientesId(gerenteWithFewerClientesId);
 
     List<Conta> newContasForGerente = findContasByGerenteIdOutputPort.find(gerenteId);
 
+    System.out.println("Quantidade de contas a serem transferidas: " + newContasForGerente.size());
+
     validateContasForNewGerente(newContasForGerente);
 
-    newContasForGerente.forEach(conta -> conta.setGerenteId(gerentesWithFewerClientesId));
+    newContasForGerente.forEach(conta -> conta.setGerenteId(gerenteWithFewerClientesId));
 
     saveContasOutputPort.save(newContasForGerente);
+    publishContasTransferidasEventOutputPort.publish(gerenteId);
   }
 
   private void validateContasForNewGerente(List<Conta> contas) {
