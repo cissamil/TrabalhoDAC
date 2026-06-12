@@ -3,14 +3,15 @@ import { NgxMaskDirective } from "ngx-mask";
 import { FormsModule } from "@angular/forms";
 import { DecimalPipe, NgClass } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { Component, Input, OnInit } from '@angular/core';
-import { Cliente, Conta } from '../../../core/models/entities';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ResponseModal } from '../../../core/models/response-modal';
 import { validateCEP, validateEmail } from '../../../core/shared/helpers';
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
+import { ClienteConta } from '../../../core/models/ClienteConta';
+import { ContaGerente } from '../../../core/models/ContaGerente';
 
 @Component({
   selector: 'app-cliente-perfil',
@@ -20,36 +21,38 @@ import { ContaService } from '../../../core/services/conta-services/conta-servic
 })
 export class ClientePerfil implements OnInit {
   constructor(
-    private router: Router,
+    //private router: Router,
     private contaService: ContaService,
     private clienteService: ClienteService,
     private clienteSessionService: ClienteSessionService,
+    private cdr: ChangeDetectorRef,
+
   ) {}
 
-  private cliente!: Cliente;
-  contaCliente!: Conta;
+  private clienteConta!: ClienteConta;
+  contaCliente!: ContaGerente;
   cep: string = '';
   rua: string = '';
   cidade: string = '';
   estado: string = '';
   endereco: string[] = [];
   salario: string = '';
-  updatedCliente!: Cliente;
+  updatedCliente!: ClienteConta;
 
   currencyFormatter: CurrencyFormatter = new CurrencyFormatter();
   responseModal: ResponseModal | null = null;
 
   ngOnInit(): void {
-    const dadosCliente = this.clienteSessionService.getCliente();
-    const dadosConta = this.clienteSessionService.getConta();
+    const dadosCarregados = this.clienteService.clienteContaLogado;
 
-    if (dadosCliente && dadosConta) {
-      this.cliente = dadosCliente;
-      this.contaCliente = dadosConta;
-
+    if (dadosCarregados) {
+      this.clienteConta = dadosCarregados;
+      this.contaCliente = dadosCarregados.conta;
       this.initalizeProfileData();
+      this.cdr.detectChanges();
+
     } else {
-      this.router.navigate(['/login']);
+      console.log("Nenhum dado encontrado no localStorage para o Perfil.");
     }
   }
 
@@ -58,9 +61,9 @@ export class ClientePerfil implements OnInit {
   }
 
   initalizeProfileData() {
-    this.updatedCliente = {...this.cliente};
-    if (this.cliente.endereco) {
-      const enderecoParts = this.cliente.endereco.split(' - ');
+    this.updatedCliente = {...this.clienteConta};
+    if (this.clienteConta.endereco) {
+      const enderecoParts = this.clienteConta.endereco.split(' - ');
       this.cep = enderecoParts[0] || '';
       this.rua = enderecoParts[1] || '';
       this.cidade = enderecoParts[2] || '';
@@ -69,11 +72,12 @@ export class ClientePerfil implements OnInit {
 
     // Formata o salário para exibição inicial
     this.salario = this.currencyFormatter.applyCurrencyMaskOnNumber(
-      this.cliente.salario,
+      this.clienteConta.salario,
     );
   }
 
   handleSalario(e: any) {
+    //mascara em tempo real
     let input = e.target;
     input.value = this.currencyFormatter.applyCurrencyMaskOnString(input.value);
     this.salario = input.value;
@@ -104,48 +108,78 @@ export class ClientePerfil implements OnInit {
     console.log(`Novo limite: ${novoLimite}, Saldo: ${this.contaCliente.saldo}`)
 
     if(this.contaCliente.saldo < 0){
-
       const saldoPositivo = this.contaCliente.saldo * -1;
-
       if(novoLimite < saldoPositivo){
         novoLimite = saldoPositivo;
       }
     }
 
     this.contaCliente.limite = novoLimite;
-
     console.log('Salário atual', salarioNumber);
-
     const enderecoCompleto = `${this.cep} - ${this.rua} - ${this.cidade} - ${this.estado}`;
 
     this.updatedCliente.salario = salarioNumber;
     this.updatedCliente.endereco = enderecoCompleto;
 
-    this.clienteService.atualizar(this.updatedCliente);
-    this.clienteSessionService.setCliente(this.updatedCliente);
-    this.clienteSessionService.setContaCliente(this.contaCliente);
 
-    this.contaService.atualizarConta(this.contaCliente);
+//função de atualizar cliente, envia os dados informados para o servidor
+    this.clienteService.atualizar(this.updatedCliente).subscribe({
+      next:(clienteAtualizado: any)=>{
+        //dado que salvou corretamente no servidor e no banco
+        this.updatedCliente.conta=this.contaCliente
+        //e atuliza em updatedCliente com o novoLimite e cliente no local
 
+        this.contaService.atualizarConta(this.contaCliente as any).subscribe({
+          //envia os dados informados para o servidor atualizar a conta e o limite no bd
+          next: (contaAtualizadaBanco: any) => {
+            // salvou corretamente no servidor, atualiza o banco
+            this.updatedCliente = {
+              //pega as infos de updatedCLiente e copiando para ClienteConta e Conta Gerente (local)
+              ...(clienteAtualizado as ClienteConta),
+              conta: contaAtualizadaBanco as ContaGerente
+            };
+            // Salva os dados na sessão
+            this.clienteSessionService.setCliente(this.updatedCliente);
+            this.responseModal = {
+              title: "Sucesso",
+              message: "Dados alterados com êxito!",
+              messageIcon: "check",
+              type: 'success'
+            };
+          },
+          error: (err) => {
+            console.error('Erro ao atualizar limite da conta', err);
+            this.mostrarModalErro('Erro ao salvar o novo limite de crédito no servidor.');
+          }
+          });
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar dados cadastrais do cliente', err);
+        this.mostrarModalErro('Erro ao salvar os dados cadastrais no servidor.');
+      }
+    });
+  }
 
+mostrarModalErro(msg: string) {
     this.responseModal = {
-      title: "Sucesso",
-      message: "Dados alterados com êxito!",
-      messageIcon: "check",
-      type: 'success'
+      title: "Erro",
+      message: msg,
+      messageIcon: "error",
+      type: 'error'
     };
+    this.cdr.detectChanges();
   }
 
 
   validateFields(): string | null{
 
-    if(!this.cliente.nome) return "Preencha o nome corretamente";
+    if(!this.clienteConta.nome) return "Preencha o nome corretamente";
 
-    if(!this.cliente.email) return "Preencha o email corretamente";
+    if(!this.clienteConta.email) return "Preencha o email corretamente";
 
-    if(!this.cliente.cpf) return "Preencha o CPF corretamente";
+    if(!this.clienteConta.cpf) return "Preencha o CPF corretamente";
 
-    if(!this.cliente.telefone) return "Preencha o telefone corretamente";
+    if(!this.clienteConta.telefone) return "Preencha o telefone corretamente";
 
     if(this.salario === "0,00") return "Preencha o campo de salário";
 
@@ -157,7 +191,7 @@ export class ClientePerfil implements OnInit {
 
     if(!this.estado) return "Preencha o estado corretamente";
 
-    if (!validateEmail(this.cliente.email)) return "Digite um email válido";
+    if (!validateEmail(this.clienteConta.email)) return "Digite um email válido";
 
     if(!validateCEP(this.cep)) return "Preencha o cep corretamente";
 

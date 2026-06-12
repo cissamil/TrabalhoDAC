@@ -21,18 +21,6 @@ function gerenteRouter(services) {
 		errorMessage: '[Gateway] Erro ao remover gerente:'
 	}));
 
-	router.get('/lista-gerentes-por-id', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
-		target: services.gerenteService,
-		errorMessage: '[Gateway] Erro ao listar gerente por id:'
-	}));
-
-	
-	router.get('/:gerenteId', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
-		target: services.gerenteService,
-		errorMessage: '[Gateway] Erro na busca do gerente'
-	}));
-
-
 	return router;
 }
 

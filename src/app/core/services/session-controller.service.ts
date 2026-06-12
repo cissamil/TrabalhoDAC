@@ -3,11 +3,11 @@ import { Cliente, Conta, Movimentacao } from '../models/entities';
 
 
 const CLIENTE_ATIVO = "clienteAtivo";
-const CONTA_ATIVA = "contaAtiva"; 
+const CONTA_ATIVA = "contaAtiva";
 const MOVIMENTACOES_CLIENTE= "movimentacoes"
 
 @Injectable({
-  providedIn: 'root' 
+  providedIn: 'root'
 })
 export class ClienteSessionService {
   private _clienteAtivo: Cliente | null = null;
@@ -27,7 +27,7 @@ export class ClienteSessionService {
     //   this._movimentacoesCliente = JSON.parse(localStorage[MOVIMENTACOES_CLIENTE]);
     // }
   }
-  
+
   private storeClienteData(){
     localStorage[CLIENTE_ATIVO] = JSON.stringify(this._clienteAtivo);
     localStorage[CONTA_ATIVA] = JSON.stringify(this._contaCliente);
@@ -35,7 +35,7 @@ export class ClienteSessionService {
   }
 
   private removeClienteData(){
-    localStorage.removeItem(CLIENTE_ATIVO) 
+    localStorage.removeItem(CLIENTE_ATIVO)
     localStorage.removeItem(CONTA_ATIVA);
     // localStorage.removeItem(MOVIMENTACOES_CLIENTE);
   }

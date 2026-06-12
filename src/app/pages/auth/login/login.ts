@@ -13,6 +13,8 @@ import { ClienteSessionService } from '../../../core/services/session-controller
 //import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
 import { AuthServices } from '../../../core/services/auth-services/auth-services';
 import {JwtHelperService} from '@auth0/angular-jwt';
+import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { ContaService } from '../../../core/services/conta-services/conta-service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +26,9 @@ export class Login implements OnInit{
   constructor(
     private router: Router,
     private clienteSessionService: ClienteSessionService,
-    private authService: AuthServices
+    private authService: AuthServices,
+    private clienteService : ClienteService,
+    private contaService: ContaService
   ) {}
 
   checkIfUserIsAuthenticated(){
@@ -42,17 +46,34 @@ export class Login implements OnInit{
       if(!decodedToken){
         return;
       }
-      
+
       const role : string = decodedToken.role;
+      const userCpf: string = decodedToken.cpf;
 
-
-      this.redirectBasedOnUserRole(role);
-
+      if(role=='CLIENTE'){
+        //busca o cliente e salva as info cadastrais na sessão
+        this.clienteService.buscarPorCPF(userCpf).subscribe({
+          next:(clienteBanco)=>{
+            this.clienteSessionService.setCliente(clienteBanco);
+            //bsuca a conta de cliente e salva as infos da conta na sessão
+            this.contaService.buscarPorCpfCliente(userCpf).subscribe({
+              next:(contaBanco)=>{
+                this.clienteSessionService.setContaCliente(contaBanco);
+                //agr sim redireciona e carrega a pagina inicial com infos carregadas, se n, não apareceria nada
+                this.redirectBasedOnUserRole(role);
+              },
+              error: (err)=> this.exibirErro("Erro ao carregar dados da conta bancária")
+            });
+          },
+          error: (err)=>("Erro ao carregar dados cadastrais de cliente")
+        });
+      }else{
+        this.redirectBasedOnUserRole(role);
+      }
     }
-
   }
 
-  
+
   redirectBasedOnUserRole(role:string){
     switch(role){
       case 'CLIENTE': return this.router.navigate(['cliente-main-page']);
@@ -61,7 +82,7 @@ export class Login implements OnInit{
       default: return;
     }
   }
-  
+
   ngOnInit(): void {
     this.checkIfUserIsAuthenticated();
   }
