@@ -28,26 +28,7 @@ export class ClienteService {
   constructor(private httpClient: HttpClient){}
 
 
-    public get clienteContaLogado(): ClienteConta | null {
-    const clienteContaStr = localStorage.getItem(CLIENTE_CONTA_LOGADO);
-    if (!clienteContaStr) return null;
 
-    try {
-      return JSON.parse(clienteContaStr) as ClienteConta;
-    } catch (e) {
-      console.error("Erro ao fazer parse de clienteContaLogado:", e);
-      return null;
-    }
-  }
-
-    // Salva o objeto transformando-o em String JSON
-  public setClienteConta(clienteConta: ClienteConta): void {
-    localStorage.setItem(CLIENTE_CONTA_LOGADO, JSON.stringify(clienteConta));
-  }
-
-  public clearClienteConta(): void {
-    localStorage.removeItem(CLIENTE_CONTA_LOGADO);
-  }
 
 
 
@@ -68,7 +49,7 @@ export class ClienteService {
   // );
   // }
 
-  listarTodos() : Observable<Cliente[]>{
+  listarTodos(token: string) : Observable<Cliente[]>{
     return this.httpClient.get<Cliente[]>(
       this.CLIENTE_URL,
       this.httpOptions
@@ -187,10 +168,31 @@ export class ClienteService {
   });
 }
 
-  buscarPorCPF(cpf: string): Observable<Cliente> {
+  buscarPorCPF(cpf: string, token:string): Observable<Cliente> {
     return this.httpClient.get<Cliente>(
       this.CLIENTE_URL + "/cpf/" + cpf,
       this.httpOptions);
   }
 
+  //---------- Métodos para gerenciamento de sessão do cliente logado
+  public get clienteContaLogado(): ClienteConta | null {
+    const clienteContaStr = localStorage.getItem(CLIENTE_CONTA_LOGADO);
+    if (!clienteContaStr) return null;
+
+    try {
+      return JSON.parse(clienteContaStr) as ClienteConta;
+    } catch (e) {
+      console.error("Erro ao fazer parse de clienteContaLogado:", e);
+      return null;
+    }
+  }
+
+    // Salva o objeto transformando-o em String JSON
+  public setClienteConta(clienteConta: ClienteConta): void {
+    localStorage.setItem(CLIENTE_CONTA_LOGADO, JSON.stringify(clienteConta));
+  }
+
+  public clearClienteConta(): void {
+    localStorage.removeItem(CLIENTE_CONTA_LOGADO);
+  }
 }

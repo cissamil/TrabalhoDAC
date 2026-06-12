@@ -34,12 +34,6 @@ export class DepositoCliente implements OnInit {
   corMensagem = '';
   mensagem = '';
 
-  get valorEstimadoDeposito(): number {
-    const valor = this.currencyFormatter.removeCurrencyMaskFromString(
-      this.valorDeposito,
-    );
-    return this.saldo + valor;
-  }
 
   clienteConta!: ClienteConta;
 
@@ -52,6 +46,13 @@ export class DepositoCliente implements OnInit {
     } else {
       console.log("Nenhum dado de cliente e conta encontrado no localStorage.");
     }
+  }
+
+  get valorEstimadoDeposito(): number {
+    const valor = this.currencyFormatter.removeCurrencyMaskFromString(
+      this.valorDeposito,
+    );
+    return this.saldo + valor;
   }
 
   inicializarDeposito() {
