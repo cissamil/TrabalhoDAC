@@ -4,11 +4,8 @@ import br.ufpr.core.domain.ClienteOutputData;
 import br.ufpr.core.domain.Conta;
 import br.ufpr.core.domain.RefusePendingContaInputData;
 import br.ufpr.core.ports.input.RefusePendingContaInputPort;
-import br.ufpr.core.ports.output.ConsultClienteEmailOutputPort;
-import br.ufpr.core.ports.output.FindContaByIdOutputPort;
-import br.ufpr.core.ports.output.SaveContaOutputPort;
+import br.ufpr.core.ports.output.*;
 import br.ufpr.core.domain.StatusConta;
-import br.ufpr.core.ports.output.SendEmailOutputPort;
 import br.ufpr.infrastructure.exceptions.BusinessRuleException;
 import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +15,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RefusePendingContaUseCase implements RefusePendingContaInputPort {
 
-  // @TODO arrumar essa porra aqui, não pode ter um feign aqui. Manda por mensageria
   private final SaveContaOutputPort saveContaOutputPort;
-  private final SendEmailOutputPort sendEmailOutputPort;
   private final FindContaByIdOutputPort findContaByIdOutputPort;
-  private final ConsultClienteEmailOutputPort consultClienteEmailOutputPort;
+  private final PublishContaRefusedEventOutputPort publishContaRefusedEventOutputPort;
 
   @Override
   public void execute(RefusePendingContaInputData inputData) {
@@ -33,31 +28,24 @@ public class RefusePendingContaUseCase implements RefusePendingContaInputPort {
 
     validateConta(conta);
 
+    String clienteId = conta.getClienteId();
     String motivoRecusa = inputData.getMotivoRecusa();
 
     conta.setStatusConta(StatusConta.CONTA_REJEITADA);
     conta.setMotivoRecusa(motivoRecusa);
 
     saveContaOutputPort.save(conta);
-    sendMotivoRecusaToClienteEmail(conta);
+
+    String content = "Viemos informar que, infelizmente, " +
+                    "sua conta não foi aprovada no processo de avaliação de" +
+                    " contas por um dos nossos gerentes" +
+                    "\n\n Motivo da rejeição: " + motivoRecusa;
+
+    publishContaRefusedEventOutputPort.publish(clienteId, content);
 
     System.out.println("Conta recusada com sucesso");
 
   }
-
-  private void sendMotivoRecusaToClienteEmail(Conta conta) {
-    ClienteOutputData outputData = consultClienteEmailOutputPort.consult(conta.getClienteId());
-
-    String clienteEmail = outputData.getClienteEmail();
-    String subject = "Sua conta bancária foi reprovada. Veja o motivo";
-    String message =
-      "Viemos informar que, infelizmente, " +
-      "sua conta foi reprovada por um de nossos gerentes." +
-      " \n Veja o motivo: \"" + conta.getMotivoRecusa() + "\"";
-
-    sendEmailOutputPort.send(clienteEmail, subject, message);
-  }
-
 
   private void validateConta(Conta conta){
     RuntimeException runtimeException = null ;

@@ -13,25 +13,22 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RefuseContaSagaConsumer {
 
-  // @TODO TERMINAR ESSE CONSUMER QUANDO ARRUMAR A ROTA DE RECUSAR CONTA
-
   private final RabbitTemplate rabbitTemplate;
 
   @RabbitListener(
     bindings = @QueueBinding(
       exchange = @Exchange(RabbitMQConstants.BANTADS_EXCHANGE),
-      value = @Queue(RabbitMQConstants.FILA_SAGA_CONTA_REPROVADA),
-      key = RabbitMQConstants.RK_CONTA_APROVADA_SUCESSO
+      value = @Queue(RabbitMQConstants.FILA_SAGA_CONTA_REJEITADA),
+      key = RabbitMQConstants.RK_CONTA_REJEITADA_EVENTO
     )
   )
   public void createCredential(String message){
 
-    System.out.println("Evento de conta criada recebido. Enviando comando para ms-auth");
-
+    System.out.println("Evento 'Conta Rejeitada' recebido. Enviando comando para ms-cliente");
 
     rabbitTemplate.convertAndSend(
       RabbitMQConstants.BANTADS_EXCHANGE,
-      RabbitMQConstants.RK_CLIENTE_CREDENCIAL_CRIAR_COMANDO,
+      RabbitMQConstants.RK_CLIENTE_PREPARAR_NOTIFICACAO_COMANDO,
       message
     );
   }
@@ -39,13 +36,50 @@ public class RefuseContaSagaConsumer {
   @RabbitListener(
     bindings = @QueueBinding(
       exchange = @Exchange(RabbitMQConstants.BANTADS_EXCHANGE),
-      value = @Queue(RabbitMQConstants.FILA_SAGA_CREDENCIAL_CLIENTE_GERADA_FALHA),
-      key = RabbitMQConstants.RK_CLIENTE_CREDENCIAL_GERADA_FALHA
+      value = @Queue(RabbitMQConstants.FILA_SAGA_CLIENTE_NOTIFICACAO_PRONTA),
+      key = RabbitMQConstants.RK_CLIENTE_NOTIFICACAO_PRONTA_EVENTO
     )
   )
-  public void desaproveConta(String message){
+  public void sendEmail(String message){
 
-    System.out.println("Evento de fallback na criação da credencial recebido. Enviando comando para ms-conta");
+    System.out.println("Evento 'Notificação Pronta' recebido. Enviando comando para ms-email");
+
+    rabbitTemplate.convertAndSend(
+      RabbitMQConstants.BANTADS_EXCHANGE,
+      RabbitMQConstants.RK_EMAIL_ENVIAR_MAS_NOTICIAS_COMANDO,
+      message
+    );
+  }
+
+  @RabbitListener(
+    bindings = @QueueBinding(
+      exchange = @Exchange(RabbitMQConstants.BANTADS_EXCHANGE),
+      value = @Queue(RabbitMQConstants.FILA_SAGA_ENVIAR_MAS_NOTICIAS_FALHA),
+      key = RabbitMQConstants.RK_EMAIL_MAS_NOTICIAS_FALHA_EVENTO
+    )
+  )
+  public void fallbackSendEmail(String message){
+
+    System.out.println("Evento 'Falha ao Enviar Email' recebido. Enviando comando para ms-conta");
+
+    rabbitTemplate.convertAndSend(
+      RabbitMQConstants.BANTADS_EXCHANGE,
+      RabbitMQConstants.RK_CONTA_REVERTER_STATUS_COMANDO,
+      message
+    );
+  }
+
+
+  @RabbitListener(
+    bindings = @QueueBinding(
+      exchange = @Exchange(RabbitMQConstants.BANTADS_EXCHANGE),
+      value = @Queue(RabbitMQConstants.FILA_SAGA_CLIENTE_PREPARAR_NOTIFICACAO_FALHA),
+      key = RabbitMQConstants.RK_CLIENTE_NOTIFICACAO_FALHA_EVENTO
+    )
+  )
+  public void fallbackPrepareNotification(String message){
+
+    System.out.println("Evento 'Falha ao preparar notificação' recebido. Enviando comando para ms-conta");
 
     rabbitTemplate.convertAndSend(
       RabbitMQConstants.BANTADS_EXCHANGE,

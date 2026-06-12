@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RemoveGerenteSagaConsumer {
 
-  // @TODO CRIAR COMANDO PARA DELETAR CREDENCIAL DO GERENTE
-
   private final RabbitTemplate rabbitTemplate;
 
   @RabbitListener(
@@ -26,7 +24,7 @@ public class RemoveGerenteSagaConsumer {
   )
   public void transferContas(String message){
 
-    System.out.println("Evento de remoção de gerente recebido. Enviando mensagem para ms-conta");
+    System.out.println("Evento de 'Remover Gerente' recebido. Enviando mensagem para ms-conta");
 
 
     rabbitTemplate.convertAndSend(
