@@ -1,125 +1,55 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ClienteService } from '../cliente-services/cliente-service';
 import { Conta, EmailNotificacao, GerenteAdmin, PedidoAutoCadastro } from '../../models/entities';
 import { PedidoAutoCadastroService } from '../pedido-autocadastro-services/pedido-autocadastro-service';
 import { ContaService } from '../conta-services/conta-service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GerenteAutocadastroService {
+  API_CONTAS_URL="http://localhost:8080/contas";
 
-  private readonly pedidosService = inject(PedidoAutoCadastroService);
-  private readonly clientesService = inject(ClienteService);
-  private readonly contaService = inject(ContaService);
+  constructor(
+    private httpClient: HttpClient,
+  ){}
 
-  private readonly pedidos: PedidoAutoCadastro[] = [];
-  private readonly contasCriadas: Conta[] = [];
-  private readonly emailsEnviados: EmailNotificacao[] = [];
+  pedidos: PedidoAutoCadastro[] = [];
+  contasCriadas: Conta[] = [];
+  emailsEnviados: EmailNotificacao[] = [];
 
-  getPedidosPendentes(cpfGerente:string): PedidoAutoCadastro[] {
-    return this.pedidos.filter(
-      (pedido) =>
-        pedido.status === 'PENDENTE' && pedido.cpfGerente === cpfGerente,
+
+    public aprovarConta(idCliente: string, token: string): Observable<void>{
+      const httpOptions = {
+        headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+        })
+      }
+      return this.httpClient.put<void>(
+        // `${this.API_CONTAS_URL}${idConta}/status`,
+        `${this.API_CONTAS_URL}/${idCliente}/aprovar`,
+        {status: 'CONTA_APROVADA'},
+        httpOptions
+
+      );
+    }
+
+  public recusarConta(idCliente: string, motivo: string, token: string): Observable<void>{
+    const httpOptions = {
+        headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+        })
+      }
+    return this.httpClient.put<void>(
+      // `${this.API_CONTAS_URL}/${idConta}/status`,
+      `${this.API_CONTAS_URL}/${idCliente}/rejeitar`,
+      {status: 'CONTA_REJEITADA', motivoRecusa:motivo},
+      httpOptions
     );
-  }
-
-  getPedidosProcessados(cpfGerente: string): PedidoAutoCadastro[] {
-    return this.pedidos
-      .filter((pedido) => pedido.status !== 'PENDENTE' && pedido.cpfGerente === cpfGerente)
-      .sort((a, b) =>{
-
-        const dataA = a.dataDecisao? new Date(a.dataDecisao).getTime() : 0;
-        const dataB = b.dataDecisao? new Date(b.dataDecisao).getTime() : 0;
-
-        return dataB - dataA;
-      });
-  }
-
-  getEmailsEnviados(): EmailNotificacao[] {
-    return this.emailsEnviados
-      .slice()
-      .sort((a, b) => b.dataEnvio.getTime() - a.dataEnvio.getTime());
-  }
-
-  aprovarPedido(cpf: string, gerente: GerenteAdmin): Conta | null {
-    const pedido = this.pedidos.find((item) => item.cpfCliente === cpf && item.status === 'PENDENTE');
-    const cliente = this.clientesService.buscarPorCPF(cpf);
-
-    console.log("CPF:", cpf);
-    //console.log(`pedido: ${pedido?.id}. Cliente: ${cliente?.id}`);
-
-    if (!pedido || !cliente) {
-      return null;
-    }
-
-    const senha:string = this.gerarSenhaTemporaria();
-
-    //cliente.senha = senha;
-
-    //this.clientesService.atualizar(cliente);
-
-
-    //const contaGerada: Conta = {
-    //   id: new Date().getTime(),
-    //   //cliente: cliente.nome,
-    //   cpfCliente: pedido.cpfCliente,
-    //   numeroConta: this.gerarNumeroConta(),
-    //   limite: this.calcularLimite(pedido.salario),
-    //   gerente: gerente.nome,
-    //   cpfGerente: gerente.cpf,
-    //   saldo: 0,
-    //   dataCriacao: new Date(),
-    // };
-
-    pedido.status = 'APROVADO';
-    pedido.dataDecisao = new Date();
-    //pedido.contaGerada = contaGerada;
-
-    this.pedidosService.atualizar(pedido);
-    //this.contasCriadas.push(contaGerada);
-    //this.registrarEmailAprovacao(pedido, contaGerada, senha);
-
-    //this.contaService.inserir(contaGerada);
-
-    console.log("Senha gerada para o usuário: ", senha);
-    //return contaGerada;
-    return null;
-  }
-
-  recusarPedido(cpf: string, motivoRecusa: string): boolean {
-    const pedido = this.pedidos.find((item) => item.cpfCliente === cpf && item.status === 'PENDENTE');
-    if (!pedido) {
-      return false;
-    }
-
-    pedido.status = 'RECUSADO';
-    pedido.dataDecisao = new Date();
-    pedido.motivoRecusa = motivoRecusa;
-
-    this.pedidosService.atualizar(pedido);
-    this.registrarEmailRecusa(pedido, motivoRecusa);
-    return true;
-  }
-
-  private calcularLimite(salario: number): number {
-    return salario >= 2000 ? salario / 2 : 0;
-  }
-
-  private gerarNumeroConta(): number {
-    return Math.floor(1000 + Math.random() * 9000);
-  }
-
-  private gerarSenhaTemporaria(): string {
-    const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz0123456789';
-    let senha = '';
-
-    for (let i = 0; i < 10; i += 1) {
-      const indice = Math.floor(Math.random() * caracteres.length);
-      senha += caracteres[indice];
-    }
-
-    return senha;
   }
 
   private registrarEmailAprovacao(pedido: PedidoAutoCadastro, conta: Conta, senha: string): void {

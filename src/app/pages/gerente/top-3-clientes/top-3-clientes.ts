@@ -1,8 +1,11 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription, combineLatest } from 'rxjs';
-import { Cliente } from '../../../core/models/entities';
+import { Cliente, Conta } from '../../../core/models/entities';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
+import { ActivatedRoute } from '@angular/router';
+import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { CommonModule } from '@angular/common';
 
 interface TopCliente {
   cpf: string;
@@ -14,47 +17,55 @@ interface TopCliente {
 
 @Component({
   selector: 'app-top-3-clientes',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './top-3-clientes.html',
   styleUrl: './top-3-clientes.css',
 })
 export class Top3Clientes implements OnInit, OnDestroy {
-  private readonly clienteService = inject(ClienteService);
-  private readonly contaService = inject(ContaService);
+  constructor(
+    private route: ActivatedRoute,
+    private clienteService: ClienteService,
+    private contaService: ContaService,
+    private authService: AuthServices
+  ){}
   private readonly subscriptions = new Subscription();
 
   topClientes: TopCliente[] = [];
+  tokenJWT = ''
 
   ngOnInit(): void {
-    // this.subscriptions.add(
-    //   combineLatest([this.clienteService.clientes$, this.contaService.contas$]).subscribe(
-    //     ([clientes, contas]) => {
-    //       const clientesPorCpf = new Map<string, Cliente>(
-    //         clientes.map((cliente) => [cliente.cpf, cliente])
-    //       );
+    this.tokenJWT=this.authService.usuarioLogado || '';
 
-    //       this.topClientes = contas
-    //         .map((conta) => {
-    //           const cliente = clientesPorCpf.get(conta.cpfCliente);
-    //           if (!cliente) {
-    //             return null;
-    //           }
 
-    //           const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco);
-    //           return {
-    //             cpf: cliente.cpf,
-    //             nome: cliente.nome,
-    //             cidade,
-    //             estado,
-    //             saldo: conta.saldo,
-    //           };
-    //         })
-    //         .filter((item): item is TopCliente => item !== null)
-    //         .sort((a, b) => b.saldo - a.saldo)
-    //         .slice(0, 3);
-    //     }
-      //)
-    //);
+    this.subscriptions.add(
+      combineLatest([
+        this.clienteService.listarTodos(this.tokenJWT),
+        this.contaService.listarTodos(this.tokenJWT)
+      ]).subscribe({
+        next: ([clientes, contas]: [Cliente[], Conta[]])=>{
+          const clientesPorCpf=new Map<string, Cliente>(
+            clientes.map((cliente)=> [cliente.cpf, cliente])
+          );
+          this.topClientes=contas.map((conta)=>{
+            const cliente = clientesPorCpf.get(conta.cpfCliente);
+            if (!cliente) return null;
+
+            const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco || '');
+              return {
+                cpf: cliente.cpf,
+                nome: cliente.nome,
+                cidade,
+                estado,
+                saldo: conta.saldo ?? 0,
+              };
+          })
+          .filter((item): item is TopCliente => item !== null)
+          .sort((a, b) => b.saldo - a.saldo)
+          .slice(0, 3);
+        },
+        error: (err) => console.error('Erro ao buscar ranking de clientes:', err)
+        })
+    );
   }
 
   ngOnDestroy(): void {
@@ -62,6 +73,9 @@ export class Top3Clientes implements OnInit, OnDestroy {
   }
 
   private extrairCidadeEstado(endereco: string): { cidade: string; estado: string } {
+    if (!endereco || !endereco.includes(' - ')) {
+      return { cidade: 'Não Informada', estado: '-' };
+    }
     const partes = endereco.split(' - ').map((item) => item.trim());
     const estado = partes.at(-1) ?? '-';
     const cidade = partes.at(-2) ?? '-';

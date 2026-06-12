@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NgxMaskDirective } from 'ngx-mask';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
-import { Cliente } from '../../../core/models/entities';
+import { Cliente, Conta } from '../../../core/models/entities';
+import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { combineLatest } from 'rxjs';
 
 interface ClienteTabela {
   cpf: string;
@@ -24,69 +26,79 @@ interface ClienteTabela {
   templateUrl: './todos-clientes.html',
   styleUrl: './todos-clientes.css',
 })
-export class TodosClientes {
+export class TodosClientes implements OnInit{
   termoBusca = '';
+  clientes: ClienteTabela[] = [];
+  tokenJWT = '';
 
   constructor(
     private clienteService: ClienteService,
     private contaService: ContaService,
     private gerenteService: GerenteService,
+    private authService: AuthServices
   ) {}
 
   ngOnInit(): void{
+    this.tokenJWT = this.authService.usuarioLogado || '';
     this.listarClientes();
   }
 
-  clientes: ClienteTabela[]=[];
-
-  //revisar ----------------------------------------
   listarClientes(): void {
-    this.clienteService.listarTodos().subscribe({
-      next: (data: Cliente[])=>{
-        this.clientes=data.map((cliente)=>{
-          return {
-          cpf: cliente.cpf,
-          nome: cliente.nome,
-          cidade:'',
-          estado: '',
-          email: cliente.email,
-          salario: cliente.salario,
-          saldo:0,
-          limite:0
-        };
-      });
-      this.clientes.sort((a, b) => a.nome.localeCompare(b.nome));
-    },
-      error: (erro)=>{
-        console.log('erro ao listar clientes', erro);
-        this.clientes=[];
+    const gerenteLogado = this.gerenteService.GerenteLogado;
+
+    if (!gerenteLogado) {
+      console.warn('Nenhum gerente logado encontrado.');
+      this.clientes = [];
+      return;
+    }
+
+    combineLatest([
+      this.clienteService.listarTodos(this.tokenJWT),
+      this.contaService.listarTodos(this.tokenJWT)
+    ]).subscribe({
+      next: ([listaClientes, listaContas]: [Cliente[], Conta[]]) => {
+
+        // Mapeia as contas por CPF do cliente para busca em tempo O(1)
+        const contasPorCpf = new Map<string, Conta>(
+          (listaContas || []).map((conta) => [conta.cpfCliente, conta])
+        );
+
+        this.clientes = (listaClientes || [])
+          .map((cliente) => {
+            const contaCliente = contasPorCpf.get(cliente.cpf);
+
+            // Se o cliente não possuir conta associada, ignora
+            if (!contaCliente) return null;
+
+            // 🎯 REGRA DE NEGÓCIO REATIVADA: Só exibe se a conta pertencer a este gerente
+            const pertenceAoGerente = contaCliente.cpfGerente === gerenteLogado.cpf;
+            if (!pertenceAoGerente) return null;
+
+            const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco || '');
+
+            return {
+              cpf: cliente.cpf,
+              nome: cliente.nome,
+              cidade,
+              estado,
+              email: cliente.email,
+              salario: cliente.salario,
+              saldo: contaCliente.saldo ?? 0,
+              limite: contaCliente.limite ?? 0
+            };
+          })
+          // Limpa os registros nulos (clientes de outras agências/gerentes)
+          .filter((item): item is ClienteTabela => item !== null)
+          // Ordena alfabeticamente
+          .sort((a, b) => a.nome.localeCompare(b.nome));
+      },
+      error: (erro) => {
+        console.error('Erro ao listar clientes e contas no dashboard', erro);
+        this.clientes = [];
       }
-    })
-
-    // const gerenteLogado = this.gerenteService.getGerenteLogado();
-    // if (!gerenteLogado) {
-    //   return [];
-    // }
-    // return clientes
-    //   .map((cliente) => {
-    //     const contaCliente = contas.find((conta) => conta.cpfCliente === cliente.cpf);
-    //     if (!contaCliente) {
-    //       return null;
-    //     }
-
-    //     const pertenceAoGerenteLogado =
-    //       contaCliente.cpfGerente === gerenteLogado.cpf ||
-    //       contaCliente.gerente === gerenteLogado.nome;
-
-    //     if (!pertenceAoGerenteLogado) {
-    //       return null;
-    //     }
-
-    //     const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco);
-
-    //   })
-    //   .filter((cliente): cliente is ClienteTabela => cliente !== null)
+    });
   }
+
 
   get clientesFiltrados(): ClienteTabela[] {
     const termo = this.termoBusca.trim().toLowerCase();
@@ -128,6 +140,9 @@ export class TodosClientes {
   }
 
   private extrairCidadeEstado(endereco: string): { cidade: string; estado: string } {
+    if (!endereco || !endereco.includes(' - ')) {
+      return { cidade: 'Não Informada', estado: '-' };
+    }
     const partes = endereco.split(' - ').map((item) => item.trim());
     return {
       cidade: partes.at(-2) ?? '-',
@@ -136,6 +151,7 @@ export class TodosClientes {
   }
 
   formatarCpf(cpf: string): string {
+    if (!cpf) return '';
     const numeros = cpf.replace(/\D/g, '');
     if (numeros.length !== 11) {
       return cpf;
