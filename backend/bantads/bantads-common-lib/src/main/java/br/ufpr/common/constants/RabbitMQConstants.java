@@ -24,6 +24,7 @@ public final class RabbitMQConstants {
 
   public static final String RK_CONTAS_TRANSFERIR_COMANDO = "contas.transferir.comando";
   public static final String RK_CONTAS_TRANSFERIDAS_SUCESSO = "contas.transferidas.sucesso";
+  public static final String RK_CREDENCIAL_GERENTE_DELETADA_EVENTO = "credencial.gerente.deletada.evento";
   public static final String RK_GERENTE_REMOVER_EVENTO = "gerente.remover.evento";
   public static final String RK_GERENTE_REMOVER_COMANDO = "gerente.remover.comando";
   public static final String RK_GERENTE_CREDENCIAL_REMOVER_COMANDO = "gerente.credencial.remover.comando";
@@ -50,6 +51,7 @@ public final class RabbitMQConstants {
   public static final String FILA_GERENTE_DELETAR = "ms-gerente.gerente.deletar.queue";
   public static final String FILA_SAGA_GERENTE_ADICIONAR = "ms-saga.gerente.adicionar.queue";
   public static final String FILA_SAGA_CONTAS_TRANSFERIDAS = "ms-saga.contas.transferidas.queue";
+  public static final String FILA_SAGA_CREDENCIAL_GERENTE_DELETADA = "ms-saga.credencial.gerente.deletada.queue";
   public static final String FILA_CONTAS_TRANSFERIR = "ms-saga.contas.transferir.queue";
   public static final String FILA_SAGA_CONTA_ATRIBUIR_FALHA = "ms-saga.conta.atribuir.falha.queue";
   public static final String FILA_CONTA_ATRIBUIR = "ms-saga.conta.atribuir.queue";
