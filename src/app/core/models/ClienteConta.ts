@@ -11,4 +11,5 @@ export interface ClienteConta{
     salario:number;
     endereco:string;
     conta: ContaGerente;
+
 }

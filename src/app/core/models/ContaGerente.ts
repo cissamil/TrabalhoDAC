@@ -1,3 +1,5 @@
+import { StatusConta } from "./entities";
+
 export interface GerenteNome{
   nomeGerente:string;
 }
@@ -12,4 +14,16 @@ export interface ContaGerente{
     cpfGerente:string;
     cpfCliente:string;
     numeroConta: number;
+    salario: number;
+}
+
+export interface GerenteContasPendentes {
+  contaId: string
+  clienteId: string;
+  clienteCpf: string
+  clienteNome: string
+  clienteEmail: string
+  clienteSalario: number
+  statusConta?: StatusConta;
+  motivoRecusa?: string;
 }
