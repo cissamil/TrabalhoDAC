@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { InfoCard } from '../../../core/models/info-card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { DecimalPipe } from '@angular/common';
 import { ManagerTableData } from '../../../core/models/table-data';
-import { Conta, GerenteAdmin } from '../../../core/models/entities';
 import { NgxMaskPipe } from 'ngx-mask';
-import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
+import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { ContaGerente } from '../../../core/models/ContaGerente';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -15,15 +16,17 @@ import { ContaService } from '../../../core/services/conta-services/conta-servic
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })
-export class AdminDashboard implements OnInit {
+export class AdminDashboard implements OnInit, OnDestroy {
+  private readonly subscriptions = new Subscription();
 
   constructor(
-    private gerentesService: GerenteService,
-    private contasService:ContaService,
+    private contasService: ContaService,
+    private cdr: ChangeDetectorRef,
+    private authService: AuthServices
   ){}
 
-  gerentes: GerenteAdmin[]=[];
-  contas: Conta[]=[];
+  tokenJWT='';
+  contas: ContaGerente[]=[];
   MANAGERS_TABLE: ManagerTableData[] = []
   infoCards: InfoCard[] = []
 
@@ -36,92 +39,87 @@ export class AdminDashboard implements OnInit {
     'Saldo Total'];
 
   ngOnInit(): void {
-    this.listarGerentes();
-    //this.contas=this.contasService.listarTodos();
-    this.fillManagersTable();
-    this.fillInfoCards();
+    this.tokenJWT=this.authService.usuarioLogado || '';
+    this.carregarDashboard();
   }
 
-    listarGerentes():void{
-    this.gerentesService.listarTodos().subscribe({
-      next: (gerentes: GerenteAdmin[]) => {
-      this.gerentes = gerentes;
-    },
-    error: (erro) => {
-      console.log('Erro ao listar gerentes', erro);
-      this.gerentes = [];
-    }
-    })
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
-  fillManagersTable(){
+carregarDashboard(): void {
+  this.subscriptions.add(
+      this.contasService.listarTodos(this.tokenJWT).subscribe({
+        next: (listaContas: ContaGerente[]) => {
+          this.contas = listaContas || [];
+this.fillManagersTable();
+          this.fillInfoCards();
+          this.cdr.detectChanges();
+        },
+        error: (erro) => {
+          console.error('Erro ao buscar dados agregados de contas/gerentes:', erro);
+          this.contas = [];
+        }
+      })
+    );
+  }
+
+
+  fillManagersTable(): void{
 
     this.MANAGERS_TABLE=[];
-    this.gerentes.forEach((gerente) =>{
+    const gerentesMap = new Map<string, {nome: string; cpf:string}>();
+    this.contas.forEach(conta => {
+      if (conta.cpfGerente && !gerentesMap.has(conta.cpfGerente)) {
+        gerentesMap.set(conta.cpfGerente, {
+          nome: conta.gerente?.nomeGerente || conta.cliente || 'Gerente Operacional',
+          cpf: conta.cpfGerente
+        });
+      }
+    });
 
-      if(gerente.tipo !== "administrador"){
+    gerentesMap.forEach((dadosGerente)=>{
+      const contasGerente = this.contas.filter(c=> c.cpfGerente === dadosGerente.cpf);
+      const resumo= contasGerente.reduce((acc, conta)=>{
+        acc.quantidade++;
 
-        const contasDoGerente = this.contas.filter(c => c.gerente === gerente.nome);
+        const saldoAtual = conta.saldo ?? 0;
+        if(saldoAtual >=0){
+          acc.positivos+=saldoAtual;
+        }else{
+          acc.negativos+= saldoAtual;
+        }
+        return acc;
+      },{quantidade: 0, positivos: 0, negativos: 0});
+      const saldoTotal = resumo.positivos + resumo.negativos;
 
-        const resumo = contasDoGerente.reduce((acc, conta) =>{
-
-          acc.quantidade++;
-
-          if(conta.saldo >= 0){
-            acc.positivos += conta.saldo;
-          } else{
-            acc.negativos += conta.saldo;
-          }
-
-          return acc;
-        }, {quantidade: 0, positivos: 0, negativos: 0});
-
-        const saldoTotal = resumo.positivos + resumo.negativos;
-
-
-        this.MANAGERS_TABLE.push({
-            nome: gerente.nome,
-            cpf:gerente.cpf,
+      this.MANAGERS_TABLE.push({
+            nome: dadosGerente.nome,
+            cpf:dadosGerente.cpf,
             quantidadeClientes: resumo.quantidade,
             saldosPositivos: resumo.positivos,
             saldosNegativos: resumo.negativos,
             saldoTotal: saldoTotal,
             colorSaldoTotal: saldoTotal >= 0 ? "green" : "red"
           });
-        }
-    });
+    })
 
     this.MANAGERS_TABLE.sort((a,b) => b.saldosPositivos - a.saldosPositivos);
-
   }
 
 
-  get saldosPositivos (){
-    let saldo = 0;
-
-    this.contas.forEach((conta) =>{
-      if( conta.saldo >= 0){
-
-        saldo += conta.saldo;
-      }
-    });
-
-    return saldo;
-  }
-
-  get saldosNegativos (){
-    let saldo = 0;
-
-    this.contas.forEach((conta) =>{
-      if(conta.saldo < 0){
-        saldo += conta.saldo;
-      }
-    });
-
-    return saldo;
+  get totalSaldosPositivos(): number{
+    return this.contas
+    .filter(c=>(c.saldo ?? 0)>=0)
+    .reduce((acc,c)=> acc +(c.saldo ?? 0), 0);
   }
 
 
+  get totalSaldosNegativos(): number{
+    return this.contas
+    .filter(c=>(c.saldo ?? 0)<0)
+    .reduce((acc,c)=> acc+(c.saldo ?? 0), 0);
+  }
 
 fillInfoCards(): void {
   this.infoCards = [
@@ -135,18 +133,23 @@ fillInfoCards(): void {
     {
       topTitle: 'Saldos Positivos',
       icon: 'trending_up',
-      middleContent: this.saldosPositivos.toString(),
+      middleContent: this.formatarMoeda(this.totalSaldosPositivos),
       color: 'green',
       bottomText: 'Limite Disponível',
     },
     {
       topTitle: 'Saldos Negativos',
       icon: 'trending_down',
-      middleContent: this.saldosNegativos.toString(),
+      middleContent: this.formatarMoeda(this.totalSaldosNegativos),
       color: 'red',
       bottomText: 'Saldo + Limite',
     },
   ];
 }
-
+formatarMoeda(valor: number): string {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(valor || 0);
+  }
 }

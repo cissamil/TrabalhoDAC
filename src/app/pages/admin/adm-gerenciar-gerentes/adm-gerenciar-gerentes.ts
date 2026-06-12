@@ -6,6 +6,7 @@ import { Conta, GerenteAdmin } from '../../../core/models/entities';
 import { ManagerListTableData } from '../../../core/models/table-data';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
+import { AuthServices } from '../../../core/services/auth-services/auth-services';
 
 export interface DashboardGerenciarGerentes {
   totalGerentes: number;
@@ -22,6 +23,8 @@ export class AdminGerenciarGerentes implements OnInit {
   constructor(
     private gerenteService: GerenteService,
     private contaService: ContaService,
+    private authService: AuthServices
+
   ) {}
 
   // calcularCards(): void {
@@ -29,7 +32,7 @@ export class AdminGerenciarGerentes implements OnInit {
   //   this.totalContas = this.contas.length;
   //   this.mediaPorGerente = this.totalGerentes > 0 ? this.totalContas / this.totalGerentes : 0;
   // }
-
+  tokenJWT = '';
   gerentes: GerenteAdmin[] = [];
   //contas: Conta[] = [];
   MANAGERS_TABLE: ManagerListTableData[] = [];
@@ -61,6 +64,7 @@ export class AdminGerenciarGerentes implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.tokenJWT = this.authService.usuarioLogado || '';
     // this.listarContas();
     this.listarGerentes();
     //this.atualizarTela();
