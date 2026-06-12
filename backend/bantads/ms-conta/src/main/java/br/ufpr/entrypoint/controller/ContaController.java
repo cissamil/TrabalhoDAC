@@ -66,8 +66,8 @@ public class ContaController {
     return ResponseEntity.ok(responseList);
   }
 
-  @PostMapping("/{id}/aprovar")
-  public ResponseEntity<Void> approveConta(@PathVariable("id") Integer contaId, @RequestBody ApproveContaRequest request){
+  @PostMapping("/{contaId}/aprovar")
+  public ResponseEntity<Void> approveConta(@PathVariable("contaId") String contaId, @RequestBody ApproveContaRequest request){
 
       System.out.println("Id da conta: " + contaId + "Salario: " + request.getClienteSalario());
 
@@ -101,8 +101,8 @@ public class ContaController {
     return ResponseEntity.ok(movimentacaoResponseList);
   }
 
-  @PostMapping("/{id}/rejeitar")
-  public ResponseEntity<Void> refuseConta(@PathVariable("id") Integer contaId, @RequestBody RefuseContaRequest request){
+  @PostMapping("/{contaId}/rejeitar")
+  public ResponseEntity<Void> refuseConta(@PathVariable("contaId") String contaId, @RequestBody RefuseContaRequest request){
 
     System.out.println("Id da conta: " + contaId + " Motivo de recusa: " + request.getMotivoRecusa());
 
@@ -124,7 +124,7 @@ public class ContaController {
     return ResponseEntity.ok(contaResponseMapper.toResponse(conta));
   }
 
-  @PostMapping("/{id}/depositar")
+  @PostMapping("/depositar")
   ResponseEntity<Void> depositValueOnConta(@RequestBody DepositValueRequest request){
 
     DepositValueInputData inputData = new DepositValueInputData();
@@ -138,7 +138,7 @@ public class ContaController {
 
   }
 
-  @PostMapping("/{id}/sacar")
+  @PostMapping("/sacar")
   ResponseEntity<Void> withdrawValueOfConta(@RequestBody WithdrawValueRequest request){
 
     WithdrawValueInputData inputData = new WithdrawValueInputData();
@@ -152,7 +152,7 @@ public class ContaController {
 
   }
 
-  @PostMapping("/{id}/transferir")
+  @PostMapping("/transferir")
   ResponseEntity<Void> transferMoneyToAnotherConta(@RequestBody TransferValueRequest request){
 
     TransferValueInputData inputData = new TransferValueInputData();
@@ -174,11 +174,5 @@ public class ContaController {
 
     return ResponseEntity.ok(responseList);
   }
-
-
-
-
-
-
 
 }

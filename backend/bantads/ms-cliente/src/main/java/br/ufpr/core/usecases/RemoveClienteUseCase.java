@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RemoveClienteUseCase implements RemoveClienteInputPort {
 
+  //@TODO MUDAR (SE DER TEMPO) O ENVIO DE EMAILS PARA O MS-EMAIL
   private final SendEmailOutputPort sendEmailOutputPort;
   private final RemoveClienteOutputPort removeClienteOutputPort;
   private final FindClienteByClienteIdOutputPort findClienteByClienteIdOutputPort;

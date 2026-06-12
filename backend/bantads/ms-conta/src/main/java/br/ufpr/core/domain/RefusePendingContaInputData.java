@@ -10,6 +10,6 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 
 public class RefusePendingContaInputData {
-  private Integer contaId;
+  private String contaId;
   private String motivoRecusa;
 }

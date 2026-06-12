@@ -17,6 +17,8 @@ import java.security.SecureRandom;
 @RequiredArgsConstructor
 public class PrepareClienteCredentialUseCase implements PrepareClienteCredentialInputPort {
 
+  //@TODO MUDAR (SE DER TEMPO) O ENVIO DE EMAILS PARA O MS-EMAIL
+
   private final SendEmailOutputPort sendEmailOutputPort;
   private final ConsultClienteOutputPort consultClienteOutputPort;
   private final CreateUserCredentialInputPort createUserCredentialInputPort;

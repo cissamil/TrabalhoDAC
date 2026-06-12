@@ -20,8 +20,14 @@ public class RevertContaApprovalUseCase implements RevertContaApprovalInputPort 
 
     Conta conta = findContaByClienteIdOutputPort.find(clienteId);
 
+    if(conta == null){
+      System.out.println("Conta não encontrada. Abortando...");
+      return;
+    }
+
     if(conta.getStatusConta() == StatusConta.CONTA_PENDENTE){
       System.out.println("Status da conta já foi revertido. Abortando...");
+      return;
     }
 
     conta.setSaldo(null);

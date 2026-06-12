@@ -11,6 +11,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ApprovePendingContaInputData {
 
-  private Integer contaId;
+  private String contaId;
   private BigDecimal clienteSalario;
 }

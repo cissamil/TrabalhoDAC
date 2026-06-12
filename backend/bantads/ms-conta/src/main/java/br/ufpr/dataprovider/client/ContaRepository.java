@@ -49,8 +49,11 @@ public interface ContaRepository extends JpaRepository<ContaEntity, Integer> {
   ContaEntity findFirstByGerenteId(String gerenteId);
 
 
-  boolean existsByNumeroConta(Integer numeroConta);
+  boolean existsByNumeroConta(String numeroConta);
   ContaEntity findByNumeroConta(String numeroConta);
+
+  ContaEntity findByContaId(String contaId);
+  boolean existsByContaId(String contaId);
 
   List<ContaEntity> findByGerenteIdAndStatusConta(String gerenteId, StatusConta statusConta);
 

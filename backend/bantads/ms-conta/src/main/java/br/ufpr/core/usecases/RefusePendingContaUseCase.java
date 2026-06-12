@@ -16,15 +16,15 @@ import org.springframework.stereotype.Component;
 public class RefusePendingContaUseCase implements RefusePendingContaInputPort {
 
   private final SaveContaOutputPort saveContaOutputPort;
-  private final FindContaByIdOutputPort findContaByIdOutputPort;
+  private final FindContaByContaIdOutputPort findContaByContaIdOutputPort;
   private final PublishContaRefusedEventOutputPort publishContaRefusedEventOutputPort;
 
   @Override
   public void execute(RefusePendingContaInputData inputData) {
 
-    Integer contaId = inputData.getContaId();
+    String contaId = inputData.getContaId();
 
-    Conta conta = findContaByIdOutputPort.find(contaId);
+    Conta conta = findContaByContaIdOutputPort.find(contaId);
 
     validateConta(conta);
 
