@@ -2,8 +2,8 @@ package br.ufpr.dataprovider.adapter;
 
 import br.ufpr.core.domain.Conta;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
-import br.ufpr.dataprovider.adapter.domain.ContaEntity;
-import br.ufpr.dataprovider.client.ContaRepository;
+import br.ufpr.dataprovider.adapter.domain.command.ContaCommandEntity;
+import br.ufpr.dataprovider.client.command.ContaCommandRepository;
 import br.ufpr.dataprovider.mapper.ContaEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
 public class SaveContaAdapter implements SaveContaOutputPort {
 
   private final ContaEntityMapper mapper;
-  private final ContaRepository repository;
+  private final ContaCommandRepository repository;
 
   public Conta save(Conta conta){
 
     try {
-      ContaEntity entity = mapper.toEntity(conta);
+      ContaCommandEntity entity = mapper.toEntity(conta);
 
-      ContaEntity savedEntity = repository.save(entity);
+      ContaCommandEntity savedEntity = repository.save(entity);
 
       return mapper.toDomain(savedEntity);
 

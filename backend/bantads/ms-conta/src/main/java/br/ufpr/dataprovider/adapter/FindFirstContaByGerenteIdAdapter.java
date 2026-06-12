@@ -2,8 +2,8 @@ package br.ufpr.dataprovider.adapter;
 
 import br.ufpr.core.domain.Conta;
 import br.ufpr.core.ports.output.FindFirstContaByGerenteIdOutputPort;
-import br.ufpr.dataprovider.adapter.domain.ContaEntity;
-import br.ufpr.dataprovider.client.ContaRepository;
+import br.ufpr.dataprovider.adapter.domain.command.ContaCommandEntity;
+import br.ufpr.dataprovider.client.command.ContaCommandRepository;
 import br.ufpr.dataprovider.mapper.ContaEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FindFirstContaByGerenteIdAdapter implements FindFirstContaByGerenteIdOutputPort {
 
-  private final ContaRepository repository;
+  private final ContaCommandRepository repository;
   private final ContaEntityMapper mapper;
 
   @Override
   public Conta find(String gerenteId) {
 
-    ContaEntity entity = repository.findFirstByGerenteId(gerenteId);
+    ContaCommandEntity entity = repository.findFirstByGerenteId(gerenteId);
 
     return mapper.toDomain(entity);
   }

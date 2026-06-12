@@ -1,7 +1,7 @@
 package br.ufpr.dataprovider.adapter;
 
 import br.ufpr.core.ports.output.FindGerenteWithFewerClientesIdOutputPort;
-import br.ufpr.dataprovider.client.ContaRepository;
+import br.ufpr.dataprovider.client.command.ContaCommandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FindGerenteWithFewerClientesAdapterId implements FindGerenteWithFewerClientesIdOutputPort {
 
-  private final ContaRepository repository;
+  private final ContaCommandRepository repository;
 
   public String find(){
 

@@ -1,17 +1,17 @@
 package br.ufpr.dataprovider.mapper;
 
 import br.ufpr.core.domain.Movimentacao;
-import br.ufpr.dataprovider.adapter.domain.MovimentacaoEntity;
+import br.ufpr.dataprovider.adapter.domain.command.MovimentacaoCommandEntity;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MovimentacaoEntityMapper {
 
-  public MovimentacaoEntity toEntity(Movimentacao domain){
+  public MovimentacaoCommandEntity toEntity(Movimentacao domain){
 
     if (domain == null) return null;
 
-    MovimentacaoEntity entity = new MovimentacaoEntity();
+    MovimentacaoCommandEntity entity = new MovimentacaoCommandEntity();
 
     entity.setId(domain.getId());
     entity.setDataHora(domain.getDataHora());
@@ -26,7 +26,7 @@ public class MovimentacaoEntityMapper {
   }
 
 
-  public Movimentacao toDomain(MovimentacaoEntity entity){
+  public Movimentacao toDomain(MovimentacaoCommandEntity entity){
 
     Movimentacao domain = new Movimentacao();
 

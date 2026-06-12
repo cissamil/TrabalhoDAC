@@ -1,13 +1,13 @@
 package br.ufpr.dataprovider.mapper;
 
 import br.ufpr.core.domain.Conta;
-import br.ufpr.dataprovider.adapter.domain.ContaEntity;
+import br.ufpr.dataprovider.adapter.domain.command.ContaCommandEntity;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ContaEntityMapper {
 
-  public Conta toDomain(ContaEntity entity){
+  public Conta toDomain(ContaCommandEntity entity){
 
     if(entity == null) return null;
 
@@ -28,11 +28,11 @@ public class ContaEntityMapper {
     return conta;
   }
 
-  public ContaEntity toEntity(Conta conta){
+  public ContaCommandEntity toEntity(Conta conta){
 
     if(conta == null) return null;
 
-    ContaEntity entity = new ContaEntity();
+    ContaCommandEntity entity = new ContaCommandEntity();
 
     entity.setId(conta.getId());
     entity.setSaldo(conta.getSaldo());

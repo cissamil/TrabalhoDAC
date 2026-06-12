@@ -1,7 +1,6 @@
 package br.ufpr.entrypoint.mapper;
 
 import br.ufpr.core.domain.Movimentacao;
-import br.ufpr.dataprovider.adapter.domain.MovimentacaoEntity;
 import br.ufpr.entrypoint.response.MovimentacaoResponse;
 import org.springframework.stereotype.Component;
 

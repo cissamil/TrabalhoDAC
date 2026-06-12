@@ -1,18 +1,16 @@
-package br.ufpr.dataprovider.client;
+package br.ufpr.dataprovider.client.command;
 
-import br.ufpr.dataprovider.adapter.domain.MovimentacaoEntity;
+import br.ufpr.dataprovider.adapter.domain.command.MovimentacaoCommandEntity;
 import feign.Param;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface MovimentacaoRepository extends JpaRepository<MovimentacaoEntity, Integer>{
+public interface MovimentacaoCommandRepository extends JpaRepository<MovimentacaoCommandEntity, Integer>{
 
   @Query(
     value = "SELECT * FROM movimentacoes " +
@@ -21,7 +19,7 @@ public interface MovimentacaoRepository extends JpaRepository<MovimentacaoEntity
     "AND cliente_origem_id = :clienteId",
     nativeQuery = true
   )
-  List<MovimentacaoEntity> findMovimentacoesByClienteIdBetweenDates(
+  List<MovimentacaoCommandEntity> findMovimentacoesByClienteIdBetweenDates(
     @Param("dataInicio") LocalDateTime dataInicio,
     @Param("dataFim") LocalDateTime dataFim,
     @Param("clienteId") String clienteId

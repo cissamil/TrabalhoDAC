@@ -1,4 +1,4 @@
-package br.ufpr.dataprovider.adapter.domain;
+package br.ufpr.dataprovider.adapter.domain.query;
 
 import br.ufpr.core.domain.StatusConta;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "contas")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ContaEntity {
+public class ContaQueryEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

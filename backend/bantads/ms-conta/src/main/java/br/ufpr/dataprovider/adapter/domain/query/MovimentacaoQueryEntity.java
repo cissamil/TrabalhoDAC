@@ -1,4 +1,4 @@
-package br.ufpr.dataprovider.adapter.domain;
+package br.ufpr.dataprovider.adapter.domain.query;
 
 import br.ufpr.core.domain.TipoMovimentacao;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "movimentacoes")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MovimentacaoEntity {
+public class MovimentacaoQueryEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

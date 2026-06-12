@@ -1,17 +1,14 @@
 package br.ufpr.dataprovider.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
 import br.ufpr.core.domain.Conta;
 import br.ufpr.core.ports.output.FindContasByGerenteAndStatusOutputPort;
-import br.ufpr.dataprovider.adapter.domain.ContaEntity;
-import br.ufpr.dataprovider.client.ContaRepository;
+import br.ufpr.dataprovider.adapter.domain.command.ContaCommandEntity;
+import br.ufpr.dataprovider.client.command.ContaCommandRepository;
 import br.ufpr.dataprovider.mapper.ContaEntityMapper;
 import br.ufpr.core.domain.StatusConta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.swing.plaf.synth.SynthTextAreaUI;
 
 // MS-CONTA
 
@@ -19,13 +16,13 @@ import javax.swing.plaf.synth.SynthTextAreaUI;
 @RequiredArgsConstructor
 public class FindContasByGerenteAndStatusAdapter implements FindContasByGerenteAndStatusOutputPort {
 
-  private final ContaRepository repository;
+  private final ContaCommandRepository repository;
   private final ContaEntityMapper mapper;
 
   @Override
   public List<Conta> find(String gerenteId, StatusConta statusConta) {
 
-    List<ContaEntity> entities;
+    List<ContaCommandEntity> entities;
 
     if(gerenteId.equals(" ") || gerenteId.isEmpty()){
 

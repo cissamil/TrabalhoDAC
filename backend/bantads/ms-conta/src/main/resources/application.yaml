@@ -21,9 +21,19 @@ spring:
         order_inserts: true
         order_updates: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/ms_conta_cud_db
-    username: tads
-    password: tads
+      command:
+        url: jdbc:postgresql://localhost:5432/ms_conta_cud_db
+        username: tads
+        password: tads
+        driver-class-name: org.postgresql.Driver
+
+      query:
+        url: jdbc:postgresql://localhost:5432/ms_conta_r_db
+        username: tads
+        password: tads
+        driver-class-name: org.postgresql.Driver
+
+
 
   rabbitmq:
     host: localhost

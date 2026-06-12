@@ -3,7 +3,7 @@ package br.ufpr.dataprovider.adapter;
 import br.ufpr.core.ports.output.FindGerenteTotalClientesOutputPort;
 import br.ufpr.core.usecases.GerenteTotalClientesOutputData;
 import br.ufpr.dataprovider.adapter.domain.GerenteTotalClientesResponse;
-import br.ufpr.dataprovider.client.ContaRepository;
+import br.ufpr.dataprovider.client.command.ContaCommandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,12 +13,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FindGerenteTotalClientesAdapter implements FindGerenteTotalClientesOutputPort {
 
-  private final ContaRepository contaRepository;
+  private final ContaCommandRepository contaCommandRepository;
 
   @Override
   public List<GerenteTotalClientesOutputData> find() {
 
-    List<GerenteTotalClientesResponse> gerentesTotalClientes = contaRepository.findGerentesTotalClientes();
+    List<GerenteTotalClientesResponse> gerentesTotalClientes = contaCommandRepository.findGerentesTotalClientes();
 
     return gerentesTotalClientes.stream().map(response -> {
 

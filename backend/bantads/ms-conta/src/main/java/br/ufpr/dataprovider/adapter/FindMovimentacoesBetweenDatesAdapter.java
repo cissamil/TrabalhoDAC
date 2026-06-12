@@ -3,8 +3,8 @@ package br.ufpr.dataprovider.adapter;
 import br.ufpr.core.domain.ConsultBankStatementInputData;
 import br.ufpr.core.domain.Movimentacao;
 import br.ufpr.core.ports.output.FindMovimentacoesBetweenDatesOutputPort;
-import br.ufpr.dataprovider.adapter.domain.MovimentacaoEntity;
-import br.ufpr.dataprovider.client.MovimentacaoRepository;
+import br.ufpr.dataprovider.adapter.domain.command.MovimentacaoCommandEntity;
+import br.ufpr.dataprovider.client.command.MovimentacaoCommandRepository;
 import br.ufpr.dataprovider.mapper.MovimentacaoEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FindMovimentacoesBetweenDatesAdapter implements FindMovimentacoesBetweenDatesOutputPort {
 
-  private final MovimentacaoRepository repository;
+  private final MovimentacaoCommandRepository repository;
   private final MovimentacaoEntityMapper mapper;
   @Override
   public List<Movimentacao> find(ConsultBankStatementInputData inputData) {
@@ -31,7 +31,7 @@ public class FindMovimentacoesBetweenDatesAdapter implements FindMovimentacoesBe
 
     System.out.println("Pegando movimentações do dia " + dataInicioTime + " até o dia " + dataFimTime);
 
-    List<MovimentacaoEntity> movimentacaoEntities = repository.findMovimentacoesByClienteIdBetweenDates(dataInicioTime, dataFimTime, clienteId);
+    List<MovimentacaoCommandEntity> movimentacaoEntities = repository.findMovimentacoesByClienteIdBetweenDates(dataInicioTime, dataFimTime, clienteId);
 
     return movimentacaoEntities.stream().map(mapper::toDomain).toList();
   }

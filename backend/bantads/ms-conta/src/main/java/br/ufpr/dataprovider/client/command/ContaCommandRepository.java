@@ -1,6 +1,6 @@
-package br.ufpr.dataprovider.client;
+package br.ufpr.dataprovider.client.command;
 
-import br.ufpr.dataprovider.adapter.domain.ContaEntity;
+import br.ufpr.dataprovider.adapter.domain.command.ContaCommandEntity;
 import br.ufpr.core.domain.StatusConta;
 import br.ufpr.dataprovider.adapter.domain.GerenteTotalClientesResponse;
 import feign.Param;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ContaRepository extends JpaRepository<ContaEntity, Integer> {
+public interface ContaCommandRepository extends JpaRepository<ContaCommandEntity, Integer> {
 
   @Query(
     value =
@@ -45,22 +45,22 @@ public interface ContaRepository extends JpaRepository<ContaEntity, Integer> {
   )
   String findGerenteWithMostClientesId();
 
-  List<ContaEntity> findByGerenteId(String gerenteId);
-  ContaEntity findFirstByGerenteId(String gerenteId);
+  List<ContaCommandEntity> findByGerenteId(String gerenteId);
+  ContaCommandEntity findFirstByGerenteId(String gerenteId);
 
 
   boolean existsByNumeroConta(String numeroConta);
-  ContaEntity findByNumeroConta(String numeroConta);
+  ContaCommandEntity findByNumeroConta(String numeroConta);
 
-  ContaEntity findByContaId(String contaId);
+  ContaCommandEntity findByContaId(String contaId);
   boolean existsByContaId(String contaId);
 
-  List<ContaEntity> findByGerenteIdAndStatusConta(String gerenteId, StatusConta statusConta);
+  List<ContaCommandEntity> findByGerenteIdAndStatusConta(String gerenteId, StatusConta statusConta);
 
-  List<ContaEntity> findByStatusConta(StatusConta statusConta);
+  List<ContaCommandEntity> findByStatusConta(StatusConta statusConta);
 
 
-  ContaEntity findByClienteId(String clienteId);
+  ContaCommandEntity findByClienteId(String clienteId);
 
   @Query(
     value =
@@ -70,7 +70,7 @@ public interface ContaRepository extends JpaRepository<ContaEntity, Integer> {
       "LIMIT ?1" ,
       nativeQuery = true
   )
-  List<ContaEntity> findContasOrderedBySaldoBasedOnQuantity(int quantity);
+  List<ContaCommandEntity> findContasOrderedBySaldoBasedOnQuantity(int quantity);
 
   @Query(
     value =
@@ -96,6 +96,6 @@ public interface ContaRepository extends JpaRepository<ContaEntity, Integer> {
       """,
     nativeQuery = true
   )
-  ContaEntity findContaWithMenorSaldoByGerenteId(@Param("gerenteId") String gerenteId);
+  ContaCommandEntity findContaWithMenorSaldoByGerenteId(@Param("gerenteId") String gerenteId);
 
 }
