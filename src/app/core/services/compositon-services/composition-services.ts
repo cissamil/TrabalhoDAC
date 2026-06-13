@@ -71,4 +71,20 @@ public getClienteConta(token: string): Observable<ClienteConta> {
       httpOptions
     )
   }
+
+public getRelatorioClientes(token: string): Observable<ClienteConta[]>{
+  const httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}` 
+    })
+  };
+  
+  return this.httpClient.get<ClienteConta[]>(
+    `${this.COMPOSITION_URL}/relatorio-clientes`,
+    httpOptions
+  );
+}
+
+
 }
