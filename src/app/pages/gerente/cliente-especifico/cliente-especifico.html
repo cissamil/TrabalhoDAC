@@ -30,11 +30,11 @@
 
 			<article class="detail-card">
 				<h3>Dados Financeiros</h3>
-				<p><strong>Numero da conta:</strong> {{ clienteSelecionado.numeroConta }}</p>
-				<p><strong>Salario:</strong> {{ formatarMoeda(clienteSelecionado.salario) }}</p>
-				<p><strong>Saldo:</strong> {{ formatarMoeda(clienteSelecionado.saldo) }}</p>
-				<p><strong>Limite:</strong> {{ formatarMoeda(clienteSelecionado.limite) }}</p>
-				<p><strong>Gerente:</strong> {{ clienteSelecionado.gerente }}</p>
+				<p><strong>Numero da conta:</strong> {{ clienteSelecionado.conta.numeroConta }}</p>
+				<p><strong>Salario:</strong> {{ formatarMoeda(clienteSelecionado.conta.salario) }}</p>
+				<p><strong>Saldo:</strong> {{ formatarMoeda(clienteSelecionado.conta.saldo) }}</p>
+				<p><strong>Limite:</strong> {{ formatarMoeda(clienteSelecionado.conta.limite) }}</p>
+				<p><strong>Gerente:</strong> {{ clienteSelecionado.conta.gerente }}</p>
 			</article>
 		</div>
 	} @else {

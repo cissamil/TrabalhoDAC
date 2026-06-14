@@ -1,13 +1,13 @@
 import { Router } from '@angular/router';
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ResponseModal } from '../../../core/models/response-modal';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
-import { CLIENTES_MOCK, CONTAS_MOCK } from '../../../core/mock/mock-data';
-import { GerenteAdmin, Cliente, Conta, PedidoAutoCadastro} from '../../../core/models/entities';
-//import {  GerenteAutocadastroService} from '../../../core/services/gerente-services/gerente-autocadastro.service';
+import { GerenteAdmin } from '../../../core/models/entities';
 import { MatIconModule } from '@angular/material/icon';
 import { GerenteAutocadastroService } from '../../../core/services/gerente-services/gerente-autocadastro.service';
+import { ContaGerente, GerenteContasPendentes } from '../../../core/models/ContaGerente';
+import { AuthServices } from '../../../core/services/auth-services/auth-services';
 
 @Component({
   selector: 'app-gerente-dashboard',
@@ -20,71 +20,69 @@ export class GerenteDashboard  implements OnInit{
     private router:Router,
     private gerenteService: GerenteService,
     private gerenteAutocadastroService: GerenteAutocadastroService,
+    private cdr: ChangeDetectorRef,
+    private authService: AuthServices
   ) {}
 
-  pedidoEmRecusa: PedidoAutoCadastro | null = null;
+  tokenJWT='';
+
+  pedidosPendentes: GerenteContasPendentes[]=[];
+  pedidosProcessados: GerenteContasPendentes[]=[];
+  pedidoEmRecusa: GerenteContasPendentes | null = null;
   motivoRecusaInput = '';
+  contasGerente: GerenteContasPendentes[]=[];
 
   // Pega o gerente logado atualmente da sessão
   gerenteLogado!: GerenteAdmin;
   responseModal: ResponseModal | null = null;
 
   ngOnInit(): void {
-    const dadosGerente = this.gerenteService.getGerenteLogado();
+    this.tokenJWT=this.authService.usuarioLogado || '';
+    const dadosGerente = this.gerenteService.GerenteLogado;
 
-    if(!dadosGerente){
+    if(dadosGerente){
+      this.gerenteLogado=dadosGerente;
+      this.contasGerente=dadosGerente.contas || [];
+
+      this.pedidosPendentes=this.contasGerente.filter(
+      (conta: GerenteContasPendentes)=> !conta.contaId
+    );
+
+    this.pedidosProcessados=(dadosGerente.contas || []).filter(
+      (conta: GerenteContasPendentes)=> conta.contaId !== null
+    );
+    this.cdr.detectChanges();
+    }else{
       this.router.navigate(['/login']);
-      return;
     }
-
-    this.gerenteLogado = dadosGerente;
   }
 
-  // Dados dos clientes e contas do mock-data
-  readonly clientesMock: Cliente[] = CLIENTES_MOCK;
-  readonly contasMock: Conta[] = CONTAS_MOCK;
-
+//---------geters e setters de gerente -----------
   get nomeGerente(): string {
-    return this.gerenteLogado.nome;
+    return this.gerenteLogado?.nome || '';
   }
 
-  get totalClientes(): number {
-    return this.clientesMock.length;
-  }
 
-  get saldoTotalContas(): number {
-    return this.contasMock.reduce((total, conta) => total + conta.saldo, 0);
-  }
+  aprovarPedido(idCliente: string): void {
+    this.gerenteAutocadastroService.aprovarConta(idCliente, this.tokenJWT).subscribe({
+      next: ()=>{
+        this.responseModal={
+          title: "Conta Ativada!",
+          message: "O status mudou para APROVADA e as credenciais foram geradas.",
+          messageIcon: "check",
+          type: 'success'
+        };
+        //remove visualmente de pendentes
+        this.pedidosPendentes=this.pedidosPendentes.filter(p=>p.clienteId !== idCliente);
+        const contaTratada=this.contasGerente.find(c=> c.clienteId === idCliente);
+        if(contaTratada){
+          contaTratada.statusConta='CONTA_APROVADA' as any;
+          this.pedidosProcessados=[...this.pedidosProcessados, contaTratada];
+        }
+      },
+      error: (err)=>console.error("Erro ao aprovar conta:", err)
 
-  get limiteTotalDisponivel(): number {
-    return this.contasMock.reduce((total, conta) => total + conta.limite, 0);
-  }
-
-  get pedidosPendentes(): PedidoAutoCadastro[] {
-
-    const pedidos =  this.gerenteAutocadastroService.getPedidosPendentes(this.gerenteLogado.cpf);
-
-    return pedidos;
-  }
-
-  get pedidosProcessados(): PedidoAutoCadastro[] {
-    const pedidos = this.gerenteAutocadastroService.getPedidosProcessados(this.gerenteLogado.cpf);
-    return pedidos;
-  }
-
-  aprovarPedido(cpf: string): void {
-    const contaCriada = this.gerenteAutocadastroService.aprovarPedido(cpf, this.gerenteLogado);
-
-    if (!contaCriada) {
-      return;
-    }
-
-    this.responseModal = {
-      title: "Cliente Aprovado com sucesso!",
-      message: `Conta ${contaCriada.numeroConta} criada e senha enviada por e-mail.`,
-      messageIcon: "check",
-      type: 'success'
-    };
+    });
 
   }
 
@@ -93,7 +91,7 @@ export class GerenteDashboard  implements OnInit{
   }
 
 
-  iniciarRecusa(pedido: PedidoAutoCadastro): void {
+  iniciarRecusa(pedido: GerenteContasPendentes): void {
     this.pedidoEmRecusa = pedido;
     this.motivoRecusaInput = '';
   }
@@ -103,39 +101,27 @@ export class GerenteDashboard  implements OnInit{
     this.motivoRecusaInput = '';
   }
 
-  confirmarRecusa(): void {
-    if (!this.pedidoEmRecusa) {
-      return;
-    }
-
-    const motivoRecusa = this.motivoRecusaInput.trim();
-    if (!motivoRecusa) {
-
+  confirmarRecusa():void{
+    if (!this.pedidoEmRecusa || !this.motivoRecusaInput.trim()) return;
+    const idCliente = this.pedidoEmRecusa.clienteId;
+    this.gerenteAutocadastroService.recusarConta(idCliente, this.motivoRecusaInput, this.tokenJWT).subscribe({
+      next: () => {
       this.responseModal = {
-        title: "Campo incompleto",
-        message: "Preencha o motivo da recusa",
-        messageIcon: "error",
-        type: 'error'
-      };
-
-      return;
-    }
-
-    const recusou = this.gerenteAutocadastroService.recusarPedido(
-      this.pedidoEmRecusa.cpfCliente,
-      motivoRecusa,
-    );
-    if (recusou) {
-
-      this.responseModal = {
-        title: "Cliente Recusado",
-        message: "E-mail com motivo enviado com sucesso!",
+        title: "Cadastro Recusado",
+        message: "O status da conta foi alterado para REJEITADA.",
         messageIcon: "check",
         type: 'success'
       };
-
+      this.pedidosPendentes= this.pedidosPendentes.filter(p => p.clienteId !== idCliente);
+      const contaTratada=this.contasGerente.find(c=> c.clienteId === idCliente);
+        if(contaTratada){
+          contaTratada.statusConta= 'CONTA_REJEITADA' as any;
+          this.pedidosProcessados=[...this.pedidosProcessados, contaTratada];
+        }
       this.cancelarRecusa();
-    }
+    },
+    error: (err) => console.error("Erro ao recusar conta:", err)
+    });
   }
 
   atualizarMotivoRecusa(valor: string): void {

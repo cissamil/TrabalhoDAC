@@ -4,9 +4,8 @@ import { GerenteAdmin } from '../../models/entities';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DashboardGerenciarGerentes } from '../../../pages/admin/adm-gerenciar-gerentes/adm-gerenciar-gerentes';
 
-//const LS_CHAVE = 'gerentes';
-const LS_CHAVE_LOGADO = 'gerenteLogado';
-
+const GERENTE_LOGADO = 'gerenteLogado';
+const ADMIN_LOGADO = 'adminLogado';
 @Injectable({
   providedIn: 'root',
 })
@@ -19,19 +18,11 @@ export class GerenteService {
       'Content-Type': 'application/json'
     })
   }
-  // private gerentesSubject: BehaviorSubject<GerenteAdmin[]>;
-  // //onde os dados atuais ficam guardados
-  // public gerentes$: Observable<GerenteAdmin[]>
-  // //versão que mostra as mudanças
-
 
   constructor(private httpClient: HttpClient){
 
-    // this.gerentesSubject = new BehaviorSubject<GerenteAdmin[]>([]);
-    // //cria o behavior com os dados do local
-    // this.gerentes$ = this.gerentesSubject.asObservable();
-    // //deixa publico
   }
+
 
 
   listarTodos() : Observable<GerenteAdmin[]>{
@@ -118,30 +109,74 @@ obterDashboardGerenciarGerentes(): Observable<DashboardGerenciarGerentes> {
 }
 
   //---------- Métodos para gerenciamento de sessão do gerente logado
-  setGerenteLogado(gerente: GerenteAdmin): void {
-    localStorage[LS_CHAVE_LOGADO] = JSON.stringify(gerente);
-    //salva o usuario logado
+  public setGerente(gerente: GerenteAdmin): void {
+        localStorage.setItem(GERENTE_LOGADO, JSON.stringify(gerente));
+      }
+
+  public get GerenteLogado(): GerenteAdmin | null{
+    const gerenteStr = localStorage.getItem(GERENTE_LOGADO);
+    if (!gerenteStr) return null;
+
+    try {
+      return JSON.parse(gerenteStr) as GerenteAdmin;
+
+    } catch (e) {
+      console.error("Erro ao fazer parse de GerenteLogado:", e);
+      return null;
+
+    }
   }
 
-  getGerenteLogado(): GerenteAdmin | null {
-    const gerenteData = localStorage[LS_CHAVE_LOGADO];
-    if (!gerenteData) {
-      return null;
+  public clearGerente(): void{
+      localStorage.removeItem(GERENTE_LOGADO);
     }
-    return JSON.parse(gerenteData) as GerenteAdmin;
-    //recupera o usuario logado
-  }
 
   isGerenteLogado(): boolean {
-    return !!localStorage[LS_CHAVE_LOGADO];
+    return !!localStorage[GERENTE_LOGADO];
     //verifica se tem alguem logado
   }
 
-  logout(): void {
-    localStorage.removeItem(LS_CHAVE_LOGADO);
+  logoutGerente(): void {
+    localStorage.removeItem(GERENTE_LOGADO);
     //faz logout
   }
 
+
+
+  //separados pq mesmo sendo a mesma entidade, eles possuem telas e dados diferentes,
+  //usar a mesma chave causa sobreescrição e pode travar o sistema e as infos
+  //---------- Métodos para gerenciamento de sessão do admin logado
+  public setAdmin(admin: GerenteAdmin): void {
+        localStorage.setItem(ADMIN_LOGADO, JSON.stringify(admin));
+      }
+
+  public get AdminLogado(): GerenteAdmin | null{
+    const adminStr = localStorage.getItem(ADMIN_LOGADO);
+    if (!adminStr) return null;
+
+    try {
+      return JSON.parse(adminStr) as GerenteAdmin;
+
+    } catch (e) {
+      console.error("Erro ao fazer parse de GerenteLogado:", e);
+      return null;
+
+    }
+  }
+
+  public clearAdmin(): void{
+      localStorage.removeItem(ADMIN_LOGADO);
+    }
+
+  isAdminLogado(): boolean {
+    return !!localStorage[ADMIN_LOGADO];
+    //verifica se tem alguem logado
+  }
+
+  logoutAdmin(): void {
+    localStorage.removeItem(ADMIN_LOGADO);
+    //faz logout
+  }
 
 
 

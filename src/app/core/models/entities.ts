@@ -1,3 +1,5 @@
+import { GerenteContasPendentes } from "./ContaGerente";
+
 export interface Cliente{
     id:number;
     cpf:string;
@@ -15,6 +17,15 @@ export interface GerenteAdmin{
     email:string;
     telefone:string;
     tipo:string; // gerente / administrador
+    //add pq une o perfil do gerente às suas contas vinculadas, mas de forma opcional
+    //a interface sirve tanto no Login (dados simples) quanto no Dashboard (dados completos).
+    contas?: GerenteContasPendentes[]
+}
+
+export enum StatusConta{
+  CONTA_CRIADA = 'CONTA_CRIADA',
+  CONTA_APROVADA =  'CONTA_APROVADA',
+  CONTA_REJEITADA = 'CONTA_REJEITADA'
 }
 
 export interface Conta{
@@ -27,8 +38,8 @@ export interface Conta{
     cpfGerente:string;
     cpfCliente:string;
     numeroConta: number;
+    statusConta: StatusConta;
 }
-
 
 
 export interface ContaGerada {

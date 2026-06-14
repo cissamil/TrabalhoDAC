@@ -1,3 +1,4 @@
+//ok
 import { Component, OnInit } from '@angular/core';
 import { NgxMaskPipe } from 'ngx-mask';
 import { FormsModule } from '@angular/forms';
@@ -5,19 +6,9 @@ import { ClienteService } from '../../../core/services/cliente-services/cliente-
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { Cliente, Conta } from '../../../core/models/entities';
 import { ActivatedRoute } from '@angular/router';
+import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { ClienteConta } from '../../../core/models/ClienteConta';
 
-interface ClienteDetalhado {
-  cpf: string;
-  nome: string;
-  email: string;
-  telefone:string
-  endereco: string;
-  salario: number;
-  saldo: number;
-  limite: number;
-  numeroConta: number;
-  gerente: string;
-}
 
 @Component({
   selector: 'app-cliente-especifico',
@@ -31,15 +22,15 @@ export class ClienteEspecifico implements OnInit {
     private route: ActivatedRoute,
     private clienteService: ClienteService,
     private contaService: ContaService,
+    private authService: AuthServices
   ){}
 
-  clientes:Cliente[]=[];
-  contas: Conta[]=[];
-
   termoBusca = '';
-  clienteSelecionado: ClienteDetalhado | null = null;
+  clienteSelecionado: ClienteConta | null = null;
+  tokenJWT = ''
 
   ngOnInit(): void {
+    this.tokenJWT=this.authService.usuarioLogado || '';
 
     this.route.queryParamMap.subscribe((params) => {
       const cpf = params.get('cpf');
@@ -48,6 +39,7 @@ export class ClienteEspecifico implements OnInit {
         this.consultarCliente();
       }
     });
+
   }
 
 
@@ -61,21 +53,37 @@ export class ClienteEspecifico implements OnInit {
     }
 
 
-    this.clienteService.buscarPorCPF(termoCpf).subscribe({
+    this.clienteService.buscarPorCPF(termoCpf, this.tokenJWT).subscribe({
     next: (cliente: Cliente) => {
       if (!cliente) {
         this.clienteSelecionado = null;
         return;
       }
 
-      this.contaService.buscarPorCpfCliente(cliente.cpf).subscribe({
+      this.contaService.buscarPorCpfCliente(cliente.cpf, this.tokenJWT).subscribe({
         next: (conta: Conta) => {
           this.clienteSelecionado = {
-            ...cliente,
-            saldo: conta.saldo,
-            limite: conta.limite,
-            numeroConta: conta.numeroConta,
-            gerente: conta.gerente
+            id: cliente.id,
+            cpf: cliente.cpf,
+            nome: cliente.nome,
+            email: cliente.email,
+            telefone: cliente.telefone,
+            salario: cliente.salario,
+            endereco: cliente.endereco,
+
+            // Embutimos a conta convertendo a 'Conta' geral para o formato 'ContaGerente'
+            conta: {
+              id: conta.id,
+              saldo: conta.saldo ?? 0,
+              limite: conta.limite ?? 0,
+              gerente: { nome: conta.gerente } as any,
+              cliente: cliente.nome,
+              dataCriacao: conta.dataCriacao,
+              cpfGerente: conta.cpfGerente,
+              cpfCliente: conta.cpfCliente,
+              numeroConta: conta.numeroConta,
+              salario: cliente.salario
+            }
           };
         },
         error: (erro: any) => console.error('Erro ao buscar conta', erro)
@@ -90,6 +98,7 @@ export class ClienteEspecifico implements OnInit {
   }
 
   formatarCpfBusca(valor: string): string {
+    if (!valor) return '';
     const numeros = valor.replace(/\D/g, '').slice(0, 11);
 
     if (numeros.length <= 3) {
@@ -111,6 +120,6 @@ export class ClienteEspecifico implements OnInit {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',
-    }).format(valor);
+    }).format(valor || 0);
   }
 }

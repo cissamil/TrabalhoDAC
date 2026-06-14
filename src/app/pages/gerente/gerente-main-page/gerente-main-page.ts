@@ -1,20 +1,57 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
+import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { CompositionServices } from '../../../core/services/compositon-services/composition-services';
 
 @Component({
+  //limpo
   selector: 'app-gerente-main-page',
   imports: [MatIconModule, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './gerente-main-page.html',
   styleUrl: './gerente-main-page.css',
 })
-export class GerenteMainPage {
-  private readonly router = inject(Router);
-  private readonly gerenteService = inject(GerenteService);
+export class GerenteMainPage implements  OnInit {
+  constructor(
+    private gerenteService: GerenteService,
+    private authService: AuthServices,
+    private cdr : ChangeDetectorRef,
+    private router: Router,
+    private compositionService: CompositionServices,
+
+  ){}
+
+  ngOnInit(): void {
+
+    const token = this.authService.usuarioLogado;
+    if(!token){
+      this.logOut();
+      return;
+    }
+
+    this.compositionService.getGerente(token).subscribe({
+      next:(responseBody)=>{
+        if(responseBody){
+          this.gerenteService.setGerente(responseBody);
+          this.cdr.detectChanges();
+        }else {
+          this.logOut();
+        }
+      },
+      error: (err) => {
+        console.error(
+          'Erro crítico ao buscar dados do gerente no Gateway:',
+          err,
+        );
+        this.logOut();
+      },
+    })
+  }
 
   logOut(){
-    this.gerenteService.logout();
+    this.gerenteService.clearGerente();
+    this.gerenteService.logoutGerente();
     this.router.navigate(['/login']);
   }
 }

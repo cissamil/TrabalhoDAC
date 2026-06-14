@@ -6,6 +6,7 @@ import { ClienteSessionService } from '../session-controller.service';
 import { Conta, ContaGerada, GerenteAdmin, Movimentacao } from '../../models/entities';
 import { MovimentacaoService } from '../movimentacoes-service/movimentacao-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ContaGerente } from '../../models/ContaGerente';
 //import { ClienteService } from '../cliente-services/cliente-service';
 
 //const LS_CHAVE = 'contas';
@@ -135,11 +136,18 @@ export class ContaService {
     )
   }
 
-  listarTodos(): Observable<Conta[]> {
-    return this.httpClient.get<Conta[]>(
-      this.CONTA_URL,
-    );
-  }
+  listarTodos(token: string): Observable<ContaGerente[]>{
+  const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Garante que o gateway/microserviço receba a autenticação
+      })
+    };
+
+  return this.httpClient.get<ContaGerente[]>(
+    `${this.CONTA_URL}`,
+    httpOptions);
+}
 
   //listarGerentes(): void{
   //   this.conService.listarTodos().subscribe({
@@ -153,7 +161,7 @@ export class ContaService {
   //   })
   //}
 
-  buscarPorCpfCliente(cpf: string):Observable<Conta>{
+  buscarPorCpfCliente(cpf: string, token:string):Observable<Conta>{
       return this.httpClient.get<Conta>(
         this.CONTA_URL + "/cliente/" + cpf,
         this.httpOptions);
