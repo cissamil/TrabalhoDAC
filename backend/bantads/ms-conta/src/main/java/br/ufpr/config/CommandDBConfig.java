@@ -2,13 +2,16 @@ package br.ufpr.config;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.boot.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -61,4 +64,14 @@ public class CommandDBConfig {
       @Qualifier(COMMAND_ENTITY_MANAGER_FACTORY) EntityManagerFactory commandEntityManagerFactory) {
       return new JpaTransactionManager(commandEntityManagerFactory);
     }
+
+  @Bean
+  public CommandLineRunner initCommandDatabase(@Qualifier(COMMAND_DATASOURCE) DataSource commandDataSource) {
+    return args -> {
+      ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+      populator.addScript(new ClassPathResource("data-command.sql"));
+      populator.execute(commandDataSource);
+      System.out.println("Banco de Leitura (Command) populado com sucesso!");
+    };
+  }
 }

@@ -1,6 +1,6 @@
 package br.ufpr.core.ports.output;
 
-import br.ufpr.core.usecases.GerenteTotalClientesOutputData;
+import br.ufpr.core.domain.GerenteTotalClientesOutputData;
 
 import java.util.List;
 

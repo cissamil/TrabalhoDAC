@@ -3,9 +3,9 @@ package br.ufpr.core.usecases;
 import br.ufpr.core.domain.ApprovePendingContaInputData;
 import br.ufpr.core.domain.ApprovedContaEvent;
 import br.ufpr.core.domain.Conta;
+import br.ufpr.core.domain.StatusConta;
 import br.ufpr.core.ports.input.ApprovePendingContaInputPort;
 import br.ufpr.core.ports.output.*;
-import br.ufpr.core.domain.StatusConta;
 import br.ufpr.infrastructure.exceptions.BusinessRuleException;
 import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +23,15 @@ public class ApprovePendingContaUsecase implements ApprovePendingContaInputPort 
   private final FindContaByNumeroContaOutputPort findContaByNumeroContaOutputPort;
   private final FindContaByContaIdOutputPort findContaByContaIdOutputPort;
   private final PublishContaAprovadaEventOutputPort publishContaAprovadaEventOutputPort;
+  private final PublishSyncContaEventOutputPort publishSyncContaEventOutputPort;
 
   public void execute(ApprovePendingContaInputData inputData){
 
     System.out.println("Aprovando conta do usuário");
 
     Conta conta = findContaByContaIdOutputPort.find(inputData.getContaId());
+
+    System.out.println("Conta: " + conta);
 
     validateConta(conta);
 
@@ -48,6 +51,7 @@ public class ApprovePendingContaUsecase implements ApprovePendingContaInputPort 
     saveContaOutputPort.save(conta);
 
     publishContaAprovadaEventOutputPort.publish(new ApprovedContaEvent(conta.getClienteId()));
+    publishSyncContaEventOutputPort.publish(conta, null);
 
     System.out.println("Conta aprovada com sucesso!");
 

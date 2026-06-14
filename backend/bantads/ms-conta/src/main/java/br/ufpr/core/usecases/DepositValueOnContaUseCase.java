@@ -3,6 +3,7 @@ package br.ufpr.core.usecases;
 import br.ufpr.core.domain.*;
 import br.ufpr.core.ports.input.DepositValueOnContaInputPort;
 import br.ufpr.core.ports.output.FindContaByNumeroContaOutputPort;
+import br.ufpr.core.ports.output.PublishSyncContaEventOutputPort;
 import br.ufpr.core.ports.output.RegisterNewMovimentacaoOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
 import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
@@ -20,6 +21,7 @@ public class DepositValueOnContaUseCase implements DepositValueOnContaInputPort 
   private final SaveContaOutputPort saveContaOutputPort;
   private final FindContaByNumeroContaOutputPort findContaByNumeroContaOutputPort;
   private final RegisterNewMovimentacaoOutputPort registerNewMovimentacaoOutputPort;
+  private final PublishSyncContaEventOutputPort publishSyncContaEventOutputPort;
 
   @Override
   public void execute(DepositValueInputData inputData) {
@@ -37,11 +39,13 @@ public class DepositValueOnContaUseCase implements DepositValueOnContaInputPort 
 
     saveContaOutputPort.save(contaToDeposit);
 
-    registerMovimentacao(contaToDeposit, valueToDeposit);
+    Movimentacao movimentacao = registerMovimentacao(contaToDeposit, valueToDeposit);
+
+    publishSyncContaEventOutputPort.publish(contaToDeposit, movimentacao);
 
   }
 
-  private void registerMovimentacao(Conta contaToDeposit, BigDecimal valueToDeposit) {
+  private Movimentacao registerMovimentacao(Conta contaToDeposit, BigDecimal valueToDeposit) {
     Movimentacao movimentacao = new Movimentacao();
 
     movimentacao.setId(null);
@@ -52,7 +56,7 @@ public class DepositValueOnContaUseCase implements DepositValueOnContaInputPort 
     movimentacao.setValor(valueToDeposit);
     movimentacao.setTipoMovimentacao(TipoMovimentacao.DEPOSITO);
 
-    registerNewMovimentacaoOutputPort.register(movimentacao);
+    return registerNewMovimentacaoOutputPort.register(movimentacao);
   }
 
 

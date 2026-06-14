@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ContaClienteDetailResponse {
 
-  private Integer contaId;
+  private String contaId;
   private String clienteId;
   private String clienteCpf;
   private String clienteNome;

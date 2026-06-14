@@ -4,7 +4,7 @@ import br.ufpr.core.domain.Movimentacao;
 import br.ufpr.core.ports.output.RegisterNewMovimentacaoOutputPort;
 import br.ufpr.dataprovider.adapter.domain.command.MovimentacaoCommandEntity;
 import br.ufpr.dataprovider.client.command.MovimentacaoCommandRepository;
-import br.ufpr.dataprovider.mapper.MovimentacaoEntityMapper;
+import br.ufpr.dataprovider.mapper.command.MovimentacaoCommandEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class RegisterNewMovimentacaoAdapter implements RegisterNewMovimentacaoOutputPort {
 
   private final MovimentacaoCommandRepository repository;
-  private final MovimentacaoEntityMapper mapper;
+  private final MovimentacaoCommandEntityMapper mapper;
 
   @Override
   public Movimentacao register(Movimentacao movimentacao) {

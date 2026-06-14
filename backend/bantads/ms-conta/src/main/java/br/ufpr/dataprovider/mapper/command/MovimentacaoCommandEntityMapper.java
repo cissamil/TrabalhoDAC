@@ -1,11 +1,11 @@
-package br.ufpr.dataprovider.mapper;
+package br.ufpr.dataprovider.mapper.command;
 
 import br.ufpr.core.domain.Movimentacao;
 import br.ufpr.dataprovider.adapter.domain.command.MovimentacaoCommandEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MovimentacaoEntityMapper {
+public class MovimentacaoCommandEntityMapper {
 
   public MovimentacaoCommandEntity toEntity(Movimentacao domain){
 

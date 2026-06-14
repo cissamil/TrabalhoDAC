@@ -1,11 +1,11 @@
-package br.ufpr.dataprovider.mapper;
+package br.ufpr.dataprovider.mapper.command;
 
 import br.ufpr.core.domain.Conta;
 import br.ufpr.dataprovider.adapter.domain.command.ContaCommandEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContaEntityMapper {
+public class ContaCommandEntityMapper {
 
   public Conta toDomain(ContaCommandEntity entity){
 

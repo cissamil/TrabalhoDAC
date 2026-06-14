@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class PendingContaResponse {
-  private Integer id;
+  private String contaId;
   private String clienteId;
   private String gerenteId;
 }

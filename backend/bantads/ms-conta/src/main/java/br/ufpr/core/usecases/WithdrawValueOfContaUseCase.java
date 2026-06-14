@@ -6,6 +6,7 @@ import br.ufpr.core.domain.TipoMovimentacao;
 import br.ufpr.core.domain.WithdrawValueInputData;
 import br.ufpr.core.ports.input.WithDrawValueOfContaInputPort;
 import br.ufpr.core.ports.output.FindContaByNumeroContaOutputPort;
+import br.ufpr.core.ports.output.PublishSyncContaEventOutputPort;
 import br.ufpr.core.ports.output.RegisterNewMovimentacaoOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
 import br.ufpr.infrastructure.exceptions.BusinessRuleException;
@@ -23,6 +24,7 @@ public class WithdrawValueOfContaUseCase implements WithDrawValueOfContaInputPor
 
 
   private final SaveContaOutputPort saveContaOutputPort;
+  private final PublishSyncContaEventOutputPort publishSyncContaEventOutputPort;
   private final FindContaByNumeroContaOutputPort findContaByNumeroContaOutputPort;
   private final RegisterNewMovimentacaoOutputPort registerNewMovimentacaoOutputPort;
 
@@ -43,7 +45,9 @@ public class WithdrawValueOfContaUseCase implements WithDrawValueOfContaInputPor
     contaToWithdraw.setSaldo(newSaldo);
 
     saveContaOutputPort.save(contaToWithdraw);
-    registerMovimentacao(contaToWithdraw, valueToWithdraw);
+    Movimentacao movimentacao = registerMovimentacao(contaToWithdraw, valueToWithdraw);
+
+    publishSyncContaEventOutputPort.publish(contaToWithdraw, movimentacao);
 
   }
 
@@ -55,7 +59,7 @@ public class WithdrawValueOfContaUseCase implements WithDrawValueOfContaInputPor
     }
   }
 
-  private void registerMovimentacao(Conta contaToDeposit, BigDecimal valueToWithdraw) {
+  private Movimentacao registerMovimentacao(Conta contaToDeposit, BigDecimal valueToWithdraw) {
     Movimentacao movimentacao = new Movimentacao();
 
     movimentacao.setId(null);
@@ -66,7 +70,7 @@ public class WithdrawValueOfContaUseCase implements WithDrawValueOfContaInputPor
     movimentacao.setValor(valueToWithdraw);
     movimentacao.setTipoMovimentacao(TipoMovimentacao.SAQUE);
 
-    registerNewMovimentacaoOutputPort.register(movimentacao);
+    return registerNewMovimentacaoOutputPort.register(movimentacao);
   }
 
 

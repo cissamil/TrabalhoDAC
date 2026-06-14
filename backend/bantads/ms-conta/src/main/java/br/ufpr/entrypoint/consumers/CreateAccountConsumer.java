@@ -43,7 +43,7 @@ public class CreateAccountConsumer {
 
         rabbitTemplate.convertAndSend(
           RabbitMQConstants.BANTADS_EXCHANGE,
-          RabbitMQConstants.FILA_SAGA_CONTA_CRIADA_FALHA,
+          RabbitMQConstants.RK_CONTA_CRIADA_FALHA,
           message
         );
 

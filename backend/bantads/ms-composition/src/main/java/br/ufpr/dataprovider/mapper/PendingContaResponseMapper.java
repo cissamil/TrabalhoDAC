@@ -14,7 +14,7 @@ public class PendingContaResponseMapper {
     PendingContaOutputData outputData = new PendingContaOutputData();
 
 
-    outputData.setId(response.getId());
+    outputData.setContaId(response.getContaId());
     outputData.setClienteId(response.getClienteId());
     outputData.setGerenteId(response.getGerenteId());
 

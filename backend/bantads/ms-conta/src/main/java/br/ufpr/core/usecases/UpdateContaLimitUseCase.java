@@ -4,6 +4,7 @@ import br.ufpr.core.domain.Conta;
 import br.ufpr.core.domain.UpdateContaLimitInputData;
 import br.ufpr.core.ports.input.UpdateContaLimitInputPort;
 import br.ufpr.core.ports.output.FindContaByClienteIdOutputPort;
+import br.ufpr.core.ports.output.PublishSyncContaEventOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
 import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class UpdateContaLimitUseCase implements UpdateContaLimitInputPort {
 
   private final SaveContaOutputPort saveContaOutputPort;
   private final FindContaByClienteIdOutputPort findContaByClienteIdOutputPort;
+  private final PublishSyncContaEventOutputPort publishSyncContaEventOutputPort;
 
   @Override
   public void execute(UpdateContaLimitInputData inputData) {
@@ -37,6 +39,8 @@ public class UpdateContaLimitUseCase implements UpdateContaLimitInputPort {
     conta.setLimite(newLimit);
 
     saveContaOutputPort.save(conta);
+
+    publishSyncContaEventOutputPort.publish(conta, null);
 
   }
 

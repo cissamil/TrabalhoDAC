@@ -14,8 +14,9 @@ public final class RabbitMQConstants {
   public static final String RK_CLIENTE_NOTIFICACAO_PRONTA_EVENTO = "cliente.notificacao.pronta.evento";
   public static final String RK_CLIENTE_NOTIFICACAO_FALHA_EVENTO = "cliente.notificacao.falha.evento";
 
+
+
   //EMAIL
-  public static final String RK_EMAIL_ENVIADO_COM_SUCESSO = "email.enviado.sucesso.evento";
   public static final String RK_EMAIL_ENVIAR_MAS_NOTICIAS_COMANDO = "email.enviar.mas.noticias.comando";
   public static final String RK_EMAIL_MAS_NOTICIAS_FALHA_EVENTO = "email.mas.noticias.falha.evento";
 
@@ -24,6 +25,8 @@ public final class RabbitMQConstants {
   public static final String RK_CONTA_CRIADA_FALHA = "conta.criada.falha.evento";
   public static final String RK_CONTA_APROVADA_SUCESSO = "conta.aprovada.sucesso";
   public static final String RK_CONTA_REVERTER_STATUS_COMANDO = "conta.reverter.status.comando";
+  public static final String RK_CONTA_SYNC_EVENTO = "conta.sync.evento";
+  public static final String RK_BATCH_CONTA_SYNC_EVENTO = "batch.conta.sync.evento";
 
   public static final String RK_CONTA_REJEITADA_EVENTO = "conta.rejeitada.evento";
 
@@ -82,6 +85,8 @@ public final class RabbitMQConstants {
   // FILAS MS-CONTA
   public static final String FILA_CONTA_CRIAR = "ms-conta.conta.criar.queue";
   public static final String FILA_CONTA_REVERTER = "ms-conta.conta.status.reverter.queue";
+  public static final String FILA_BATCH_CONTA_SYNC = "ms-conta.batch.conta.sync.queue";
+  public static final String FILA_CONTA_SYNC = "ms-conta.conta.sync.queue";
 
 
   // FILAS DO MS-CLIENTE (O Trabalhador)

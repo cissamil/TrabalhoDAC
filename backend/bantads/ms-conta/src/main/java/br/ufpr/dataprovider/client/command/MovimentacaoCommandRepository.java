@@ -11,18 +11,4 @@ import java.util.List;
 
 @Repository
 public interface MovimentacaoCommandRepository extends JpaRepository<MovimentacaoCommandEntity, Integer>{
-
-  @Query(
-    value = "SELECT * FROM movimentacoes " +
-    "WHERE data_hora >= :dataInicio " +
-    "AND data_hora <= :dataFim "  +
-    "AND cliente_origem_id = :clienteId",
-    nativeQuery = true
-  )
-  List<MovimentacaoCommandEntity> findMovimentacoesByClienteIdBetweenDates(
-    @Param("dataInicio") LocalDateTime dataInicio,
-    @Param("dataFim") LocalDateTime dataFim,
-    @Param("clienteId") String clienteId
-  );
-
 }

@@ -52,7 +52,7 @@ public class PendingContasDashboardAssembler {
 
       ContaClienteDetailResponse detailResponse = new ContaClienteDetailResponse();
 
-      detailResponse.setContaId(conta.getId());
+      detailResponse.setContaId(conta.getContaId());
       detailResponse.setClienteId(conta.getClienteId());
 
       if(clienteOfConta != null){

@@ -6,6 +6,7 @@ import br.ufpr.core.domain.TipoMovimentacao;
 import br.ufpr.core.domain.TransferValueInputData;
 import br.ufpr.core.ports.input.TransferMoneyToAnotherContaInputPort;
 import br.ufpr.core.ports.output.FindContaByNumeroContaOutputPort;
+import br.ufpr.core.ports.output.PublishSyncContaEventOutputPort;
 import br.ufpr.core.ports.output.RegisterNewMovimentacaoOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
 import br.ufpr.infrastructure.exceptions.BusinessRuleException;
@@ -25,6 +26,7 @@ public class TransferMoneyToAnotherContaUseCase implements TransferMoneyToAnothe
   private final SaveContaOutputPort saveContaOutputPort;
   private final FindContaByNumeroContaOutputPort findContaByNumeroContaOutputPort;
   private final RegisterNewMovimentacaoOutputPort registerNewMovimentacaoOutputPort;
+  private final PublishSyncContaEventOutputPort publishSyncContaEventOutputPort;
 
   @Override
   @Transactional
@@ -51,7 +53,10 @@ public class TransferMoneyToAnotherContaUseCase implements TransferMoneyToAnothe
 
       saveContaOutputPort.save(contaToWithdraw);
       saveContaOutputPort.save(contaToTransfer);
-      registerMovimentacao(contaToWithdraw, contaToTransfer, valueToTransfer);
+      Movimentacao movimentacao =  registerMovimentacao(contaToWithdraw, contaToTransfer, valueToTransfer);
+
+      publishSyncContaEventOutputPort.publish(contaToWithdraw, movimentacao);
+      publishSyncContaEventOutputPort.publish(contaToTransfer, movimentacao);
   }
 
   private void validateContas(Conta contaToWithdraw, Conta contaToTransfer) {
@@ -60,7 +65,7 @@ public class TransferMoneyToAnotherContaUseCase implements TransferMoneyToAnothe
     }
   }
 
-  private void registerMovimentacao(Conta contaOrigin, Conta contaDestiny, BigDecimal valueToTransfer) {
+  private Movimentacao registerMovimentacao(Conta contaOrigin, Conta contaDestiny, BigDecimal valueToTransfer) {
     Movimentacao movimentacao = new Movimentacao();
 
     movimentacao.setId(null);
@@ -71,7 +76,7 @@ public class TransferMoneyToAnotherContaUseCase implements TransferMoneyToAnothe
     movimentacao.setValor(valueToTransfer);
     movimentacao.setTipoMovimentacao(TipoMovimentacao.TRANSFERENCIA);
 
-    registerNewMovimentacaoOutputPort.register(movimentacao);
+   return registerNewMovimentacaoOutputPort.register(movimentacao);
   }
 
 

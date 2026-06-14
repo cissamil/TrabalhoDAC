@@ -20,7 +20,7 @@ public interface MovimentacaoQueryRepository extends JpaRepository<MovimentacaoQ
     "AND cliente_origem_id = :clienteId",
     nativeQuery = true
   )
-  List<MovimentacaoCommandEntity> findMovimentacoesByClienteIdBetweenDates(
+  List<MovimentacaoQueryEntity> findMovimentacoesByClienteIdBetweenDates(
     @Param("dataInicio") LocalDateTime dataInicio,
     @Param("dataFim") LocalDateTime dataFim,
     @Param("clienteId") String clienteId

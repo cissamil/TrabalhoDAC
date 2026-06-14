@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PendingContaOutputData {
 
-  private Integer id;
+  private String contaId;
   private String clienteId;
   private String gerenteId;
 

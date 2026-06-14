@@ -15,6 +15,7 @@ public class TransferContasToNewGerenteUseCase implements TransferContasToNewGer
 
   private final SaveContasOutputPort saveContasOutputPort;
   private final FindContasByGerenteIdOutputPort findContasByGerenteIdOutputPort;
+  private final PublishBatchSyncContaEventOutputPort publishBatchSyncContaEventOutputPort;
   private final FindGerenteWithFewerClientesIdOutputPort findGerenteWithFewerClientesIdOutputPort;
   private final PublishContasTransferidasEventOutputPort publishContasTransferidasEventOutputPort;
 
@@ -46,6 +47,7 @@ public class TransferContasToNewGerenteUseCase implements TransferContasToNewGer
 
     saveContasOutputPort.save(newContasForGerente);
     publishContasTransferidasEventOutputPort.publish(gerenteId);
+    publishBatchSyncContaEventOutputPort.publish(newContasForGerente);
   }
 
   private void validateContasForNewGerente(List<Conta> contas) {

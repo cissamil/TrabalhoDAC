@@ -4,6 +4,7 @@ import br.ufpr.core.domain.Conta;
 import br.ufpr.core.domain.StatusConta;
 import br.ufpr.core.ports.input.RevertContaApprovalInputPort;
 import br.ufpr.core.ports.output.FindContaByClienteIdOutputPort;
+import br.ufpr.core.ports.output.PublishSyncContaEventOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ public class RevertContaApprovalUseCase implements RevertContaApprovalInputPort 
 
   private final SaveContaOutputPort saveContaOutputPort;
   private final FindContaByClienteIdOutputPort findContaByClienteIdOutputPort;
+  private final PublishSyncContaEventOutputPort publishSyncContaEventOutputPort;
 
   @Override
   public void execute(String clienteId) {
@@ -38,6 +40,8 @@ public class RevertContaApprovalUseCase implements RevertContaApprovalInputPort 
     conta.setStatusConta(StatusConta.CONTA_PENDENTE);
 
     Conta updatedConta = saveContaOutputPort.save(conta);
+
+    publishSyncContaEventOutputPort.publish(updatedConta, null);
 
     System.out.println("Conta " + updatedConta.getContaId() + " revertida com sucesso");
   }

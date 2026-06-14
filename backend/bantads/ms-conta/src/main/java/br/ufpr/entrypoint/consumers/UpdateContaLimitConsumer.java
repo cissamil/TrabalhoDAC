@@ -1,11 +1,8 @@
 package br.ufpr.entrypoint.consumers;
 
 import br.ufpr.config.RabbitMQConfigMsConta;
-import br.ufpr.core.domain.TransferContasToGerenteInputData;
 import br.ufpr.core.domain.UpdateContaLimitInputData;
 import br.ufpr.core.ports.input.UpdateContaLimitInputPort;
-import br.ufpr.core.ports.output.TransferContasToNewGerenteInputPort;
-import br.ufpr.model.message.TransferContasToGerenteMessage;
 import br.ufpr.model.message.UpdateContaLimitMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,8 +20,6 @@ public class UpdateContaLimitConsumer {
 
   @RabbitListener(queues = RabbitMQConfigMsConta.UPDATE_ACCOUNT_LIMIT_QUEUE)
   public void receiveEvent(String message) throws JsonProcessingException{
-
-
     try{
 
       UpdateContaLimitMessage payload = objectMapper.readValue(message, UpdateContaLimitMessage.class);

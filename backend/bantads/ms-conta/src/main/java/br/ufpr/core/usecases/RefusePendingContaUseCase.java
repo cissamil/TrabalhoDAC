@@ -17,6 +17,7 @@ public class RefusePendingContaUseCase implements RefusePendingContaInputPort {
 
   private final SaveContaOutputPort saveContaOutputPort;
   private final FindContaByContaIdOutputPort findContaByContaIdOutputPort;
+  private final PublishSyncContaEventOutputPort publishSyncContaEventOutputPort;
   private final PublishContaRefusedEventOutputPort publishContaRefusedEventOutputPort;
 
   @Override
@@ -36,15 +37,21 @@ public class RefusePendingContaUseCase implements RefusePendingContaInputPort {
 
     saveContaOutputPort.save(conta);
 
+    publishContaRefused(motivoRecusa, clienteId);
+
+    publishSyncContaEventOutputPort.publish(conta, null);
+
+    System.out.println("Conta recusada com sucesso");
+
+  }
+
+  private void publishContaRefused(String motivoRecusa, String clienteId) {
     String content = "Viemos informar que, infelizmente, " +
                     "sua conta não foi aprovada no processo de avaliação de" +
                     " contas por um dos nossos gerentes" +
                     "\n\n Motivo da rejeição: " + motivoRecusa;
 
     publishContaRefusedEventOutputPort.publish(clienteId, content);
-
-    System.out.println("Conta recusada com sucesso");
-
   }
 
   private void validateConta(Conta conta){

@@ -2,6 +2,7 @@ package br.ufpr.core.usecases;
 
 import br.ufpr.core.domain.AssignGerenteToContaInputData;
 import br.ufpr.core.domain.Conta;
+import br.ufpr.core.domain.GerenteTotalClientesOutputData;
 import br.ufpr.core.ports.input.AssignNewGerenteToContaInputPort;
 import br.ufpr.core.ports.output.*;
 import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
@@ -18,6 +19,7 @@ public class AssignNewGerenteToContaUseCase implements AssignNewGerenteToContaIn
   private final FindGerenteTotalClientesOutputPort findGerenteTotalClientesOutputPort;
   private final FindGerenteWithMostClientesIdOutputPort findGerenteIdWithMostClientesOutputPort;
   private final FindContaWithMenorSaldoByGerenteIdOutputPort findContaWithMenorSaldoByGerenteIdOutputPort;
+  private final PublishSyncContaEventOutputPort publishSyncContaEventOutputPort;
 
   @Override
   public void execute(AssignGerenteToContaInputData inputData) {
@@ -47,6 +49,8 @@ public class AssignNewGerenteToContaUseCase implements AssignNewGerenteToContaIn
     contaToAssign.setGerenteId(gerenteId);
 
     saveContaOutputPort.save(contaToAssign);
+
+    publishSyncContaEventOutputPort.publish(contaToAssign, null);
   }
 
   private static boolean isContaAllowedToAssign(List<GerenteTotalClientesOutputData> gerentesClientesRelation) {

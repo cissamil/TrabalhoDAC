@@ -4,6 +4,7 @@ import br.ufpr.core.domain.Conta;
 import br.ufpr.core.domain.TransferClienteDataInputData;
 import br.ufpr.core.ports.input.CreatePendingContaInputPort;
 import br.ufpr.core.ports.output.FindGerenteWithFewerClientesIdOutputPort;
+import br.ufpr.core.ports.output.PublishSyncContaEventOutputPort;
 import br.ufpr.core.ports.output.SaveContaOutputPort;
 import br.ufpr.core.domain.StatusConta;
 import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
@@ -15,9 +16,10 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class CreatePendingConta implements CreatePendingContaInputPort {
+public class CreatePendingContaUseCase implements CreatePendingContaInputPort {
 
   private final SaveContaOutputPort saveContaOutputPort;
+  private final PublishSyncContaEventOutputPort publishSyncContaEventOutputPort;
   private final FindGerenteWithFewerClientesIdOutputPort findGerenteWithFewerClientesIdOutputPort;
 
   @Override
@@ -43,6 +45,7 @@ public class CreatePendingConta implements CreatePendingContaInputPort {
 
     saveContaOutputPort.save(novaConta);
 
+    publishSyncContaEventOutputPort.publish(novaConta, null);
     System.out.println("Conta criada com sucesso!");
 
   }
