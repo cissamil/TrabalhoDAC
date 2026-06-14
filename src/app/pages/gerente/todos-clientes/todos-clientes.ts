@@ -5,7 +5,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
-import { Cliente, Conta } from '../../../core/models/entities';
+import { ClienteOutdated, ContaOutdated } from '../../../core/models/entities';
 import { AuthServices } from '../../../core/services/auth-services/auth-services';
 import { combineLatest } from 'rxjs';
 
@@ -52,51 +52,51 @@ export class TodosClientes implements OnInit{
       return;
     }
 
-    combineLatest([
-      this.clienteService.listarTodos(this.tokenJWT),
-      this.contaService.listarTodos(this.tokenJWT)
-    ]).subscribe({
-      next: ([listaClientes, listaContas]: [Cliente[], Conta[]]) => {
+    // combineLatest([
+    //   this.clienteService.listarTodos(this.tokenJWT),
+    //   this.contaService.listarTodos(this.tokenJWT)
+    // ]).subscribe({
+    //   next: ([listaClientes, listaContas]: [Cliente[], Conta[]]) => {
 
-        // Mapeia as contas por CPF do cliente para busca em tempo O(1)
-        const contasPorCpf = new Map<string, Conta>(
-          (listaContas || []).map((conta) => [conta.cpfCliente, conta])
-        );
+    //     // Mapeia as contas por CPF do cliente para busca em tempo O(1)
+    //     const contasPorCpf = new Map<string, Conta>(
+    //       (listaContas || []).map((conta) => [conta.cpfCliente, conta])
+    //     );
 
-        this.clientes = (listaClientes || [])
-          .map((cliente) => {
-            const contaCliente = contasPorCpf.get(cliente.cpf);
+    //     this.clientes = (listaClientes || [])
+    //       .map((cliente) => {
+    //         const contaCliente = contasPorCpf.get(cliente.cpf);
 
-            // Se o cliente não possuir conta associada, ignora
-            if (!contaCliente) return null;
+    //         // Se o cliente não possuir conta associada, ignora
+    //         if (!contaCliente) return null;
 
-            // 🎯 REGRA DE NEGÓCIO REATIVADA: Só exibe se a conta pertencer a este gerente
-            const pertenceAoGerente = contaCliente.cpfGerente === gerenteLogado.cpf;
-            if (!pertenceAoGerente) return null;
+    //         // 🎯 REGRA DE NEGÓCIO REATIVADA: Só exibe se a conta pertencer a este gerente
+    //         const pertenceAoGerente = contaCliente.cpfGerente === gerenteLogado.cpf;
+    //         if (!pertenceAoGerente) return null;
 
-            const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco || '');
+    //         const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco || '');
 
-            return {
-              cpf: cliente.cpf,
-              nome: cliente.nome,
-              cidade,
-              estado,
-              email: cliente.email,
-              salario: cliente.salario,
-              saldo: contaCliente.saldo ?? 0,
-              limite: contaCliente.limite ?? 0
-            };
-          })
-          // Limpa os registros nulos (clientes de outras agências/gerentes)
-          .filter((item): item is ClienteTabela => item !== null)
-          // Ordena alfabeticamente
-          .sort((a, b) => a.nome.localeCompare(b.nome));
-      },
-      error: (erro) => {
-        console.error('Erro ao listar clientes e contas no dashboard', erro);
-        this.clientes = [];
-      }
-    });
+    //         return {
+    //           cpf: cliente.cpf,
+    //           nome: cliente.nome,
+    //           cidade,
+    //           estado,
+    //           email: cliente.email,
+    //           salario: cliente.salario,
+    //           saldo: contaCliente.saldo ?? 0,
+    //           limite: contaCliente.limite ?? 0
+    //         };
+    //       })
+    //       // Limpa os registros nulos (clientes de outras agências/gerentes)
+    //       .filter((item): item is ClienteTabela => item !== null)
+    //       // Ordena alfabeticamente
+    //       .sort((a, b) => a.nome.localeCompare(b.nome));
+    //   },
+    //   error: (erro) => {
+    //     console.error('Erro ao listar clientes e contas no dashboard', erro);
+    //     this.clientes = [];
+    //   }
+    // });
   }
 
 

@@ -1,13 +1,24 @@
 import { GerenteContasPendentes } from "./ContaGerente";
+import { Endereco } from "./EnderecoEntity";
+
+export interface ClienteOutdated{
+  id:number;
+  cpf:string;
+  nome:string;
+  email:string;
+  telefone:string;
+  salario:number;
+  endereco:Endereco;
+}
 
 export interface Cliente{
-    id:number;
-    cpf:string;
-    nome:string;
-    email:string;
-    telefone:string;
-    salario:number;
-    endereco:string;
+  clienteId:string;
+  cpf:string;
+  nome:string;
+  email:string;
+  telefone:string;
+  salario:number;
+  endereco:Endereco;
 }
 
 export interface GerenteAdmin{
@@ -28,7 +39,7 @@ export enum StatusConta{
   CONTA_REJEITADA = 'CONTA_REJEITADA'
 }
 
-export interface Conta{
+export interface ContaOutdated{
     id: number;
     saldo:number;
     limite:number;
@@ -39,6 +50,19 @@ export interface Conta{
     cpfCliente:string;
     numeroConta: number;
     statusConta: StatusConta;
+}
+
+export interface Conta{
+  contaId:string;
+  saldo:number;
+  limite:number;
+  gerente:string;
+  cliente: string;
+  dataCriacao:Date;
+  cpfGerente:string;
+  cpfCliente:string;
+  numeroConta: number;
+  statusConta: StatusConta;
 }
 
 
@@ -62,7 +86,7 @@ export interface PedidoAutoCadastro {
   status: "APROVADO" | "RECUSADO" | "PENDENTE";
   dataDecisao?: Date;
   motivoRecusa?: string;
-  contaGerada?: Conta;
+  contaGerada?: ContaOutdated;
 }
 
 export interface EmailNotificacao {

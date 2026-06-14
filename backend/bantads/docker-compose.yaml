@@ -1,4 +1,6 @@
 services:
+
+  # SERVIÇOS PRINCIPAIS
   postgres-db:
     image: postgres:14
     container_name: bantads-postgres
@@ -14,9 +16,6 @@ services:
   mongo:
     image: mongo:latest
     container_name: bantads-mongodb
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: tads
-#      MONGO_INITDB_ROOT_PASSWORD: tads
     ports:
       - "27017:27017"
     volumes:
@@ -44,6 +43,88 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=tads
       - RABBITMQ_DEFAULT_PASS=tads
+
+  # MICROSSERVIÇOS
+
+  ms-cliente:
+    build: ./ms-cliente
+    container_name: ms-cliente
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/ms_cliente_db
+    depends_on:
+      - rabbitmq
+      - postgres-db
+
+  ms-conta:
+    build: ./ms-conta
+    container_name: ms-conta
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_DATASOURCE_COMMAND_URL=jdbc:postgresql://postgres-db:5432/ms_conta_cud_db
+      - SPRING_DATASOURCE_QUERY_URL=jdbc:postgresql://postgres-db:5432/ms_conta_r_db
+    depends_on:
+      - rabbitmq
+      - postgres-db
+
+  ms-gerente:
+    build: ./ms-gerente
+    container_name: ms-gerente
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/ms_gerente_db
+    depends_on:
+      - rabbitmq
+      - postgres-db
+
+  ms-composition:
+    build: ./ms-composition
+    container_name: ms-composition
+    ports:
+      - "8086:8086"
+
+  ms-auth:
+    build: ./ms-auth
+    container_name: ms-auth
+    ports:
+      - "8087:8087"
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_DATASOURCE_URI=mongodb://mongo:27017/ms_auth_db
+    depends_on:
+      - rabbitmq
+      - mongo
+
+  ms-saga:
+    build: ./ms-saga
+    container_name: ms-saga
+    ports:
+      - "8088:8088"
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
+
+  ms-email:
+    build: ./ms-email
+    container_name: ms-email
+    ports:
+      - "8089:8089"
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
+
+
+
+
+
 
 volumes:
   pg_data:

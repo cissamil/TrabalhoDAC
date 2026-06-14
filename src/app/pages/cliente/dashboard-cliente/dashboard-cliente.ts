@@ -45,7 +45,7 @@ inicializarDashboard() {
     const color = saldoStatus ? 'black' : 'red';
     const saldoInfo = saldoStatus ? 'Saldo Positivo' : 'Saldo Negativo';
     this.nomeGerente = this.clienteConta.conta.gerente?.nomeGerente
-    this.nomeCliente = this.clienteConta.nome;
+    this.nomeCliente = this.clienteConta.cliente.nome;
 
     this.infoCards = [
       {

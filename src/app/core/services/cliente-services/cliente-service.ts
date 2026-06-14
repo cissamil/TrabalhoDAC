@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Cliente } from '../../models/entities';
+import { Cliente, ClienteOutdated } from '../../models/entities';
 import { PedidoAutoCadastroService } from '../pedido-autocadastro-services/pedido-autocadastro-service';
 import { ContaService } from '../conta-services/conta-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -49,16 +49,16 @@ export class ClienteService {
   // );
   // }
 
-  listarTodos(token: string) : Observable<Cliente[]>{
-    return this.httpClient.get<Cliente[]>(
+  listarTodos(token: string) : Observable<ClienteOutdated[]>{
+    return this.httpClient.get<ClienteOutdated[]>(
       this.CLIENTE_URL,
       this.httpOptions
     );
   }
 
-  inserir(cliente:Cliente): Observable<Cliente>{
+  inserir(cliente: Cliente): Observable<ClienteOutdated>{
 
-    return this.httpClient.post<Cliente>(
+    return this.httpClient.post<ClienteOutdated>(
       this.CLIENTE_URL + '/autocadastro/' ,
       JSON.stringify(cliente),
       this.httpOptions
@@ -112,9 +112,9 @@ export class ClienteService {
   //   this.pedidoAutoCadastroService.inserir(pedidoCadastro);
   // }
 
-  atualizar(cliente: Cliente) : Observable<Cliente>{
-    return this.httpClient.put<Cliente>(
-      this.CLIENTE_URL + "/" + cliente.id,
+  atualizar(cliente: Cliente) : Observable<ClienteOutdated>{
+    return this.httpClient.put<ClienteOutdated>(
+      this.CLIENTE_URL + "/" + cliente.clienteId,
       JSON.stringify(cliente),
       this.httpOptions
     );
@@ -136,12 +136,12 @@ export class ClienteService {
     //   this.atualizarDados(clientes);
     // }
 
-  remover(id: number) : Observable<Cliente>{
+  remover(id: number) : Observable<ClienteOutdated>{
     // const clientes = this.listarTodos()
     //   .filter((c) => c.id !== id);
       //this.atualizarDados(clientes);
 
-    return this.httpClient.delete<Cliente>(
+    return this.httpClient.delete<ClienteOutdated>(
       this.CLIENTE_URL + "/" + id,
       this.httpOptions
     )
@@ -161,15 +161,15 @@ export class ClienteService {
   //         cliente.cpf === cpf)));
   //   }
 
-  buscarClientePorEmailESenha(email: string, senha: string): Observable<Cliente> {
-  return this.httpClient.get<Cliente>(this.CLIENTE_URL + "/login", {
+  buscarClientePorEmailESenha(email: string, senha: string): Observable<ClienteOutdated> {
+  return this.httpClient.get<ClienteOutdated>(this.CLIENTE_URL + "/login", {
     ...this.httpOptions,
     params: { email, senha }
   });
 }
 
-  buscarPorCPF(cpf: string, token:string): Observable<Cliente> {
-    return this.httpClient.get<Cliente>(
+  buscarPorCPF(cpf: string, token:string): Observable<ClienteOutdated> {
+    return this.httpClient.get<ClienteOutdated>(
       this.CLIENTE_URL + "/cpf/" + cpf,
       this.httpOptions);
   }

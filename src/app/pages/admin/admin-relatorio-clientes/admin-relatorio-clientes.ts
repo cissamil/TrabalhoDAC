@@ -65,20 +65,20 @@ export class AdminRelatorioClientes implements OnInit {
   
 
   fillClientsTable() {
-    this.CLIENTS_TABLE = this.clientesContas.map((item) => ({
-      cpfCliente: item.cpf,
-      nomeCliente: item.nome,
-      emailCliente: item.email,
-      salarioCliente: item.salario,
-      numeroContaCliente: item.conta.numeroConta,
-      saldoContaCliente: item.conta.saldo,
-      limiteContaCliente: item.conta.limite,
-      cpfGerente: item.conta.cpfGerente,
-      nomeGerente: item.conta.gerente.nomeGerente,
-      colorSaldo: item.conta.saldo >= 0 ? 'green' : 'red'
-    }));
+    // this.CLIENTS_TABLE = this.clientesContas.map((item) => ({
+    //   cpfCliente: item.cliente.cpf,
+    //   nomeCliente: item.cliente.nome,
+    //   emailCliente: item.cliente.email,
+    //   salarioCliente: item.cliente.salario,
+    //   numeroContaCliente: item.conta.numeroConta,
+    //   saldoContaCliente: item.conta.saldo,
+    //   limiteContaCliente: item.conta.limite,
+    //   cpfGerente: item.conta.cpfGerente,
+    //   nomeGerente: item.conta.gerente.nomeGerente,
+    //   colorSaldo: item.conta.saldo >= 0 ? 'green' : 'red'
+    // }));
 
-    this.CLIENTS_TABLE.sort((a, b) => a.nomeCliente.localeCompare(b.nomeCliente));
+    // this.CLIENTS_TABLE.sort((a, b) => a.nomeCliente.localeCompare(b.nomeCliente));
   }
 }
 

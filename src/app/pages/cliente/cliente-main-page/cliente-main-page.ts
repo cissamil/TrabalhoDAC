@@ -2,7 +2,8 @@ import { Router } from '@angular/router';
 import { Extrato } from '../extrato/extrato';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { Cliente } from '../../../core/models/entities';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ClienteOutdated } from '../../../core/models/entities';
 import { SaqueCliente } from '../saque-cliente/saque-cliente';
 import { ClientePerfil } from '../cliente-perfil/cliente-perfil';
 import { DepositoCliente } from '../deposito-cliente/deposito-cliente';
@@ -24,7 +25,8 @@ import { CompositionServices } from '../../../core/services/compositon-services/
     Extrato,
     TransferenciaCliente,
     ClientePerfil,
-  ],
+    MatProgressSpinner
+],
   templateUrl: './cliente-main-page.html',
   styleUrl: './cliente-main-page.css',
 })
@@ -37,10 +39,13 @@ export class ClienteMainPage implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {}
 
-  cliente!: Cliente;
+  cliente!: ClienteOutdated;
   navigationOption: ClientNavigationOptions = ClientNavigationOptions.Dashboard;
 
+  isLoading:boolean = true;
+
   ngOnInit(): void {
+
     const token = this.authService.usuarioLogado;
 
     if (!token) {
@@ -51,13 +56,15 @@ export class ClienteMainPage implements OnInit {
     this.compositionService.getClienteConta(token).subscribe({
       next: (responseBody) => {
         if (responseBody) {
-          // salva o cliente no localStorage
           this.clienteService.setClienteConta(responseBody);
+
+          this.isLoading = false;
 
           this.cdr.detectChanges();
         } else {
           this.logOut();
         }
+        
       },
       error: (err) => {
         console.error(

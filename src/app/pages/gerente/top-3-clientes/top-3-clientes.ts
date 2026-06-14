@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription, combineLatest } from 'rxjs';
-import { Cliente, Conta } from '../../../core/models/entities';
+import { ClienteOutdated, ContaOutdated } from '../../../core/models/entities';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { ActivatedRoute } from '@angular/router';
@@ -37,35 +37,35 @@ export class Top3Clientes implements OnInit, OnDestroy {
     this.tokenJWT=this.authService.usuarioLogado || '';
 
 
-    this.subscriptions.add(
-      combineLatest([
-        this.clienteService.listarTodos(this.tokenJWT),
-        this.contaService.listarTodos(this.tokenJWT)
-      ]).subscribe({
-        next: ([clientes, contas]: [Cliente[], Conta[]])=>{
-          const clientesPorCpf=new Map<string, Cliente>(
-            clientes.map((cliente)=> [cliente.cpf, cliente])
-          );
-          this.topClientes=contas.map((conta)=>{
-            const cliente = clientesPorCpf.get(conta.cpfCliente);
-            if (!cliente) return null;
+    // this.subscriptions.add(
+    //   combineLatest([
+    //     this.clienteService.listarTodos(this.tokenJWT),
+    //     this.contaService.listarTodos(this.tokenJWT)
+    //   ]).subscribe({
+    //     next: ([clientes, contas]: [Cliente[], Conta[]])=>{
+    //       const clientesPorCpf=new Map<string, Cliente>(
+    //         clientes.map((cliente)=> [cliente.cpf, cliente])
+    //       );
+    //       this.topClientes=contas.map((conta)=>{
+    //         const cliente = clientesPorCpf.get(conta.cpfCliente);
+    //         if (!cliente) return null;
 
-            const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco || '');
-              return {
-                cpf: cliente.cpf,
-                nome: cliente.nome,
-                cidade,
-                estado,
-                saldo: conta.saldo ?? 0,
-              };
-          })
-          .filter((item): item is TopCliente => item !== null)
-          .sort((a, b) => b.saldo - a.saldo)
-          .slice(0, 3);
-        },
-        error: (err) => console.error('Erro ao buscar ranking de clientes:', err)
-        })
-    );
+    //         const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco || '');
+    //           return {
+    //             cpf: cliente.cpf,
+    //             nome: cliente.nome,
+    //             cidade,
+    //             estado,
+    //             saldo: conta.saldo ?? 0,
+    //           };
+    //       })
+    //       .filter((item): item is TopCliente => item !== null)
+    //       .sort((a, b) => b.saldo - a.saldo)
+    //       .slice(0, 3);
+    //     },
+    //     error: (err) => console.error('Erro ao buscar ranking de clientes:', err)
+    //     })
+    // );
   }
 
   ngOnDestroy(): void {

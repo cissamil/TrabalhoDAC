@@ -5,14 +5,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { validateEmail } from '../../../core/shared/helpers';
 import { ResponseModal } from '../../../core/models/response-modal';
 //import { Cliente, Conta, GerenteAdmin } from '../../../core/models/entities';
-import {ProfileOptions } from '../../../core/models/navigationOptions';
+import { ProfileOptions } from '../../../core/models/navigationOptions';
 //import { ContaService } from '../../../core/services/conta-services/conta-service';
 //import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 //import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
 //import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
 import { AuthServices } from '../../../core/services/auth-services/auth-services';
-import {JwtHelperService} from '@auth0/angular-jwt';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 
@@ -20,66 +20,45 @@ import { ContaService } from '../../../core/services/conta-services/conta-servic
   selector: 'app-login',
   imports: [FormsModule, MatIconModule],
   templateUrl: './login.html',
-  styleUrls: ['./login.css',  '../../shared/css/responseModal.css'],
+  styleUrls: ['./login.css', '../../shared/css/responseModal.css'],
 })
-export class Login implements OnInit{
+export class Login implements OnInit {
   constructor(
     private router: Router,
-    private clienteSessionService: ClienteSessionService,
     private authService: AuthServices,
-    private clienteService : ClienteService,
-    private contaService: ContaService
   ) {}
 
-  checkIfUserIsAuthenticated(){
-
+  checkIfUserIsAuthenticated() {
     const decoder = new JwtHelperService();
 
     const storedToken = this.authService.usuarioLogado;
 
-    console.log("Token de login: ", storedToken);
-
-    if(storedToken){
-
+    if (storedToken) {
       const decodedToken = decoder.decodeToken(storedToken);
 
-      if(!decodedToken){
+      if (!decodedToken) {
         return;
       }
-
-      const role : string = decodedToken.role;
-      const userCpf: string = decodedToken.cpf;
-
-      if(role=='CLIENTE'){
-        //busca o cliente e salva as info cadastrais na sessão
-        this.clienteService.buscarPorCPF(userCpf).subscribe({
-          next:(clienteBanco)=>{
-            this.clienteSessionService.setCliente(clienteBanco);
-            //bsuca a conta de cliente e salva as infos da conta na sessão
-            this.contaService.buscarPorCpfCliente(userCpf).subscribe({
-              next:(contaBanco)=>{
-                this.clienteSessionService.setContaCliente(contaBanco);
-                //agr sim redireciona e carrega a pagina inicial com infos carregadas, se n, não apareceria nada
-                this.redirectBasedOnUserRole(role);
-              },
-              error: (err)=> this.exibirErro("Erro ao carregar dados da conta bancária")
-            });
-          },
-          error: (err)=>("Erro ao carregar dados cadastrais de cliente")
-        });
-      }else{
-        this.redirectBasedOnUserRole(role);
+      const userRole = decodedToken.role;
+      
+      if(userRole){
+        this.redirectBasedOnUserRole(userRole);
       }
     }
   }
 
+  redirectBasedOnUserRole(role: string) {
 
-  redirectBasedOnUserRole(role:string){
-    switch(role){
-      case 'CLIENTE': return this.router.navigate(['cliente-main-page']);
-      case 'GERENTE': return this.router.navigate(['gerente-main-page']);
-      case 'ADMIN': return this.router.navigate(['admin-main-page']);
-      default: return;
+    console.log("Redirecionando para a tela de ", role);
+    switch (role) {
+      case 'CLIENTE':
+        return this.router.navigate(['cliente-main-page']);
+      case 'GERENTE':
+        return this.router.navigate(['gerente-main-page']);
+      case 'ADMIN':
+        return this.router.navigate(['admin-main-page']);
+      default:
+        return;
     }
   }
 
@@ -88,13 +67,12 @@ export class Login implements OnInit{
   }
   responseModal: ResponseModal | null = null;
 
-
   public get profileOptions(): typeof ProfileOptions {
     return ProfileOptions;
   }
   acessProfile: ProfileOptions = ProfileOptions.Cliente;
 
-  redirect(page:string){
+  redirect(page: string) {
     this.router.navigate([page]);
   }
 
@@ -102,14 +80,12 @@ export class Login implements OnInit{
     this.acessProfile = option;
   }
 
-
-  closeModal(){
-    if(this.responseModal?.type === 'success'){
+  closeModal() {
+    if (this.responseModal?.type === 'success') {
       this.router.navigate(['/login']);
     }
 
     this.responseModal = null;
-
   }
 
   email: string = '';
@@ -117,47 +93,41 @@ export class Login implements OnInit{
 
   private exibirErro(mensagem: string) {
     this.responseModal = {
-      title: "Falha no Acesso",
+      title: 'Falha no Acesso',
       message: mensagem,
-      messageIcon: "error",
-      type: 'error'
+      messageIcon: 'error',
+      type: 'error',
     };
   }
 
-
   loginUser() {
-
-
     const verifyFields = this.validateFields();
 
-    if(verifyFields != null){
-    this.responseModal = {
-        title: "Campo Inválido",
+    if (verifyFields != null) {
+      this.responseModal = {
+        title: 'Campo Inválido',
         message: verifyFields,
-        messageIcon: "error",
-        type: 'error'
+        messageIcon: 'error',
+        type: 'error',
       };
       return;
     }
 
-    this.authService.login(this.email,this.senha).subscribe({
-      next:() =>{
+    this.authService.login(this.email, this.senha).subscribe({
+      next: () => {
         this.checkIfUserIsAuthenticated();
-      }
-    })
+      },
+    });
   }
 
-  validateFields() : string | null{
+  validateFields(): string | null {
+    if (!this.email) return 'Preencha o e-mail corretamente';
+    if (!this.senha) return 'Preencha a senha corretamente';
 
-    if(!this.email) return "Preencha o e-mail corretamente";
-    if(!this.senha) return "Preencha a senha corretamente";
-
-    if(!validateEmail(this.email)) return "Digite um e-mail válido";
+    if (!validateEmail(this.email)) return 'Digite um e-mail válido';
 
     return null;
-
   }
-
 
   // handleResult(result : any, profile:ProfileOptions){
 

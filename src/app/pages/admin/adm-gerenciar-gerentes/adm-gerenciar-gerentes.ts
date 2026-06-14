@@ -2,7 +2,7 @@ import { FormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { MatTableModule } from '@angular/material/table';
-import { Conta, GerenteAdmin } from '../../../core/models/entities';
+import { ContaOutdated, GerenteAdmin } from '../../../core/models/entities';
 import { ManagerListTableData } from '../../../core/models/table-data';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';

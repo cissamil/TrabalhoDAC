@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Cliente, Conta, Movimentacao } from '../../../core/models/entities';
+import { ClienteOutdated, ContaOutdated, Movimentacao } from '../../../core/models/entities';
 import { Router } from '@angular/router';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
@@ -41,8 +41,8 @@ export class TransferenciaCliente implements OnInit{
 
   private currencyFormatter = new CurrencyFormatter();
 
-  cliente!: Cliente;
-  contaCliente!: Conta;
+  cliente!: ClienteOutdated;
+  contaCliente!: ContaOutdated;
 
   ngOnInit(): void {
     const dadosCliente = this.clienteSessionService.getCliente();
@@ -187,7 +187,7 @@ export class TransferenciaCliente implements OnInit{
   }
   private recarregarContaCliente() {
     this.contaService.buscarPorId(this.contaCliente.id).subscribe({
-      next: (contaAtualizada: Conta) => {
+      next: (contaAtualizada: ContaOutdated) => {
         this.saldo = contaAtualizada.saldo;
         this.contaCliente = contaAtualizada;
         this.clienteSessionService.setContaCliente(contaAtualizada); // Sincroniza a sessão local

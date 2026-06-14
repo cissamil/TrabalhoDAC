@@ -1,7 +1,7 @@
 package br.ufpr.core.usecases;
 
-import br.ufpr.core.domain.GerenteEventPublisher;
 import br.ufpr.core.domain.Gerente;
+import br.ufpr.core.domain.GerenteEventPublisher;
 import br.ufpr.core.domain.GerenteInputData;
 import br.ufpr.core.domain.TipoGerente;
 import br.ufpr.core.ports.input.InsertNewGerenteInputPort;
@@ -17,10 +17,8 @@ import java.util.UUID;
 public class InsertNewGerenteUseCase implements InsertNewGerenteInputPort {
 
   private final SaveGerenteOutputPort saveGerenteOutputPort;
-  private final FindGerentesOutputPort findGerentesOutputPort;
   private final FindGerenteByCpfOutputPort findGerenteByCpfOutputPort;
   private final FindGerenteByGerenteIdOutputPort findGerenteByGerenteIdOutputPort;
-  private final PublishAssignContaToGerenteEventOutputPort publishAssignContaToGerenteEventOutputPort;
   private final PublishCreatedGerenteEventOutputPort publishCreatedGerenteEventOutputPort;
 
   @Override

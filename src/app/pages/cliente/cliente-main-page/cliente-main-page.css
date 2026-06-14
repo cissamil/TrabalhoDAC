@@ -13,6 +13,16 @@ header{
     color: white;
     padding: 20px;
 }
+.spinning-component{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    position: absolute;
+    top: 50vh;
+    left: 50vw;
+}
 
 .icon{
     padding-right: 10px;

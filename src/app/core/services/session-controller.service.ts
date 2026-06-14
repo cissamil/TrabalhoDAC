@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Cliente, Conta, Movimentacao } from '../models/entities';
+import { ClienteOutdated, ContaOutdated, Movimentacao } from '../models/entities';
 
 
 const CLIENTE_ATIVO = "clienteAtivo";
@@ -10,8 +10,8 @@ const MOVIMENTACOES_CLIENTE= "movimentacoes"
   providedIn: 'root'
 })
 export class ClienteSessionService {
-  private _clienteAtivo: Cliente | null = null;
-  private _contaCliente: Conta | null = null;
+  private _clienteAtivo: ClienteOutdated | null = null;
+  private _contaCliente: ContaOutdated | null = null;
   // private _movimentacoesCliente: Movimentacao[] | null = null;
 
   constructor() {
@@ -44,12 +44,12 @@ export class ClienteSessionService {
     return !!localStorage[CLIENTE_ATIVO] && localStorage[CONTA_ATIVA] //&& localStorage[MOVIMENTACOES_CLIENTE];
   }
 
-  setCliente(cliente: Cliente) {
+  setCliente(cliente: ClienteOutdated) {
     this._clienteAtivo = cliente;
     this.storeClienteData();
   }
 
-  setContaCliente(conta: Conta){
+  setContaCliente(conta: ContaOutdated){
     this._contaCliente = conta;
     this.storeClienteData();
   }
@@ -63,11 +63,11 @@ export class ClienteSessionService {
   //   return this._movimentacoesCliente;
   // }
 
-  getCliente(): Cliente | null {
+  getCliente(): ClienteOutdated | null {
     return this._clienteAtivo;
   }
 
-  getConta(): Conta | null{
+  getConta(): ContaOutdated | null{
     return this._contaCliente;
   }
 

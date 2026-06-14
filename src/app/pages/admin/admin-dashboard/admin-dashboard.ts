@@ -70,38 +70,38 @@ this.fillManagersTable();
     this.MANAGERS_TABLE=[];
     const gerentesMap = new Map<string, {nome: string; cpf:string}>();
     this.contas.forEach(conta => {
-      if (conta.cpfGerente && !gerentesMap.has(conta.cpfGerente)) {
-        gerentesMap.set(conta.cpfGerente, {
-          nome: conta.gerente?.nomeGerente || conta.cliente || 'Gerente Operacional',
-          cpf: conta.cpfGerente
-        });
-      }
+      // if (conta.cpfGerente && !gerentesMap.has(conta.cpfGerente)) {
+      //   gerentesMap.set(conta.cpfGerente, {
+      //     nome: conta.gerente?.nomeGerente || conta.cliente || 'Gerente Operacional',
+      //     cpf: conta.cpfGerente
+      //   });
+      // }
     });
 
     gerentesMap.forEach((dadosGerente)=>{
-      const contasGerente = this.contas.filter(c=> c.cpfGerente === dadosGerente.cpf);
-      const resumo= contasGerente.reduce((acc, conta)=>{
-        acc.quantidade++;
+      // const contasGerente = this.contas.filter(c=> c.cpfGerente === dadosGerente.cpf);
+      // const resumo= contasGerente.reduce((acc, conta)=>{
+      //   acc.quantidade++;
 
-        const saldoAtual = conta.saldo ?? 0;
-        if(saldoAtual >=0){
-          acc.positivos+=saldoAtual;
-        }else{
-          acc.negativos+= saldoAtual;
-        }
-        return acc;
-      },{quantidade: 0, positivos: 0, negativos: 0});
-      const saldoTotal = resumo.positivos + resumo.negativos;
+      //   const saldoAtual = conta.saldo ?? 0;
+      //   if(saldoAtual >=0){
+      //     acc.positivos+=saldoAtual;
+      //   }else{
+      //     acc.negativos+= saldoAtual;
+      //   }
+      //   return acc;
+      // },{quantidade: 0, positivos: 0, negativos: 0});
+      // const saldoTotal = resumo.positivos + resumo.negativos;
 
-      this.MANAGERS_TABLE.push({
-            nome: dadosGerente.nome,
-            cpf:dadosGerente.cpf,
-            quantidadeClientes: resumo.quantidade,
-            saldosPositivos: resumo.positivos,
-            saldosNegativos: resumo.negativos,
-            saldoTotal: saldoTotal,
-            colorSaldoTotal: saldoTotal >= 0 ? "green" : "red"
-          });
+      // this.MANAGERS_TABLE.push({
+      //       nome: dadosGerente.nome,
+      //       cpf:dadosGerente.cpf,
+      //       quantidadeClientes: resumo.quantidade,
+      //       saldosPositivos: resumo.positivos,
+      //       saldosNegativos: resumo.negativos,
+      //       saldoTotal: saldoTotal,
+      //       colorSaldoTotal: saldoTotal >= 0 ? "green" : "red"
+      //     });
     })
 
     this.MANAGERS_TABLE.sort((a,b) => b.saldosPositivos - a.saldosPositivos);

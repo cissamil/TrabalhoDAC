@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ClienteService } from '../cliente-services/cliente-service';
-import { Conta, EmailNotificacao, GerenteAdmin, PedidoAutoCadastro } from '../../models/entities';
+import { ContaOutdated, EmailNotificacao, GerenteAdmin, PedidoAutoCadastro } from '../../models/entities';
 import { PedidoAutoCadastroService } from '../pedido-autocadastro-services/pedido-autocadastro-service';
 import { ContaService } from '../conta-services/conta-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -17,7 +17,7 @@ export class GerenteAutocadastroService {
   ){}
 
   pedidos: PedidoAutoCadastro[] = [];
-  contasCriadas: Conta[] = [];
+  contasCriadas: ContaOutdated[] = [];
   emailsEnviados: EmailNotificacao[] = [];
 
 
@@ -52,7 +52,7 @@ export class GerenteAutocadastroService {
     );
   }
 
-  private registrarEmailAprovacao(pedido: PedidoAutoCadastro, conta: Conta, senha: string): void {
+  private registrarEmailAprovacao(pedido: PedidoAutoCadastro, conta: ContaOutdated, senha: string): void {
     const limiteFormatado = new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',

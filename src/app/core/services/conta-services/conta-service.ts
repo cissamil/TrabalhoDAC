@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 //import { CONTAS_MOCK } from '../../mock/mock-data';
 import { GerenteService } from '../gerente-services/gerente-services';
 import { ClienteSessionService } from '../session-controller.service';
-import { Conta, ContaGerada, GerenteAdmin, Movimentacao } from '../../models/entities';
+import { ContaOutdated, ContaGerada, GerenteAdmin, Movimentacao } from '../../models/entities';
 import { MovimentacaoService } from '../movimentacoes-service/movimentacao-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ContaGerente } from '../../models/ContaGerente';
@@ -50,8 +50,8 @@ export class ContaService {
   //   this.contasSubject.next(contas);
   // }
 
-  inserir(conta: Conta): Observable<Conta> {
-    return this.httpClient.post<Conta>(
+  inserir(conta: ContaOutdated): Observable<ContaOutdated> {
+    return this.httpClient.post<ContaOutdated>(
       this.CONTA_URL,
       JSON.stringify(conta),
       this.httpOptions
@@ -67,8 +67,8 @@ export class ContaService {
   //   console.error("Erro ao inserir usuário: ", e)
   // }
 
-  atualizarConta(conta: Conta): Observable<Conta> {
-    return this.httpClient.post<Conta>(
+  atualizarConta(conta: ContaOutdated): Observable<ContaOutdated> {
+    return this.httpClient.post<ContaOutdated>(
       this.CONTA_URL + "/" + conta.id,
       JSON.stringify(conta),
       this.httpOptions
@@ -161,13 +161,13 @@ export class ContaService {
   //   })
   //}
 
-  buscarPorCpfCliente(cpf: string, token:string):Observable<Conta>{
-      return this.httpClient.get<Conta>(
+  buscarPorCpfCliente(cpf: string, token:string):Observable<ContaOutdated>{
+      return this.httpClient.get<ContaOutdated>(
         this.CONTA_URL + "/cliente/" + cpf,
         this.httpOptions);
     }
-  buscarPorId(id: number): Observable<Conta> {
-      return this.httpClient.get<Conta>(
+  buscarPorId(id: number): Observable<ContaOutdated> {
+      return this.httpClient.get<ContaOutdated>(
         this.CONTA_URL + "/" + id,
         this.httpOptions
       );

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Cliente, Conta, Movimentacao } from '../../../core/models/entities';
+import { ClienteOutdated, ContaOutdated, Movimentacao } from '../../../core/models/entities';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
 import { Router } from '@angular/router';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
@@ -42,8 +42,8 @@ export class SaqueCliente implements OnInit{
 
   //saldoCalculado = this.saldo + this.limite;
 
-  cliente!: Cliente;
-  contaCliente!: Conta;
+  cliente!: ClienteOutdated;
+  contaCliente!: ContaOutdated;
 
   ngOnInit(): void {
     const dadosCliente = this.clienteSessionService.getCliente();
@@ -132,13 +132,13 @@ export class SaqueCliente implements OnInit{
       return;
     }
 
-  const contaAtualizada: Conta={
+  const contaAtualizada: ContaOutdated={
     ...this.contaCliente,
     saldo: this.saldo - valor
 }
 
 this.contaService.atualizarConta(contaAtualizada).subscribe({
-  next:(contaBanco:Conta)=>{
+  next:(contaBanco:ContaOutdated)=>{
     this.saldo=contaBanco.saldo;
     this.contaCliente=contaBanco;
     this.valorSaque = '0,00';

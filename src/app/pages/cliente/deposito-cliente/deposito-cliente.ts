@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Cliente, Conta, Movimentacao } from '../../../core/models/entities';
+import { ClienteOutdated, ContaOutdated, Movimentacao } from '../../../core/models/entities';
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
 import { Router } from '@angular/router';
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
@@ -107,24 +107,24 @@ this.contaService.atualizarConta(contaAtualizada as any).subscribe({
 
 
   registrarMovimentacao(valor:number){
-    const movimentacao: Movimentacao = {
-          id:0,
-          data_hora: new Date(),
-          tipo:'deposito',
-          clienteDestino: '',
-          cpfClienteDestino: '',
-          valor: valor,
-          clienteOrigem: this.clienteConta.nome,
-          cpfClienteOrigem: this.clienteConta.cpf,
-        }
+    // const movimentacao: Movimentacao = {
+    //       id:0,
+    //       data_hora: new Date(),
+    //       tipo:'deposito',
+    //       clienteDestino: '',
+    //       cpfClienteDestino: '',
+    //       valor: valor,
+    //       clienteOrigem: this.clienteConta.nome,
+    //       cpfClienteOrigem: this.clienteConta.cpf,
+    //     }
 
-    this.movimentacaoService.inserir(movimentacao).subscribe({
-      next:(movimentacaoSalva)=>{
-        console.log('Movimentação registrada com sucesso')
-      },
-      error: (erro)=>{
-        console.error(' erro ao registrar movimentação no extrato ', erro);
-      }
-    })
+    // this.movimentacaoService.inserir(movimentacao).subscribe({
+    //   next:(movimentacaoSalva)=>{
+    //     console.log('Movimentação registrada com sucesso')
+    //   },
+    //   error: (erro)=>{
+    //     console.error(' erro ao registrar movimentação no extrato ', erro);
+    //   }
+    // })
   }
 }

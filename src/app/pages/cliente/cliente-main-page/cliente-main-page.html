@@ -11,66 +11,75 @@
     </header>
 
     <div class="container">
+        @if(isLoading){
 
-        <div class="navigation-card">
-            <p (click)="changeNavigationOptions(clientNavigationOptions.Dashboard)">
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="wallet"></mat-icon>
-                Dashboard
-            </p>
+            <div class="spinning-component">
+                <mat-spinner></mat-spinner>
+                <p>Carregando as informações do cliente</p>
+            </div>
+        }
+        @else{
 
-            <p (click)="changeNavigationOptions(clientNavigationOptions.Perfil)">
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="account_circle"></mat-icon>
-                Meu Perfil
-            </p>
-
-            <p (click)="changeNavigationOptions(clientNavigationOptions.Deposito)">
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="download_2"></mat-icon>
-                Depósito
-            </p>
-
-            <p (click)="changeNavigationOptions(clientNavigationOptions.Saque)">
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="upload_2"></mat-icon>
-                Saque
-            </p>
-
-            <p (click)="changeNavigationOptions(clientNavigationOptions.Transferencia)">
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="compare_arrows"></mat-icon>
-                Transferência
-            </p>
-
-            <p (click)="changeNavigationOptions(clientNavigationOptions.Extrato)">
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="assignment"></mat-icon>
-                Extrato
-            </p>
-        </div>
-
-        <div class="components">
-
-            @if(navigationOption === clientNavigationOptions.Dashboard){
-                <app-dashboard-cliente></app-dashboard-cliente>
-            }
-
-            @if(navigationOption === clientNavigationOptions.Perfil){
-                <app-cliente-perfil></app-cliente-perfil>
-            }
-
-            @if(navigationOption === clientNavigationOptions.Deposito){
-                <app-deposito-cliente></app-deposito-cliente>
-            }
-
-            @if(navigationOption === clientNavigationOptions.Saque){
-                <app-saque-cliente></app-saque-cliente>
-            }
-
-            @if(navigationOption === clientNavigationOptions.Transferencia){
-                <app-transferencia-cliente></app-transferencia-cliente>
-            }
-
-            @if(navigationOption === clientNavigationOptions.Extrato){
-                <app-extrato></app-extrato>
-            }
-
-        </div>
+            <div class="navigation-card">
+                <p (click)="changeNavigationOptions(clientNavigationOptions.Dashboard)">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="wallet"></mat-icon>
+                    Dashboard
+                </p>
+    
+                <p (click)="changeNavigationOptions(clientNavigationOptions.Perfil)">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="account_circle"></mat-icon>
+                    Meu Perfil
+                </p>
+    
+                <p (click)="changeNavigationOptions(clientNavigationOptions.Deposito)">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="download_2"></mat-icon>
+                    Depósito
+                </p>
+    
+                <p (click)="changeNavigationOptions(clientNavigationOptions.Saque)">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="upload_2"></mat-icon>
+                    Saque
+                </p>
+    
+                <p (click)="changeNavigationOptions(clientNavigationOptions.Transferencia)">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="compare_arrows"></mat-icon>
+                    Transferência
+                </p>
+    
+                <p (click)="changeNavigationOptions(clientNavigationOptions.Extrato)">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="assignment"></mat-icon>
+                    Extrato
+                </p>
+            </div>
+    
+            <div class="components">
+    
+                @if(navigationOption === clientNavigationOptions.Dashboard){
+                    <app-dashboard-cliente></app-dashboard-cliente>
+                }
+    
+                @if(navigationOption === clientNavigationOptions.Perfil){
+                    <app-cliente-perfil></app-cliente-perfil>
+                }
+    
+                @if(navigationOption === clientNavigationOptions.Deposito){
+                    <app-deposito-cliente></app-deposito-cliente>
+                }
+    
+                @if(navigationOption === clientNavigationOptions.Saque){
+                    <app-saque-cliente></app-saque-cliente>
+                }
+    
+                @if(navigationOption === clientNavigationOptions.Transferencia){
+                    <app-transferencia-cliente></app-transferencia-cliente>
+                }
+    
+                @if(navigationOption === clientNavigationOptions.Extrato){
+                    <app-extrato></app-extrato>
+                }
+    
+            </div>
+        }
 
     </div>
 

@@ -1,15 +1,7 @@
+import { ContaGerente } from './ContaGerente';
+import { Cliente } from './entities';
 
-import {ContaGerente} from "./ContaGerente"
-
-export interface ClienteConta{
-
-    id:number;
-    cpf:string;
-    nome:string;
-    email:string;
-    telefone:string;
-    salario:number;
-    endereco:string;
-    conta: ContaGerente;
-
+export interface ClienteConta {
+  cliente: Cliente;
+  conta: ContaGerente;
 }
