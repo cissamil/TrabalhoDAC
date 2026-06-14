@@ -44,7 +44,10 @@ public class UpdateClienteUseCase implements UpdateClienteInputPort {
     saveClienteOutputPort.save(updatedClienteData);
 
     if (emailHasChanged) {
-      publishUpdateUserEmailEventOutputPort.publish(clienteId, clienteEmail);
+
+      String previousEmail = outdatedClienteData.getEmail();
+
+      publishUpdateUserEmailEventOutputPort.publish(clienteId, clienteEmail, previousEmail);
     }
 
     if(salaryHasChanged){

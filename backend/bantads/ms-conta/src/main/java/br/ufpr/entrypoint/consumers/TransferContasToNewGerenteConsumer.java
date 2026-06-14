@@ -1,7 +1,6 @@
 package br.ufpr.entrypoint.consumers;
 
 import br.ufpr.common.constants.RabbitMQConstants;
-import br.ufpr.config.RabbitMQConfigMsConta;
 import br.ufpr.core.domain.TransferContasToGerenteInputData;
 import br.ufpr.core.ports.output.TransferContasToNewGerenteInputPort;
 import br.ufpr.model.message.TransferContasToGerenteMessage;

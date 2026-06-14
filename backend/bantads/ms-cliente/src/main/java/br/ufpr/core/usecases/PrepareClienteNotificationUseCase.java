@@ -27,7 +27,7 @@ public class PrepareClienteNotificationUseCase implements PrepareClienteNotifica
 
     String email = cliente.getEmail();
 
-    publishClienteNotificationReadyOutputPort.publish(email, clienteId, message);
+    publishClienteNotificationReadyOutputPort.publish(email, clienteId, message, "");
   }
 
   private static void validateCliente(Cliente cliente) {

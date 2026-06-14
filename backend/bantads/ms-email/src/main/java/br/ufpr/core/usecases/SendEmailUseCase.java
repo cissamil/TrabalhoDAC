@@ -27,7 +27,5 @@ public class SendEmailUseCase implements SendEmailInputPort {
     email.setText(inputData.getMessage());
 
     mailSender.send(email);
-
-    System.out.println("E-mail enviado com sucesso!");
   }
 }

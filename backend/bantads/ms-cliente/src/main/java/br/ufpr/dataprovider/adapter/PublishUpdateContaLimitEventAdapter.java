@@ -1,9 +1,7 @@
 package br.ufpr.dataprovider.adapter;
 
-import br.ufpr.config.RabbitMQConfigMsCliente;
+import br.ufpr.common.constants.RabbitMQConstants;
 import br.ufpr.core.ports.output.PublishUpdateContaLimitEventOutputPort;
-import br.ufpr.core.ports.output.PublishUpdateUserEmailEventOutputPort;
-import br.ufpr.model.message.TransferClienteDataSagaMessage;
 import br.ufpr.model.message.UpdateContaLimitMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,8 +32,8 @@ public class PublishUpdateContaLimitEventAdapter implements PublishUpdateContaLi
       String message = objectMapper.writeValueAsString(updateContaLimitMessage);
 
       rabbitTemplate.convertAndSend(
-        RabbitMQConfigMsCliente.UPDATE_ACCOUNT_LIMIT_EXCHANGE,
-        "fluxo.atualizar-limite.key",
+        RabbitMQConstants.BANTADS_EXCHANGE,
+        RabbitMQConstants.RK_CLIENTE_SALARIO_ATUALIZADO_EVENTO,
         message
       );
 

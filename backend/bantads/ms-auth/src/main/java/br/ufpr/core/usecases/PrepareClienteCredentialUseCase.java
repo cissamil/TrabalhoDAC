@@ -4,11 +4,9 @@ import br.ufpr.core.domain.*;
 import br.ufpr.core.ports.input.PrepareClienteCredentialInputPort;
 import br.ufpr.core.ports.input.CreateUserCredentialInputPort;
 import br.ufpr.core.ports.output.ConsultClienteOutputPort;
-import br.ufpr.core.ports.output.SendEmailOutputPort;
+import br.ufpr.core.ports.output.PublishEmailNotificationEventOutputPort;
 import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -17,11 +15,9 @@ import java.security.SecureRandom;
 @RequiredArgsConstructor
 public class PrepareClienteCredentialUseCase implements PrepareClienteCredentialInputPort {
 
-  //@TODO MUDAR (SE DER TEMPO) O ENVIO DE EMAILS PARA O MS-EMAIL
-
-  private final SendEmailOutputPort sendEmailOutputPort;
   private final ConsultClienteOutputPort consultClienteOutputPort;
   private final CreateUserCredentialInputPort createUserCredentialInputPort;
+  private final PublishEmailNotificationEventOutputPort publishEmailNotificationEventOutputPort;
 
   @Override
   public void execute(TransferClienteIdInputData inputData) {
@@ -43,7 +39,7 @@ public class PrepareClienteCredentialUseCase implements PrepareClienteCredential
     userInputData.setTipoUsuario(TipoUsuario.CLIENTE);
 
     createUserCredentialInputPort.execute(userInputData);
-    sendPasswordEmailToCliente(clienteEmail, senhaUsuario);
+    sendPasswordEmailToCliente(clienteId, clienteEmail, senhaUsuario);
   }
 
   private static void validateEmailCliente(String clienteEmail) {
@@ -67,12 +63,11 @@ public class PrepareClienteCredentialUseCase implements PrepareClienteCredential
     return senha.toString();
   }
 
-  public void sendPasswordEmailToCliente(String clienteEmail, String password){
+  public void sendPasswordEmailToCliente(String clienteId, String clienteEmail, String password){
 
     String subject = "Sua conta bancária foi aprovada!";
-    String message = "Olá! Sua conta bancária foi criada com sucesso! Sua senha de acesso é: " + password;
+    String content = "Olá! Sua conta bancária foi criada com sucesso! Sua senha de acesso é: " + password;
 
-    sendEmailOutputPort.send(clienteEmail, subject, message);
-
+    publishEmailNotificationEventOutputPort.publish(clienteEmail, clienteId, content, subject);
   }
 }

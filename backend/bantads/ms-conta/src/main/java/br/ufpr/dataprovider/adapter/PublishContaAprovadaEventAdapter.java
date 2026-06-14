@@ -1,7 +1,6 @@
 package br.ufpr.dataprovider.adapter;
 
 import br.ufpr.common.constants.RabbitMQConstants;
-import br.ufpr.config.RabbitMQConfigMsConta;
 import br.ufpr.core.domain.ApprovedContaEvent;
 import br.ufpr.core.ports.output.PublishContaAprovadaEventOutputPort;
 import br.ufpr.model.message.TransferClienteIdSagaMessage;

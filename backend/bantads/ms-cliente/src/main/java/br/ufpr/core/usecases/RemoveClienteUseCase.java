@@ -4,9 +4,9 @@ import br.ufpr.core.domain.Cliente;
 import br.ufpr.core.domain.TransferClienteDataInputData;
 import br.ufpr.core.ports.input.RemoveClienteInputPort;
 import br.ufpr.core.ports.output.FindClienteByClienteIdOutputPort;
+import br.ufpr.core.ports.output.PublishClienteNotificationReadyOutputPort;
+import br.ufpr.core.ports.output.PublishEmailNotificationEventOutputPort;
 import br.ufpr.core.ports.output.RemoveClienteOutputPort;
-import br.ufpr.core.ports.output.SendEmailOutputPort;
-import br.ufpr.infrastructure.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,17 +14,19 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RemoveClienteUseCase implements RemoveClienteInputPort {
 
-  //@TODO MUDAR (SE DER TEMPO) O ENVIO DE EMAILS PARA O MS-EMAIL
-  private final SendEmailOutputPort sendEmailOutputPort;
   private final RemoveClienteOutputPort removeClienteOutputPort;
   private final FindClienteByClienteIdOutputPort findClienteByClienteIdOutputPort;
+  private final PublishEmailNotificationEventOutputPort publishEmailNotificationEventOutputPort;
+
   @Override
   public void execute(TransferClienteDataInputData inputData) {
 
-    Cliente cliente = findClienteByClienteIdOutputPort.find(inputData.getClienteId());
+    String clienteId = inputData.getClienteId();
+
+    Cliente cliente = findClienteByClienteIdOutputPort.find(clienteId);
 
     if(cliente == null){
-      System.out.println("Aviso: O cliente " + inputData.getClienteId() + " já não existe no banco. Abortando...");
+      System.out.println("Aviso: O cliente " + clienteId + " já não existe no banco. Abortando...");
       return;
     }
 
@@ -32,10 +34,10 @@ public class RemoveClienteUseCase implements RemoveClienteInputPort {
 
     removeClienteOutputPort.remove(cliente);
 
-    sendEmailOutputPort.send(
-      cliente.getEmail(),
-      "Erro ao cadastrar sua conta",
-      "Houve um erro durante o cadastro da sua conta. Por favor, realize o cadastro novamente"
-    );
+    String clienteEmail = cliente.getEmail();
+    String subject = "Erro ao cadastrar a sua conta";
+    String content = "Infelizmente tivemos um erro ao realizar o cadastro da sua conta. Por favor, realize o cadastro novamente";
+
+    publishEmailNotificationEventOutputPort.publish(clienteEmail, clienteId, content, subject);
   }
 }

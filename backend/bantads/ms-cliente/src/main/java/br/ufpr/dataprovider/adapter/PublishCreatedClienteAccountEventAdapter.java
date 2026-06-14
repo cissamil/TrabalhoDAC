@@ -1,7 +1,6 @@
 package br.ufpr.dataprovider.adapter;
 
 import br.ufpr.common.constants.RabbitMQConstants;
-import br.ufpr.config.RabbitMQConfigMsCliente;
 import br.ufpr.core.domain.Cliente;
 import br.ufpr.core.ports.output.PublishCreatedClienteAccountEventOutputPort;
 import br.ufpr.model.message.TransferClienteDataSagaMessage;

@@ -1,7 +1,6 @@
 package br.ufpr.entrypoint.consumers;
 
 import br.ufpr.common.constants.RabbitMQConstants;
-import br.ufpr.config.RabbitMQConfigMsAuth;
 import br.ufpr.core.domain.TransferClienteIdInputData;
 import br.ufpr.core.ports.input.PrepareClienteCredentialInputPort;
 import br.ufpr.model.message.TransferClienteIdSagaMessage;

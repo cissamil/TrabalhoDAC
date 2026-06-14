@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateUserEmailInputData {
   private String userId;
-  private String userEmail;
+  private String userNewEmail;
+  private String userPreviousEmail;
 }

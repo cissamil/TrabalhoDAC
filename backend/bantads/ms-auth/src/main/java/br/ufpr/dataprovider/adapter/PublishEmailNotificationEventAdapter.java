@@ -1,7 +1,7 @@
 package br.ufpr.dataprovider.adapter;
 
 import br.ufpr.common.constants.RabbitMQConstants;
-import br.ufpr.core.ports.output.PublishClienteNotificationReadyOutputPort;
+import br.ufpr.core.ports.output.PublishEmailNotificationEventOutputPort;
 import br.ufpr.model.message.SendEmailMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PublishClienteNotificationReadyAdapter implements PublishClienteNotificationReadyOutputPort {
+public class PublishEmailNotificationEventAdapter implements PublishEmailNotificationEventOutputPort {
 
   @Autowired
   private final RabbitTemplate rabbitTemplate;
   private final ObjectMapper objectMapper;
 
   @Override
-  public void publish(String email, String clienteId, String content, String subject){
+  public void publish(String email, String userId, String content, String subject){
 
     try{
 
@@ -29,14 +29,14 @@ public class PublishClienteNotificationReadyAdapter implements PublishClienteNot
 
       sendEmailMessage.setReceiver(email);
       sendEmailMessage.setMessage(content);
-      sendEmailMessage.setReceiverId(clienteId);
+      sendEmailMessage.setReceiverId(userId);
       sendEmailMessage.setSubject(emailSubject);
 
       String message = objectMapper.writeValueAsString(sendEmailMessage);
 
       rabbitTemplate.convertAndSend(
         RabbitMQConstants.BANTADS_EXCHANGE,
-        RabbitMQConstants.RK_CLIENTE_NOTIFICACAO_PRONTA_EVENTO,
+        RabbitMQConstants.RK_NOTIFICACAO_PRONTA_EVENTO,
         message
       );
 

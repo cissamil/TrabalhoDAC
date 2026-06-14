@@ -17,12 +17,12 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UpdateUserEmailMessage {
 
-  @NotNull
-  @NotBlank
+  @NotNull @NotBlank
   private String userId;
 
-  @Email
-  @NotNull
-  @NotBlank
-  private String userEmail;
+  @Email @NotNull @NotBlank
+  private String userNewEmail;
+
+  @Email @NotNull @NotBlank
+  private String userPreviousEmail;
 }

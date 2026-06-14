@@ -1,8 +1,7 @@
 package br.ufpr.dataprovider.adapter;
 
-import br.ufpr.config.RabbitMQConfigMsCliente;
+import br.ufpr.common.constants.RabbitMQConstants;
 import br.ufpr.core.ports.output.PublishUpdateUserEmailEventOutputPort;
-import br.ufpr.model.message.TransferClienteDataSagaMessage;
 import br.ufpr.model.message.UpdateUserEmailMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,19 +20,20 @@ public class PublishUpdateUserEmailEventAdapter implements PublishUpdateUserEmai
 
 
   @Override
-  public void publish(String userId, String userEmail ) {
+  public void publish(String clienteId, String newClienteEmail, String previousClienteEmail) {
 
     UpdateUserEmailMessage updateUserEmailMessage = new UpdateUserEmailMessage();
 
-    updateUserEmailMessage.setUserId(userId);
-    updateUserEmailMessage.setUserEmail(userEmail);
+    updateUserEmailMessage.setUserId(clienteId);
+    updateUserEmailMessage.setUserNewEmail(newClienteEmail);
+    updateUserEmailMessage.setUserPreviousEmail(previousClienteEmail);
 
     try {
       String message = objectMapper.writeValueAsString(updateUserEmailMessage);
 
       rabbitTemplate.convertAndSend(
-        RabbitMQConfigMsCliente.UPDATE_USER_EMAIL_EXCHANGE,
-        "fluxo.atualizar-login-usuario.key",
+        RabbitMQConstants.BANTADS_EXCHANGE,
+        RabbitMQConstants.RK_CLIENTE_EMAIL_ATUALIZADO_EVENTO,
         message
       );
 
