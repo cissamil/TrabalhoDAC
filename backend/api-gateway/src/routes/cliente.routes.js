@@ -23,7 +23,7 @@ function clienteRouter(services) {
 		errorMessage: '[Gateway] Erro na busca do cliente:'
 	}));
 
-	router.put('/:clienteId', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+	router.put('/:clienteId', verifyJWT, requireRole(routeRoles['/cliente']), createProxyRoute({
 		target: services.clienteService,
 		errorMessage: '[Gateway] Erro ao atualizar cliente:'
 	}));

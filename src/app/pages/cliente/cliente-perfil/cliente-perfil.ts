@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
-import { NgxMaskDirective } from "ngx-mask";
-import { FormsModule } from "@angular/forms";
+import { NgxMaskDirective } from 'ngx-mask';
+import { FormsModule } from '@angular/forms';
 import { DecimalPipe, NgClass } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
@@ -12,196 +12,206 @@ import { ClienteSessionService } from '../../../core/services/session-controller
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { ClienteConta } from '../../../core/models/ClienteConta';
 import { ContaGerente } from '../../../core/models/ContaGerente';
+import { CompositionServices } from '../../../core/services/compositon-services/composition-services';
+import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { HttpErrorResponse } from '@angular/common/http';
+import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { ESTADOS_UF } from '../../../core/mock/estados-uf';
 
 @Component({
   selector: 'app-cliente-perfil',
-  imports: [FormsModule, DecimalPipe, NgxMaskDirective, MatIconModule, NgClass],
+  imports: [FormsModule, DecimalPipe, NgxMaskDirective, MatIconModule, NgClass, MatProgressSpinner],
   templateUrl: './cliente-perfil.html',
   styleUrls: ['./cliente-perfil.css', '../../shared/css/responseModal.css'],
 })
 export class ClientePerfil implements OnInit {
+  constructor(
+    //private router: Router,
+    private clienteService: ClienteService,
+    private compositionService: CompositionServices,
+    private authService: AuthServices,
+    private cdr: ChangeDetectorRef,
+  ) {}
+
+  private clienteConta!: ClienteConta;
+  contaCliente!: ContaGerente;
+  salario: string = '';
+  updatedCliente!: ClienteConta;
+
+  currencyFormatter: CurrencyFormatter = new CurrencyFormatter();
+  responseModal: ResponseModal | null = null;
+
+  uf: string [] = ESTADOS_UF;
+  
+  isLoading: boolean = false;
+
+  changeIsLoading(){
+    this.isLoading = !this.isLoading;
+    this.cdr.detectChanges();
+  }
+
+  getUpdatedClienteData() {
+    const token = this.authService.usuarioLogado;
+    if (!token) {
+      return;
+    }
+
+    this.compositionService.getClienteConta(token).subscribe({
+      next: (responseBody) => {
+        if (responseBody) {
+          this.clienteService.setClienteConta(responseBody);
+
+          this.fillContaCliente(responseBody);
+        }
+      },
+    });
+  }
+
+  fillContaCliente(dadosCarregados: ClienteConta){
+
+    this.clienteConta = dadosCarregados;
+    this.contaCliente = dadosCarregados.conta;
+    this.initalizeProfileData();
+  }
 
   ngOnInit(): void {
+
+    this.isLoading = true;
     
+    const dadosCarregados = this.clienteService.clienteContaLogado;
+
+
+    if (dadosCarregados) {
+      this.fillContaCliente(dadosCarregados);
+
+    } else {
+      console.log('Nenhum dado encontrado no localStorage para o Perfil.');
+    }
+
+    this.isLoading = false
   }
-//   constructor(
-//     //private router: Router,
-//     private contaService: ContaService,
-//     private clienteService: ClienteService,
-//     private clienteSessionService: ClienteSessionService,
-//     private cdr: ChangeDetectorRef,
 
-//   ) {}
+  get colorSaldo() {
+    return this.contaCliente.saldo > 0 ? 'blue' : 'red';
+  }
 
-//   private clienteConta!: ClienteConta;
-//   contaCliente!: ContaGerente;
-//   cep: string = '';
-//   rua: string = '';
-//   cidade: string = '';
-//   estado: string = '';
-//   endereco: string[] = [];
-//   salario: string = '';
-//   updatedCliente!: ClienteConta;
+  initalizeProfileData() {
+    this.updatedCliente = { ...this.clienteConta };
 
-//   currencyFormatter: CurrencyFormatter = new CurrencyFormatter();
-//   responseModal: ResponseModal | null = null;
+    this.salario = this.currencyFormatter.applyCurrencyMaskOnNumber(
+      this.clienteConta.cliente.salario,
+    );
+  }
 
-//   ngOnInit(): void {
-//     const dadosCarregados = this.clienteService.clienteContaLogado;
+  handleSalario(e: any) {
+    //mascara em tempo real
+    let input = e.target;
+    input.value = this.currencyFormatter.applyCurrencyMaskOnString(input.value);
+    this.salario = input.value;
+  }
 
-//     if (dadosCarregados) {
-//       this.clienteConta = dadosCarregados;
-//       this.contaCliente = dadosCarregados.conta;
-//       this.initalizeProfileData();
-//       this.cdr.detectChanges();
+  closeModal() {
+    this.responseModal = null;
+  }
 
-//     } else {
-//       console.log("Nenhum dado encontrado no localStorage para o Perfil.");
-//     }
-//   }
+  atualizarDados() {
 
-//   get colorSaldo(){
-//     return this.contaCliente.saldo > 0 ? 'blue' : 'red';
-//   }
+    this.changeIsLoading();
 
-//   initalizeProfileData() {
-//     this.updatedCliente = {...this.clienteConta};
-//     if (this.clienteConta.endereco) {
-//       const enderecoParts = this.clienteConta.endereco.split(' - ');
-//       this.cep = enderecoParts[0] || '';
-//       this.rua = enderecoParts[1] || '';
-//       this.cidade = enderecoParts[2] || '';
-//       this.estado = enderecoParts[3] || '';
-//     }
+    const verifyFields = this.validateFields();
 
-//     // Formata o salário para exibição inicial
-//     this.salario = this.currencyFormatter.applyCurrencyMaskOnNumber(
-//       this.clienteConta.salario,
-//     );
-//   }
+    const token = this.authService.usuarioLogado;
 
-//   handleSalario(e: any) {
-//     //mascara em tempo real
-//     let input = e.target;
-//     input.value = this.currencyFormatter.applyCurrencyMaskOnString(input.value);
-//     this.salario = input.value;
-//   }
+    const salarioNumber: number = this.currencyFormatter.removeCurrencyMaskFromString(this.salario);
 
-//   closeModal(){
-//     this.responseModal = null;
-//   }
+    this.updatedCliente.cliente.salario = salarioNumber;
 
+    if (!token) {
+      console.error("Token não encontrado!");
+      return;
+    }
 
-//   atualizarDados() {
+    if (verifyFields != null) {
+      this.responseModal = {
+        title: 'Campo Inválido',
+        message: verifyFields,
+        messageIcon: 'error',
+        type: 'error',
+      };
 
-//     const verifyFields = this.validateFields();
+      this.changeIsLoading();
+      return;
+    }
 
-//     if(verifyFields != null){
-//       this.responseModal = {
-//         title: "Campo Inválido",
-//         message: verifyFields,
-//         messageIcon: "error",
-//         type: 'error'
-//       };
-//       return;
-//     }
+    this.clienteService.atualizar(this.updatedCliente.cliente, token).subscribe({
+      next: () => {
 
-//     const salarioNumber: number = this.currencyFormatter.removeCurrencyMaskFromString(this.salario);
-//     let novoLimite = salarioNumber / 2;
+        setTimeout(() =>{
+          
+          this.getUpdatedClienteData();
+          
+          this.responseModal = {
+            title: 'Dados Atualizados!',
+            message: 'Suas informações e limites foram recalculados com sucesso.',
+            messageIcon: 'check',
+            type: 'success',
+          };
 
-//     console.log(`Novo limite: ${novoLimite}, Saldo: ${this.contaCliente.saldo}`)
+          this.changeIsLoading();
+          
+        }, 800)
 
-//     if(this.contaCliente.saldo < 0){
-//       const saldoPositivo = this.contaCliente.saldo * -1;
-//       if(novoLimite < saldoPositivo){
-//         novoLimite = saldoPositivo;
-//       }
-//     }
+        console.log("Carregando: ", this.isLoading);
+      },
+      error: (erro: HttpErrorResponse) => {
 
-//     this.contaCliente.limite = novoLimite;
-//     console.log('Salário atual', salarioNumber);
-//     const enderecoCompleto = `${this.cep} - ${this.rua} - ${this.cidade} - ${this.estado}`;
+        console.error("Erro Interceptado: ", erro);
 
-//     this.updatedCliente.cliente.salario = salarioNumber;
-//     // this.updatedCliente.cliente.endereco = enderecoCompleto;
+        const backendError = erro.error as StandartErrorResponse;
+
+        this.responseModal = {
+          title: backendError?.error || 'Erro na atualização de dados',
+          message:
+            backendError?.message ||
+            'Ocorreu um erro ao tentar atualizar seus dados. Tente novamente.',
+          messageIcon: 'error',
+          type: 'error',
+        };
+
+        this.changeIsLoading();
+      },
+    });
+  }
 
 
-// //função de atualizar cliente, envia os dados informados para o servidor
-//     this.clienteService.atualizar(this.updatedCliente).subscribe({
-//       next:(clienteAtualizado: any)=>{
-//         //dado que salvou corretamente no servidor e no banco
-//         this.updatedCliente.conta=this.contaCliente
-//         //e atuliza em updatedCliente com o novoLimite e cliente no local
+  validateFields(): string | null {
+    if (!this.updatedCliente.cliente.nome) return 'Preencha o nome corretamente';
 
-//         this.contaService.atualizarConta(this.contaCliente as any).subscribe({
-//           //envia os dados informados para o servidor atualizar a conta e o limite no bd
-//           next: (contaAtualizadaBanco: any) => {
-//             // salvou corretamente no servidor, atualiza o banco
-//             this.updatedCliente = {
-//               //pega as infos de updatedCLiente e copiando para ClienteConta e Conta Gerente (local)
-//               ...(clienteAtualizado as ClienteConta),
-//               conta: contaAtualizadaBanco as ContaGerente
-//             };
-//             // Salva os dados na sessão
-//             this.clienteSessionService.setCliente(this.updatedCliente);
-//             this.responseModal = {
-//               title: "Sucesso",
-//               message: "Dados alterados com êxito!",
-//               messageIcon: "check",
-//               type: 'success'
-//             };
-//           },
-//           error: (err) => {
-//             console.error('Erro ao atualizar limite da conta', err);
-//             this.mostrarModalErro('Erro ao salvar o novo limite de crédito no servidor.');
-//           }
-//           });
-//       },
-//       error: (err) => {
-//         console.error('Erro ao atualizar dados cadastrais do cliente', err);
-//         this.mostrarModalErro('Erro ao salvar os dados cadastrais no servidor.');
-//       }
-//     });
-//   }
+    if (!this.updatedCliente.cliente.email)
+      return 'Preencha o email corretamente';
 
-// mostrarModalErro(msg: string) {
-//     this.responseModal = {
-//       title: "Erro",
-//       message: msg,
-//       messageIcon: "error",
-//       type: 'error'
-//     };
-//     this.cdr.detectChanges();
-//   }
+    if (!this.updatedCliente.cliente.cpf) return 'Preencha o CPF corretamente';
 
+    if (!this.updatedCliente.cliente.telefone)
+      return 'Preencha o telefone corretamente';
 
-//   validateFields(): string | null{
+    if (this.salario === '0,00') return 'Preencha o campo de salário';
 
-//     if(!this.clienteConta.cliente.nome) return "Preencha o nome corretamente";
+    if (!this.updatedCliente.cliente.endereco.cep) return 'Preencha o o CEP corretamente';
 
-//     if(!this.clienteConta.cliente.email) return "Preencha o email corretamente";
+    if (!this.updatedCliente.cliente.endereco.logradouro) return 'Preencha a rua corretamente';
 
-//     if(!this.clienteConta.cliente.cpf) return "Preencha o CPF corretamente";
+    if (!this.updatedCliente.cliente.endereco.numero) return 'Preencha o número da rua corretamente';
 
-//     if(!this.clienteConta.cliente.telefone) return "Preencha o telefone corretamente";
+    if (!this.updatedCliente.cliente.endereco.cidade) return 'Preencha a cidade corretamente';
 
-//     if(this.salario === "0,00") return "Preencha o campo de salário";
+    if (!this.updatedCliente.cliente.endereco.estado) return 'Preencha o estado corretamente';
 
-//     if(!this.cep) return "Preencha o o CEP corretamente";
+    if (!validateEmail(this.clienteConta.cliente.email)) return 'Digite um email válido';
 
-//     if(!this.rua) return "Preencha a rua corretamente";
+    if (!validateCEP(this.updatedCliente.cliente.endereco.cep)) return 'Preencha o cep corretamente';
 
-//     if(!this.cidade) return "Preencha a cidade corretamente";
-
-//     if(!this.estado) return "Preencha o estado corretamente";
-
-//     if (!validateEmail(this.clienteConta.cliente.email)) return "Digite um email válido";
-
-//     if(!validateCEP(this.cep)) return "Preencha o cep corretamente";
-
-
-//     return null;
-
-//   }
-
+    return null;
+  }
 }

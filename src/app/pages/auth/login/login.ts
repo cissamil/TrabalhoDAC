@@ -146,49 +146,4 @@ export class Login implements OnInit {
     return null;
   }
 
-  // handleResult(result : any, profile:ProfileOptions){
-
-  //   if(result === undefined){
-  //     this.responseModal = {
-  //       title: "Campo Inválido",
-  //       message: 'Usuário não encontrado. Verifique suas informações e tente novamente',
-  //       messageIcon: "error",
-  //       type: 'error'
-  //     };
-  //     return;
-  //   }
-
-  //   if(profile == ProfileOptions.Cliente){
-  //     const cliente = result as Cliente;
-
-  //     const conta = this.contaService.buscarPorCpfCliente(cliente.cpf).subscribe({
-
-  //     });
-  //     const movimentacoes = this.movimentacaoService.buscarMovimentacoesPorCPFCliente(cliente.cpf);
-
-  //     this.clienteSessionService.setCliente(result as Cliente);
-  //     this.clienteSessionService.setContaCliente(conta!);
-  //     this.clienteSessionService.setMovimentacoesCliente(movimentacoes!);
-
-  //     this.redirect('/cliente-main-page');
-  //     return;
-  //   }
-
-  //   if(profile == ProfileOptions.Gerente){
-  //     const gerente = result as GerenteAdmin;
-  //     this.gerenteService.setGerenteLogado(gerente);
-  //     this.redirect('/gerente-main-page');
-  //     return;
-  //   }
-
-  //   if(profile == ProfileOptions.Admin){
-  //     const gerente = result as GerenteAdmin;
-  //     this.gerenteService.setGerenteLogado(gerente).subscribe({
-  //       next:
-  //       this.redirect('/admin-main-page');
-  //     });
-  //     this.redirect('/admin-main-page');
-  //     return;
-  //   }
-  //}
 }

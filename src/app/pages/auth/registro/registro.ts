@@ -11,6 +11,7 @@ import { ClienteService } from '../../../core/services/cliente-services/cliente-
 import { HttpErrorResponse } from '@angular/common/http';
 import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import {ESTADOS_UF} from "../../../core/mock/estados-uf";
 
 @Component({
   selector: 'app-registro',
@@ -29,36 +30,8 @@ export class Registro{
   isLoading: boolean = false;
 
 
-  uf: string[] = [
-    'AC', 
-    'AL',
-    'AP',
-    'AM',
-    'BA',
-    'CE',
-    'DF',
-    'ES',
-    'GO',
-    'MA',
-    'MT',
-    'MS',
-    'MG',
-    'PA',
-    'PB',
-    'PR',
-    'PE',
-    'PI',
-    'RJ',
-    'RN',
-    'RS',
-    'RO',
-    'RR',
-    'SC',
-    'SP',
-    'SE',
-    'TO',
-  ];
-
+  uf: string [] = ESTADOS_UF;
+  
   responseModal: ResponseModal | null = null;
 
   cliente: Cliente = {

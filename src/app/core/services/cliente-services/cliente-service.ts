@@ -22,32 +22,7 @@ export class ClienteService {
     })
   }
 
-  // private clientesSubject: BehaviorSubject<Cliente[]>;
-  // public clientes$: Observable<Cliente[]>
-
   constructor(private httpClient: HttpClient){}
-
-
-
-
-
-
-    // localStorage[LS_CHAVE] = JSON.stringify(CLIENTES_MOCK);
-    //const clientes: Cliente[]= localStorage[LS_CHAVE] ? JSON.parse(localStorage[LS_CHAVE]) : [];
-    //this.clientesSubject = new BehaviorSubject<Cliente[]>(clientes);
-    //this.clientes$ = this.clientesSubject.asObservable();
-
-    //console.log(`MOCK de clientes inseridos, quantidade: ${clientes.length}`);
-  //}
-
-  // private atualizarDados(clientes: Cliente[]){
-
-  //   return this.httpClient.post<Cliente>(
-  //   this.CLIENTE_URL,
-  //   JSON.stringify(clientes),
-  //   this.httpOptions
-  // );
-  // }
 
   listarTodos(token: string) : Observable<ClienteOutdated[]>{
     return this.httpClient.get<ClienteOutdated[]>(
@@ -63,103 +38,29 @@ export class ClienteService {
       JSON.stringify(cliente),
       this.httpOptions
     );
-    // console.log(`
-    //   Cliente a inserir:
-    //   Nome: ${cliente.nome}
-    //   Email: ${cliente.email}
-    //   Senha: ${cliente.senha}
-    //   Salario: ${cliente.salario}
-    //   Endereço: ${cliente.endereco}
-    // `);
-
-    // try{
-
-    //   const clientes = this.listarTodos();
-    //   cliente.id = new Date().getTime();
-    //   clientes.push(cliente);
-    //   this.atualizarDados(clientes);
-
-    //   const gerente = this.contaService.buscarGerenteComMenosClientes();
-
-    //   this.enviarSolicitacaoDeConta(cliente, gerente);
-
-    //   console.log("Gerente com menos clientes:", gerente.nome);
-
-    // }catch(e){
-
-    //   console.error("Erro ao inserir usuário: ", e)
-
-    // }
-
   }
 
-  // private enviarSolicitacaoDeConta(cliente:Cliente, gerente: GerenteAdmin){
+  atualizar(cliente: Cliente, token: string) : Observable<ClienteOutdated>{
 
-  //   const pedidoCadastro: PedidoAutoCadastro ={
-  //     id: 0,
-  //     nomeCliente: cliente.nome,
-  //     nomeGerente: gerente.nome,
-  //     cpfCliente: cliente.cpf,
-  //     cpfGerente: gerente.cpf,
-  //     emailCliente: cliente.email,
-  //     salario: cliente.salario,
-  //     dataSolicitacao: new Date(),
-  //     status: 'PENDENTE'
-  //   }
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
 
-  //   console.log("[SERVICE] Pedido a ser enviado:", pedidoCadastro);
-
-  //   this.pedidoAutoCadastroService.inserir(pedidoCadastro);
-  // }
-
-  atualizar(cliente: Cliente) : Observable<ClienteOutdated>{
     return this.httpClient.put<ClienteOutdated>(
       this.CLIENTE_URL + "/" + cliente.clienteId,
       JSON.stringify(cliente),
-      this.httpOptions
+      {headers: header}
     );
   }
-    // console.log(`
-    //   Dados a atualizar:
-    //   Id: ${cliente.id}
-    //   Nome: ${cliente.nome}
-    //   Email: ${cliente.email}
-    //   Senha: ${cliente.senha}
-    //   Salario: ${cliente.salario}
-    //   Endereço: ${cliente.endereco}
-    // `);
-    //const clientes = this.listarTodos();
-
-    // const index = clientes.findIndex(c => c.id === cliente.id);
-    // if(index > -1){
-    //   clientes[index] = cliente;
-    //   this.atualizarDados(clientes);
-    // }
 
   remover(id: number) : Observable<ClienteOutdated>{
-    // const clientes = this.listarTodos()
-    //   .filter((c) => c.id !== id);
-      //this.atualizarDados(clientes);
 
     return this.httpClient.delete<ClienteOutdated>(
       this.CLIENTE_URL + "/" + id,
       this.httpOptions
     )
   }
-
-  // buscarClientePorEmail(email:string) : Observable<Cliente | undefined>{
-  //   return this.listarTodos().pipe(
-  //   map((clientes: Cliente[]) =>
-  //     clientes.find((cliente) =>
-  //       cliente.email === email)));
-  // }
-
-  // buscarClientePorCPF(cpf: string) : Observable<Cliente | undefined>{
-  //   return this.listarTodos().pipe(
-  //   map((clientes:Cliente[])=>
-  //       clientes.find((cliente) =>
-  //         cliente.cpf === cpf)));
-  //   }
 
   buscarClientePorEmailESenha(email: string, senha: string): Observable<ClienteOutdated> {
   return this.httpClient.get<ClienteOutdated>(this.CLIENTE_URL + "/login", {

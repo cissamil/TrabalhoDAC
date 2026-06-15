@@ -1,4 +1,4 @@
-<!-- <main>
+<main>
     <div class="title">
         <h1>Meu Perfil</h1>
         <p class="grey">Gerencie suas informações pessoais</p>
@@ -12,22 +12,22 @@
                 <p class="grey">Você pode alterar todos os dados, exceto o CPF</p>
             </div>
 
-            <form action="">
+            <form (ngSubmit)="atualizarDados()">
 
                 <div class="field full-length">
                     <label for="name">Nome Completo</label>
-                    <input type="text" [(ngModel)]="updatedCliente.nome" name="name" placeholder="Digite o seu nome completo">
+                    <input type="text" [(ngModel)]="updatedCliente.cliente.nome" name="name" placeholder="Digite o seu nome completo">
                 </div>
 
                 <div class="field">
                     <label>CPF</label>
-                    <input type="text" mask="000.000.000-00" [ngModel]="updatedCliente.cpf" name="cpf" disabled>
+                    <input type="text" mask="000.000.000-00" [ngModel]="updatedCliente.cliente.cpf" name="cpf" disabled>
                     <label class="cpf_block">O CPF não pode ser alterado</label>
                 </div>
 
                 <div class="field">
                     <label>E-mail</label>
-                    <input type="email" [(ngModel)]="updatedCliente.email" name="email" placeholder="seu@email.com">
+                    <input type="email" [(ngModel)]="updatedCliente.cliente.email" name="email" placeholder="seu@email.com">
                 </div>
 
                 <div class="field">
@@ -37,22 +37,31 @@
 
                 <div class="field">
                     <label>CEP</label>
-                    <input type="text" placeholder="00000-000" [dropSpecialCharacters]="false" [(ngModel)]="cep" name="cep" mask="00000-000">
+                    <input type="text" placeholder="00000-000" [(ngModel)]="updatedCliente.cliente.endereco.cep" name="cep" mask="00000-000">
                 </div>
 
                 <div class="field full-length">
                     <label>Endereço</label>
-                    <input type="text" placeholder="Rua, número, complemento" [(ngModel)]="rua"  name="rua">
+                    <input type="text" placeholder="Rua, complemento" [(ngModel)]="updatedCliente.cliente.endereco.logradouro"  name="logradouro">
+                </div>
+
+                <div class="field full-length">
+                    <label>Número</label>
+                    <input type="text" placeholder="798" [(ngModel)]="updatedCliente.cliente.endereco.numero"  name="numero">
                 </div>
 
                 <div class="field">
                     <label>Cidade</label>
-                    <input type="text" placeholder="Sua cidade" [(ngModel)]="cidade" name="cidade">
+                    <input type="text" placeholder="Sua cidade" [(ngModel)]="updatedCliente.cliente.endereco.cidade" name="cidade">
                 </div>
 
                 <div class="field">
                     <label>Estado</label>
-                    <input type="text" placeholder="UF" name="estado" [(ngModel)]="estado">
+                    <select type="text" [(ngModel)]="updatedCliente.cliente.endereco.estado" name="estado" placeholder="UF">
+                        @for (estado of uf; track $index) {
+                            <option value="{{estado}}">{{estado}}</option>
+                        }
+                    </select>
                 </div>
 
 
@@ -82,14 +91,19 @@
     
                 <div class="account-data-info">
                     <p class="info-title grey">Gerente</p>
-                    <p class="info-content">{{contaCliente.gerente}}</p>
+                    <p class="info-content">{{contaCliente.gerente.nomeGerente}}</p>
                 </div>
             </div>
 
         </div>
 
-        <button class="enviar full-length" type="submit" (click)="atualizarDados()">Atualizar Dados</button>
-
+        <button class="enviar full-length" type="submit" (click)="atualizarDados()"  [disabled]="isLoading">
+            @if(isLoading) {
+                <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+            } @else {
+                Atualizar Dados
+            }
+        </button>
 
     </div>
 
@@ -109,4 +123,4 @@
             </div>
         </div>
     }
-</main> -->
+</main>
