@@ -242,10 +242,10 @@ export class TransferenciaCliente implements OnInit{
         const backendError = erro.error as StandartErrorResponse;
 
         this.responseModal = {
-          title: backendError?.error || 'Erro na atualização de dados',
+          title: backendError?.error || 'Erro ao processar requisição',
           message:
             backendError?.message ||
-            'Ocorreu um erro ao tentar atualizar seus dados. Tente novamente.',
+            'Ocorreu um erro ao processar sua requisição. Tente novamente',
           messageIcon: 'error',
           type: 'error',
         };

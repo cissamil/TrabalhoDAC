@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ClienteConta } from '../../models/ClienteConta';
 import { GerenteAdmin } from '../../models/entities';
 import { ExtratoCliente } from '../../models/ExtratoCliente';
+import { GerenteContasPendentes } from '../../models/ContaGerente';
 
 @Injectable({
   providedIn: 'root',
@@ -58,16 +59,16 @@ export class CompositionService {
     );
   }
 
-  public getContasPendentes(token: string): Observable<ClienteConta[]> {
+  public getContasPendentes(token: string): Observable<GerenteContasPendentes> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`, // Garante que o gateway/microserviço receba a autenticação
+        'Authorization': `Bearer ${token}`, // Garante que o gateway/microserviço receba a autenticação
       }),
     };
 
-    return this.httpClient.get<ClienteConta[]>(
-      `${this.COMPOSITION_URL}/gerente/contas-pendentes`,
+    return this.httpClient.get<GerenteContasPendentes>(
+      `${this.COMPOSITION_URL}/contas-pendentes`,
       httpOptions,
     );
   }

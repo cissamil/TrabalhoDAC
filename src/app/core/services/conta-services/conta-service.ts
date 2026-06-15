@@ -1,21 +1,18 @@
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 //import { CONTAS_MOCK } from '../../mock/mock-data';
-import { GerenteService } from '../gerente-services/gerente-services';
-import { ClienteSessionService } from '../session-controller.service';
-import {
-  ContaOutdated,
-  ContaGerada,
-  GerenteAdmin,
-  Movimentacao,
-  Conta,
-} from '../../models/entities';
-import { MovimentacaoService } from '../movimentacoes-service/movimentacao-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ContaCliente } from '../../models/ContaGerente';
+import { ContaAprovar } from '../../models/ContaAprovar';
 import { ContaDeposito } from '../../models/ContaDeposito';
+import { ContaCliente } from '../../models/ContaGerente';
 import { ContaSaque } from '../../models/ContaSaque';
 import { ContaTransferencia } from '../../models/ContaTransferencia';
+import {
+  Conta,
+  ContaGerada,
+  ContaOutdated
+} from '../../models/entities';
+import { ContaRejeitar } from '../../models/ContaRejeitar';
 //import { ClienteService } from '../cliente-services/cliente-service';
 
 //const LS_CHAVE = 'contas';
@@ -80,6 +77,34 @@ export class ContaService {
     return this.httpClient.post<void>(
       this.CONTA_URL + '/transferir',
       JSON.stringify(conta),
+      {headers: header}
+    );
+  }
+
+  aprovarConta(contaId:string, contaAprovar: ContaAprovar, token: string): Observable<void> {
+
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.httpClient.post<void>(
+      `${this.CONTA_URL}/${contaId}/aprovar`,
+      JSON.stringify(contaAprovar),
+      {headers: header}
+    );
+  }
+
+  rejeitarConta(contaId:string, contaRejeitar: ContaRejeitar, token: string): Observable<void> {
+
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.httpClient.post<void>(
+      `${this.CONTA_URL}/${contaId}/rejeitar`,
+      JSON.stringify(contaRejeitar),
       {headers: header}
     );
   }

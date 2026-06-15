@@ -11,9 +11,9 @@ function parseUserRoles(user) {
 function requireRole(allowedRoles) {
 	return (req, res, next) => {
 		if (!allowedRoles || allowedRoles.length === 0) return next(); //nenhuma rota definida, qualquer um pode eacessar
-
+		
 		const user = req.user;
-
+		
 		if (!user) {
 			return res.status(403).json({ error: 'Forbidden', message: 'Usuário não autenticado' }); // sem verifyJWT  
 		}

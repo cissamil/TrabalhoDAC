@@ -1,127 +1,212 @@
-import { Router } from '@angular/router';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ResponseModal } from '../../../core/models/response-modal';
-import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
-import { GerenteAdmin } from '../../../core/models/entities';
 import { MatIconModule } from '@angular/material/icon';
-import { GerenteAutocadastroService } from '../../../core/services/gerente-services/gerente-autocadastro.service';
-import { ContaCliente, GerenteContasPendentes } from '../../../core/models/ContaGerente';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Router } from '@angular/router';
+import { ContaAprovar } from '../../../core/models/ContaAprovar';
+import {ContaPendente, GerenteContasPendentes} from '../../../core/models/ContaGerente';
+import { ResponseModal } from '../../../core/models/response-modal';
+import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
 import { AuthService } from '../../../core/services/auth-services/auth-services';
+import { CompositionService } from '../../../core/services/compositon-services/composition-services';
+import { ContaService } from '../../../core/services/conta-services/conta-service';
+import { ContaRejeitar } from '../../../core/models/ContaRejeitar';
 
 @Component({
   selector: 'app-gerente-dashboard',
-  imports: [DatePipe, DecimalPipe, MatIconModule],
+  imports: [
+    CurrencyPipe,
+    MatIconModule,
+    MatProgressSpinner,
+  ],
   templateUrl: './gerente-dashboard.html',
-  styleUrls:[ './gerente-dashboard.css', '../../shared/css/responseModal.css'],
+  styleUrls: ['./gerente-dashboard.css', '../../shared/css/responseModal.css'],
 })
-export class GerenteDashboard  implements OnInit{
+export class GerenteDashboard implements OnInit {
   constructor(
-    private router:Router,
-    private gerenteService: GerenteService,
-    private gerenteAutocadastroService: GerenteAutocadastroService,
+    private router: Router,
     private cdr: ChangeDetectorRef,
-    private authService: AuthService
+    private authService: AuthService,
+    private contaService: ContaService,
+    private compositionService: CompositionService,
   ) {}
 
-  tokenJWT='';
-
-  pedidosPendentes: GerenteContasPendentes[]=[];
-  pedidosProcessados: GerenteContasPendentes[]=[];
-  pedidoEmRecusa: GerenteContasPendentes | null = null;
+  gerenteContasPendentes!: GerenteContasPendentes;
+  nomeGerente: string = '';
+  contasPendentes: ContaPendente[] = [];
+  contaEmRecusa: ContaPendente | null = null;
   motivoRecusaInput = '';
-  contasGerente: GerenteContasPendentes[]=[];
+  contasGerente: GerenteContasPendentes[] = [];
 
-  // Pega o gerente logado atualmente da sessão
-  gerenteLogado!: GerenteAdmin;
   responseModal: ResponseModal | null = null;
+  isLoading: boolean = false;
+
+  changeIsLoading() {
+    this.isLoading = !this.isLoading;
+    this.cdr.detectChanges();
+  }
+
+  getUpdatedGerenteData() {
+    const token = this.authService.usuarioLogado;
+    if (!token) {
+      return;
+    }
+
+    this.compositionService.getContasPendentes(token).subscribe({
+      next: (gerenteContasPendentes) => {
+        this.gerenteContasPendentes = gerenteContasPendentes;
+
+        this.fillGerenteContasPendentes(gerenteContasPendentes);
+      },
+    });
+  }
+
+  fillGerenteContasPendentes(dadosCarregados: GerenteContasPendentes) {
+    this.gerenteContasPendentes = dadosCarregados;
+    this.incializarDashboard();
+  }
 
   ngOnInit(): void {
-    this.tokenJWT=this.authService.usuarioLogado || '';
-    const dadosGerente = this.gerenteService.GerenteLogado;
+    this.isLoading = true;
+    this.getUpdatedGerenteData();
 
-    if(dadosGerente){
-      this.gerenteLogado=dadosGerente;
-      this.contasGerente=dadosGerente.contas || [];
+    this.isLoading = false;
+  }
 
-      this.pedidosPendentes=this.contasGerente.filter(
-      (conta: GerenteContasPendentes)=> !conta.contaId
-    );
+  incializarDashboard() {
+    this.nomeGerente = this.gerenteContasPendentes.gerente.nome;
+    this.contasPendentes = this.gerenteContasPendentes.contas;
 
-    this.pedidosProcessados=(dadosGerente.contas || []).filter(
-      (conta: GerenteContasPendentes)=> conta.contaId !== null
-    );
     this.cdr.detectChanges();
-    }else{
-      this.router.navigate(['/login']);
+  }
+
+  aprovarPedido(conta: ContaPendente): void {
+    this.changeIsLoading();
+
+    const token = this.authService.usuarioLogado;
+    if (!token) {
+      return;
     }
+
+    const clienteSalario: ContaAprovar = {
+      clienteSalario: conta.clienteSalario,
+    };
+
+    this.contaService
+      .aprovarConta(conta.contaId, clienteSalario, token)
+      .subscribe({
+        next: () => {
+          setTimeout(() => {
+            this.getUpdatedGerenteData();
+
+            this.responseModal = {
+              title: 'Conta Ativada!',
+              message:
+                'O status mudou para APROVADA e as credenciais foram geradas.',
+              messageIcon: 'check',
+              type: 'success',
+            };
+
+            this.changeIsLoading();
+          }, 500);
+        },
+        error: (erro: HttpErrorResponse) => {
+          console.error('Erro Interceptado: ', erro);
+
+          const backendError = erro.error as StandartErrorResponse;
+
+          this.responseModal = {
+            title: backendError?.error || 'Erro ao processar requisição',
+            message:
+              backendError?.message ||
+              'Ocorreu um erro ao processar sua requisição. Tente novamente',
+            messageIcon: 'error',
+            type: 'error',
+          };
+
+          this.changeIsLoading();
+        },
+      });
   }
 
-//---------geters e setters de gerente -----------
-  get nomeGerente(): string {
-    return this.gerenteLogado?.nome || '';
-  }
-
-
-  aprovarPedido(idCliente: string): void {
-    this.gerenteAutocadastroService.aprovarConta(idCliente, this.tokenJWT).subscribe({
-      next: ()=>{
-        this.responseModal={
-          title: "Conta Ativada!",
-          message: "O status mudou para APROVADA e as credenciais foram geradas.",
-          messageIcon: "check",
-          type: 'success'
-        };
-        //remove visualmente de pendentes
-        this.pedidosPendentes=this.pedidosPendentes.filter(p=>p.clienteId !== idCliente);
-        const contaTratada=this.contasGerente.find(c=> c.clienteId === idCliente);
-        if(contaTratada){
-          contaTratada.statusConta='CONTA_APROVADA' as any;
-          this.pedidosProcessados=[...this.pedidosProcessados, contaTratada];
-        }
-      },
-      error: (err)=>console.error("Erro ao aprovar conta:", err)
-
-    });
-
-  }
-
-  closeModal(){
+  closeModal() {
     this.responseModal = null;
   }
 
-
-  iniciarRecusa(pedido: GerenteContasPendentes): void {
-    this.pedidoEmRecusa = pedido;
+  iniciarRecusa(pedido: ContaPendente): void {
+    this.contaEmRecusa = pedido;
     this.motivoRecusaInput = '';
   }
 
   cancelarRecusa(): void {
-    this.pedidoEmRecusa = null;
+    this.contaEmRecusa = null;
     this.motivoRecusaInput = '';
   }
 
-  confirmarRecusa():void{
-    if (!this.pedidoEmRecusa || !this.motivoRecusaInput.trim()) return;
-    const idCliente = this.pedidoEmRecusa.clienteId;
-    this.gerenteAutocadastroService.recusarConta(idCliente, this.motivoRecusaInput, this.tokenJWT).subscribe({
-      next: () => {
+  confirmarRecusa(): void {
+    if (!this.contaEmRecusa) return;
+
+    const token = this.authService.usuarioLogado;
+    if (!token) {
+      return;
+    }
+    
+    const motivoRecusa = this.motivoRecusaInput.trim();
+    
+    if (!motivoRecusa) {
       this.responseModal = {
-        title: "Cadastro Recusado",
-        message: "O status da conta foi alterado para REJEITADA.",
-        messageIcon: "check",
-        type: 'success'
+        title: 'Campo incompleto',
+        message: 'Preencha o motivo da recusa',
+        messageIcon: 'error',
+        type: 'error',
       };
-      this.pedidosPendentes= this.pedidosPendentes.filter(p => p.clienteId !== idCliente);
-      const contaTratada=this.contasGerente.find(c=> c.clienteId === idCliente);
-        if(contaTratada){
-          contaTratada.statusConta= 'CONTA_REJEITADA' as any;
-          this.pedidosProcessados=[...this.pedidosProcessados, contaTratada];
-        }
-      this.cancelarRecusa();
-    },
-    error: (err) => console.error("Erro ao recusar conta:", err)
-    });
+      
+      return;
+    }
+    
+    this.changeIsLoading();
+
+    const contaRecusar: ContaRejeitar = {
+      motivoRecusa: motivoRecusa,
+    };
+
+    this.contaService
+      .rejeitarConta(this.contaEmRecusa.contaId, contaRecusar, token)
+      .subscribe({
+        next: () => {
+          setTimeout(() => {
+            this.getUpdatedGerenteData();
+
+            this.responseModal = {
+              title: 'Cliente Recusado',
+              message: 'E-mail com motivo enviado com sucesso!',
+              messageIcon: 'check',
+              type: 'success',
+            };
+
+            this.contaEmRecusa = null;
+
+            this.changeIsLoading();
+          }, 500);
+        },
+        error: (erro: HttpErrorResponse) => {
+          console.error('Erro Interceptado: ', erro);
+
+          const backendError = erro.error as StandartErrorResponse;
+
+          this.responseModal = {
+            title: backendError?.error || 'Erro ao processar requisição',
+            message:
+              backendError?.message ||
+              'Ocorreu um erro ao processar sua requisição. Tente novamente',
+            messageIcon: 'error',
+            type: 'error',
+          };
+
+          this.changeIsLoading();
+        },
+      });
   }
 
   atualizarMotivoRecusa(valor: string): void {

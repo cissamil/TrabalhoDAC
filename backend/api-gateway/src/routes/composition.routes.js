@@ -10,7 +10,7 @@ function compositionRouter(services) {
 		target: services.compositionService,
 		errorMessage: '[Gateway] Erro no pedido de contas:',
 		onProxyReq: (proxyReq, req) => {
-			const gerenteId = req.user?.id || 'Sistema';
+			const gerenteId = req.user?.sub || 'Sistema';
 			proxyReq.setHeader('X-Gerente-Id', gerenteId);
 		}
 	}));

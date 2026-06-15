@@ -17,12 +17,12 @@ router.get('/', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute
 		
 }));
 
-	router.post('/:id/aprovar', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+	router.post('/:id/aprovar', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
 		target: services.contaService,
 		errorMessage: '[Gateway] Erro na aprovação:'
 	}));
 
-	router.post('/:id/rejeitar', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+	router.post('/:id/rejeitar', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
 		target: services.contaService,
 		errorMessage: '[Gateway] Erro na rejeição:'
 	}));

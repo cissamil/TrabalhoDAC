@@ -11,29 +11,35 @@
           <tr>
             <th>CPF</th>
             <th>Nome</th>
+            <th>Salário</th>
             <th>Aprove ou rejeite</th>
           </tr>
         </thead>
         <tbody>
-          @if (pedidosPendentes.length === 0) {
+          @if (contasPendentes.length === 0) {
             <tr>
               <td colspan="3" class="empty-state">Nenhum pedido pendente de aprovação.</td>
             </tr>
           }
 
-          @for (pedido of pedidosPendentes; track pedido.clienteId) {
+          @for (conta of contasPendentes; track conta.clienteId) {
             <tr>
-              <td>{{ formatarCpf(pedido.clienteCpf) }}</td>
-              <td>{{ pedido.clienteNome }}</td>
+              <td>{{ formatarCpf(conta.clienteCpf) }}</td>
+              <td>{{ conta.clienteNome }}</td>
+              <td>{{ conta.clienteSalario | currency: 'R$'}}</td> 
 
-              <td class="actions-cell">
-                <button class="btn btn-approve" type="button" (click)="aprovarPedido(pedido.clienteId)">
-                  Aprovar
-                </button>
-                <button class="btn btn-reject" type="button" (click)="iniciarRecusa(pedido)">
-                  Recusar
-                </button>
-              </td>
+              @if(isLoading){
+                <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+              } @else {
+                <td class="actions-cell" >
+                  <button class="btn btn-approve" type="button" (click)="aprovarPedido(conta)">
+                    Aprovar
+                  </button>
+                  <button class="btn btn-reject" type="button" (click)="iniciarRecusa(conta)">
+                    Recusar
+                  </button>
+                </td>
+              }
             </tr>
           }
         </tbody>
@@ -41,50 +47,13 @@
     </div>
   </div>
 
-  @if (pedidosProcessados.length > 0) {
-    <div class="section">
-      <h2>Histórico de pedidos</h2>
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>CPF</th>
-              <th>Nome</th>
-              <th>Status</th>
-              <th>Data/Hora Decisão</th>
-              <th>Conta</th>
-              <th>Motivo</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (pedido of pedidosProcessados; track pedido.clienteId) {
-              <tr>
-                <td>{{ formatarCpf(pedido.clienteCpf) }}</td>
-                <td>{{ pedido.clienteNome }}</td>
-                <td>
-                  @if (pedido.statusConta === 'CONTA_APROVADA' || pedido.contaId === 'APROVADO') {
-                    <span class="badge approved">Aprovado</span>
-                  } @else {
-                    <span class="badge rejected">Recusado</span>
-                  }
-                </td>
-                <td>{{ pedido.contaId === 'APROVADO' || pedido.contaId === 'REJEITADO' ? '-' : pedido.contaId }}</td>
-                <td>{{ pedido.motivoRecusa ?? '-' }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
-  }
-
-  @if (pedidoEmRecusa) {
+    @if (contaEmRecusa) {
     <div class="modal-backdrop" (click)="cancelarRecusa()">
       <div class="modal" (click)="$event.stopPropagation()">
         <h3>Recusar Autocadastro</h3>
         <p>
           Informe o motivo da recusa para o cliente
-          <strong>{{ pedidoEmRecusa.clienteNome }}</strong>.
+          <strong>{{ contaEmRecusa.clienteNome }}</strong>.
         </p>
 
         <textarea
@@ -101,6 +70,7 @@
       </div>
     </div>
   }
+
 
   @if(responseModal != null) {
     <div class="modal-overlay">

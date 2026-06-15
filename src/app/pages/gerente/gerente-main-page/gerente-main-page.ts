@@ -29,29 +29,12 @@ export class GerenteMainPage implements  OnInit {
       this.logOut();
       return;
     }
-
-    this.compositionService.getGerente(token).subscribe({
-      next:(responseBody)=>{
-        if(responseBody){
-          this.gerenteService.setGerente(responseBody);
-          this.cdr.detectChanges();
-        }else {
-          this.logOut();
-        }
-      },
-      error: (err) => {
-        console.error(
-          'Erro crítico ao buscar dados do gerente no Gateway:',
-          err,
-        );
-        this.logOut();
-      },
-    })
   }
 
   logOut(){
     this.gerenteService.clearGerente();
     this.gerenteService.logoutGerente();
+    this.authService.clearUsuarioLogado();
     this.router.navigate(['/login']);
   }
 }
