@@ -80,4 +80,14 @@
       </div>
     </div>
   }
+    
+  @if(isLoading) {
+    <div class="modal-overlay">
+      <div class="modal-card">
+          <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+
+          <p>Carregando todos os seus clientes</p>
+      </div>
+    </div>
+  }
 </section>

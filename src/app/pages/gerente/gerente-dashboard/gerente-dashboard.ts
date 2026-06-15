@@ -48,6 +48,7 @@ export class GerenteDashboard implements OnInit {
   }
 
   getUpdatedGerenteData() {
+    this.changeIsLoading();
     const token = this.authService.usuarioLogado;
     if (!token) {
       return;
@@ -60,6 +61,8 @@ export class GerenteDashboard implements OnInit {
         this.fillGerenteContasPendentes(gerenteContasPendentes);
       },
     });
+
+    this.changeIsLoading();
   }
 
   fillGerenteContasPendentes(dadosCarregados: GerenteContasPendentes) {
@@ -68,10 +71,7 @@ export class GerenteDashboard implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isLoading = true;
     this.getUpdatedGerenteData();
-
-    this.isLoading = false;
   }
 
   incializarDashboard() {

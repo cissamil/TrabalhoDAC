@@ -1,9 +1,8 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 import { AuthService } from '../../../core/services/auth-services/auth-services';
-import { CompositionService } from '../../../core/services/compositon-services/composition-services';
+import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 
 @Component({
   //limpo
@@ -16,9 +15,7 @@ export class GerenteMainPage implements  OnInit {
   constructor(
     private gerenteService: GerenteService,
     private authService: AuthService,
-    private cdr : ChangeDetectorRef,
     private router: Router,
-    private compositionService: CompositionService,
 
   ){}
 

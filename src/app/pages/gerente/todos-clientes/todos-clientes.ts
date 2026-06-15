@@ -12,6 +12,7 @@ import { ResponseModal } from '../../../core/models/response-modal';
 import { HttpErrorResponse } from '@angular/common/http';
 import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
 import { MatIcon } from "@angular/material/icon";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 interface ClienteTabela {
   cpf: string;
@@ -26,7 +27,7 @@ interface ClienteTabela {
 
 @Component({
   selector: 'app-todos-clientes',
-  imports: [FormsModule, RouterLink, NgxMaskDirective, MatIcon],
+  imports: [FormsModule, RouterLink, NgxMaskDirective, MatIcon, MatProgressSpinner],
   templateUrl: './todos-clientes.html',
   styleUrls: ['./todos-clientes.css', '../../shared/css/responseModal.css'],
 })

@@ -14,8 +14,8 @@
         <p class="position">{{ i + 1 }}º Lugar</p>
 
         <h3>{{ cliente.nome }}</h3>
-        <p class="cpf">{{ formatarCpf(cliente.cpf) }}</p>
-        <p class="location">{{ cliente.cidade }} - {{ cliente.estado }}</p>
+        <p class="cpf"> {{ formatarCpf(cliente.cpf) }}</p>
+        <p class="location">{{ cliente.endereco.cidade }} - {{ cliente.endereco.estado }}</p>
 
         <hr />
 
@@ -24,4 +24,31 @@
       </article>
     }
   </div>
+
+  @if(responseModal != null) {
+    <div class="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-icon-container" [class]="responseModal.type">
+          <mat-icon>{{ responseModal.messageIcon }}</mat-icon>
+        </div>
+
+        <div class="modal-content">
+          <h3>{{ responseModal.title || 'Aviso' }}</h3>
+          <p>{{ responseModal.message }}</p>
+        </div>
+
+        <button class="modal-button" (click)="closeModal()">Entendido</button>
+      </div>
+    </div>
+  }
+
+  @if(isLoading) {
+    <div class="modal-overlay">
+      <div class="modal-card">
+          <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+
+          <p>Carregando os melhores clientes</p>
+      </div>
+    </div>
+  }
 </section>

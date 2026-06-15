@@ -88,4 +88,14 @@
       </div>
     </div>
   }
+
+  @if(isLoading) {
+    <div class="modal-overlay">
+      <div class="modal-card">
+          <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+
+          <p>Procurando contas pendentes</p>
+      </div>
+    </div>
+  }
 </section>
