@@ -21,7 +21,7 @@
         @if(isLoading) {
          <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
         } @else {
-         Confirmar Depósito
+         Confirmar Saque
         }
       </button>
 
@@ -34,20 +34,20 @@
 
         @for(valorInfo of listaValoresInfo; track $index){
 
-        @if(valorInfo.reference != 'valorS' && valorInfo.reference !== 'novoS'){
-         <p class="cardInfo">{{valorInfo.title}}</p>
-         <span class={{valorInfo.reference}}>R$ {{valorInfo.value | number:'1.2-2'}}</span>
-        }
+          @if(valorInfo.reference != 'valorS' && valorInfo.reference !== 'novoS'){
+            <p class="cardInfo">{{valorInfo.title}}</p>
+            <span class={{valorInfo.reference}}>R$ {{valorInfo.value | number:'1.2-2'}}</span>
+          }
 
-        @if(valorInfo.reference == 'valorS' && valorASacar > 0){
-         <p class="cardInfo">{{valorInfo.title}}</p>
-         <span class="redInfo">R$ {{valorInfo.value | number:'1.2-2'}}</span>
-        }
+          @if(valorInfo.reference == 'valorS' && valorASacar > 0){
+            <p class="cardInfo">{{valorInfo.title}}</p>
+            <span class="redInfo">R$ {{valorInfo.value | number:'1.2-2'}}</span>
+          }
 
-        @if(valorInfo.reference == 'novoS' && valorASacar > 0){
-         <p class="cardInfo">{{valorInfo.title}}</p>
-         <span class="redInfo">R$ {{valorInfo.value | number:'1.2-2'}}</span>
-        }
+          @if(valorInfo.reference == 'novoS' && valorASacar > 0){
+            <p class="cardInfo">{{valorInfo.title}}</p>
+            <span class="redInfo">R$ {{valorInfo.value | number:'1.2-2'}}</span>
+          }
         }
 
       </div>

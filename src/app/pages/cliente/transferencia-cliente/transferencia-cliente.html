@@ -11,17 +11,26 @@
       <p class="cardInfo">Número da conta com 4 dígitos</p>
       @if(mensagem != null && tipoErro == 'erroCONTA'){
 
-        <p class={{corMensagem}}> {{ mensagem }} </p>
+      <p class={{corMensagem}}> {{ mensagem }} </p>
       }
       <label for="valorTransferência">Valor de Transferência(R$)</label>
-      <input [(ngModel)]="valorTransferencia" type="text" (input)="handleValorTransferencia($event)" name="valorTransferencia" id="valorTransferencia">
+      <input [(ngModel)]="valorTransferencia" type="text" (input)="handleValorTransferencia($event)"
+        name="valorTransferencia" id="valorTransferencia">
       <p class="cardInfo">O valor será transferido imediatamente</p>
 
       @if(mensagem != null && tipoErro == 'erroTR'){
 
-        <p class={{corMensagem}}> {{ mensagem }} </p>
+      <p class={{corMensagem}}> {{ mensagem }} </p>
       }
-      <button (click)="transferir()" id="btnTransferir">Confirmar Transferência</button>
+
+
+      <button id="btnTransferir" type="submit" (click)="transferir()" [disabled]="isLoading">
+        @if(isLoading) {
+         <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+        } @else {
+         Confirmar Transferencia
+        }
+      </button>
     </div>
 
     <div class="card">
@@ -50,4 +59,21 @@
       </div>
     </div>
   </div>
+
+  @if(responseModal != null) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon-container" [class]="responseModal.type">
+        <mat-icon>{{ responseModal.messageIcon }}</mat-icon>
+      </div>
+
+      <div class="modal-content">
+        <h3>{{ responseModal.title || 'Aviso' }}</h3>
+        <p>{{ responseModal.message }}</p>
+      </div>
+
+      <button class="modal-button" (click)="closeModal()">Entendido</button>
+    </div>
+  </div>
+  }
 </main>

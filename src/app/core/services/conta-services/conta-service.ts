@@ -14,6 +14,8 @@ import { MovimentacaoService } from '../movimentacoes-service/movimentacao-servi
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ContaCliente } from '../../models/ContaGerente';
 import { ContaDeposito } from '../../models/ContaDeposito';
+import { ContaSaque } from '../../models/ContaSaque';
+import { ContaTransferencia } from '../../models/ContaTransferencia';
 //import { ClienteService } from '../cliente-services/cliente-service';
 
 //const LS_CHAVE = 'contas';
@@ -54,7 +56,7 @@ export class ContaService {
     );
   }
 
-  sacarValor(conta: ContaDeposito, token: string): Observable<void> {
+  sacarValor(conta: ContaSaque, token: string): Observable<void> {
 
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -63,6 +65,20 @@ export class ContaService {
 
     return this.httpClient.post<void>(
       this.CONTA_URL + '/sacar',
+      JSON.stringify(conta),
+      {headers: header}
+    );
+  }
+
+  transferirValor(conta: ContaTransferencia, token: string): Observable<void> {
+
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.httpClient.post<void>(
+      this.CONTA_URL + '/transferir',
       JSON.stringify(conta),
       {headers: header}
     );

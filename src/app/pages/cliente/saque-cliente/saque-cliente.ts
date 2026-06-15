@@ -1,27 +1,19 @@
+import { DecimalPipe } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  ClienteOutdated,
-  ContaOutdated,
-  Movimentacao,
-} from '../../../core/models/entities';
-import { ClienteSessionService } from '../../../core/services/session-controller.service';
-import { Router } from '@angular/router';
+import { MatIcon } from "@angular/material/icon";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { ClienteConta } from '../../../core/models/ClienteConta';
+import { ContaCliente } from '../../../core/models/ContaGerente';
+import { ContaSaque } from '../../../core/models/ContaSaque';
+import { ResponseModal } from '../../../core/models/response-modal';
+import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
+import { AuthService } from '../../../core/services/auth-services/auth-services';
+import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { CompositionService } from '../../../core/services/compositon-services/composition-services';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
-import { DecimalPipe } from '@angular/common';
-import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
-import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
-import { AuthService } from '../../../core/services/auth-services/auth-services';
-import { CompositionService } from '../../../core/services/compositon-services/composition-services';
-import { ResponseModal } from '../../../core/models/response-modal';
-import { ContaCliente } from '../../../core/models/ContaGerente';
-import { ClienteConta } from '../../../core/models/ClienteConta';
-import { ContaSaque } from '../../../core/models/ContaSaque';
-import { HttpErrorResponse } from '@angular/common/http';
-import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
-import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { MatIcon } from "@angular/material/icon";
 
 interface valorInfo {
   title: string;

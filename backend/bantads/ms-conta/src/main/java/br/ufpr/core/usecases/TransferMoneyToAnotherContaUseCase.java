@@ -55,7 +55,7 @@ public class TransferMoneyToAnotherContaUseCase implements TransferMoneyToAnothe
       saveContaOutputPort.save(contaToTransfer);
       Movimentacao movimentacao =  registerMovimentacao(contaToWithdraw, contaToTransfer, valueToTransfer);
 
-      publishSyncContaEventOutputPort.publish(contaToWithdraw, movimentacao);
+      publishSyncContaEventOutputPort.publish(contaToWithdraw, null);
       publishSyncContaEventOutputPort.publish(contaToTransfer, movimentacao);
   }
 
