@@ -40,7 +40,7 @@ export class ClienteMainPage implements OnInit {
   ) {}
 
   cliente!: ClienteOutdated;
-  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Transferencia;
+  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Extrato;
 
   isLoading:boolean = true;
 

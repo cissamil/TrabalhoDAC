@@ -85,6 +85,10 @@ public class CompositionController {
     @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim
   ){
 
+    System.out.println("Pegando o extrato do cliente: " + clienteId);
+    System.out.println("Data Início: " + dataInicio + " Data Fim: " + dataFim);
+
+
     ConsultBankStatementInputData inputData = new ConsultBankStatementInputData();
 
     inputData.setClienteId(clienteId);
@@ -94,6 +98,8 @@ public class CompositionController {
     ClienteMovimentacoesDashboardOutputData outputData = groupClienteMovimentacoesInputPort.execute(inputData);
 
     ClienteMovimentacoesDashboardResponse response = clienteMovimentacoesDashboardAssembler.assemble(outputData);
+
+    System.out.println("Response: " + response);
 
     return ResponseEntity.ok(response);
   }

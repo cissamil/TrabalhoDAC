@@ -88,6 +88,8 @@ public class ContaController {
     @RequestParam("dataFim") LocalDate dataFim
   ){
 
+    System.out.println("Data Início: " + dataInicio + "Data Fim: " + dataFim);
+
     ConsultBankStatementInputData inputData = new ConsultBankStatementInputData(
       clienteId,
       dataInicio,
@@ -98,6 +100,7 @@ public class ContaController {
 
     List<MovimentacaoResponse> movimentacaoResponseList = movimentacoes.stream().map(movimentacaoResponseMapper::toResponse).toList();
 
+    System.out.println("Movimentações: " + movimentacoes);
     return ResponseEntity.ok(movimentacaoResponseList);
   }
 

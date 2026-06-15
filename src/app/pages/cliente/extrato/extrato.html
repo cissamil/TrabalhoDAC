@@ -25,7 +25,7 @@
     </div>
 
 
-    <!-- <button (click)="tirarExtrato()" class="btnNeutro">Consultar Extrato</button> -->
+    <button (click)="tirarExtrato()" class="btnNeutro">Consultar Extrato</button>
   </div>
 
   @if(dataInicio && dataFim){
@@ -50,21 +50,21 @@
             </div>
             
             <div class="movimentacoes-lista">
-              @for (mov of dia.value.movimentacoes; track mov.id) {
+              @for (mov of dia.value.movimentacoes; track mov.movimentacaoId) {
                 <div class="movimentacao-card" [ngClass]="getClasseMovimentacao(mov)">
                   <div class="status-indicator"></div>
                   
                   <div class="mov-main-info">
                     <div class="mov-primario">
-                      <span class="hora">{{ mov.data_hora | date:'HH:mm' }}</span>
+                      <span class="hora">{{ mov.dataHora | date:'HH:mm' }}</span>
                       <span class="operacao-nome">
-                        @if(mov.tipo === 'transferencia'){ TRANSFERÊNCIA }
-                        @else if (mov.tipo === 'deposito') { DEPÓSITO } 
+                        @if(mov.tipoMovimentacao === 'TRANSFERENCIA'){ TRANSFERÊNCIA }
+                        @else if (mov.tipoMovimentacao === 'DEPOSITO') { DEPÓSITO } 
                         @else { SAQUE }
                       </span>
                     </div>
                     
-                    @if (mov.tipo === 'transferencia') {
+                    @if (mov.tipoMovimentacao === 'TRANSFERENCIA') {
                       <div class="mov-detalhe">
                         <mat-icon class="icon-small">swap_horiz</mat-icon>
                         <!-- <span>{{ mov.cpfClienteOrigem === cliente.cpf ? 'Para: ' + mov.clienteDestino : 'De: ' + mov.clienteOrigem }}</span> -->
