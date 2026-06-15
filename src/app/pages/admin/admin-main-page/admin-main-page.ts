@@ -44,7 +44,7 @@ export class AdminMainPage implements OnInit{
     return AdminNavigationOptions;
   }
 
-  navigationOption: AdminNavigationOptions = AdminNavigationOptions.Dashboard;
+  navigationOption: AdminNavigationOptions = AdminNavigationOptions.RelatorioClientes;
 
   changeNavigationOptions(option: AdminNavigationOptions){
 

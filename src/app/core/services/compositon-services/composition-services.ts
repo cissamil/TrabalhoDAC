@@ -8,6 +8,7 @@ import { GerenteContasPendentes } from '../../models/ContaGerente';
 import { ClienteGerente } from '../../models/ClienteGerente';
 import { MelhoresClientes } from '../../models/MelhoresClientes';
 import { GerenteResumo } from '../../models/GerenteResumo';
+import { ClienteRelatorio } from '../../models/RelatorioClientes';
 
 @Injectable({
   providedIn: 'root',
@@ -76,7 +77,7 @@ export class CompositionService {
     );
   }
 
-  public getRelatorioClientes(token: string): Observable<ClienteConta[]> {
+  public getRelatorioClientes(token: string): Observable<ClienteRelatorio[]> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -84,7 +85,7 @@ export class CompositionService {
       }),
     };
 
-    return this.httpClient.get<ClienteConta[]>(
+    return this.httpClient.get<ClienteRelatorio[]>(
       `${this.COMPOSITION_URL}/relatorio-clientes`,
       httpOptions,
     );

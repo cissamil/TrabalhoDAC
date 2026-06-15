@@ -4,61 +4,63 @@
         <h1>Relatorio de Clientes</h1>
         <p class="grey">Listagem completa de todos os clientes do banco</p>
     </div>
-    
+
     <div class="relatorio-container">
-    
+
         <div class="clients">
             <div class="clients-header">
                 <p>Lista Completa de Clientes</p>
                 <p class="grey">Ordenados por nome em ordem crescente</p>
             </div>
             <div class="clients-list">
-                
-                <table mat-table [dataSource]="CLIENTS_TABLE" class="mat-elevation-z2">
+
+                <table mat-table [dataSource]="clientes" class="mat-elevation-z2">
 
                     <ng-container matColumnDef="CPF Cliente">
                         <th mat-header-cell *matHeaderCellDef> CPF Cliente </th>
-                        <td mat-cell *matCellDef="let element;">{{element.cpfCliente | mask:'000.000.000-00'}}</td>
+                        <td mat-cell *matCellDef="let element;">{{element.cliente.cpf | mask:'000.000.000-00'}}</td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Nome Cliente" >
+                    <ng-container matColumnDef="Nome Cliente">
                         <th mat-header-cell *matHeaderCellDef> Nome Cliente </th>
-                        <td mat-cell *matCellDef="let element"> {{element.nomeCliente}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.cliente.nome}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="E-mail" >
+                    <ng-container matColumnDef="E-mail">
                         <th mat-header-cell *matHeaderCellDef> E-mail </th>
-                        <td mat-cell *matCellDef="let element"> {{element.emailCliente}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.cliente.email}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Salario" >
+                    <ng-container matColumnDef="Salario">
                         <th mat-header-cell *matHeaderCellDef> Salário </th>
-                        <td mat-cell *matCellDef="let element"> R$ {{element.salarioCliente | number:'1.2-2'}} </td>
+                        <td mat-cell *matCellDef="let element"> R$ {{element.cliente.salario | number:'1.2-2'}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="N Conta" >
+                    <ng-container matColumnDef="N Conta">
                         <th mat-header-cell *matHeaderCellDef> N° Conta </th>
-                        <td mat-cell *matCellDef="let element"> {{element.numeroContaCliente}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.conta.numeroConta}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Saldo" >
+                    <ng-container matColumnDef="Saldo">
                         <th mat-header-cell *matHeaderCellDef> Saldo </th>
-                        <td mat-cell *matCellDef="let element" class="{{element.colorSaldo}}"> R$ {{element.saldoContaCliente | number:'1.2-2'}} </td>
+                        <td mat-cell *matCellDef="let element" class="{{element.colorSaldo}}"> R$
+                            {{element.conta.saldo | number:'1.2-2'}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Limite" >
+                    <ng-container matColumnDef="Limite">
                         <th mat-header-cell *matHeaderCellDef> Limite </th>
-                        <td mat-cell *matCellDef="let element" class="blue"> R$ {{element.limiteContaCliente | number:'1.2-2'}} </td>
+                        <td mat-cell *matCellDef="let element" class="blue"> R$ {{element.conta.limite |
+                            number:'1.2-2'}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="CPF Gerente" >
+                    <ng-container matColumnDef="CPF Gerente">
                         <th mat-header-cell *matHeaderCellDef> CPF Gerente </th>
-                        <td mat-cell *matCellDef="let element"> {{element.cpfGerente | mask:'000.000.000-00'}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.gerente.cpf | mask:'000.000.000-00'}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="Nome Gerente" >
+                    <ng-container matColumnDef="Nome Gerente">
                         <th mat-header-cell *matHeaderCellDef> Nome Gerente </th>
-                        <td mat-cell *matCellDef="let element"> {{element.nomeGerente}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.gerente.nome}} </td>
                     </ng-container>
 
 
@@ -69,9 +71,35 @@
             </div>
 
         </div>
-        
+
     </div>
 
-    
+    @if(responseModal != null) {
+    <div class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-icon-container" [class]="responseModal.type">
+                <mat-icon>{{ responseModal.messageIcon }}</mat-icon>
+            </div>
+
+            <div class="modal-content">
+                <h3>{{ responseModal.title || 'Aviso' }}</h3>
+                <p>{{ responseModal.message }}</p>
+            </div>
+
+            <button class="modal-button" (click)="closeModal()">Entendido</button>
+        </div>
+    </div>
+    }
+
+    @if(isLoading) {
+    <div class="modal-overlay">
+        <div class="modal-card">
+            <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+
+            <p>Procurando todos os clientes</p>
+        </div>
+    </div>
+    }
+
 
 </main>
