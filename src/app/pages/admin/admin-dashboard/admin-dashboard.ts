@@ -1,34 +1,46 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { InfoCard } from '../../../core/models/info-card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
 import { DecimalPipe } from '@angular/common';
-import { ManagerTableData } from '../../../core/models/table-data';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
 import { NgxMaskPipe } from 'ngx-mask';
-import { ContaService } from '../../../core/services/conta-services/conta-service';
+import { GerenteResumo } from '../../../core/models/GerenteResumo';
+import { InfoCard } from '../../../core/models/info-card';
+import { ResponseModal } from '../../../core/models/response-modal';
+import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
 import { AuthService } from '../../../core/services/auth-services/auth-services';
-import { ContaCliente } from '../../../core/models/ContaGerente';
-import { Subscription } from 'rxjs';
+import { CompositionService } from '../../../core/services/compositon-services/composition-services';
 
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [MatIconModule, DecimalPipe, NgxMaskPipe, MatTableModule],
+  imports: [
+    MatIconModule,
+    DecimalPipe,
+    NgxMaskPipe,
+    MatTableModule,
+    MatProgressSpinner,
+  ],
   templateUrl: './admin-dashboard.html',
-  styleUrl: './admin-dashboard.css',
+  styleUrls: ['./admin-dashboard.css', '../../shared/css/responseModal.css'],
 })
-export class AdminDashboard implements OnInit, OnDestroy {
-  private readonly subscriptions = new Subscription();
+export class AdminDashboard implements OnInit {
+  responseModal: ResponseModal | null = null;
+  isLoading: boolean = false;
 
+  changeIsLoading() {
+    this.isLoading = !this.isLoading;
+    this.cdr.detectChanges();
+  }
   constructor(
-    private contasService: ContaService,
     private cdr: ChangeDetectorRef,
-    private authService: AuthService
-  ){}
+    private authService: AuthService,
+    private compositionService: CompositionService,
+  ) {}
 
-  tokenJWT='';
-  contas: ContaCliente[]=[];
-  MANAGERS_TABLE: ManagerTableData[] = []
-  infoCards: InfoCard[] = []
+  infoCards: InfoCard[] = [];
+
+  gerentes: GerenteResumo[] = [];
 
   displayedColumns: string[] = [
     'Nome Gerente',
@@ -36,117 +48,94 @@ export class AdminDashboard implements OnInit, OnDestroy {
     'Qtd. Clientes',
     'Saldos Positivos',
     'Saldos Negativos',
-    'Saldo Total'];
+  ];
 
   ngOnInit(): void {
-    this.tokenJWT=this.authService.usuarioLogado || '';
     this.carregarDashboard();
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-  }
+  carregarDashboard(): void {
+    this.changeIsLoading();
+    const token = this.authService.usuarioLogado;
+    if (!token) {
+      return;
+    }
 
-carregarDashboard(): void {
-  this.subscriptions.add(
-      this.contasService.listarTodos(this.tokenJWT).subscribe({
-        next: (listaContas: ContaCliente[]) => {
-          this.contas = listaContas || [];
-this.fillManagersTable();
-          this.fillInfoCards();
-          this.cdr.detectChanges();
-        },
-        error: (erro) => {
-          console.error('Erro ao buscar dados agregados de contas/gerentes:', erro);
-          this.contas = [];
-        }
-      })
-    );
-  }
+    this.compositionService.getDashboardAdmin(token).subscribe({
+      next: (resumoGerentes) => {
+        this.gerentes = resumoGerentes;
 
+        this.fillInfoCards();
 
-  fillManagersTable(): void{
+        this.changeIsLoading();
 
-    this.MANAGERS_TABLE=[];
-    const gerentesMap = new Map<string, {nome: string; cpf:string}>();
-    this.contas.forEach(conta => {
-      // if (conta.cpfGerente && !gerentesMap.has(conta.cpfGerente)) {
-      //   gerentesMap.set(conta.cpfGerente, {
-      //     nome: conta.gerente?.nomeGerente || conta.cliente || 'Gerente Operacional',
-      //     cpf: conta.cpfGerente
-      //   });
-      // }
+      },
+      error: (erro: HttpErrorResponse) => {
+        console.error('Erro Interceptado: ', erro);
+
+        const backendError = erro.error as StandartErrorResponse;
+
+        this.responseModal = {
+          title: backendError?.error || 'Erro ao processar requisição',
+          message:
+            backendError?.message ||
+            'Ocorreu um erro ao processar sua requisição. Tente novamente',
+          messageIcon: 'error',
+          type: 'error',
+        };
+
+        this.changeIsLoading();
+      },
     });
-
-    gerentesMap.forEach((dadosGerente)=>{
-      // const contasGerente = this.contas.filter(c=> c.cpfGerente === dadosGerente.cpf);
-      // const resumo= contasGerente.reduce((acc, conta)=>{
-      //   acc.quantidade++;
-
-      //   const saldoAtual = conta.saldo ?? 0;
-      //   if(saldoAtual >=0){
-      //     acc.positivos+=saldoAtual;
-      //   }else{
-      //     acc.negativos+= saldoAtual;
-      //   }
-      //   return acc;
-      // },{quantidade: 0, positivos: 0, negativos: 0});
-      // const saldoTotal = resumo.positivos + resumo.negativos;
-
-      // this.MANAGERS_TABLE.push({
-      //       nome: dadosGerente.nome,
-      //       cpf:dadosGerente.cpf,
-      //       quantidadeClientes: resumo.quantidade,
-      //       saldosPositivos: resumo.positivos,
-      //       saldosNegativos: resumo.negativos,
-      //       saldoTotal: saldoTotal,
-      //       colorSaldoTotal: saldoTotal >= 0 ? "green" : "red"
-      //     });
-    })
-
-    this.MANAGERS_TABLE.sort((a,b) => b.saldosPositivos - a.saldosPositivos);
   }
 
-
-  get totalSaldosPositivos(): number{
-    return this.contas
-    .filter(c=>(c.saldo ?? 0)>=0)
-    .reduce((acc,c)=> acc +(c.saldo ?? 0), 0);
+  get TotalClientes(): number {
+    return this.gerentes
+      .filter((g) => (g.quantidadeClientes ?? 0) >= 0)
+      .reduce((soma, g) => soma + (g.quantidadeClientes ?? 0), 0);
+  }
+  get totalSaldosPositivos(): number {
+    return this.gerentes
+      .filter((g) => (g.somaSaldosPositivos ?? 0) >= 0)
+      .reduce((soma, g) => soma + (g.somaSaldosPositivos ?? 0), 0);
   }
 
-
-  get totalSaldosNegativos(): number{
-    return this.contas
-    .filter(c=>(c.saldo ?? 0)<0)
-    .reduce((acc,c)=> acc+(c.saldo ?? 0), 0);
+  get totalSaldosNegativos(): number {
+    return this.gerentes
+      .filter((g) => (g.somaSaldosNegativos ?? 0) < 0)
+      .reduce((soma, g) => soma + (g.somaSaldosNegativos ?? 0), 0);
   }
 
-fillInfoCards(): void {
-  this.infoCards = [
-    {
-      topTitle: 'Total de Clientes',
-      icon: 'account_balance_wallet',
-      middleContent: this.contas.length.toString(),
-      color: 'black',
-      bottomText: 'Em todos os gerentes',
-    },
-    {
-      topTitle: 'Saldos Positivos',
-      icon: 'trending_up',
-      middleContent: this.formatarMoeda(this.totalSaldosPositivos),
-      color: 'green',
-      bottomText: 'Limite Disponível',
-    },
-    {
-      topTitle: 'Saldos Negativos',
-      icon: 'trending_down',
-      middleContent: this.formatarMoeda(this.totalSaldosNegativos),
-      color: 'red',
-      bottomText: 'Saldo + Limite',
-    },
-  ];
-}
-formatarMoeda(valor: number): string {
+  closeModal() {
+    this.responseModal = null;
+  }
+
+  fillInfoCards(): void {
+    this.infoCards = [
+      {
+        topTitle: 'Total de Clientes',
+        icon: 'account_balance_wallet',
+        middleContent: this.TotalClientes.toString(),
+        color: 'black',
+        bottomText: 'Em todos os gerentes',
+      },
+      {
+        topTitle: 'Saldos Positivos',
+        icon: 'trending_up',
+        middleContent: this.totalSaldosPositivos.toString(),
+        color: 'green',
+        bottomText: 'Limite Disponível',
+      },
+      {
+        topTitle: 'Saldos Negativos',
+        icon: 'trending_down',
+        middleContent: this.totalSaldosNegativos.toString(),
+        color: 'red',
+        bottomText: 'Saldo + Limite',
+      },
+    ];
+  }
+  formatarMoeda(valor: number): string {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',

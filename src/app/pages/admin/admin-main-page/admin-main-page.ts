@@ -27,28 +27,11 @@ export class AdminMainPage implements OnInit{
 
   ngOnInit(): void{
     const token = this.authService.usuarioLogado;
-        if(!token){
-          this.logOut();
-          return;
-        }
 
-    this.compositionService.getAdmin(token).subscribe({
-      next:(responseBody)=>{
-        if(responseBody){
-          this.gerenteService.setAdmin(responseBody);
-          this.cdr.detectChanges();
-        }else {
-          this.logOut();
-        }
-      },
-      error: (err) => {
-        console.error(
-          'Erro crítico ao buscar dados do admin no Gateway:',
-          err,
-        );
-        this.logOut();
-      },
-    })
+    if(!token){
+      this.logOut();
+      return;
+    }
   }
 
   logOut(){

@@ -7,6 +7,7 @@ import { ExtratoCliente } from '../../models/ExtratoCliente';
 import { GerenteContasPendentes } from '../../models/ContaGerente';
 import { ClienteGerente } from '../../models/ClienteGerente';
 import { MelhoresClientes } from '../../models/MelhoresClientes';
+import { GerenteResumo } from '../../models/GerenteResumo';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,7 @@ export class CompositionService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`, // Garante que o gateway/microserviço receba a autenticação
+        'Authorization': `Bearer ${token}`, // Garante que o gateway/microserviço receba a autenticação
       }),
     };
 
@@ -35,7 +36,7 @@ export class CompositionService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`, // Garante que o gateway/microserviço receba a autenticação
+        'Authorization': `Bearer ${token}`, // Garante que o gateway/microserviço receba a autenticação
       }),
     };
 
@@ -46,17 +47,17 @@ export class CompositionService {
     );
   }
 
-  public getAdmin(token: string): Observable<GerenteAdmin> {
+  public getDashboardAdmin(token: string): Observable<GerenteResumo[]> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`, // Garante que o gateway/microserviço receba a autenticação
+        'Authorization': `Bearer ${token}`, // Garante que o gateway/microserviço receba a autenticação
       }),
     };
 
     // puxa o adm
-    return this.httpClient.get<GerenteAdmin>(
-      `${this.COMPOSITION_URL} /dashboard-admin`,
+    return this.httpClient.get<GerenteResumo[]>(
+      `${this.COMPOSITION_URL}/dashboard-admin`,
       httpOptions,
     );
   }
@@ -79,7 +80,7 @@ export class CompositionService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
       }),
     };
 
@@ -93,7 +94,7 @@ export class CompositionService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
       }),
     };
 
@@ -107,7 +108,7 @@ export class CompositionService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
       }),
     };
 
