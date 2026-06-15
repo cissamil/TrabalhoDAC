@@ -1,28 +1,33 @@
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
-import { Endereco } from '../../../core/models/EnderecoEntity';
 import { ResponseModal } from '../../../core/models/response-modal';
 import { Cliente, ClienteOutdated } from '../../../core/models/entities';
 import { CurrencyFormatter } from '../../../core/shared/currency_formatter';
 import {validateCEP, validateCPF, validateEmail} from '../../../core/shared/helpers';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-registro',
-  imports: [NgxMaskDirective, FormsModule, MatIconModule],
+  imports: [NgxMaskDirective, FormsModule, MatIconModule, MatProgressSpinner],
   templateUrl: './registro.html',
   styleUrls: ['./registro.css', '../../shared/css/responseModal.css'],
 })
-export class Registro implements OnInit {
+export class Registro{
   constructor(
     private router: Router,
     private clienteService: ClienteService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   currencyFormatter: CurrencyFormatter = new CurrencyFormatter();
+  isLoading: boolean = false;
+
 
   uf: string[] = [
     'AC', 
@@ -73,21 +78,16 @@ export class Registro implements OnInit {
     },
   };
 
-  cep: string = '';
-  rua: string = '';
-  cidade: string = '';
-  estado: string = '';
-  numero: number = 0;
-
-  ngOnInit(): void {
-    //this.redirectToLoginPage();
-  }
-
   redirectToLoginPage() {
     this.router.navigate(['/login']);
   }
 
-  salario: string = '';
+  changeIsLoading(){
+    this.isLoading = !this.isLoading;
+    this.cdr.detectChanges();
+  }
+
+  salario: string = '0,00';
 
   handleSalario(e: any) {
     let input = e.target;
@@ -104,6 +104,8 @@ export class Registro implements OnInit {
   }
 
   registrarUsuario() {
+    this.changeIsLoading();
+
     const validationMessage = this.validateFields();
     if (validationMessage) {
       this.responseModal = {
@@ -112,18 +114,9 @@ export class Registro implements OnInit {
         messageIcon: 'error',
         type: 'error',
       };
+
       return;
     }
-
-    const endereco : Endereco = {
-      id: 0,
-      cep: this.cep,
-      logradouro: this.rua,
-      cidade: this.cidade,
-      estado: this.estado,
-      numero: this.numero,
-
-    };
 
     this.cliente.nome = this.cliente.nome.trim();
     this.cliente.email = this.cliente.email.trim();
@@ -132,10 +125,10 @@ export class Registro implements OnInit {
     );
 
 
-    this.cliente.endereco = endereco;
-
     this.clienteService.inserir(this.cliente).subscribe({
-      next: (clienteCriado) => {
+      next: () => {
+        console.log("Entrou no bloco next");
+
         this.responseModal = {
           title: 'Registro realizado com sucesso!',
           message:
@@ -143,19 +136,30 @@ export class Registro implements OnInit {
           messageIcon: 'check',
           type: 'success',
         };
-      },
-      error: (erro) => {
-        console.error(erro);
+
+        this.changeIsLoading();      },
+      error: (erro: HttpErrorResponse) => {
+
+        console.log("Entrou no bloco error");
+
+        console.error("Erro Interceptado: ", erro);
+
+        const backendError = erro.error as StandartErrorResponse;
+
         this.responseModal = {
-          title: 'Erro no Cadastro',
+          title: backendError?.error || 'Erro no Cadastro',
           message:
-            erro.error?.message ||
+            backendError?.message ||
             'Ocorreu um erro ao tentar se cadastrar. Tente novamente.',
           messageIcon: 'error',
           type: 'error',
         };
+
+        this.changeIsLoading();
       },
     });
+
+
   }
 
   validateFields(): string | null {
@@ -169,19 +173,21 @@ export class Registro implements OnInit {
 
     if (this.salario === '0,00') return 'Preencha o campo de salário';
 
-    if (!this.cep) return 'Preencha o o CEP corretamente';
+    if (!this.cliente.endereco.cep) return 'Preencha o o CEP corretamente';
 
-    if (!this.rua) return 'Preencha a rua corretamente';
+    if (!this.cliente.endereco.logradouro) return 'Preencha a rua corretamente';
 
-    if (!this.cidade) return 'Preencha a cidade corretamente';
+    if (!this.cliente.endereco.numero) return 'Preencha o número da residência corretamente';
 
-    if (!this.estado) return 'Preencha o estado corretamente';
+    if (!this.cliente.endereco.cidade) return 'Preencha a cidade corretamente';
+
+    if (!this.cliente.endereco.estado) return 'Preencha o estado corretamente';
 
     if (!validateEmail(this.cliente.email)) return 'Digite um email válido';
 
     if (!validateCPF(this.cliente.cpf)) return 'Preencha o cpf corretamente';
 
-    if (!validateCEP(this.cep)) return 'Preencha o cep corretamente';
+    if (!validateCEP(this.cliente.endereco.cep)) return 'Preencha o cep corretamente';
 
     return null;
   }

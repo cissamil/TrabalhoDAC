@@ -59,7 +59,7 @@ export class ClienteService {
   inserir(cliente: Cliente): Observable<ClienteOutdated>{
 
     return this.httpClient.post<ClienteOutdated>(
-      this.CLIENTE_URL + '/autocadastro/' ,
+      this.CLIENTE_URL + '/autocadastro' ,
       JSON.stringify(cliente),
       this.httpOptions
     );
