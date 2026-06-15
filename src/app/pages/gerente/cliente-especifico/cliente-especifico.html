@@ -1,43 +1,53 @@
-<!-- <section>
+<section>
 	<div class="title">
 		<h2>Consultar Cliente</h2>
 		<p>Pesquise por CPF para visualizar os detalhes da conta.</p>
 	</div>
 
 	<div class="search-bar">
-		<input
-			type="text"
-			[(ngModel)]="termoBusca"
-			(ngModelChange)="termoBusca = formatarCpfBusca($event)"
-			maxlength="14"
-			inputmode="numeric"
-			placeholder="Digite CPF do cliente"
-			(keyup.enter)="consultarCliente()"
-		/>
+		<input type="text" [(ngModel)]="termoBusca" (ngModelChange)="termoBusca = formatarCpfBusca($event)"
+			maxlength="14" inputmode="numeric" placeholder="Digite CPF do cliente" (keyup.enter)="consultarCliente()" />
 		<button type="button" (click)="consultarCliente()">Consultar</button>
 	</div>
 
 	@if (clienteSelecionado) {
-		<div class="details-grid">
-			<article class="detail-card">
-				<h3>Dados Cadastrais</h3>
-				<p><strong>Nome:</strong> {{ clienteSelecionado.nome }}</p>
-				<p><strong>CPF:</strong> {{ clienteSelecionado.cpf | mask:'000.000.000-00'}}</p>
-				<p><strong>E-mail:</strong> {{ clienteSelecionado.email }}</p>
-        <p><strong>Telefone:</strong> {{ clienteSelecionado.telefone| mask:'(00)00000-0000' }}</p>
-				<p><strong>Endereco:</strong> {{ clienteSelecionado.endereco }}</p>
-			</article>
+	<div class="details-grid">
+		<article class="detail-card">
+			<h3>Dados Cadastrais</h3>
+			<p><strong>Nome:</strong> {{ clienteSelecionado.nome }}</p>
+			<p><strong>CPF:</strong> {{ clienteSelecionado.cpf | mask:'000.000.000-00'}}</p>
+			<p><strong>E-mail:</strong> {{ clienteSelecionado.email }}</p>
+			<p><strong>Telefone:</strong> {{ clienteSelecionado.telefone| mask:'(00)00000-0000' }}</p>
+			<p><strong>Endereco:</strong> {{ endereco }}</p>
+		</article>
 
-			<article class="detail-card">
-				<h3>Dados Financeiros</h3>
-				<p><strong>Numero da conta:</strong> {{ clienteSelecionado.conta.numeroConta }}</p>
-				<p><strong>Salario:</strong> {{ formatarMoeda(clienteSelecionado.conta.salario) }}</p>
-				<p><strong>Saldo:</strong> {{ formatarMoeda(clienteSelecionado.conta.saldo) }}</p>
-				<p><strong>Limite:</strong> {{ formatarMoeda(clienteSelecionado.conta.limite) }}</p>
-				<p><strong>Gerente:</strong> {{ clienteSelecionado.conta.gerente }}</p>
-			</article>
-		</div>
+		<article class="detail-card">
+			<h3>Dados Financeiros</h3>
+			<p><strong>Numero da conta:</strong> {{ clienteSelecionado.numeroConta }}</p>
+			<p><strong>Salario:</strong> {{ formatarMoeda(clienteSelecionado.salario) }}</p>
+			<p><strong>Saldo:</strong> {{ formatarMoeda(clienteSelecionado.saldo) }}</p>
+			<p><strong>Limite:</strong> {{ formatarMoeda(clienteSelecionado.limite) }}</p>
+		</article>
+	</div>
 	} @else {
-		<p class="empty-state">Nenhum cliente selecionado. Faça uma busca para consultar.</p>
+	<p class="empty-state">Nenhum cliente selecionado. Faça uma busca para consultar.</p>
 	}
-</section> -->
+
+
+	@if(responseModal != null) {
+	<div class="modal-overlay">
+		<div class="modal-card">
+			<div class="modal-icon-container" [class]="responseModal.type">
+				<mat-icon>{{ responseModal.messageIcon }}</mat-icon>
+			</div>
+
+			<div class="modal-content">
+				<h3>{{ responseModal.title || 'Aviso' }}</h3>
+				<p>{{ responseModal.message }}</p>
+			</div>
+
+			<button class="modal-button" (click)="closeModal()">Entendido</button>
+		</div>
+	</div>
+	}
+</section>

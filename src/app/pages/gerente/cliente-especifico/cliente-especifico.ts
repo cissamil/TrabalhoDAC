@@ -1,99 +1,133 @@
 //ok
-import { Component, OnInit } from '@angular/core';
-import { NgxMaskPipe } from 'ngx-mask';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
-import { ContaService } from '../../../core/services/conta-services/conta-service';
-import { ClienteOutdated, ContaOutdated } from '../../../core/models/entities';
+import { MatIcon } from "@angular/material/icon";
 import { ActivatedRoute } from '@angular/router';
+import { NgxMaskPipe, NgxMaskDirective } from 'ngx-mask';
+import { ClienteGerente } from '../../../core/models/ClienteGerente';
+import { ResponseModal } from '../../../core/models/response-modal';
+import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
 import { AuthService } from '../../../core/services/auth-services/auth-services';
-import { ClienteConta } from '../../../core/models/ClienteConta';
+import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { CompositionService } from '../../../core/services/compositon-services/composition-services';
+import { ContaService } from '../../../core/services/conta-services/conta-service';
 
 
 @Component({
   selector: 'app-cliente-especifico',
-  imports: [FormsModule, NgxMaskPipe],
+  imports: [FormsModule, NgxMaskPipe, MatIcon, NgxMaskDirective],
   templateUrl: './cliente-especifico.html',
-  styleUrl: './cliente-especifico.css',
+  styleUrls: ['./cliente-especifico.css', '../../shared/css/responseModal.css'],
 })
 export class ClienteEspecifico implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private clienteService: ClienteService,
-    private contaService: ContaService,
-    private authService: AuthService
+    private authService: AuthService,
+    private compositionService: CompositionService,
+    private cdr: ChangeDetectorRef
   ){}
 
   termoBusca = '';
-  clienteSelecionado: ClienteConta | null = null;
+  clientes: ClienteGerente[] = [];
+  clienteSelecionado: ClienteGerente | null = null;
+  endereco: string = '';
+  
   tokenJWT = ''
 
-  ngOnInit(): void {
-    this.tokenJWT=this.authService.usuarioLogado || '';
+    responseModal: ResponseModal | null = null;
+    
+    isLoading:boolean = false;
+  
+    changeIsLoading() {
+      this.isLoading = !this.isLoading;
+      this.cdr.detectChanges();
+    }
+  
+    closeModal() {
+      this.responseModal = null;
+    }
 
-    this.route.queryParamMap.subscribe((params) => {
-      const cpf = params.get('cpf');
-      if (cpf) {
-        this.termoBusca = cpf;
-        this.consultarCliente();
-      }
+  ngOnInit(): void{
+    this.listarClientes();
+  }
+
+  listarClientes(): void {
+    
+    const usuarioLogado = this.authService.usuarioLogado;
+
+    if(!usuarioLogado) return;
+
+    this.changeIsLoading();
+
+    this.compositionService.getClientesDoGerente(usuarioLogado).subscribe({
+      
+      next: (clientesDoGerente) => {
+
+        this.clientes = clientesDoGerente;
+        this.route.queryParamMap.subscribe((params) =>{
+          const cpf = params.get('cpf');
+
+          if(cpf){
+            this.termoBusca = cpf;
+            this.consultarCliente();
+          }
+        })
+
+        this.changeIsLoading();
+
+      }, error: (erro: HttpErrorResponse) => {
+          console.error('Erro Interceptado: ', erro);
+
+          const backendError = erro.error as StandartErrorResponse;
+
+          this.responseModal = {
+            title: backendError?.error || 'Erro ao processar requisição',
+            message:
+              backendError?.message ||
+              'Ocorreu um erro ao processar sua requisição. Tente novamente',
+            messageIcon: 'error',
+            type: 'error',
+          };
+
+          this.changeIsLoading();
+        },
     });
-
   }
 
 
   consultarCliente(): void {
-  //   const termoNormalizado = this.termoBusca.trim();
-  //   const termoCpf = termoNormalizado.replace(/\D/g, '');
+    const termoNormalizado = this.termoBusca.trim();
+    const termoCpf = termoNormalizado.replace(/\D/g, '');
 
-  //   if (!termoNormalizado) {
-  //     this.clienteSelecionado = null;
-  //     return;
-  //   }
+    if (!termoNormalizado) {
+      this.clienteSelecionado = null;
+      return;
+    }
 
+    this.clienteSelecionado = this.clientes.find((cliente) =>{
+      return cliente.cpf === termoCpf;
+    }) ?? null;
 
-  //   this.clienteService.buscarPorCPF(termoCpf, this.tokenJWT).subscribe({
-  //   next: (cliente: ClienteOutdated) => {
-  //     if (!cliente) {
-  //       this.clienteSelecionado = null;
-  //       return;
-  //     }
+    if(this.clienteSelecionado){  
 
-  //     this.contaService.buscarPorCpfCliente(cliente.cpf, this.tokenJWT).subscribe({
-  //       next: (conta: ContaOutdated) => {
-  //         this.clienteSelecionado = {
-  //           id: cliente.id,
-  //           cpf: cliente.cpf,
-  //           nome: cliente.nome,
-  //           email: cliente.email,
-  //           telefone: cliente.telefone,
-  //           salario: cliente.salario,
-  //           endereco: cliente.endereco,
+      const enderecoSalvo  = this.clienteSelecionado.endereco;
+      const cepFormatado = this.formatarCep(enderecoSalvo.cep);
 
-  //           // Embutimos a conta convertendo a 'Conta' geral para o formato 'ContaGerente'
-  //           conta: {
-  //             id: conta.id,
-  //             saldo: conta.saldo ?? 0,
-  //             limite: conta.limite ?? 0,
-  //             gerente: { nome: conta.gerente } as any,
-  //             cliente: cliente.nome,
-  //             dataCriacao: conta.dataCriacao,
-  //             cpfGerente: conta.cpfGerente,
-  //             cpfCliente: conta.cpfCliente,
-  //             numeroConta: conta.numeroConta,
-  //             salario: cliente.salario
-  //           }
-  //         };
-  //       },
-  //       error: (erro: any) => console.error('Erro ao buscar conta', erro)
-  //     });
-  //   },
-  //   error: (erro: any) => {
-  //     console.error('Erro ao buscar cliente', erro);
-  //     this.clienteSelecionado = null;
-  //   }
-  // });
+      this.endereco = `${cepFormatado}, ${enderecoSalvo.logradouro} - ${enderecoSalvo.cidade}/${enderecoSalvo.estado}`;
+    }
+
+    if(!this.clienteSelecionado){
+
+      this.responseModal = {
+        title: 'Nenhum cliente encontrado',
+        message: 'Verifique se você digitou o cpf corretamente',
+        messageIcon: 'error',
+        type: 'error',
+      };
+
+    }
 
   }
 
@@ -115,6 +149,14 @@ export class ClienteEspecifico implements OnInit {
 
     return `${numeros.slice(0, 3)}.${numeros.slice(3, 6)}.${numeros.slice(6, 9)}-${numeros.slice(9)}`;
   }
+  
+  formatarCep(valor: string): string {
+    if (!valor) return '';
+    const numeros = valor.replace(/\D/g, '').slice(0, 8);
+
+    return `${numeros.slice(0,5)}-${numeros.slice(5,8)}`;
+  }
+
 
   formatarMoeda(valor: number): string {
     return new Intl.NumberFormat('pt-BR', {

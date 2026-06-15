@@ -21,7 +21,11 @@ public class ClientesContasDashboardResponse {
   private String cpf;
   private String clienteId;
   private BigDecimal saldo;
+  private String email;
+  private String telefone;
   private String contaId;
   private BigDecimal limite;
+  private BigDecimal salario;
+  private String numeroConta;
   private EnderecoOutputData endereco;
 }

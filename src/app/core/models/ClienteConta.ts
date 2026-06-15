@@ -6,3 +6,4 @@ export interface ClienteConta {
   conta: ContaCliente;
   gerente: GerenteCliente;
 }
+

@@ -38,6 +38,10 @@ public class ClientesContasDashboardAssembler {
     response.setClienteId(cliente.getClienteId());
     response.setContaId(conta.getContaId());
     response.setLimite(conta.getLimite());
+    response.setEmail(cliente.getEmail());
+    response.setNumeroConta(conta.getNumeroConta());
+    response.setTelefone(cliente.getTelefone());
+    response.setSalario(cliente.getSalario());
 
     return response;
   }

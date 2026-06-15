@@ -5,6 +5,7 @@ import { ClienteConta } from '../../models/ClienteConta';
 import { GerenteAdmin } from '../../models/entities';
 import { ExtratoCliente } from '../../models/ExtratoCliente';
 import { GerenteContasPendentes } from '../../models/ContaGerente';
+import { ClienteGerente } from '../../models/ClienteGerente';
 
 @Injectable({
   providedIn: 'root',
@@ -83,6 +84,20 @@ export class CompositionService {
 
     return this.httpClient.get<ClienteConta[]>(
       `${this.COMPOSITION_URL}/relatorio-clientes`,
+      httpOptions,
+    );
+  }
+
+  public getClientesDoGerente(token: string): Observable<ClienteGerente[]> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }),
+    };
+
+    return this.httpClient.get<ClienteGerente[]>(
+      `${this.COMPOSITION_URL}/consultar-clientes`,
       httpOptions,
     );
   }

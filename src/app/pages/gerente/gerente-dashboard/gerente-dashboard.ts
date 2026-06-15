@@ -1,17 +1,17 @@
-import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { ContaAprovar } from '../../../core/models/ContaAprovar';
-import {ContaPendente, GerenteContasPendentes} from '../../../core/models/ContaGerente';
+import { ContaPendente, GerenteContasPendentes } from '../../../core/models/ContaGerente';
+import { ContaRejeitar } from '../../../core/models/ContaRejeitar';
 import { ResponseModal } from '../../../core/models/response-modal';
 import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
 import { AuthService } from '../../../core/services/auth-services/auth-services';
 import { CompositionService } from '../../../core/services/compositon-services/composition-services';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
-import { ContaRejeitar } from '../../../core/models/ContaRejeitar';
 
 @Component({
   selector: 'app-gerente-dashboard',

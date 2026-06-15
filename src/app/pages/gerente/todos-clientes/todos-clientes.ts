@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NgxMaskDirective } from 'ngx-mask';
+import { AuthService } from '../../../core/services/auth-services/auth-services';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
+import { CompositionService } from '../../../core/services/compositon-services/composition-services';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
-import { ClienteOutdated, ContaOutdated } from '../../../core/models/entities';
-import { AuthService } from '../../../core/services/auth-services/auth-services';
-import { combineLatest } from 'rxjs';
+import { ClienteGerente } from '../../../core/models/ClienteGerente';
+import { ResponseModal } from '../../../core/models/response-modal';
+import { HttpErrorResponse } from '@angular/common/http';
+import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
+import { MatIcon } from "@angular/material/icon";
 
 interface ClienteTabela {
   cpf: string;
@@ -22,85 +26,78 @@ interface ClienteTabela {
 
 @Component({
   selector: 'app-todos-clientes',
-  imports: [FormsModule, RouterLink, NgxMaskDirective],
+  imports: [FormsModule, RouterLink, NgxMaskDirective, MatIcon],
   templateUrl: './todos-clientes.html',
-  styleUrl: './todos-clientes.css',
+  styleUrls: ['./todos-clientes.css', '../../shared/css/responseModal.css'],
 })
 export class TodosClientes implements OnInit{
+  
   termoBusca = '';
-  clientes: ClienteTabela[] = [];
-  tokenJWT = '';
+  clientes: ClienteGerente[] = [];
+  responseModal: ResponseModal | null = null;
+  
+  isLoading:boolean = false;
 
+  changeIsLoading() {
+    this.isLoading = !this.isLoading;
+    this.cdr.detectChanges();
+  }
+
+  closeModal() {
+    this.responseModal = null;
+  }
+
+  
   constructor(
-    private clienteService: ClienteService,
-    private contaService: ContaService,
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService,
     private gerenteService: GerenteService,
-    private authService: AuthService
+    private compositionService: CompositionService
   ) {}
 
   ngOnInit(): void{
-    this.tokenJWT = this.authService.usuarioLogado || '';
     this.listarClientes();
   }
 
   listarClientes(): void {
-    const gerenteLogado = this.gerenteService.GerenteLogado;
+    
+    const usuarioLogado = this.authService.usuarioLogado;
 
-    if (!gerenteLogado) {
-      console.warn('Nenhum gerente logado encontrado.');
-      this.clientes = [];
-      return;
-    }
+    if(!usuarioLogado) return;
 
-    // combineLatest([
-    //   this.clienteService.listarTodos(this.tokenJWT),
-    //   this.contaService.listarTodos(this.tokenJWT)
-    // ]).subscribe({
-    //   next: ([listaClientes, listaContas]: [Cliente[], Conta[]]) => {
+    this.changeIsLoading();
 
-    //     // Mapeia as contas por CPF do cliente para busca em tempo O(1)
-    //     const contasPorCpf = new Map<string, Conta>(
-    //       (listaContas || []).map((conta) => [conta.cpfCliente, conta])
-    //     );
+    this.compositionService.getClientesDoGerente(usuarioLogado).subscribe({
+      
+      next: (clientesDoGerente) => {
 
-    //     this.clientes = (listaClientes || [])
-    //       .map((cliente) => {
-    //         const contaCliente = contasPorCpf.get(cliente.cpf);
+        this.clientes = clientesDoGerente;
 
-    //         // Se o cliente não possuir conta associada, ignora
-    //         if (!contaCliente) return null;
 
-    //         // 🎯 REGRA DE NEGÓCIO REATIVADA: Só exibe se a conta pertencer a este gerente
-    //         const pertenceAoGerente = contaCliente.cpfGerente === gerenteLogado.cpf;
-    //         if (!pertenceAoGerente) return null;
+        this.changeIsLoading();
 
-    //         const { cidade, estado } = this.extrairCidadeEstado(cliente.endereco || '');
 
-    //         return {
-    //           cpf: cliente.cpf,
-    //           nome: cliente.nome,
-    //           cidade,
-    //           estado,
-    //           email: cliente.email,
-    //           salario: cliente.salario,
-    //           saldo: contaCliente.saldo ?? 0,
-    //           limite: contaCliente.limite ?? 0
-    //         };
-    //       })
-    //       // Limpa os registros nulos (clientes de outras agências/gerentes)
-    //       .filter((item): item is ClienteTabela => item !== null)
-    //       // Ordena alfabeticamente
-    //       .sort((a, b) => a.nome.localeCompare(b.nome));
-    //   },
-    //   error: (erro) => {
-    //     console.error('Erro ao listar clientes e contas no dashboard', erro);
-    //     this.clientes = [];
-    //   }
-    // });
+      }, error: (erro: HttpErrorResponse) => {
+          console.error('Erro Interceptado: ', erro);
+
+          const backendError = erro.error as StandartErrorResponse;
+
+          this.responseModal = {
+            title: backendError?.error || 'Erro ao processar requisição',
+            message:
+              backendError?.message ||
+              'Ocorreu um erro ao processar sua requisição. Tente novamente',
+            messageIcon: 'error',
+            type: 'error',
+          };
+
+          this.changeIsLoading();
+        },
+    });
   }
 
 
-  get clientesFiltrados(): ClienteTabela[] {
+  get clientesFiltrados(): ClienteGerente[] {
     const termo = this.termoBusca.trim().toLowerCase();
     if (!termo) {
       return this.clientes;
