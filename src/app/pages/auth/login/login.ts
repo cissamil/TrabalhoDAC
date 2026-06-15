@@ -1,24 +1,19 @@
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { MatIconModule } from '@angular/material/icon';
 import { validateEmail } from '../../../core/shared/helpers';
 import { ResponseModal } from '../../../core/models/response-modal';
-//import { Cliente, Conta, GerenteAdmin } from '../../../core/models/entities';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProfileOptions } from '../../../core/models/navigationOptions';
-//import { ContaService } from '../../../core/services/conta-services/conta-service';
-//import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
-//import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
-import { ClienteSessionService } from '../../../core/services/session-controller.service';
-//import { MovimentacaoService } from '../../../core/services/movimentacoes-service/movimentacao-service';
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { AuthServices } from '../../../core/services/auth-services/auth-services';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
-import { ContaService } from '../../../core/services/conta-services/conta-service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, MatIconModule],
+  imports: [FormsModule, MatIconModule, MatProgressSpinner],
   templateUrl: './login.html',
   styleUrls: ['./login.css', '../../shared/css/responseModal.css'],
 })
@@ -26,7 +21,16 @@ export class Login implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthServices,
+    private cdr: ChangeDetectorRef
   ) {}
+
+  isLoading: boolean = false;
+
+  changeIsLoading(){
+    this.isLoading = !this.isLoading;
+    this.cdr.detectChanges();
+  }
+
 
   checkIfUserIsAuthenticated() {
     const decoder = new JwtHelperService();
@@ -91,16 +95,9 @@ export class Login implements OnInit {
   email: string = '';
   senha: string = '';
 
-  private exibirErro(mensagem: string) {
-    this.responseModal = {
-      title: 'Falha no Acesso',
-      message: mensagem,
-      messageIcon: 'error',
-      type: 'error',
-    };
-  }
-
   loginUser() {
+    this.changeIsLoading();
+
     const verifyFields = this.validateFields();
 
     if (verifyFields != null) {
@@ -116,6 +113,26 @@ export class Login implements OnInit {
     this.authService.login(this.email, this.senha).subscribe({
       next: () => {
         this.checkIfUserIsAuthenticated();
+        this.changeIsLoading();
+      },
+      error: (erro: HttpErrorResponse) => {
+
+        console.log("Entrou no bloco error");
+
+        console.error("Erro Interceptado: ", erro);
+
+        const backendError = erro.error as StandartErrorResponse;
+
+        this.responseModal = {
+          title: backendError?.error || 'Erro no Cadastro',
+          message:
+            backendError?.message ||
+            'Ocorreu um erro ao tentar se cadastrar. Tente novamente.',
+          messageIcon: 'error',
+          type: 'error',
+        };
+
+        this.changeIsLoading();
       },
     });
   }

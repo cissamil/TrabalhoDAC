@@ -6,17 +6,8 @@
             <h1>BANTADS</h1>
         </div>
         <div class="form-control">
-            <form action="">
+            <form (ngSubmit)="loginUser()">
                 
-                <div class="form-input">
-                    <label for="profile">Perfil de acesso</label>
-                    <select name="profile" id="">
-                        <option value="cliente" (click)="setAcessProfile(profileOptions.Cliente)">Cliente</option>
-                        <option value="gerente" (click)="setAcessProfile(profileOptions.Gerente)">Gerente</option>
-                        <option value="administrador" (click)="setAcessProfile(profileOptions.Admin)">Administrador</option>
-                    </select>
-                </div>
-
                 <div class="form-input">
                     <label for="email">E-mail</label>
                     <input type="email" [(ngModel)]="email" name="email"  id="" placeholder="usuario@email.com">
@@ -26,8 +17,15 @@
                     <label for="password">Senha</label>
                     <input type="password" [(ngModel)]="senha" name="senha" id="" placeholder="******">
                 </div>
-                
-                <button class="entrar" type="submit" (click)="loginUser()">Entrar</button>
+
+                <button class="entrar" type="submit" [disabled]="isLoading">
+                    @if(isLoading) {
+                        <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+                    } @else {
+                        Entrar
+                    }
+                </button>
+
                 <a  class="criar-conta" (click)="redirect('/registro')">Criar conta</a>
             </form>
         </div>
