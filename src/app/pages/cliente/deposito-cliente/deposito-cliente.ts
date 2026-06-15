@@ -148,22 +148,23 @@ export class DepositoCliente implements OnInit {
 
       next: () => {
 
-        this.cleanInput();
-
+        
         setTimeout(() =>{
           
           this.getUpdatedClienteData();
           
           this.responseModal = {
-            title: 'Dados Atualizados!',
-            message: 'Suas informações e limites foram recalculados com sucesso.',
+            title: 'Depósito concluido com sucesso!',
+            message: `O depósito no valor de ${this.valorDeposito} foi realizado com sucesso!`,
             messageIcon: 'check',
             type: 'success',
           };
-
+          
+          this.cleanInput();
           this.changeIsLoading();
           
         }, 800)
+        
       },
       error: (erro: HttpErrorResponse) => {
 

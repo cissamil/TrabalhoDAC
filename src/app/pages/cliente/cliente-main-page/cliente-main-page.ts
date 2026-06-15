@@ -40,7 +40,7 @@ export class ClienteMainPage implements OnInit {
   ) {}
 
   cliente!: ClienteOutdated;
-  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Deposito;
+  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Saque;
 
   isLoading:boolean = true;
 

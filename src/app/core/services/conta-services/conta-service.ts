@@ -62,7 +62,7 @@ export class ContaService {
     });
 
     return this.httpClient.post<void>(
-      this.CONTA_URL + '/depositar',
+      this.CONTA_URL + '/sacar',
       JSON.stringify(conta),
       {headers: header}
     );

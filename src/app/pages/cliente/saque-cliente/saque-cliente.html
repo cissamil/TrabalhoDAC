@@ -9,14 +9,21 @@
       <p class="cardInfo">Informe o valor que deseja sacar de sua conta</p>
       <label for="valorSaque">Valor do Saque (R$)</label>
       <input type="text" [(ngModel)]="valorSaque" name="valorSaque" (input)="handleValorSaque($event)" id="valorSaque">
-      <!--ngModel conecta html com ts, com entrada do usuario-->
+      
       <p class="cardInfo">O valor será debitado imediatamente de sua conta</p>
       <p class={{corMensagem}}> {{ mensagem }} </p>
       <div class="textoSecundario">
         <p class="cardInfo">Saldo disponível para saque: </p>
         <span class="saldoAtual">R$ {{ saldoDisponivelTotal | number:'1.2-2'}} </span>
       </div>
-      <button id="btnSacar" (click)="sacar()">Confirmar Saque</button>
+
+      <button id="btnSacar" type="submit" (click)="sacar()" [disabled]="isLoading">
+        @if(isLoading) {
+         <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+        } @else {
+         Confirmar Depósito
+        }
+      </button>
 
     </div>
 
@@ -27,23 +34,40 @@
 
         @for(valorInfo of listaValoresInfo; track $index){
 
-          @if(valorInfo.reference != 'valorS' && valorInfo.reference !== 'novoS'){
-            <p class="cardInfo">{{valorInfo.title}}</p>
-            <span class={{valorInfo.reference}}>R$ {{valorInfo.value | number:'1.2-2'}}</span>
-          }
+        @if(valorInfo.reference != 'valorS' && valorInfo.reference !== 'novoS'){
+         <p class="cardInfo">{{valorInfo.title}}</p>
+         <span class={{valorInfo.reference}}>R$ {{valorInfo.value | number:'1.2-2'}}</span>
+        }
 
-          @if(valorInfo.reference == 'valorS' && valorASacar > 0){
-            <p class="cardInfo">{{valorInfo.title}}</p>
-            <span class="redInfo">R$ {{valorInfo.value | number:'1.2-2'}}</span>
-          }
+        @if(valorInfo.reference == 'valorS' && valorASacar > 0){
+         <p class="cardInfo">{{valorInfo.title}}</p>
+         <span class="redInfo">R$ {{valorInfo.value | number:'1.2-2'}}</span>
+        }
 
-          @if(valorInfo.reference == 'novoS' && valorASacar > 0){
-            <p class="cardInfo">{{valorInfo.title}}</p>
-            <span class="redInfo">R$ {{valorInfo.value | number:'1.2-2'}}</span>
-          }
+        @if(valorInfo.reference == 'novoS' && valorASacar > 0){
+         <p class="cardInfo">{{valorInfo.title}}</p>
+         <span class="redInfo">R$ {{valorInfo.value | number:'1.2-2'}}</span>
+        }
         }
 
       </div>
     </div>
   </div>
+
+  @if(responseModal != null) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon-container" [class]="responseModal.type">
+        <mat-icon>{{ responseModal.messageIcon }}</mat-icon>
+      </div>
+
+      <div class="modal-content">
+        <h3>{{ responseModal.title || 'Aviso' }}</h3>
+        <p>{{ responseModal.message }}</p>
+      </div>
+
+      <button class="modal-button" (click)="closeModal()">Entendido</button>
+    </div>
+  </div>
+  }
 </main>

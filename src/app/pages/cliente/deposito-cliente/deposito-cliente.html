@@ -5,24 +5,25 @@
   <div class="deposito-container">
     <div class="card">
       <h2>Realizar Depósito</h2>
-      
+
       <p class="cardInfo">Informe o valor que deseja depositar em sua conta </p>
-      
+
       <label for="valorDeposito">Valor do Depósito (R$)</label>
 
-      <input [(ngModel)]="valorDeposito" type="text" (input)="handleValorDeposito($event)" name="valorDeposito" id="valorDeposito">
+      <input [(ngModel)]="valorDeposito" type="text" (input)="handleValorDeposito($event)" name="valorDeposito"
+        id="valorDeposito">
 
       <p class="cardInfo">O valor será creditado imediatamente em sua conta</p>
 
       <p class={{corMensagem}}> {{ mensagem }} </p>
 
-        <button id="btnDepositar" type="submit" (click)="depositar()"  [disabled]="isLoading">
-            @if(isLoading) {
-                <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
-            } @else {
-                Confirmar Depósito
-            }
-        </button>
+      <button id="btnDepositar" type="submit" (click)="depositar()" [disabled]="isLoading">
+        @if(isLoading) {
+        <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+        } @else {
+        Confirmar Depósito
+        }
+      </button>
     </div>
 
     <div class="card">
