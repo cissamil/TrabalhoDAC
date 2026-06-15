@@ -6,8 +6,8 @@ import { GerenteService } from '../../../core/services/gerente-services/gerente-
 import { GerenteAdmin } from '../../../core/models/entities';
 import { MatIconModule } from '@angular/material/icon';
 import { GerenteAutocadastroService } from '../../../core/services/gerente-services/gerente-autocadastro.service';
-import { ContaGerente, GerenteContasPendentes } from '../../../core/models/ContaGerente';
-import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { ContaCliente, GerenteContasPendentes } from '../../../core/models/ContaGerente';
+import { AuthService } from '../../../core/services/auth-services/auth-services';
 
 @Component({
   selector: 'app-gerente-dashboard',
@@ -21,7 +21,7 @@ export class GerenteDashboard  implements OnInit{
     private gerenteService: GerenteService,
     private gerenteAutocadastroService: GerenteAutocadastroService,
     private cdr: ChangeDetectorRef,
-    private authService: AuthServices
+    private authService: AuthService
   ) {}
 
   tokenJWT='';

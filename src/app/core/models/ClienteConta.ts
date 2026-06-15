@@ -1,7 +1,8 @@
-import { ContaGerente } from './ContaGerente';
+import { ContaCliente, GerenteCliente } from './ContaGerente';
 import { Cliente } from './entities';
 
 export interface ClienteConta {
   cliente: Cliente;
-  conta: ContaGerente;
+  conta: ContaCliente;
+  gerente: GerenteCliente;
 }

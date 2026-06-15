@@ -30,17 +30,10 @@ public class SyncContaUseCase implements SyncContaInputPort {
 
     Conta existingConta = findContaByContaIdOutputPort.find(receivedConta.getContaId());
 
-    System.out.println("Conta Recebida: " + receivedConta);
-    System.out.println("Conta existente: " + existingConta);
-
     if(existingConta == null){
-
-      System.out.println("Nova conta para criar");
 
       receivedConta.setId(null);
     } else{
-
-      System.out.println("Conta para atualizar");
 
       receivedConta.setId(existingConta.getId());
     }
@@ -52,6 +45,7 @@ public class SyncContaUseCase implements SyncContaInputPort {
 
     if (movimentacao != null) {
 
+      movimentacao.setId(null);
       syncMovimentacaoOutputPort.sync(movimentacao);
 
     }

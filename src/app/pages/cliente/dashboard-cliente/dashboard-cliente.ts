@@ -44,7 +44,7 @@ inicializarDashboard() {
     const saldoDisponivel = this.clienteConta.conta.limite + this.clienteConta.conta.saldo;
     const color = saldoStatus ? 'black' : 'red';
     const saldoInfo = saldoStatus ? 'Saldo Positivo' : 'Saldo Negativo';
-    this.nomeGerente = this.clienteConta.conta.gerente?.nomeGerente
+    this.nomeGerente = this.clienteConta.gerente?.nomeGerente
     this.nomeCliente = this.clienteConta.cliente.nome;
 
     this.infoCards = [

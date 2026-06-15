@@ -4,7 +4,7 @@ import { ClienteOutdated, ContaOutdated } from '../../../core/models/entities';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { ActivatedRoute } from '@angular/router';
-import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { AuthService } from '../../../core/services/auth-services/auth-services';
 import { CommonModule } from '@angular/common';
 
 interface TopCliente {
@@ -26,7 +26,7 @@ export class Top3Clientes implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private clienteService: ClienteService,
     private contaService: ContaService,
-    private authService: AuthServices
+    private authService: AuthService
   ){}
   private readonly subscriptions = new Subscription();
 

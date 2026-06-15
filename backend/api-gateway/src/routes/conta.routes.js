@@ -27,17 +27,17 @@ router.get('/', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute
 		errorMessage: '[Gateway] Erro na rejeição:'
 	}));
 
-	router.post('/:id/depositar', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
+	router.post('/depositar', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
 		target: services.contaService,
 		errorMessage: '[Gateway] Erro em depositar:'
 	}));
 
-	router.post('/:id/sacar', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
+	router.post('/sacar', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
 		target: services.contaService,
 		errorMessage: '[Gateway] Erro em sacar:'
 	}));
 
-	router.post('/:id/transferir', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
+	router.post('/transferir', verifyJWT, requireRole(routeRoles['/conta']), createProxyRoute({
 		target: services.contaService,
 		errorMessage: '[Gateway] Erro em trasnferir:'
 	}));

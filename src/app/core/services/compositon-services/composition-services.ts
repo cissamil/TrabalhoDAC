@@ -7,7 +7,7 @@ import { GerenteAdmin } from '../../models/entities';
 @Injectable({
   providedIn: 'root',
 })
-export class CompositionServices {
+export class CompositionService {
   COMPOSITION_URL="http://localhost:8080"
 
   constructor(private httpClient: HttpClient){}

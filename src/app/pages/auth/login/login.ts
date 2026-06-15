@@ -7,7 +7,7 @@ import { ResponseModal } from '../../../core/models/response-modal';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProfileOptions } from '../../../core/models/navigationOptions';
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { AuthService } from '../../../core/services/auth-services/auth-services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
 
@@ -20,7 +20,7 @@ import { StandartErrorResponse } from '../../../core/models/StandartErrorRespons
 export class Login implements OnInit {
   constructor(
     private router: Router,
-    private authService: AuthServices,
+    private authService: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
 

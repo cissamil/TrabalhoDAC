@@ -22,11 +22,12 @@ public class ClienteContaDashboardAssembler {
     GerenteOutputData gerente = clienteContaDashboardOutputData.getGerenteOutputData();
 
     GerenteResponse gerenteResponse = buildGerenteResponseObject(gerente);
-    ContaResponse contaResponse = buildContaResponseObject(conta, gerenteResponse);
+    ContaResponse contaResponse = buildContaResponseObject(conta);
     ClienteResponse clienteResponse = buildClienteResponseObject(cliente);
 
     dashboardResponse.setCliente(clienteResponse);
     dashboardResponse.setConta(contaResponse);
+    dashboardResponse.setGerente(gerenteResponse);
 
     return dashboardResponse;
   }
@@ -38,14 +39,13 @@ public class ClienteContaDashboardAssembler {
     return gerenteResponse;
   }
 
-  private ContaResponse buildContaResponseObject(ContaOutputData conta, GerenteResponse gerenteResponse) {
+  private ContaResponse buildContaResponseObject(ContaOutputData conta) {
     ContaResponse contaResponse = new ContaResponse();
 
     contaResponse.setContaId(conta.getContaId());
     contaResponse.setNumeroConta(conta.getNumeroConta());
     contaResponse.setSaldo(conta.getSaldo());
     contaResponse.setLimite(conta.getLimite());
-    contaResponse.setGerente(gerenteResponse);
     return contaResponse;
   }
 

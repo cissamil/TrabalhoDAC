@@ -4,8 +4,8 @@ import { MatTableModule } from '@angular/material/table';
 import { DecimalPipe } from '@angular/common';
 import { NgxMaskPipe } from 'ngx-mask';
 import { ClientTableData } from '../../../core/models/table-data';
-import { CompositionServices } from '../../../core/services/compositon-services/composition-services';
-import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { CompositionService } from '../../../core/services/compositon-services/composition-services';
+import { AuthService } from '../../../core/services/auth-services/auth-services';
 import { ClienteConta } from '../../../core/models/ClienteConta';
 
 
@@ -19,8 +19,8 @@ import { ClienteConta } from '../../../core/models/ClienteConta';
 export class AdminRelatorioClientes implements OnInit {
 
   constructor(
-    private compositionService: CompositionServices,
-    private authService: AuthServices
+    private compositionService: CompositionService,
+    private authService: AuthService
   ) {}
 
   clientesContas: ClienteConta[] = [];

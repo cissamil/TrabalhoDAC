@@ -137,23 +137,23 @@ export class SaqueCliente implements OnInit{
     saldo: this.saldo - valor
 }
 
-this.contaService.atualizarConta(contaAtualizada).subscribe({
-  next:(contaBanco:ContaOutdated)=>{
-    this.saldo=contaBanco.saldo;
-    this.contaCliente=contaBanco;
-    this.valorSaque = '0,00';
-    this.corMensagem = 'green';
-    this.mensagem = 'Saque realizado com sucesso';
-    this.clienteSessionService.setContaCliente(contaBanco);
-    this.registrarMovimentacao(valor);
+// this.contaService.atualizarConta(contaAtualizada).subscribe({
+//   next:(contaBanco:ContaOutdated)=>{
+//     this.saldo=contaBanco.saldo;
+//     this.contaCliente=contaBanco;
+//     this.valorSaque = '0,00';
+//     this.corMensagem = 'green';
+//     this.mensagem = 'Saque realizado com sucesso';
+//     this.clienteSessionService.setContaCliente(contaBanco);
+//     this.registrarMovimentacao(valor);
 
-  },
-  error:(erro)=>{
-      console.error('Erro ao efetuar saque', erro);
-        this.corMensagem = 'red';
-        this.mensagem = 'Erro ao processar o saque no servidor';
-  },
-})
+//   },
+//   error:(erro)=>{
+//       console.error('Erro ao efetuar saque', erro);
+//         this.corMensagem = 'red';
+//         this.mensagem = 'Erro ao processar o saque no servidor';
+//   },
+// })
 }
 
   registrarMovimentacao(valor: number){

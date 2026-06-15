@@ -9,7 +9,7 @@ const AUTH_TOKEN_KEY = "auth_token";
   providedIn: 'root',
 })
 
-export class AuthServices {
+export class AuthService {
 
   AUTH_URL = "http://localhost:8080/auth"
 

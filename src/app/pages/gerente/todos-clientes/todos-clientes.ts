@@ -6,7 +6,7 @@ import { ClienteService } from '../../../core/services/cliente-services/cliente-
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 import { ClienteOutdated, ContaOutdated } from '../../../core/models/entities';
-import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { AuthService } from '../../../core/services/auth-services/auth-services';
 import { combineLatest } from 'rxjs';
 
 interface ClienteTabela {
@@ -35,7 +35,7 @@ export class TodosClientes implements OnInit{
     private clienteService: ClienteService,
     private contaService: ContaService,
     private gerenteService: GerenteService,
-    private authService: AuthServices
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void{

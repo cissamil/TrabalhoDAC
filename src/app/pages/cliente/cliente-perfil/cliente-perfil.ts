@@ -11,9 +11,9 @@ import { ClienteService } from '../../../core/services/cliente-services/cliente-
 import { ClienteSessionService } from '../../../core/services/session-controller.service';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { ClienteConta } from '../../../core/models/ClienteConta';
-import { ContaGerente } from '../../../core/models/ContaGerente';
-import { CompositionServices } from '../../../core/services/compositon-services/composition-services';
-import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { ContaCliente } from '../../../core/models/ContaGerente';
+import { CompositionService } from '../../../core/services/compositon-services/composition-services';
+import { AuthService } from '../../../core/services/auth-services/auth-services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
@@ -29,13 +29,13 @@ export class ClientePerfil implements OnInit {
   constructor(
     //private router: Router,
     private clienteService: ClienteService,
-    private compositionService: CompositionServices,
-    private authService: AuthServices,
+    private compositionService: CompositionService,
+    private authService: AuthService,
     private cdr: ChangeDetectorRef,
   ) {}
 
   private clienteConta!: ClienteConta;
-  contaCliente!: ContaGerente;
+  contaCliente!: ContaCliente;
   salario: string = '';
   updatedCliente!: ClienteConta;
 
@@ -122,15 +122,15 @@ export class ClientePerfil implements OnInit {
     const verifyFields = this.validateFields();
 
     const token = this.authService.usuarioLogado;
-
-    const salarioNumber: number = this.currencyFormatter.removeCurrencyMaskFromString(this.salario);
-
-    this.updatedCliente.cliente.salario = salarioNumber;
-
+    
     if (!token) {
       console.error("Token não encontrado!");
       return;
     }
+
+    const salarioNumber: number = this.currencyFormatter.removeCurrencyMaskFromString(this.salario);
+
+    this.updatedCliente.cliente.salario = salarioNumber;
 
     if (verifyFields != null) {
       this.responseModal = {
@@ -161,8 +161,6 @@ export class ClientePerfil implements OnInit {
           this.changeIsLoading();
           
         }, 800)
-
-        console.log("Carregando: ", this.isLoading);
       },
       error: (erro: HttpErrorResponse) => {
 

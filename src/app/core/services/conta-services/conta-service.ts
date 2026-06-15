@@ -3,10 +3,17 @@ import { BehaviorSubject, Observable } from 'rxjs';
 //import { CONTAS_MOCK } from '../../mock/mock-data';
 import { GerenteService } from '../gerente-services/gerente-services';
 import { ClienteSessionService } from '../session-controller.service';
-import { ContaOutdated, ContaGerada, GerenteAdmin, Movimentacao } from '../../models/entities';
+import {
+  ContaOutdated,
+  ContaGerada,
+  GerenteAdmin,
+  Movimentacao,
+  Conta,
+} from '../../models/entities';
 import { MovimentacaoService } from '../movimentacoes-service/movimentacao-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ContaGerente } from '../../models/ContaGerente';
+import { ContaCliente } from '../../models/ContaGerente';
+import { ContaDeposito } from '../../models/ContaDeposito';
 //import { ClienteService } from '../cliente-services/cliente-service';
 
 //const LS_CHAVE = 'contas';
@@ -15,199 +22,88 @@ import { ContaGerente } from '../../models/ContaGerente';
   providedIn: 'root',
 })
 export class ContaService {
-
-  CONTA_URL = "http://localhost:8080/contas"
+  CONTA_URL = 'http://localhost:8080/contas';
 
   httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  }
+      'Content-Type': 'application/json',
+    }),
+  };
 
-  // private contasSubject: BehaviorSubject<Conta[]>;
-  // public contas$: Observable<Conta[]>
-
-  constructor(
-    private httpClient: HttpClient,
-    private movimentacaoService: MovimentacaoService,
-    private gerenteService: GerenteService,
-    private clienteSessionService: ClienteSessionService,
-  ) {
-    //   if(!localStorage[LS_CHAVE]){
-    //     localStorage[LS_CHAVE] = JSON.stringify(CONTAS_MOCK);
-    //   }
-    //   // localStorage[LS_CHAVE] = JSON.stringify(CONTAS_MOCK);
-
-    //   const contas: Conta[]= localStorage[LS_CHAVE] ? JSON.parse(localStorage[LS_CHAVE]) : [];
-    //   this.contasSubject = new BehaviorSubject<Conta[]>(contas);
-    //   this.contas$ = this.contasSubject.asObservable();
-
-    //   console.log(`MOCK de contas inseridos, quantidade: ${contas.length}`);
-  }
-
-  // private atualizarDados(contas: Conta[]){
-  //   localStorage[LS_CHAVE] = JSON.stringify(contas);
-  //   this.contasSubject.next(contas);
-  // }
+  constructor( private httpClient: HttpClient) {}
 
   inserir(conta: ContaOutdated): Observable<ContaOutdated> {
     return this.httpClient.post<ContaOutdated>(
       this.CONTA_URL,
       JSON.stringify(conta),
-      this.httpOptions
-    )
+      this.httpOptions,
+    );
   }
 
-  // try{
-  //   const contas = this.listarTodos();
-  //   conta.id = new Date().getTime();
-  //   contas.push(conta);
-  //   this.atualizarDados(contas);
-  // }catch(e){
-  //   console.error("Erro ao inserir usuário: ", e)
-  // }
+  depositarValor(conta: ContaDeposito, token: string): Observable<void> {
 
-  atualizarConta(conta: ContaOutdated): Observable<ContaOutdated> {
-    return this.httpClient.post<ContaOutdated>(
-      this.CONTA_URL + "/" + conta.id,
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.httpClient.post<void>(
+      this.CONTA_URL + '/depositar',
       JSON.stringify(conta),
-      this.httpOptions
-    )
-
-    //   try{
-    //     const contas = this.listarTodos();
-    //     const index = contas.findIndex(c => c.id === conta.id);
-    //     if(index > -1){
-    //       contas[index] = conta;
-    //       this.atualizarDados(contas);
-    //     }
-    //   console.log("Conta atualizada com sucesso!");
-    // }catch(e){
-    //   console.error("Erro ao atualizar conta ", e);
-    // }
+      {headers: header}
+    );
   }
 
-  //realizarTransferencia(contaOrigem: Conta, contaDestino: Conta, valor:number){
-  // try{
-  //   const contas = this.listarTodos();
-  //   this.listarConta(contaDestino.numeroConta);
-  //   const indexOrigem = contas.findIndex(c => c.id === contaOrigem.id);
-  //   const indexDestino = contas.findIndex(c => c.id === contaDestino.id);
-  //   if(indexOrigem > -1 && indexDestino > -1){
-  //     contas[indexOrigem] = contaOrigem;
-  //     contas[indexDestino] = contaDestino;
-  //     this.atualizarDados(contas);
-  //     this.registrarMovimentacao(valor, contaOrigem, contaDestino)
-  //     this.clienteSessionService.setContaCliente(contaOrigem);
-  //   }
-  //   this.listarConta(contaDestino.numeroConta);
-  // }catch(e){
-  //   console.error("Erro ao atualizar conta ", e);
-  // }
-  //return []
-  //}
+  sacarValor(conta: ContaDeposito, token: string): Observable<void> {
 
-  // registrarMovimentacao(valor: number, contaOrigem: Conta, contaDestino:Conta){
-  //   const movimentacao: Movimentacao = {
-  //     id:0,
-  //     valor: valor,
-  //     data_hora: new Date(),
-  //     tipo:'transferencia',
-  //     clienteOrigem: contaOrigem.cliente,
-  //     clienteDestino: contaDestino.cliente,
-  //     cpfClienteDestino: contaDestino.cpfCliente,
-  //     cpfClienteOrigem: contaOrigem.cpfCliente
-  //   }
-  //   this.movimentacaoService.inserir(movimentacao);
-  // }
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
 
-  // buscarGerenteComMenosClientes(): GerenteAdmin{
-  //   const contas = this.listarTodos();
-  //   const gerentes = this.gerenteService.listarGerentes();
-  // }
+    return this.httpClient.post<void>(
+      this.CONTA_URL + '/depositar',
+      JSON.stringify(conta),
+      {headers: header}
+    );
+  }
 
   listarConta(numeroConta: number): Observable<ContaGerada[]> {
-    // const contas = this.listarTodos();
-    // const conta = contas.find((conta) => conta.numeroConta === numeroConta);
-    // console.log("Valor atual conta: ", conta?.saldo);
-
     return this.httpClient.get<ContaGerada[]>(
-      this.CONTA_URL + "/numero/" + numeroConta
-    )
+      this.CONTA_URL + '/numero/' + numeroConta,
+    );
   }
 
-  listarTodos(token: string): Observable<ContaGerente[]>{
-  const httpOptions = {
+  listarTodos(token: string): Observable<ContaCliente[]> {
+    const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Garante que o gateway/microserviço receba a autenticação
-      })
+        Authorization: `Bearer ${token}`, // Garante que o gateway/microserviço receba a autenticação
+      }),
     };
 
-  return this.httpClient.get<ContaGerente[]>(
-    `${this.CONTA_URL}`,
-    httpOptions);
-}
+    return this.httpClient.get<ContaCliente[]>(
+      `${this.CONTA_URL}`,
+      httpOptions,
+    );
+  }
 
-  //listarGerentes(): void{
-  //   this.conService.listarTodos().subscribe({
-  //     next: (gerentes: GerenteAdmin[]) => {
-  //     this.gerentes = gerentes;
-  //   },
-  //   error: (erro) => {
-  //     console.log('Erro ao listar clientes', erro);
-  //     this.clientes = [];
-  //   }
-  //   })
-  //}
+  buscarPorClienteId(clienteId:string, token:string) : Observable<Conta>{
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
 
-  buscarPorCpfCliente(cpf: string, token:string):Observable<ContaOutdated>{
-      return this.httpClient.get<ContaOutdated>(
-        this.CONTA_URL + "/cliente/" + cpf,
-        this.httpOptions);
-    }
+    return this.httpClient.get<Conta>(
+      this.CONTA_URL + '/' + clienteId,
+      this.httpOptions,
+    );
+  }
+
   buscarPorId(id: number): Observable<ContaOutdated> {
-      return this.httpClient.get<ContaOutdated>(
-        this.CONTA_URL + "/" + id,
-        this.httpOptions
-      );
-    }
-  // buscarPorNumeroConta(numero: string){
-  //   const numeroConta = Number(numero);
-  //   //const contas = this.listarTodos();
-  //   return []
-  //   //contas.find((conta: Conta) => conta.numeroConta === numeroConta);
-  // }
-
-  // contarContasGerente(cpfGerente: string): number {
-  //   const contas = this.listarTodos();
-  //   return contas.filter((c: Conta) => c.cpfGerente === cpfGerente).length;
-  // }
-
-  // substituirGerente(cpfGerenteEmExclusao: string, cpfGerenteNovo: string): void {
-  //   const contas = this.listarTodos();
-  //   const contasAtualizadas = contas.map((conta: Conta) => {
-  //     if (conta.cpfGerente === cpfGerenteEmExclusao) {
-  //       return { ...conta, cpfGerente: cpfGerenteNovo };
-  //     }
-  //     return conta;
-  //   });
-  //   this.atualizarDados(contasAtualizadas);
-  // }
-
+    return this.httpClient.get<ContaOutdated>(
+      this.CONTA_URL + '/' + id,
+      this.httpOptions,
+    );
+  }
 }
-
-// // 1. Para listagens administrativas
-// listarTodos(): Observable<Conta[]> { ... }
-
-// // 2. Para a busca do painel do Cliente após o Login
-// buscarPorCpfCliente(cpf: string): Observable<Conta> { ... }
-
-// // 3. Para buscar a conta destino na tela de transferência
-// buscarPorNumeroConta(numero: number): Observable<Conta> { ... }
-
-// // 4. A rota que dispara a transferência e faz toda a mágica no Back
-// realizarTransferencia(numeroOrigem: number, numeroDestino: number, valor: number): Observable<any> { ... }
-
-// // 5. Caso precise atualizar dados da conta (como alterar o limite)
-// atualizarConta(conta: Conta): Observable<Conta> { ... }

@@ -11,8 +11,8 @@ import { DashboardCliente } from '../dashboard-cliente/dashboard-cliente';
 import { ClientNavigationOptions } from '../../../core/models/navigationOptions';
 import { TransferenciaCliente } from '../transferencia-cliente/transferencia-cliente';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
-import { AuthServices } from '../../../core/services/auth-services/auth-services';
-import { CompositionServices } from '../../../core/services/compositon-services/composition-services';
+import { AuthService } from '../../../core/services/auth-services/auth-services';
+import { CompositionService } from '../../../core/services/compositon-services/composition-services';
 
 @Component({
   //limpo
@@ -34,13 +34,13 @@ export class ClienteMainPage implements OnInit {
   constructor(
     private router: Router,
     private clienteService: ClienteService,
-    private authService: AuthServices,
-    private compositionService: CompositionServices,
+    private authService: AuthService,
+    private compositionService: CompositionService,
     private cdr: ChangeDetectorRef,
   ) {}
 
   cliente!: ClienteOutdated;
-  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Perfil;
+  navigationOption: ClientNavigationOptions = ClientNavigationOptions.Deposito;
 
   isLoading:boolean = true;
 

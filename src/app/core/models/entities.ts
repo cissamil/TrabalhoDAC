@@ -55,11 +55,10 @@ export interface ContaOutdated{
 export interface Conta{
   contaId:string;
   saldo:number;
+  clienteId:string;
+  gerenteId:string;
   limite:number;
-  gerente:string;
-  cliente: string;
   dataCriacao:Date;
-  cpfGerente:string;
   cpfCliente:string;
   numeroConta: number;
   statusConta: StatusConta;

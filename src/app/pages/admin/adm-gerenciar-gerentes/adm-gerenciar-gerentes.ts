@@ -6,7 +6,7 @@ import { ContaOutdated, GerenteAdmin } from '../../../core/models/entities';
 import { ManagerListTableData } from '../../../core/models/table-data';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
-import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { AuthService } from '../../../core/services/auth-services/auth-services';
 
 export interface DashboardGerenciarGerentes {
   totalGerentes: number;
@@ -23,7 +23,7 @@ export class AdminGerenciarGerentes implements OnInit {
   constructor(
     private gerenteService: GerenteService,
     private contaService: ContaService,
-    private authService: AuthServices
+    private authService: AuthService
 
   ) {}
 

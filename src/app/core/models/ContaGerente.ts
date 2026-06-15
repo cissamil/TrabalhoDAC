@@ -1,15 +1,14 @@
 import { StatusConta } from './entities';
 
-export interface GerenteNome {
+export interface GerenteCliente {
   nomeGerente: string;
 }
 
-export interface ContaGerente {
+export interface ContaCliente {
   contaId: string;
   saldo: number;
   limite: number;
   numeroConta: string;
-  gerente: GerenteNome;
 }
 
 export interface GerenteContasPendentes {

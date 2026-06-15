@@ -6,8 +6,8 @@ import { DecimalPipe } from '@angular/common';
 import { ManagerTableData } from '../../../core/models/table-data';
 import { NgxMaskPipe } from 'ngx-mask';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
-import { AuthServices } from '../../../core/services/auth-services/auth-services';
-import { ContaGerente } from '../../../core/models/ContaGerente';
+import { AuthService } from '../../../core/services/auth-services/auth-services';
+import { ContaCliente } from '../../../core/models/ContaGerente';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -22,11 +22,11 @@ export class AdminDashboard implements OnInit, OnDestroy {
   constructor(
     private contasService: ContaService,
     private cdr: ChangeDetectorRef,
-    private authService: AuthServices
+    private authService: AuthService
   ){}
 
   tokenJWT='';
-  contas: ContaGerente[]=[];
+  contas: ContaCliente[]=[];
   MANAGERS_TABLE: ManagerTableData[] = []
   infoCards: InfoCard[] = []
 
@@ -50,7 +50,7 @@ export class AdminDashboard implements OnInit, OnDestroy {
 carregarDashboard(): void {
   this.subscriptions.add(
       this.contasService.listarTodos(this.tokenJWT).subscribe({
-        next: (listaContas: ContaGerente[]) => {
+        next: (listaContas: ContaCliente[]) => {
           this.contas = listaContas || [];
 this.fillManagersTable();
           this.fillInfoCards();

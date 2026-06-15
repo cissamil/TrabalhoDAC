@@ -5,12 +5,24 @@
   <div class="deposito-container">
     <div class="card">
       <h2>Realizar Depósito</h2>
+      
       <p class="cardInfo">Informe o valor que deseja depositar em sua conta </p>
+      
       <label for="valorDeposito">Valor do Depósito (R$)</label>
+
       <input [(ngModel)]="valorDeposito" type="text" (input)="handleValorDeposito($event)" name="valorDeposito" id="valorDeposito">
+
       <p class="cardInfo">O valor será creditado imediatamente em sua conta</p>
+
       <p class={{corMensagem}}> {{ mensagem }} </p>
-      <button (click)="depositar()" id="btnDepositar">Confirmar Depósito</button>
+
+        <button id="btnDepositar" type="submit" (click)="depositar()"  [disabled]="isLoading">
+            @if(isLoading) {
+                <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+            } @else {
+                Confirmar Depósito
+            }
+        </button>
     </div>
 
     <div class="card">
@@ -26,4 +38,22 @@
       </div>
     </div>
   </div>
+
+
+  @if(responseModal != null) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon-container" [class]="responseModal.type">
+        <mat-icon>{{ responseModal.messageIcon }}</mat-icon>
+      </div>
+
+      <div class="modal-content">
+        <h3>{{ responseModal.title || 'Aviso' }}</h3>
+        <p>{{ responseModal.message }}</p>
+      </div>
+
+      <button class="modal-button" (click)="closeModal()">Entendido</button>
+    </div>
+  </div>
+  }
 </main>

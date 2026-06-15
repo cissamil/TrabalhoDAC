@@ -19,14 +19,7 @@ import java.math.BigDecimal;
 public class ClienteContaDashboardResponse {
 
   private ClienteResponse cliente;
-//  private String cpf;
-//  private String nome;
-//  private String email;
-//  private String telefone;
-//  private String clienteId;
-//  private BigDecimal salario;
   private ContaResponse conta;
-//  private EnderecoOutputData endereco;
-
+  private GerenteResponse gerente;
 
 }

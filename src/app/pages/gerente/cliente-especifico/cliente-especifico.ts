@@ -6,7 +6,7 @@ import { ClienteService } from '../../../core/services/cliente-services/cliente-
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { ClienteOutdated, ContaOutdated } from '../../../core/models/entities';
 import { ActivatedRoute } from '@angular/router';
-import { AuthServices } from '../../../core/services/auth-services/auth-services';
+import { AuthService } from '../../../core/services/auth-services/auth-services';
 import { ClienteConta } from '../../../core/models/ClienteConta';
 
 
@@ -22,7 +22,7 @@ export class ClienteEspecifico implements OnInit {
     private route: ActivatedRoute,
     private clienteService: ClienteService,
     private contaService: ContaService,
-    private authService: AuthServices
+    private authService: AuthService
   ){}
 
   termoBusca = '';

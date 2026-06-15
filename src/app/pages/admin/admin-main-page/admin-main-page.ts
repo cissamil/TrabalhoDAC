@@ -7,8 +7,8 @@ import { AdminRelatorioClientes } from '../admin-relatorio-clientes/admin-relato
 import { AdminGerenciarGerentes } from "../adm-gerenciar-gerentes/adm-gerenciar-gerentes";
 import { Router } from '@angular/router';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
-import { AuthServices } from '../../../core/services/auth-services/auth-services';
-import { CompositionServices } from '../../../core/services/compositon-services/composition-services';
+import { AuthService } from '../../../core/services/auth-services/auth-services';
+import { CompositionService } from '../../../core/services/compositon-services/composition-services';
 
 @Component({
   imports: [MatIconModule, AdminDashboard, AdminRelatorioClientes, AdminGerenciarGerentes],
@@ -19,10 +19,10 @@ export class AdminMainPage implements OnInit{
 
   constructor(
     private gerenteService: GerenteService,
-    private authService: AuthServices,
+    private authService: AuthService,
     private cdr : ChangeDetectorRef,
     private router: Router,
-    private compositionService: CompositionServices,
+    private compositionService: CompositionService,
   ){}
 
   ngOnInit(): void{

@@ -20,5 +20,4 @@ public class ContaResponse {
   private BigDecimal saldo;
   private BigDecimal limite;
   private String numeroConta;
-  private GerenteResponse gerente;
 }
