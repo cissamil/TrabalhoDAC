@@ -37,6 +37,7 @@ export class AdminMainPage implements OnInit{
   logOut(){
     this.gerenteService.clearAdmin();
     this.gerenteService.logoutAdmin();
+    this.authService.clearUsuarioLogado();
     this.router.navigate(['/login']);
   }
 
@@ -44,7 +45,7 @@ export class AdminMainPage implements OnInit{
     return AdminNavigationOptions;
   }
 
-  navigationOption: AdminNavigationOptions = AdminNavigationOptions.GerenciarGerentes;
+  navigationOption: AdminNavigationOptions = AdminNavigationOptions.Dashboard;
 
   changeNavigationOptions(option: AdminNavigationOptions){
 

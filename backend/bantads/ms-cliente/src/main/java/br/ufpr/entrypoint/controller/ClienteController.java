@@ -36,7 +36,7 @@ public class ClienteController {
   @Autowired
   private final RabbitTemplate rabbitTemplate;
 
-  @PostMapping(value = "/autocadastro")
+  @PostMapping(value = {"/", ""})
   public ResponseEntity<Void> cadastrar(@Valid @RequestBody ClienteRequest request){
 
       Cliente cliente = clienteRequestMapper.toDomain(request);

@@ -6,7 +6,7 @@ import { requireRole, routeRoles } from '../middlewares/roles.js';
 function clienteRouter(services) {
 	const router = express.Router();
 
-	router.post('/autocadastro', createProxyRoute({
+	router.post('/', createProxyRoute({
 		target: services.clienteService,
 		proxyTimeout: 5000,
 		timeout: 5000,
