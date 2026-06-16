@@ -17,7 +17,7 @@ public interface MovimentacaoQueryRepository extends JpaRepository<MovimentacaoQ
     value = "SELECT * FROM movimentacoes " +
     "WHERE data_hora >= :dataInicio " +
     "AND data_hora <= :dataFim "  +
-    "AND cliente_origem_id = :clienteId",
+    "AND (cliente_origem_id = :clienteId OR cliente_destino_id = :clienteId)",
     nativeQuery = true
   )
   List<MovimentacaoQueryEntity> findMovimentacoesByClienteIdBetweenDates(

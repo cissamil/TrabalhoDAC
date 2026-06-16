@@ -20,7 +20,9 @@ public class MovimentacaoOutputData {
   private Date dataHora;
   private BigDecimal valor;
   private String movimentacaoId;
+  private String clienteOrigemId;
   private String clienteDestinoId;
+  private String clienteOrigemNome;
   private String clienteDestinoNome;
   private TipoMovimentacao tipoMovimentacao;
 }

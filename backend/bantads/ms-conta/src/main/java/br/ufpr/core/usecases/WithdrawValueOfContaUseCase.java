@@ -36,9 +36,10 @@ public class WithdrawValueOfContaUseCase implements WithDrawValueOfContaInputPor
     validateContaToWithdraw(contaToWithdraw);
 
     BigDecimal saldo = contaToWithdraw.getSaldo();
+    BigDecimal limite = contaToWithdraw.getLimite();
     BigDecimal valueToWithdraw = inputData.getValue();
 
-    validateWithdrawAvailability(valueToWithdraw, saldo);
+    validateWithdrawAvailability(valueToWithdraw, saldo, limite);
 
     BigDecimal newSaldo = saldo.subtract(inputData.getValue());
 
@@ -51,8 +52,11 @@ public class WithdrawValueOfContaUseCase implements WithDrawValueOfContaInputPor
 
   }
 
-  private static void validateWithdrawAvailability(BigDecimal valueToWithdraw, BigDecimal saldo) {
-    boolean valueToWithdrawIsGreaterThanAvailableSaldo = valueToWithdraw.compareTo(saldo) > 0;
+  private static void validateWithdrawAvailability(BigDecimal valueToWithdraw, BigDecimal saldo, BigDecimal limite) {
+
+    BigDecimal saldoReal = saldo.add(limite);
+
+    boolean valueToWithdrawIsGreaterThanAvailableSaldo = valueToWithdraw.compareTo(saldoReal) > 0;
 
     if(valueToWithdrawIsGreaterThanAvailableSaldo){
       throw new BusinessRuleException("Saldo insuficiente");

@@ -39,11 +39,11 @@ public class TransferMoneyToAnotherContaUseCase implements TransferMoneyToAnothe
 
       BigDecimal contaToWithdrawSaldo = contaToWithdraw.getSaldo();
       BigDecimal valueToTransfer = inputData.getValue();
-
+      BigDecimal limit = contaToWithdraw.getLimite();
 
       BigDecimal contaToTransferSaldo = contaToTransfer.getSaldo();
 
-      validateWithdrawAvailability(contaToWithdrawSaldo, valueToTransfer);
+      validateWithdrawAvailability(contaToWithdrawSaldo, valueToTransfer, limit);
 
       BigDecimal contaToWithdrawNewSaldo = contaToWithdrawSaldo.subtract(valueToTransfer);
       BigDecimal contaToTransferNewSaldo = contaToTransferSaldo.add(valueToTransfer);
@@ -80,8 +80,11 @@ public class TransferMoneyToAnotherContaUseCase implements TransferMoneyToAnothe
   }
 
 
-  private void validateWithdrawAvailability(BigDecimal saldo, BigDecimal valueToWithdraw) {
-    boolean valueToWithdrawIsGreaterThanAvailableSaldo = valueToWithdraw.compareTo(saldo) > 0;
+  private static void validateWithdrawAvailability(BigDecimal valueToWithdraw, BigDecimal saldo, BigDecimal limite) {
+
+    BigDecimal saldoReal = saldo.add(limite);
+
+    boolean valueToWithdrawIsGreaterThanAvailableSaldo = valueToWithdraw.compareTo(saldoReal) > 0;
 
     if(valueToWithdrawIsGreaterThanAvailableSaldo){
       throw new BusinessRuleException("Saldo insuficiente");

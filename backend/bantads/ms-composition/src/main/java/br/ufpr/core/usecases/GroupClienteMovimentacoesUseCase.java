@@ -32,9 +32,14 @@ public class GroupClienteMovimentacoesUseCase implements GroupClienteMovimentaco
       return dashboardOutputData;
     }
 
-    List<ClienteOutputData> clienteDestinoIds = extractClientesIdAndConsultOutputPort(transferencias);
+    List<ClienteOutputData> clienteDestinoIds = extractClientesDestinoIdAndConsultOutputPort(transferencias);
+    List<ClienteOutputData> clienteOrigemIds = extractClientesOrigemIdAndConsultOutputPort(transferencias);
 
-    List<MovimentacaoOutputData> updatedMovimentacoesList = fillMovimentacoeWithClienteDestinoName(movimentacaoOutputDataList, clienteDestinoIds);
+    List<MovimentacaoOutputData> updatedMovimentacoesList = fillMovimentacoesWithClienteDestinoName(movimentacaoOutputDataList, clienteDestinoIds);
+
+    updatedMovimentacoesList = fillMovimentacoesWithClienteOrigemName(movimentacaoOutputDataList, clienteOrigemIds);
+
+    System.out.println("Movimentações encontradas: " + updatedMovimentacoesList);
 
     dashboardOutputData.setMovimentacoes(updatedMovimentacoesList);
 
@@ -47,12 +52,14 @@ public class GroupClienteMovimentacoesUseCase implements GroupClienteMovimentaco
       .toList();
   }
 
-  private List<MovimentacaoOutputData> fillMovimentacoeWithClienteDestinoName(List<MovimentacaoOutputData> movimentacaoOutputDataList, List<ClienteOutputData> clienteDestinoIds) {
+  private List<MovimentacaoOutputData> fillMovimentacoesWithClienteDestinoName(List<MovimentacaoOutputData> movimentacaoOutputDataList, List<ClienteOutputData> clienteDestinoIds) {
     return movimentacaoOutputDataList.stream().map(movimentacao -> {
+
+
 
       if (!movimentacao.getTipoMovimentacao().equals(TipoMovimentacao.TRANSFERENCIA)) return movimentacao;
 
-      ClienteOutputData cliente = getClienteFromList(movimentacao, clienteDestinoIds);
+      ClienteOutputData cliente = getClienteDestinoIdFromList(movimentacao, clienteDestinoIds);
 
       if (cliente == null) return movimentacao;
 
@@ -62,16 +69,53 @@ public class GroupClienteMovimentacoesUseCase implements GroupClienteMovimentaco
     }).toList();
   }
 
-  private ClienteOutputData getClienteFromList(MovimentacaoOutputData movimentacao, List<ClienteOutputData> clientes) {
+
+  private List<MovimentacaoOutputData> fillMovimentacoesWithClienteOrigemName(List<MovimentacaoOutputData> movimentacaoOutputDataList, List<ClienteOutputData> clienteOrigemIds) {
+    return movimentacaoOutputDataList.stream().map(movimentacao -> {
+
+      if (!movimentacao.getTipoMovimentacao().equals(TipoMovimentacao.TRANSFERENCIA)) return movimentacao;
+
+      ClienteOutputData cliente = getClienteOrigemIdFromList(movimentacao, clienteOrigemIds);
+
+      if (cliente == null) return movimentacao;
+
+      movimentacao.setClienteOrigemNome(cliente.getNome());
+
+      return movimentacao;
+    }).toList();
+  }
+
+  private ClienteOutputData getClienteDestinoIdFromList(MovimentacaoOutputData movimentacao, List<ClienteOutputData> clientes) {
     return clientes.stream().filter(
         clienteOutputData -> clienteOutputData.getClienteId().equals(movimentacao.getClienteDestinoId()))
       .findFirst()
       .orElse(null);
   }
-  private List<ClienteOutputData> extractClientesIdAndConsultOutputPort(List<MovimentacaoOutputData> transferencias) {
+
+  private ClienteOutputData getClienteOrigemIdFromList(MovimentacaoOutputData movimentacao, List<ClienteOutputData> clientes) {
+    return clientes.stream().filter(
+        clienteOutputData -> clienteOutputData.getClienteId().equals(movimentacao.getClienteOrigemId()))
+      .findFirst()
+      .orElse(null);
+  }
+  private List<ClienteOutputData> extractClientesDestinoIdAndConsultOutputPort(List<MovimentacaoOutputData> transferencias) {
 
     List<String> clienteDestinoIdList = transferencias.stream().
       map(MovimentacaoOutputData::getClienteDestinoId)
+      .distinct()
+      .toList();
+
+    System.out.println("Buscando clientes pendentes \n");
+
+    return consultClientesListFromIdsOutputPort.consult(clienteDestinoIdList);
+
+  }
+
+
+  private List<ClienteOutputData> extractClientesOrigemIdAndConsultOutputPort(List<MovimentacaoOutputData> transferencias) {
+
+    List<String> clienteDestinoIdList = transferencias.stream().
+      map(MovimentacaoOutputData::getClienteOrigemId)
       .distinct()
       .toList();
 

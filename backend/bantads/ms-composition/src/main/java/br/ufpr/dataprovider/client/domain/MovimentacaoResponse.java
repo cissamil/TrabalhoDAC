@@ -21,6 +21,7 @@ public class MovimentacaoResponse {
   private Date dataHora;
   private BigDecimal valor;
   private String movimentacaoId;
+  private String clienteOrigemId;
   private String clienteDestinoId;
   private TipoMovimentacao tipoMovimentacao;
 }

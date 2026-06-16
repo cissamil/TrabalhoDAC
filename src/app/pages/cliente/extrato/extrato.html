@@ -21,74 +21,102 @@
         <label for="dataFim">Data Fim: </label>
         <input [(ngModel)]="dataFim" name="dataFim" type="date">
       </div>
-  
+
     </div>
 
 
     <button (click)="tirarExtrato()" class="btnNeutro">Consultar Extrato</button>
   </div>
 
-  @if(dataInicio && dataFim){
-    <div class="card">
-      <div class="title">
-        <h1>Extrato Bancário</h1>
-        <p class="grey">Período: {{ dataInicio | date:'dd/MM/yyyy' }} até {{ dataFim | date:'dd/MM/yyyy' }}</p>
-      </div>
-  
-      <div class="extrato-container">
-        @for (dia of movimentacoesAgrupadasPorDia | keyvalue: originalOrder; track dia.key) {
-          <div class="dia-section">
-            
-            <div class="dia-header">
-              <span class="dia-texto">{{ dia.key }}</span>
-              <div class="saldo-consolidado-badge">
-                <span class="label">Saldo do dia:</span>
-                <span class="valor" [class.red]="dia.value.saldoConsolidado < 0">
-                  R$ {{ dia.value.saldoConsolidado | number:'1.2-2' }}
+  @if(extratoAberto){
+  <div class="card">
+    <div class="title">
+      <h1>Extrato Bancário</h1>
+      <p class="grey">Período: {{ dataInicio | date:'dd/MM/yyyy' }} até {{ dataFim | date:'dd/MM/yyyy' }}</p>
+    </div>
+
+    <div class="extrato-container">
+      @for (dia of movimentacoesAgrupadasPorDia | keyvalue: originalOrder; track dia.key) {
+      <div class="dia-section">
+
+        <div class="dia-header">
+          <span class="dia-texto">{{ dia.key }}</span>
+          <div class="saldo-consolidado-badge">
+            <span class="label">Saldo do dia:</span>
+            <span class="valor" [class.red]="dia.value.saldoConsolidado < 0">
+              R$ {{ dia.value.saldoConsolidado | number:'1.2-2' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="movimentacoes-lista">
+          @for (mov of dia.value.movimentacoes; track mov.movimentacaoId) {
+          <div class="movimentacao-card" [ngClass]="getClasseMovimentacao(mov)">
+            <div class="status-indicator"></div>
+
+            <div class="mov-main-info">
+              <div class="mov-primario">
+                <span class="hora">{{ mov.dataHora | date:'HH:mm' }}</span>
+                <span class="operacao-nome">
+                  @if(mov.tipoMovimentacao === 'TRANSFERENCIA'){ TRANSFERÊNCIA }
+                  @else if (mov.tipoMovimentacao === 'DEPOSITO') { DEPÓSITO }
+                  @else { SAQUE }
                 </span>
               </div>
-            </div>
-            
-            <div class="movimentacoes-lista">
-              @for (mov of dia.value.movimentacoes; track mov.movimentacaoId) {
-                <div class="movimentacao-card" [ngClass]="getClasseMovimentacao(mov)">
-                  <div class="status-indicator"></div>
-                  
-                  <div class="mov-main-info">
-                    <div class="mov-primario">
-                      <span class="hora">{{ mov.dataHora | date:'HH:mm' }}</span>
-                      <span class="operacao-nome">
-                        @if(mov.tipoMovimentacao === 'TRANSFERENCIA'){ TRANSFERÊNCIA }
-                        @else if (mov.tipoMovimentacao === 'DEPOSITO') { DEPÓSITO } 
-                        @else { SAQUE }
-                      </span>
-                    </div>
-                    
-                    @if (mov.tipoMovimentacao === 'TRANSFERENCIA') {
-                      <div class="mov-detalhe">
-                        <mat-icon class="icon-small">swap_horiz</mat-icon>
-                        <!-- <span>{{ mov.cpfClienteOrigem === cliente.cpf ? 'Para: ' + mov.clienteDestino : 'De: ' + mov.clienteOrigem }}</span> -->
-                      </div>
-                    }
-                  </div>
 
-                  <div class="mov-valor-container">
-                    <span class="simbolo">{{ isSaida(mov) ? '-' : '+' }}</span>
-                    <span class="valor-final">R$ {{ mov.valor | number:'1.2-2' }}</span>
-                  </div>
-                </div>
-              } @empty {
-                <div class="sem-mov-card">
-                  <mat-icon>info_outline</mat-icon>
-                  <p>Nenhuma movimentação registrada.</p>
-                </div>
+              @if (mov.tipoMovimentacao === 'TRANSFERENCIA') {
+              <div class="mov-detalhe">
+                <mat-icon class="icon-small">swap_horiz</mat-icon>
+                <span>{{ mov.clienteOrigemId === clienteConta.cliente.clienteId ? 'Para: ' + mov.clienteDestinoNome :
+                  'De: ' + mov.clienteOrigemNome }}</span>
+              </div>
               }
             </div>
 
+            <div class="mov-valor-container">
+              <span class="simbolo">{{ isSaida(mov) ? '-' : '+' }}</span>
+              <span class="valor-final">R$ {{ mov.valor | number:'1.2-2' }}</span>
+            </div>
           </div>
-        }
+          } @empty {
+          <div class="sem-mov-card">
+            <mat-icon>info_outline</mat-icon>
+            <p>Nenhuma movimentação registrada.</p>
+          </div>
+          }
+        </div>
+
       </div>
+      }
     </div>
+  </div>
   }
-  
+
+
+  @if(isLoading){
+
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+      <p>Carregando seu extrato</p>
+    </div>
+  </div>
+  }
+
+  @if(responseModal != null) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon-container" [class]="responseModal.type">
+        <mat-icon>{{ responseModal.messageIcon }}</mat-icon>
+      </div>
+
+      <div class="modal-content">
+        <h3>{{ responseModal.title || 'Aviso' }}</h3>
+        <p>{{ responseModal.message }}</p>
+      </div>
+
+      <button class="modal-button" (click)="closeModal()">Entendido</button>
+    </div>
+  </div>
+  }
 </main>

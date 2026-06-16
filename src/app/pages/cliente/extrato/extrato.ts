@@ -1,10 +1,14 @@
 import { DatePipe, DecimalPipe, KeyValuePipe, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { booleanAttribute, ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { ClienteConta } from '../../../core/models/ClienteConta';
 import { MovimentacaoCliente } from '../../../core/models/MovimentacaoCliente';
+import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
+import { ResponseModal } from '../../../core/models/response-modal';
 import { AuthService } from '../../../core/services/auth-services/auth-services';
 import { ClienteService } from '../../../core/services/cliente-services/cliente-service';
 import { CompositionService } from '../../../core/services/compositon-services/composition-services';
@@ -18,9 +22,10 @@ import { CompositionService } from '../../../core/services/compositon-services/c
     DatePipe,
     NgClass,
     MatIconModule,
+    MatProgressSpinner,
   ],
   templateUrl: './extrato.html',
-  styleUrl: './extrato.css',
+  styleUrls: ['./extrato.css', '../../shared/css/responseModal.css'],
 })
 export class Extrato {
   constructor(
@@ -34,10 +39,17 @@ export class Extrato {
   mensagem = '';
   dataInicio: Date | null = null;
   dataFim: Date | null = null;
+  isLoading: boolean = false;
+  extratoAberto:boolean = false;
 
   clienteConta!: ClienteConta;
   movimentacoes: MovimentacaoCliente[] = [];
+  responseModal: ResponseModal | null = null;
 
+  changeIsLoading() {
+    this.isLoading = !this.isLoading;
+    this.cdr.detectChanges();
+  }
   ngOnInit(): void {
     const dadosCarregados = this.clienteService.clienteContaLogado;
     if (dadosCarregados) {
@@ -46,6 +58,8 @@ export class Extrato {
   }
 
   tirarExtrato() {
+    this.changeIsLoading();
+
     if (!this.dataInicio || !this.dataFim) {
       this.mensagem = 'Por favor, selecione o período de início e fim.';
       return;
@@ -62,15 +76,28 @@ export class Extrato {
       )
       .subscribe({
         next: (response) => {
-
-          console.log("Movimentações: ", response.movimentacoes);
+          console.log('Movimentações: ', response.movimentacoes);
           this.movimentacoes = response.movimentacoes;
           this.mensagem = 'Extrato gerado com sucesso!';
-          this.cdr.detectChanges(); 
+
+          this.extratoAberto = true;
+          this.changeIsLoading();
         },
-        error: (erro) => {
-          console.error('Erro ao buscar extrato: ', erro);
-          this.mensagem = 'Erro ao buscar extrato. Tente novamente.';
+        error: (erro: HttpErrorResponse) => {
+          console.error('Erro Interceptado: ', erro);
+
+          const backendError = erro.error as StandartErrorResponse;
+
+          this.responseModal = {
+            title: backendError?.error || 'Erro ao processar requisição',
+            message:
+              backendError?.message ||
+              'Ocorreu um erro ao processar sua requisição. Tente novamente',
+            messageIcon: 'error',
+            type: 'error',
+          };
+
+          this.changeIsLoading();
         },
       });
   }
@@ -110,22 +137,22 @@ export class Extrato {
         }
       });
 
-      dataAtual.setDate(dataAtual.getDate() - 1); 
+      dataAtual.setDate(dataAtual.getDate() - 1);
     }
 
     return mapa;
   }
 
   isSaida(mov: any): boolean {
-    if (mov.tipo_movimentacao === 'SAQUE') return true;
-    
-    if (
-      mov.tipo_movimentacao === 'TRANSFERENCIA' &&
-      mov.cliente_destino_nome != null
-    )
-      return true;
+    if (mov.tipoMovimentacao === 'SAQUE') return true;
 
-    return false; 
+    const clienteDestinoValido = mov.clienteDestinoId != null && mov.clienteDestinoId != this.clienteConta.cliente.clienteId; 
+
+    if (mov.tipoMovimentacao === 'TRANSFERENCIA' && clienteDestinoValido){
+      return true;
+    }
+
+    return false;
   }
 
   getClasseMovimentacao(mov: any): string {
@@ -134,4 +161,9 @@ export class Extrato {
   originalOrder = (a: any, b: any): number => {
     return 0;
   };
+
+  closeModal() {
+    this.responseModal = null;
+  }
+
 }

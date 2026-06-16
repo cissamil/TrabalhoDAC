@@ -36,8 +36,11 @@ public class ClienteMovimentacoesDashboardAssembler {
     response.setValor(outputData.getValor());
     response.setDataHora(outputData.getDataHora());
     response.setMovimentacaoId(outputData.getMovimentacaoId());
-    response.setClienteDestinoNome(outputData.getClienteDestinoNome());
+    response.setClienteOrigemId(outputData.getClienteOrigemId());
+    response.setClienteDestinoId(outputData.getClienteDestinoId());
     response.setTipoMovimentacao(outputData.getTipoMovimentacao());
+    response.setClienteOrigemNome(outputData.getClienteOrigemNome());
+    response.setClienteDestinoNome(outputData.getClienteDestinoNome());
 
     return response;
   }

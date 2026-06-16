@@ -17,6 +17,7 @@ public class MovimentacaoResponseMapper {
     outputData.setValor(response.getValor());
     outputData.setDataHora(response.getDataHora());
     outputData.setMovimentacaoId(response.getMovimentacaoId());
+    outputData.setClienteOrigemId(response.getClienteOrigemId());
     outputData.setClienteDestinoId(response.getClienteDestinoId());
     outputData.setTipoMovimentacao(response.getTipoMovimentacao());
 

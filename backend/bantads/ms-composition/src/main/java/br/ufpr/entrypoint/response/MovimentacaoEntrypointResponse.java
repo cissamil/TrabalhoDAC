@@ -16,11 +16,14 @@ import java.util.Date;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MovimentacaoEntrypointResponse {
 
+public class MovimentacaoEntrypointResponse {
   private Date dataHora;
   private BigDecimal valor;
   private String movimentacaoId;
+  private String clienteOrigemId;
+  private String clienteDestinoId;
+  private String clienteOrigemNome;
   private String clienteDestinoNome;
   private TipoMovimentacao tipoMovimentacao;
 }

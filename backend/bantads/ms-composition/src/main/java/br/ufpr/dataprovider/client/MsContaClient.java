@@ -5,6 +5,7 @@ import br.ufpr.dataprovider.client.domain.LargestBalancesContasResponse;
 import br.ufpr.dataprovider.client.domain.MovimentacaoResponse;
 import br.ufpr.dataprovider.client.domain.PendingContaResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,8 +31,8 @@ public interface MsContaClient {
   @GetMapping(value = "/movimentacoes")
   List<MovimentacaoResponse> consultContaMovimentacoes(
     @RequestParam("clienteId") String clienteId,
-    @RequestParam("dataInicio") LocalDate dataInicio, // Pode passar como String ISO
-    @RequestParam("dataFim") LocalDate dataFim
+    @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio, // Pode passar como String ISO
+    @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim
   );
 
   @GetMapping
