@@ -54,11 +54,17 @@ export class GerenteService {
     );
   }
 
-  atualizar(gerente: Gerente): Observable<Gerente> {
+  atualizar(id: string, gerente: AdicionarGerente, token: string): Observable<Gerente> {
+
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    });
+
     return this.httpClient.put<Gerente>(
-      this.GERENTE_URL + '/' + gerente.gerenteId,
+      this.GERENTE_URL + '/' + id,
       JSON.stringify(gerente),
-      this.httpOptions,
+      {headers: header}
     );
   }
 
@@ -72,16 +78,8 @@ export class GerenteService {
       this.GERENTE_URL + '/' + id,
       {headers: header}
     );
-
-    //const todosGerentes=this.listarGerentes();
-    //if(todosGerentes.length<=1){
-    //  alert("Não é permitido remover o último gerente.");
-    //  return;
-    //}
-
-    //const novaListaGerentes=this.listarTodos().filter(g=>g.id !==idEmExclusao);
-    //this.atualizarDados(novaListaGerentes);
   }
+ 
 
   // buscarGerentePorEmailESenhaETipo(email:string, senha:string, tipo:string){
   //   const gerentes = this.listarTodos();

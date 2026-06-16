@@ -63,7 +63,7 @@ export class AdminGerenciarGerentes implements OnInit {
   exibirFormularioNovoGerente = false;
   mensagemErro = '';
   mensagemSucesso = '';
-  idGerenteEditando: number | null = null;
+  idGerenteEditando: string | null = null;
 
   novoGerente = {
     nome: '',
@@ -263,7 +263,96 @@ export class AdminGerenciarGerentes implements OnInit {
     }
   }
 
+   atualizarGerente(id: string): void {
+    //prepara a edição do gerente
+
+    const gerente=this.buscarPorId(id);
+    if (!gerente) return;
+
+    this.idGerenteEditando = id;
+    this.exibirFormularioNovoGerente = true;
+
+    this.novoGerente = {
+        nome: gerente.nome,
+        cpf: gerente.cpf,
+        email: gerente.email,
+        telefone: gerente.telefone,
+        senha: ''
+      };
+  }
+
+
+
+  editarGerente(): void {
+
+    
+    const token = this.authService.usuarioLogado;
+    
+    if (!token) {
+      return;
+    }
+    
+    if (this.idGerenteEditando===null) return;
+    
+    
+    const gerenteOriginal = this.buscarPorId(this.idGerenteEditando);
+    
+    if (!gerenteOriginal) return;
+    
+    this.changeIsLoading('Atualizando Gerente');
+
+    const gerenteAtualizado: Gerente = {
+      gerenteId: gerenteOriginal.gerenteId,
+      cpf: gerenteOriginal.cpf,
+      tipo: gerenteOriginal.tipo,
+      nome: this.novoGerente.nome.trim(),
+      email: this.novoGerente.email.toLowerCase(),
+      telefone: this.novoGerente.telefone.replace(/\D/g, ''),
+    };
+
+    this.gerenteService.atualizar(gerenteOriginal.gerenteId, this.novoGerente, token).subscribe({
+      next:()=>{
+
+        setTimeout(() => {
+          this.responseModal = {
+            title: 'Gerente Adicionado',
+            message: `Dados do gerente atualizados com sucesso!`,
+            messageIcon: 'check',
+            type: 'success',
+          };
+
+          this.listarGerentes();
+
+          this.exibirFormularioNovoGerente = false;
+
+          this.changeIsLoading();
+        }, 800);
+        
+      },
+       error: (erro: HttpErrorResponse) => {
+          console.error('Erro Interceptado: ', erro);
+
+          const backendError = erro.error as StandartErrorResponse;
+
+          this.responseModal = {
+            title: backendError?.error || 'Erro ao processar requisição',
+            message:
+              backendError?.message ||
+              'Ocorreu um erro ao processar sua requisição. Tente novamente',
+            messageIcon: 'error',
+            type: 'error',
+          };
+
+          this.changeIsLoading();
+        },
+    });
+  }
+
   salvarGerente(): void {
-    this.inserirNovoGerente();
+    if (this.idGerenteEditando !== null) {
+      this.editarGerente();
+    } else {
+      this.inserirNovoGerente();
+    }
   }
 }

@@ -5,8 +5,7 @@ import br.ufpr.core.domain.GerenteInputData;
 import br.ufpr.core.domain.RemoveGerenteInputData;
 import br.ufpr.core.ports.input.*;
 import br.ufpr.entrypoint.mapper.GerenteRequestMapper;
-import br.ufpr.entrypoint.request.AddGerenteRequest;
-import br.ufpr.entrypoint.request.RemoveGerenteRequest;
+import br.ufpr.entrypoint.request.GerenteRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
@@ -30,6 +29,7 @@ public class GerenteController {
   private final InsertNewGerenteInputPort insertNewGerenteInputPort;
   private final FindGerenteByGerenteIdInputPort findGerenteByGerenteIdInputPort;
   private final FindGerentesFromIdListInputPort findGerentesFromIdListInputPort;
+  private final UpdateGerenteInputPort updateGerenteInputPort;
 
 
   @GetMapping(value = {"", "/"})
@@ -42,7 +42,7 @@ public class GerenteController {
     return ResponseEntity.ok(responseList);
   }
   @PostMapping(value = {"", "/"})
-  ResponseEntity<Void> insertGerente(@Valid @RequestBody AddGerenteRequest request){
+  ResponseEntity<Void> insertGerente(@Valid @RequestBody GerenteRequest request){
 
     GerenteInputData inputData = gerenteRequestMapper.toInputData(request);
 
@@ -72,6 +72,16 @@ public class GerenteController {
     GerenteResponse response = gerenteResponseMapper.toResponse(gerente);
 
     return ResponseEntity.ok(response);
+  }
+
+  @PutMapping(value = "/{gerenteId}")
+  ResponseEntity<GerenteResponse> updateGerente(@PathVariable("gerenteId") String gerenteId, @Valid @RequestBody GerenteRequest request){
+
+    GerenteInputData inputData = gerenteRequestMapper.toInputData(request);
+
+    updateGerenteInputPort.execute(gerenteId, inputData);
+
+    return ResponseEntity.noContent().build();
   }
 
   @PostMapping(value = "/lista-gerentes-por-id")

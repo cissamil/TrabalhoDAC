@@ -98,6 +98,7 @@
         <ng-container matColumnDef="Ações">
           <th mat-header-cell *matHeaderCellDef> Ações </th>
           <td mat-cell *matCellDef="let element">
+            <button type="button" (click)="atualizarGerente(element.gerenteId)">Editar</button>
             <button type="button" class="btn-remover" (click)="remover(element.gerenteId)">Remover</button>
           </td>
         </ng-container>

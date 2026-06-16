@@ -25,10 +25,10 @@ import { CompositionService } from '../../../core/services/compositon-services/c
     Extrato,
     TransferenciaCliente,
     ClientePerfil,
-    MatProgressSpinner
-],
+    MatProgressSpinner,
+  ],
   templateUrl: './cliente-main-page.html',
-  styleUrl: './cliente-main-page.css',
+  styleUrls: ['./cliente-main-page.css', '../../shared/css/responseModal.css'],
 })
 export class ClienteMainPage implements OnInit {
   constructor(
@@ -42,10 +42,20 @@ export class ClienteMainPage implements OnInit {
   cliente!: ClienteOutdated;
   navigationOption: ClientNavigationOptions = ClientNavigationOptions.Dashboard;
 
-  isLoading:boolean = true;
+  isLoading: boolean = false;
+
+  changeIsLoading(loadingMessage?: string) {
+    this.isLoading = !this.isLoading;
+    this.cdr.detectChanges();
+  }
 
   ngOnInit(): void {
+    this.carregarDadosUsuario();
+  }
 
+  carregarDadosUsuario() {
+
+    this.changeIsLoading();
     const token = this.authService.usuarioLogado;
 
     if (!token) {
@@ -58,13 +68,11 @@ export class ClienteMainPage implements OnInit {
         if (responseBody) {
           this.clienteService.setClienteConta(responseBody);
 
-          this.isLoading = false;
-
-          this.cdr.detectChanges();
+          this.changeIsLoading();
+          
         } else {
           this.logOut();
         }
-        
       },
       error: (err) => {
         console.error(
@@ -72,6 +80,8 @@ export class ClienteMainPage implements OnInit {
           err,
         );
         this.logOut();
+        this.changeIsLoading();
+
       },
     });
   }

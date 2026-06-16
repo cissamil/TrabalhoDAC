@@ -18,12 +18,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:postgresql://localhost:5432/ms_gerente_db
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/ms_gerente_db}
     username: tads
     password: tads
 
   rabbitmq:
-    host: localhost
+    host: ${SPRING_RABBITMQ_HOST:localhost}
     port: 5672
     username: tads
     password: tads

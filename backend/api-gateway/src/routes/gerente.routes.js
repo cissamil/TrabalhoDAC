@@ -20,6 +20,11 @@ function gerenteRouter(services) {
 		target: services.gerenteService,
 		errorMessage: '[Gateway] Erro ao remover gerente:'
 	}));
+	
+	router.put('/:gerenteId', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+		target: services.gerenteService,
+		errorMessage: '[Gateway] Erro ao remover gerente:'
+	}));
 
 	return router;
 }

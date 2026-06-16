@@ -10,7 +10,7 @@ spring:
       name: "MsSaga"
 
   rabbitmq:
-    host: localhost
+    host: ${SPRING_RABBITMQ_HOST:localhost}
     port: 5672
     username: tads
     password: tads
