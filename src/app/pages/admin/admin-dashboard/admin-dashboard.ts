@@ -32,6 +32,8 @@ export class AdminDashboard implements OnInit {
     this.isLoading = !this.isLoading;
     this.cdr.detectChanges();
   }
+
+
   constructor(
     private cdr: ChangeDetectorRef,
     private authService: AuthService,
@@ -56,6 +58,7 @@ export class AdminDashboard implements OnInit {
 
   carregarDashboard(): void {
     this.changeIsLoading();
+
     const token = this.authService.usuarioLogado;
     if (!token) {
       return;

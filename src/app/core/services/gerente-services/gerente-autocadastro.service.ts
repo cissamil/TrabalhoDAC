@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ClienteService } from '../cliente-services/cliente-service';
-import { ContaOutdated, EmailNotificacao, GerenteAdmin, PedidoAutoCadastro } from '../../models/entities';
+import { ContaOutdated, EmailNotificacao, Gerente, PedidoAutoCadastro } from '../../models/entities';
 import { PedidoAutoCadastroService } from '../pedido-autocadastro-services/pedido-autocadastro-service';
 import { ContaService } from '../conta-services/conta-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';

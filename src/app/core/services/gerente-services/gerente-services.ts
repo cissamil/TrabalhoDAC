@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable } from 'rxjs';
-import { GerenteAdmin } from '../../models/entities';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { DashboardGerenciarGerentes } from '../../../pages/admin/adm-gerenciar-gerentes/adm-gerenciar-gerentes';
+import { Gerente } from '../../models/entities';
+import { AdicionarGerente } from '../../models/AdicionarGerente';
 
 const GERENTE_LOGADO = 'gerenteLogado';
 const ADMIN_LOGADO = 'adminLogado';
@@ -10,61 +11,67 @@ const ADMIN_LOGADO = 'adminLogado';
   providedIn: 'root',
 })
 export class GerenteService {
+  GERENTE_URL = 'http://localhost:8080/gerentes';
 
-  GERENTE_URL="http://localhost:8080/gerentes";
-
-  httpOptions={
+  httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  }
+      'Content-Type': 'application/json',
+    }),
+  };
 
-  constructor(private httpClient: HttpClient){
+  constructor(private httpClient: HttpClient) {}
 
-  }
+  listarGerentes(token: string): Observable<Gerente[]> {
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    });
 
-
-
-  listarTodos() : Observable<GerenteAdmin[]>{
-    return this.httpClient.get<GerenteAdmin[]>(
-      this.GERENTE_URL,
-      this.httpOptions);
+    return this.httpClient.get<Gerente[]>(this.GERENTE_URL, {
+      headers: header,
+    });
     //busca a lista atual no subject, retornando todos gerentes e adm
   }
 
-  listarGerentes(): Observable<GerenteAdmin[]>{
-    return this.httpClient.get<GerenteAdmin[]>(
-      this.GERENTE_URL,
-      this.httpOptions);
-      //.filter((item) => item.tipo === 'gerente')
-      //.sort((a,b) => a.nome.localeCompare(b.nome));
-    }
-
-    buscarPorId(id:number):Observable<GerenteAdmin>{
-      return this.httpClient.get<GerenteAdmin>(
-        this.GERENTE_URL + "/" + id,
-        this.httpOptions);
-    }
-
-    inserir(gerente:GerenteAdmin): Observable<GerenteAdmin>{
-      return this.httpClient.post<GerenteAdmin>(
-      this.GERENTE_URL,
-      JSON.stringify(gerente),
-      this.httpOptions);
+  buscarPorId(id: number): Observable<Gerente> {
+    return this.httpClient.get<Gerente>(
+      this.GERENTE_URL + '/' + id,
+      this.httpOptions,
+    );
   }
 
-  atualizar(gerente: GerenteAdmin) : Observable<GerenteAdmin> {
-      return this.httpClient.put<GerenteAdmin>(
-        this.GERENTE_URL + "/" + gerente.id,
-        JSON.stringify(gerente),
-        this.httpOptions);
-    }
+  inserir(gerente: AdicionarGerente, token:string): Observable<Gerente> {
 
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    });
 
-  remover(id:number): Observable<GerenteAdmin>{
-    return this.httpClient.delete<GerenteAdmin>(
-      this.GERENTE_URL + "/" + id,
-      this.httpOptions);
+    return this.httpClient.post<Gerente>(
+      this.GERENTE_URL,
+      JSON.stringify(gerente),
+      {headers: header}
+    );
+  }
+
+  atualizar(gerente: Gerente): Observable<Gerente> {
+    return this.httpClient.put<Gerente>(
+      this.GERENTE_URL + '/' + gerente.gerenteId,
+      JSON.stringify(gerente),
+      this.httpOptions,
+    );
+  }
+
+  remover(id:string, token:string): Observable<Gerente> {
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    });
+    
+    return this.httpClient.delete<Gerente>(
+      this.GERENTE_URL + '/' + id,
+      {headers: header}
+    );
 
     //const todosGerentes=this.listarGerentes();
     //if(todosGerentes.length<=1){
@@ -74,9 +81,7 @@ export class GerenteService {
 
     //const novaListaGerentes=this.listarTodos().filter(g=>g.id !==idEmExclusao);
     //this.atualizarDados(novaListaGerentes);
-
   }
-
 
   // buscarGerentePorEmailESenhaETipo(email:string, senha:string, tipo:string){
   //   const gerentes = this.listarTodos();
@@ -91,45 +96,41 @@ export class GerenteService {
   //   //busca o gerente que tenha o email, senha e tipo estritamente iguais
   // }
 
-buscarGerentePorEmailESenhaETipo(email: string, senha: string, tipo:string): Observable<GerenteAdmin> {
-  return this.httpClient.get<GerenteAdmin>(this.GERENTE_URL + "/login", {
-    ...this.httpOptions,
-    params: {
-      email,
-      senha,
-      tipo}
-  });
-}
-
-obterDashboardGerenciarGerentes(): Observable<DashboardGerenciarGerentes> {
-  return this.httpClient.get<DashboardGerenciarGerentes>(
-    this.GERENTE_URL + '/dashboard/',
-    this.httpOptions
-  );
-}
+  buscarGerentePorEmailESenhaETipo(
+    email: string,
+    senha: string,
+    tipo: string,
+  ): Observable<Gerente> {
+    return this.httpClient.get<Gerente>(this.GERENTE_URL + '/login', {
+      ...this.httpOptions,
+      params: {
+        email,
+        senha,
+        tipo,
+      },
+    });
+  }
 
   //---------- Métodos para gerenciamento de sessão do gerente logado
-  public setGerente(gerente: GerenteAdmin): void {
-        localStorage.setItem(GERENTE_LOGADO, JSON.stringify(gerente));
-      }
+  public setGerente(gerente: Gerente): void {
+    localStorage.setItem(GERENTE_LOGADO, JSON.stringify(gerente));
+  }
 
-  public get GerenteLogado(): GerenteAdmin | null{
+  public get GerenteLogado(): Gerente | null {
     const gerenteStr = localStorage.getItem(GERENTE_LOGADO);
     if (!gerenteStr) return null;
 
     try {
-      return JSON.parse(gerenteStr) as GerenteAdmin;
-
+      return JSON.parse(gerenteStr) as Gerente;
     } catch (e) {
-      console.error("Erro ao fazer parse de GerenteLogado:", e);
+      console.error('Erro ao fazer parse de GerenteLogado:', e);
       return null;
-
     }
   }
 
-  public clearGerente(): void{
-      localStorage.removeItem(GERENTE_LOGADO);
-    }
+  public clearGerente(): void {
+    localStorage.removeItem(GERENTE_LOGADO);
+  }
 
   isGerenteLogado(): boolean {
     return !!localStorage[GERENTE_LOGADO];
@@ -141,32 +142,28 @@ obterDashboardGerenciarGerentes(): Observable<DashboardGerenciarGerentes> {
     //faz logout
   }
 
-
-
   //separados pq mesmo sendo a mesma entidade, eles possuem telas e dados diferentes,
   //usar a mesma chave causa sobreescrição e pode travar o sistema e as infos
   //---------- Métodos para gerenciamento de sessão do admin logado
-  public setAdmin(admin: GerenteAdmin): void {
-        localStorage.setItem(ADMIN_LOGADO, JSON.stringify(admin));
-      }
+  public setAdmin(admin: Gerente): void {
+    localStorage.setItem(ADMIN_LOGADO, JSON.stringify(admin));
+  }
 
-  public get AdminLogado(): GerenteAdmin | null{
+  public get AdminLogado(): Gerente | null {
     const adminStr = localStorage.getItem(ADMIN_LOGADO);
     if (!adminStr) return null;
 
     try {
-      return JSON.parse(adminStr) as GerenteAdmin;
-
+      return JSON.parse(adminStr) as Gerente;
     } catch (e) {
-      console.error("Erro ao fazer parse de GerenteLogado:", e);
+      console.error('Erro ao fazer parse de GerenteLogado:', e);
       return null;
-
     }
   }
 
-  public clearAdmin(): void{
-      localStorage.removeItem(ADMIN_LOGADO);
-    }
+  public clearAdmin(): void {
+    localStorage.removeItem(ADMIN_LOGADO);
+  }
 
   isAdminLogado(): boolean {
     return !!localStorage[ADMIN_LOGADO];
@@ -177,9 +174,4 @@ obterDashboardGerenciarGerentes(): Observable<DashboardGerenciarGerentes> {
     localStorage.removeItem(ADMIN_LOGADO);
     //faz logout
   }
-
-
-
-
-
 }

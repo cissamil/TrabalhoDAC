@@ -1,12 +1,19 @@
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { MatTableModule } from '@angular/material/table';
-import { ContaOutdated, GerenteAdmin } from '../../../core/models/entities';
+import { ContaOutdated, Gerente } from '../../../core/models/entities';
 import { ManagerListTableData } from '../../../core/models/table-data';
 import { ContaService } from '../../../core/services/conta-services/conta-service';
 import { GerenteService } from '../../../core/services/gerente-services/gerente-services';
 import { AuthService } from '../../../core/services/auth-services/auth-services';
+import { CompositionService } from '../../../core/services/compositon-services/composition-services';
+import { ResponseModal } from '../../../core/models/response-modal';
+import { HttpErrorResponse } from '@angular/common/http';
+import { StandartErrorResponse } from '../../../core/models/StandartErrorResponse';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { AdicionarGerente } from '../../../core/models/AdicionarGerente';
 
 export interface DashboardGerenciarGerentes {
   totalGerentes: number;
@@ -15,16 +22,25 @@ export interface DashboardGerenciarGerentes {
 }
 @Component({
   selector: 'app-admin-gerenciar-gerentes',
-  imports: [MatTableModule, NgxMaskPipe, FormsModule, NgxMaskDirective],
+  imports: [
+    MatTableModule,
+    NgxMaskPipe,
+    FormsModule,
+    NgxMaskDirective,
+    MatIcon,
+    MatProgressSpinner,
+  ],
   templateUrl: './adm-gerenciar-gerentes.html',
-  styleUrl: './adm-gerenciar-gerentes.css',
+  styleUrls: [
+    './adm-gerenciar-gerentes.css',
+    '../../shared/css/responseModal.css',
+  ],
 })
 export class AdminGerenciarGerentes implements OnInit {
   constructor(
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService,
     private gerenteService: GerenteService,
-    private contaService: ContaService,
-    private authService: AuthService
-
   ) {}
 
   // calcularCards(): void {
@@ -32,9 +48,12 @@ export class AdminGerenciarGerentes implements OnInit {
   //   this.totalContas = this.contas.length;
   //   this.mediaPorGerente = this.totalGerentes > 0 ? this.totalContas / this.totalGerentes : 0;
   // }
-  tokenJWT = '';
-  gerentes: GerenteAdmin[] = [];
-  //contas: Conta[] = [];
+
+  responseModal: ResponseModal | null = null;
+  isLoading: boolean = false;
+  loadingMessage: string = '';
+
+  gerentes: Gerente[] = [];
   MANAGERS_TABLE: ManagerListTableData[] = [];
   dashboardGerenciarGerentes!: DashboardGerenciarGerentes;
 
@@ -54,21 +73,24 @@ export class AdminGerenciarGerentes implements OnInit {
     senha: '',
   };
 
-  displayedColunas: string[] = [
-    'Nome',
-    'CPF',
-    'E-mail',
-    'Telefone',
-    'Quantidade de Contas',
-    'Ações'
-  ];
+  displayedColunas: string[] = ['Nome', 'CPF', 'E-mail', 'Telefone', 'Ações'];
+
+  changeIsLoading(loadingMessage?: string) {
+    this.isLoading = !this.isLoading;
+
+    if (loadingMessage) {
+      this.loadingMessage = loadingMessage;
+    }
+
+    this.cdr.detectChanges();
+  }
+
+  closeModal() {
+    this.responseModal = null;
+  }
 
   ngOnInit(): void {
-    this.tokenJWT = this.authService.usuarioLogado || '';
-    // this.listarContas();
     this.listarGerentes();
-    //this.atualizarTela();
-    this.carregarDashboardGerenciarGerentes();
   }
 
   toggleFormularioNovoGerente(): void {
@@ -77,330 +99,171 @@ export class AdminGerenciarGerentes implements OnInit {
     this.mensagemSucesso = '';
   }
 
-  // fillGerentesTable(): void {
-  //   const novosDados = this.gerentes.map((gerente) => {
-  //     const quantidadeContas = this.contas.filter(
-  //       (conta) => conta.cpfGerente === gerente.cpf
-  //     ).length;
+  listarGerentes(): void {
+    this.changeIsLoading('Carregando lista de gerentes');
 
-  //     return {
-  //       id: gerente.id,
-  //       nome: gerente.nome,
-  //       cpf: gerente.cpf,
-  //       email: gerente.email,
-  //       telefone: gerente.telefone,
-  //       quantidadeClientes: quantidadeContas
-  //     };
-  //   });
+    const token = this.authService.usuarioLogado;
 
-  //   novosDados.sort((a, b) => a.nome.localeCompare(b.nome));
-  //   this.MANAGERS_TABLE = [...novosDados];
-  // }
+    if (!token) {
+      return;
+    }
 
-  // private atualizarTela(): void {
-  //   this.listarGerentes();
-  //   //this.listarContas();
-  //   //this.fillGerentesTable();
+    this.gerenteService.listarGerentes(token).subscribe({
+      next: (gerentesPegos) => {
+        this.gerentes = gerentesPegos;
 
-  // }
+        console.log('Gerentes: ', this.gerentes);
 
-  listarGerentes(): void{
-    this.gerenteService.listarTodos().subscribe({
-      next:(data: GerenteAdmin[])=>{
-        //this.gerentes=data.filter((item)=>item.tipo==='gerente');
-        this.gerentes=data;
-        this.MANAGERS_TABLE = data.map(gerente => ({
-        id: gerente.id,
-        nome: gerente.nome,
-        cpf: gerente.cpf,
-        email: gerente.email,
-        telefone: gerente.telefone,
-        // deixei 0 temporariamente para sumir o erro, mas dps pode ser substituido por gerente.quantidadeContas.
-        quantidadeClientes: (gerente as any).quantidadeContas || 0
-      }));
+        this.changeIsLoading();
       },
-      error: (erro)=>{
-        console.error (' erro ao listar os gerentes ', erro);
-        this.MANAGERS_TABLE = [];
-      }
-    })
-  }
-//-----------retirei esse método pq ele só carregaria todas as contas,
-// ----------baixando um tantao de contas e deixando pesado
-//-----------o atributo quantidadeContas calculado viria direto do SQL,
-// ---------puxa pelo listarGerentes() e no endpoint /gerentes/dashboard
-    // listarContas():void{
-    //   this.contaService.listarTodos().subscribe({
-    //     next:(data: Conta[])=>{
-    //       this.contas=data;
-    //     },
-    //     error: (erro: any)=>{
-    //       console.log('Erro ao listar contas', erro);
-    //       this.contas=[];
-    //     }
-    //   })
-    // }
+      error: (erro: HttpErrorResponse) => {
+        console.error('Erro Interceptado: ', erro);
 
-  carregarDashboardGerenciarGerentes(): void {
-    // Fazemos o subscribe no serviço purista. O Java processa a matemática e nos dá o resultado.
-    this.gerenteService.obterDashboardGerenciarGerentes().subscribe({
-      next: (dadosProntos: DashboardGerenciarGerentes) => {
-        this.dashboardGerenciarGerentes = dadosProntos;
-        // Agora, no seu HTML, os cards vão ler direto de:
-        // {{ estatisticas?.totalGerentes }}, {{ estatisticas?.totalContas }}, etc.
+        const backendError = erro.error as StandartErrorResponse;
+
+        this.responseModal = {
+          title: backendError?.error || 'Erro ao processar requisição',
+          message:
+            backendError?.message ||
+            'Ocorreu um erro ao processar sua requisição. Tente novamente',
+          messageIcon: 'error',
+          type: 'error',
+        };
+
+        this.changeIsLoading();
       },
-      error: (erro) => {
-        console.error('Erro ao carregar os cards do painel', erro);
-      }
     });
   }
-  buscarPorId(id:number){
-    return this.gerentes.find((item)=>item.id===id);
+
+  buscarPorId(id: string) {
+    return this.gerentes.find((item) => item.gerenteId === id);
   }
 
   inserirNovoGerente(): void {
+    this.changeIsLoading('Inserindo novo gerente');
+
+    const token = this.authService.usuarioLogado;
+
+    if (!token) {
+      return;
+    }
+
     const nome = this.novoGerente.nome.trim();
     const cpf = this.novoGerente.cpf.replace(/\D/g, '');
     const email = this.novoGerente.email.trim().toLowerCase();
     const telefone = this.novoGerente.telefone.replace(/\D/g, '');
     const senha = this.novoGerente.senha;
 
-
     if (!nome || !cpf || !email || !telefone || !senha) {
-    this.mensagemErro = 'Preencha todos os campos, incluindo a senha.';
-    return;
-  }
+      this.mensagemErro = 'Preencha todos os campos, incluindo a senha.';
+
+      this.changeIsLoading();
+      return;
+    }
+
     if (cpf.length !== 11) {
       console.log('CPF invalido. Informe 11 digitos.');
       return;
     }
 
-    // const jaExisteCpf = this.gerenteService.listarTodos().some((item) => item.cpf === cpf);
-    // if (jaExisteCpf) {
-    //   console.log( 'Ja existe cadastro com este CPF.');
-    //   return;
-    // }
-
-      const novoGerente: GerenteAdmin = {
-      id: 0,
-      nome,
-      cpf,
-      email,
-      telefone,
-      tipo: 'gerente',
+    const novoGerente: AdicionarGerente = {
+      cpf: cpf,
+      nome: nome,
+      email: email,
+      telefone: telefone,
+      senha: senha,
     };
 
-    // const contaTransferida = this.transferirContaParaNovoGerente(novoGerente, gerentesAntesInsercao);
+    this.gerenteService.inserir(novoGerente, token).subscribe({
+      next: () => {
+        setTimeout(() => {
+          this.responseModal = {
+            title: 'Gerente Adicionado',
+            message: `Gerente '${nome}' adicionado com sucesso!`,
+            messageIcon: 'check',
+            type: 'success',
+          };
 
-    this.gerenteService.inserir(novoGerente).subscribe({
-      next:(gerenteCriado)=>{
-        this.mensagemSucesso = `Novo gerente cadastrado com sucesso.`
-        this.novoGerente = {
-          nome: '',
-          cpf: '',
-          email: '',
-          telefone: '',
-          senha: '',
-      }
-        this.exibirFormularioNovoGerente = false;
-        this.listarGerentes();
+          this.listarGerentes();
+
+          this.exibirFormularioNovoGerente = false;
+
+          this.changeIsLoading();
+        }, 800);
       },
-      error: (erro)=>{
-        console.error(' erro ao inserir novo gerente ', erro);
-        this.mensagemErro = 'Erro ao cadastrar gerente.';
-      }})
-  }
+      error: (erro: HttpErrorResponse) => {
+        console.error('Erro Interceptado: ', erro);
 
-  // private obterMenorSaldoPositivo(contas: Conta[]): number {
-  //   const menoresSaldosPositivos = contas
-  //     .map((conta) => conta.saldo)
-  //     .filter((saldo) => saldo < 0)
-  //     .sort((a, b) => a - b);
+        const backendError = erro.error as StandartErrorResponse;
 
-  //   return menoresSaldosPositivos[0] ?? Number.POSITIVE_INFINITY;
-  // }
-
-  // private selecionarContaParaTransferencia(contas: Conta[]): Conta | null {
-  //   const contasPositivas = contas
-  //     .filter((conta) => conta.saldo > 0)
-  //     .sort((a, b) => a.saldo - b.saldo);
-
-  //   if (contasPositivas.length > 0) {
-  //     return contasPositivas[0];
-  //   }
-
-  //   const contasOrdenadas = contas.slice().sort((a, b) => a.saldo - b.saldo);
-  //   return contasOrdenadas[0] ?? null;
-  // }
-
-  // private transferirContaParaNovoGerente(
-  //   novoGerente: GerenteAdmin,
-  //   gerentesAntesInsercao: GerenteAdmin[],
-  // ): Conta | null {
-  //   if (gerentesAntesInsercao.length === 0) {
-  //     return null;
-  //   }
-
-  //   const contasAtuais = this.contaService.listarTodos();
-  //   if (contasAtuais.length === 0) {
-  //     return null;
-  //   }
-
-  //   if (gerentesAntesInsercao.length === 1) {
-  //     const contasGerenteUnico = contasAtuais.filter(
-  //       (conta) => conta.cpfGerente === gerentesAntesInsercao[0].cpf
-  //     );
-
-  //     if (contasGerenteUnico.length <= 1) {
-  //       return null;
-  //     }
-  //   }
-
-  //   const contagemPorGerente = gerentesAntesInsercao.map((gerente) => {
-  //     const contasGerente = contasAtuais.filter(
-  //       (conta) => conta.cpfGerente === gerente.cpf
-  //     );
-
-  //     return {
-  //       gerente,
-  //       contas: contasGerente,
-  //     };
-  //   });
-
-  //   const maxContas = Math.max(...contagemPorGerente.map((item) => item.contas.length));
-  //   if (maxContas <= 0) {
-  //     return null;
-  //   }
-
-  //   const candidatos = contagemPorGerente.filter((item) => item.contas.length === maxContas);
-  //   const gerenteDoador = candidatos
-  //     .map((item) => ({
-  //       ...item,
-  //       menorSaldoPositivo: this.obterMenorSaldoPositivo(item.contas),
-  //     }))
-  //     .sort((a, b) => {
-  //       if (a.menorSaldoPositivo !== b.menorSaldoPositivo) {
-  //         return a.menorSaldoPositivo - b.menorSaldoPositivo;
-  //       }
-
-  //       return a.gerente.nome.localeCompare(b.gerente.nome);
-  //     })[0];
-
-  //   if (!gerenteDoador) {
-  //     return null;
-  //   }
-
-  //   const contaEscolhida = this.selecionarContaParaTransferencia(gerenteDoador.contas);
-  //   if (!contaEscolhida) {
-  //     return null;
-  //   }
-
-  //   const contaAtualizada: Conta = {
-  //     ...contaEscolhida,
-  //     gerente: novoGerente.nome,
-  //     cpfGerente: novoGerente.cpf,
-  //   };
-
-  //   this.contaService.atualizarConta(contaAtualizada);
-  //   return contaAtualizada;
-  // }
-
-  remover($event: any, id: number): void {
-    $event.preventDefault();
-    if(confirm(`Tem certeza que deseja remover este gerente? As contas serão transferidas`)){
-      this.gerenteService.remover(id!).subscribe({
-        complete: ()=> {this.listarGerentes();
-
-        }})
-    }
-  }
-
-    // const quaseTodosGerentes = listaGerentes.filter((gerente) => gerente.id !== id);
-
-    // const gerenteEmExclusao = listaGerentes.find((g) => g.id === id);
-    // if (!gerenteEmExclusao) return;
-
-    // const contagem = quaseTodosGerentes.map((contador) => ({
-    //   dados: contador,
-    //   qtdContas: this.contaService.contarContasGerente(contador.cpf)
-    // }));
-
-    // contagem.sort((a, b) => a.qtdContas - b.qtdContas);
-    // const sucessor = contagem[0].dados;
-
-    //this.contaService.substituirGerente(gerenteEmExclusao.cpf, sucessor.cpf);
-    //this.gerenteService.removerGerente(id);
-
-    // this.gerentes = this.gerenteService.listarGerentes();
-    // this.contas = this.contaService.listarTodos();
-    // this.fillGerentesTable();
-    // this.calcularCards();
-
-    // alert(`Contas de ${gerenteEmExclusao.nome} transferidas para ${sucessor.nome}`);
-
-
-  atualizarGerente(id: number): void {
-    //prepara a edição do gerente
-
-    const gerente=this.buscarPorId(id);
-    if (!gerente) return;
-
-    this.idGerenteEditando = id;
-    this.exibirFormularioNovoGerente = true;
-
-    // this.novoGerente = {
-    //     nome: gerente.nome,
-    //     cpf: gerente.cpf,
-    //     email: gerente.email,
-    //     telefone: gerente.telefone,
-    //   };
-  }
-
-  editarGerente(): void {
-    //faz req rest
-    if (this.idGerenteEditando===null) return;
-
-    const gerenteOriginal = this.buscarPorId(this.idGerenteEditando);
-
-    if (!gerenteOriginal) return;
-
-    const gerenteAtualizado: GerenteAdmin = {
-      id: gerenteOriginal.id,
-      cpf: gerenteOriginal.cpf,
-      tipo: gerenteOriginal.tipo,
-      nome: this.novoGerente.nome.trim(),
-      email: this.novoGerente.email.toLowerCase(),
-      telefone: this.novoGerente.telefone.replace(/\D/g, ''),
-    };
-
-    this.gerenteService.atualizar(gerenteAtualizado).subscribe({
-      next:()=>{
-        this.idGerenteEditando=null;
-        this.novoGerente = {
-          nome: '',
-          cpf: '',
-          email: '',
-          telefone: '',
-          senha: '',
+        this.responseModal = {
+          title: backendError?.error || 'Erro ao processar requisição',
+          message:
+            backendError?.message ||
+            'Ocorreu um erro ao processar sua requisição. Tente novamente',
+          messageIcon: 'error',
+          type: 'error',
         };
-        this.exibirFormularioNovoGerente=false;
-        this.listarGerentes();
-        this.mensagemSucesso='Gerente atualizado com sucesso'
+
+        this.changeIsLoading('');
       },
-      error: (erro:any)=>{
-        console.error('Erro ao atualizar gerente', erro);
-        this.mensagemErro='erro ao atualizar gerente'
-      }
     });
   }
 
+  remover(id: string): void {
+    this.changeIsLoading('Deletando novo gerente');
+
+    const token = this.authService.usuarioLogado;
+
+    if (!token) {
+      return;
+    }
+
+    if (
+      confirm(
+        `Tem certeza que deseja remover este gerente? As contas serão transferidas`,
+      )
+    ) {
+      this.gerenteService.remover(id, token).subscribe({
+        next: () => {
+          setTimeout(() => {
+            this.responseModal = {
+              title: 'Gerente Adicionado',
+              message: `Gerente removido com sucesso!`,
+              messageIcon: 'check',
+              type: 'success',
+            };
+
+            this.listarGerentes();
+
+            this.changeIsLoading();
+          }, 2000);
+        },
+        error: (erro: HttpErrorResponse) => {
+          console.error('Erro Interceptado: ', erro);
+
+          const backendError = erro.error as StandartErrorResponse;
+
+          this.responseModal = {
+            title: backendError?.error || 'Erro ao processar requisição',
+            message:
+              backendError?.message ||
+              'Ocorreu um erro ao processar sua requisição. Tente novamente',
+            messageIcon: 'error',
+            type: 'error',
+          };
+
+          this.changeIsLoading('');
+        },
+      });
+    }
+
+    else{
+      this.changeIsLoading();
+    }
+  }
 
   salvarGerente(): void {
-    //separa se não for atualização é inserção
-    if (this.idGerenteEditando !== null) {
-      this.editarGerente();
-    } else {
-      this.inserirNovoGerente();
-    }
+    this.inserirNovoGerente();
   }
 }

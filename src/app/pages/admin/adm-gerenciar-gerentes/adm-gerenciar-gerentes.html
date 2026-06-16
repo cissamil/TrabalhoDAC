@@ -6,78 +6,66 @@
   </button>
 
   @if (exibirFormularioNovoGerente) {
-    <section class="novo-gerente-form">
-      <h2>Novo gerente</h2>
+  <section class="novo-gerente-form">
+    <h2>Novo gerente</h2>
 
-      <div class="form-grid">
-        <label>
-          Nome
-          <input type="text" [(ngModel)]="novoGerente.nome" />
-        </label>
+    <div class="form-grid">
+      <label>
+        Nome
+        <input type="text" [(ngModel)]="novoGerente.nome" />
+      </label>
 
-        @if (idGerenteEditando){
-          <div class="field">
-            <label>CPF</label>
-              <input type="text" mask="000.000.000-00" [ngModel]="novoGerente.cpf" name="cpf" disabled>
-              <label class="cpf_block">O CPF não pode ser alterado</label>
-        </div>
-        }@else {
-          <div class="field">
-            <label>CPF</label>
-              <input type="text" mask="000.000.000-00" [(ngModel)]="novoGerente.cpf" name="cpf" >
-        </div>
-        }
-
-        <label>
-          E-mail
-          <input type="email" [(ngModel)]="novoGerente.email" />
-        </label>
-
-        <label>
-          Telefone
-          <input type="text" mask="(00) 00000-0000" [(ngModel)]="novoGerente.telefone" />
-        </label>
-
-        <label>
-          Senha
-          <input type="password" [(ngModel)]="novoGerente.senha" />
-        </label>
+      @if (idGerenteEditando){
+      <div class="field">
+        <label>CPF</label>
+        <input type="text" mask="000.000.000-00" [ngModel]="novoGerente.cpf" name="cpf" disabled>
+        <label class="cpf_block">O CPF não pode ser alterado</label>
       </div>
-
-      @if (mensagemErro) {
-        <p class="mensagem erro">{{ mensagemErro }}</p>
+      }@else {
+      <div class="field">
+        <label>CPF</label>
+        <input type="text" mask="000.000.000-00" [(ngModel)]="novoGerente.cpf" name="cpf">
+      </div>
       }
 
-      @if (mensagemSucesso) {
-        <p class="mensagem sucesso">{{ mensagemSucesso }}</p>
-      }
+      <label>
+        E-mail
+        <input type="email" [(ngModel)]="novoGerente.email" />
+      </label>
 
-      <div class="form-actions">
-        <button type="button" class="btnSalvar" (click)="salvarGerente()">{{idGerenteEditando ? 'Atualizar' : 'Salvar'}}</button>
-      </div>
-    </section>
+      <label>
+        Telefone
+        <input type="text" mask="(00) 00000-0000" [(ngModel)]="novoGerente.telefone" />
+      </label>
+
+      <label>
+        Senha
+        <input type="password" [(ngModel)]="novoGerente.senha" />
+      </label>
+    </div>
+
+    @if (mensagemErro) {
+    <p class="mensagem erro">{{ mensagemErro }}</p>
+    }
+
+    @if (mensagemSucesso) {
+    <p class="mensagem sucesso">{{ mensagemSucesso }}</p>
+    }
+
+    <div class="form-actions">
+      <button type="button" class="btnSalvar" (click)="salvarGerente()">{{idGerenteEditando ? 'Atualizar' :
+        'Salvar'}}</button>
+    </div>
+  </section>
   }
 
 
   <div class="container">
-    <div class="card1">
-      <p>Total de Gerentes</p>
-      <span class="totalGerentes">{{ totalGerentes }}</span>
-    </div>
-    <div class="card2">
-      <p>Total de Contas</p>
-      <span class="totalContas">{{ totalContas }}</span>
-    </div>
-    <div class="card3">
-      <p>Média por Gerente</p>
-      <span class="mediaGerente">{{ mediaPorGerente.toFixed(0) }}</span>
-    </div>
-
     <div class="containerListaGerentes">
       <h2 class="titulo">Lista de Gerentes</h2>
       <p class="subtitulo">Ordenados por nome em ordem crescente</p>
 
-      <table mat-table [dataSource]="MANAGERS_TABLE" class="mat-elevation-z2">
+      <table mat-table [dataSource]="gerentes" class="mat-elevation-z2">
 
         <ng-container matColumnDef="Nome">
           <th mat-header-cell *matHeaderCellDef> Nome </th>
@@ -107,26 +95,44 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="Quantidade de Contas">
-          <th mat-header-cell *matHeaderCellDef> Quantidade de Contas </th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.quantidadeClientes }}
-          </td>
-        </ng-container>
-
         <ng-container matColumnDef="Ações">
           <th mat-header-cell *matHeaderCellDef> Ações </th>
           <td mat-cell *matCellDef="let element">
-            <button type="button" (click)="atualizarGerente(element.id)">Editar</button>
-            <button type="button" class="btn-remover"
-            (click)="remover(element.e, element.id)">Remover</button>
+            <button type="button" class="btn-remover" (click)="remover(element.gerenteId)">Remover</button>
           </td>
         </ng-container>
 
-        <!-- <tr mat-header-row *matHeaderRowDef="displayedcColunas"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedcColunas"></tr> -->
+        <tr mat-header-row *matHeaderRowDef="displayedColunas"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColunas"></tr>
       </table>
     </div>
 
   </div>
+
+  @if(responseModal != null) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon-container" [class]="responseModal.type">
+        <mat-icon>{{ responseModal.messageIcon }}</mat-icon>
+      </div>
+
+      <div class="modal-content">
+        <h3>{{ responseModal.title || 'Aviso' }}</h3>
+        <p>{{ responseModal.message }}</p>
+      </div>
+
+      <button class="modal-button" (click)="closeModal()">Entendido</button>
+    </div>
+  </div>
+  }
+
+  @if(isLoading) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+
+      <p>{{loadingMessage}}</p>
+    </div>
+  </div>
+  }
 </main>

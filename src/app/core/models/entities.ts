@@ -21,16 +21,13 @@ export interface Cliente{
   endereco:Endereco;
 }
 
-export interface GerenteAdmin{
-    id:number;
-    cpf:string;
-    nome:string;
-    email:string;
-    telefone:string;
-    tipo:string; // gerente / administrador
-    //add pq une o perfil do gerente às suas contas vinculadas, mas de forma opcional
-    //a interface sirve tanto no Login (dados simples) quanto no Dashboard (dados completos).
-    contas?: GerenteContasPendentes[]
+export interface Gerente{
+  cpf:string;
+  nome:string;
+  email:string;
+  telefone:string;
+  gerenteId:string;
+  tipo:string;
 }
 
 export enum StatusConta{

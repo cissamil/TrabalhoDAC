@@ -32,7 +32,7 @@ public class GerenteController {
   private final FindGerentesFromIdListInputPort findGerentesFromIdListInputPort;
 
 
-  @GetMapping
+  @GetMapping(value = {"", "/"})
   ResponseEntity<List<GerenteResponse>> getGerentes(){
 
     List<Gerente> gerentes = findGerentesInputPort.find();
@@ -41,7 +41,7 @@ public class GerenteController {
 
     return ResponseEntity.ok(responseList);
   }
-  @PostMapping(value = "/adicionar-gerente")
+  @PostMapping(value = {"", "/"})
   ResponseEntity<Void> insertGerente(@Valid @RequestBody AddGerenteRequest request){
 
     GerenteInputData inputData = gerenteRequestMapper.toInputData(request);
@@ -52,12 +52,12 @@ public class GerenteController {
 
   }
 
-  @PostMapping(value = "/remover-gerente")
-  ResponseEntity<Void> prepareGerenteDeletion(@Valid @RequestBody RemoveGerenteRequest request){
+  @DeleteMapping(value = "/{gerenteId}")
+  ResponseEntity<Void> prepareGerenteDeletion(@PathVariable("gerenteId") String gerenteId){
 
     RemoveGerenteInputData inputData = new RemoveGerenteInputData();
 
-    inputData.setGerenteId(request.getGerenteId());
+    inputData.setGerenteId(gerenteId);
 
     prepareGerenteDeletionInputPort.execute(inputData);
 

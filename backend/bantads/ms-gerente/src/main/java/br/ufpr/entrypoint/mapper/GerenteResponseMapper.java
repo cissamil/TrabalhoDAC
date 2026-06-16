@@ -13,10 +13,10 @@ public class GerenteResponseMapper {
 
     GerenteResponse response = new GerenteResponse();
 
-    response.setId(gerente.getId());
     response.setCpf(gerente.getCpf());
     response.setNome(gerente.getNome());
     response.setEmail(gerente.getEmail());
+    response.setTelefone(gerente.getTelefone());
     response.setGerenteId(gerente.getGerenteId());
     response.setTipoGerente(gerente.getTipoGerente());
 

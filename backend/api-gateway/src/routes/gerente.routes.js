@@ -11,12 +11,12 @@ function gerenteRouter(services) {
 		errorMessage: '[Gateway] Erro na busca dos gerentes'
 	}));
 
-	router.post('/adicionar-gerente', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+	router.post('/', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
 		target: services.gerenteService,
 		errorMessage: '[Gateway] Erro ao adicionar gerente:'
 	}));
 
-	router.post('/remover-gerente', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
+	router.delete('/:gerenteId', verifyJWT, requireRole(routeRoles['/gerente']), createProxyRoute({
 		target: services.gerenteService,
 		errorMessage: '[Gateway] Erro ao remover gerente:'
 	}));

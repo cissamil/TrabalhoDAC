@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ClienteConta } from '../../models/ClienteConta';
-import { GerenteAdmin } from '../../models/entities';
+import { Gerente } from '../../models/entities';
 import { ExtratoCliente } from '../../models/ExtratoCliente';
 import { GerenteContasPendentes } from '../../models/ContaGerente';
 import { ClienteGerente } from '../../models/ClienteGerente';
@@ -33,7 +33,7 @@ export class CompositionService {
     );
   }
 
-  public getGerente(token: string): Observable<GerenteAdmin> {
+  public getGerente(token: string): Observable<Gerente> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ export class CompositionService {
     };
 
     // puxa o gerente
-    return this.httpClient.get<GerenteAdmin>(
+    return this.httpClient.get<Gerente>(
       `${this.COMPOSITION_URL}/gerente`,
       httpOptions,
     );

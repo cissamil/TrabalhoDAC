@@ -91,6 +91,7 @@ public interface ContaQueryRepository extends JpaRepository<ContaQueryEntity, In
       """
         SELECT * FROM contas
         WHERE gerente_id = :gerenteId
+        AND saldo >= 0
         ORDER BY saldo ASC limit 1
       """,
     nativeQuery = true

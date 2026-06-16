@@ -7,11 +7,7 @@ import { ContaDeposito } from '../../models/ContaDeposito';
 import { ContaCliente } from '../../models/ContaGerente';
 import { ContaSaque } from '../../models/ContaSaque';
 import { ContaTransferencia } from '../../models/ContaTransferencia';
-import {
-  Conta,
-  ContaGerada,
-  ContaOutdated
-} from '../../models/entities';
+import { Conta, ContaGerada, ContaOutdated } from '../../models/entities';
 import { ContaRejeitar } from '../../models/ContaRejeitar';
 //import { ClienteService } from '../cliente-services/cliente-service';
 
@@ -29,7 +25,7 @@ export class ContaService {
     }),
   };
 
-  constructor( private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {}
 
   inserir(conta: ContaOutdated): Observable<ContaOutdated> {
     return this.httpClient.post<ContaOutdated>(
@@ -40,72 +36,75 @@ export class ContaService {
   }
 
   depositarValor(conta: ContaDeposito, token: string): Observable<void> {
-
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
 
     return this.httpClient.post<void>(
       this.CONTA_URL + '/depositar',
       JSON.stringify(conta),
-      {headers: header}
+      { headers: header },
     );
   }
 
   sacarValor(conta: ContaSaque, token: string): Observable<void> {
-
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
 
     return this.httpClient.post<void>(
       this.CONTA_URL + '/sacar',
       JSON.stringify(conta),
-      {headers: header}
+      { headers: header },
     );
   }
 
   transferirValor(conta: ContaTransferencia, token: string): Observable<void> {
-
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
 
     return this.httpClient.post<void>(
       this.CONTA_URL + '/transferir',
       JSON.stringify(conta),
-      {headers: header}
+      { headers: header },
     );
   }
 
-  aprovarConta(contaId:string, contaAprovar: ContaAprovar, token: string): Observable<void> {
-
+  aprovarConta(
+    contaId: string,
+    contaAprovar: ContaAprovar,
+    token: string,
+  ): Observable<void> {
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
 
     return this.httpClient.post<void>(
       `${this.CONTA_URL}/${contaId}/aprovar`,
       JSON.stringify(contaAprovar),
-      {headers: header}
+      { headers: header },
     );
   }
 
-  rejeitarConta(contaId:string, contaRejeitar: ContaRejeitar, token: string): Observable<void> {
-
+  rejeitarConta(
+    contaId: string,
+    contaRejeitar: ContaRejeitar,
+    token: string,
+  ): Observable<void> {
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
 
     return this.httpClient.post<void>(
       `${this.CONTA_URL}/${contaId}/rejeitar`,
       JSON.stringify(contaRejeitar),
-      {headers: header}
+      { headers: header },
     );
   }
 
@@ -129,10 +128,10 @@ export class ContaService {
     );
   }
 
-  buscarPorClienteId(clienteId:string, token:string) : Observable<Conta>{
+  buscarPorClienteId(clienteId: string, token: string): Observable<Conta> {
     const header = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
 
     return this.httpClient.get<Conta>(
